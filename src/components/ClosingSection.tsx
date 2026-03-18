@@ -5,17 +5,19 @@ const GROUP_LINK = 'https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC'
 
 export default function ClosingSection() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative overflow-hidden px-4 pt-10 pb-12"
-      style={{
-        background:
-          'linear-gradient(160deg, #F5EDE5 0%, #F0E8DD 50%, #EAE0D5 100%)',
-      }}
-    >
+    <section className="px-4 pb-6">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative overflow-hidden px-4 pt-10 pb-12 rounded-3xl"
+        style={{
+          background:
+            'linear-gradient(160deg, #F5EDE5 0%, #F0E8DD 50%, #EAE0D5 100%)',
+          boxShadow: '0 4px 20px rgba(58, 43, 31, 0.04)',
+        }}
+      >
       {/* Decorative orbs */}
       <div
         className="absolute top-0 left-0 w-48 h-48 rounded-full pointer-events-none"
@@ -113,6 +115,7 @@ export default function ClosingSection() {
           Dança &amp; Consciência
         </p>
       </div>
-    </motion.section>
+      </motion.div>
+    </section>
   )
 }

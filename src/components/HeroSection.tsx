@@ -15,13 +15,15 @@ const fade = (delay = 0) =>
 
 export default function HeroSection() {
   return (
-    <section
-      className="relative flex flex-col items-center px-6 pt-14 pb-10 text-center overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(ellipse at 80% 10%, #E4D8C820 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, #EFF4EB25 0%, transparent 55%), #FAF7F4',
-      }}
-    >
+    <section className="px-4 pt-4 pb-4">
+      <div
+        className="relative flex flex-col items-center px-6 pt-12 pb-10 text-center overflow-hidden rounded-3xl"
+        style={{
+          background:
+            'radial-gradient(ellipse at 80% 10%, #E4D8C820 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, #EFF4EB25 0%, transparent 55%), #FAF7F4',
+          boxShadow: '0 4px 20px rgba(58, 43, 31, 0.04)',
+        }}
+      >
       {/* Decorative orb — top right */}
       <div
         className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none"
@@ -139,6 +141,7 @@ export default function HeroSection() {
           <TikTokIcon size={15} />
         </SocialLink>
       </motion.div>
+      </div>
     </section>
   )
 }
