@@ -67,26 +67,26 @@ function LinkCard({
       initial={{ opacity: 0, x: -10 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -3, scale: 1.015, boxShadow: '0 8px 24px rgba(92, 112, 80, 0.12)' }}
+      whileHover={{ y: -3, scale: 1.015, boxShadow: '0 8px 24px rgba(158, 15, 47, 0.12)' }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94], delay }}
       className="group flex items-center gap-4 px-5 py-4 rounded-2xl relative overflow-hidden bg-white"
       style={{
-        border: '1px solid #E4D8C8',
-        boxShadow: '0 4px 14px rgba(58, 43, 31, 0.05)',
+        border: '1px solid #F4B8CC',
+        boxShadow: '0 4px 14px rgba(42, 10, 20, 0.05)',
       }}
     >
       {/* Icon */}
       <div
         className="w-11 h-11 rounded-xl flex items-center justify-center text-[1.4rem] shrink-0 transition-transform duration-300 group-hover:scale-110"
-        style={{ background: '#F2EBE0', border: '1px solid #EAE0D5' }}
+        style={{ background: '#FFE4EC', border: '1px solid #F4B8CC' }}
       >
         {link.icon}
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <p className="text-[0.85rem] font-medium text-espresso leading-tight transition-colors duration-300 group-hover:text-[#5C7050]">
+        <p className="text-[0.85rem] font-medium text-espresso leading-tight transition-colors duration-300 group-hover:text-[#9E0F2F]">
           {link.label}
         </p>
         <p className="text-[0.72rem] text-driftwood font-light italic mt-0.5">{link.sublabel}</p>
@@ -94,10 +94,10 @@ function LinkCard({
 
       {/* Arrow */}
       <div 
-        className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-[#5C7050]" 
-        style={{ background: '#F5EDE5' }}
+        className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-[#9E0F2F]" 
+        style={{ background: '#FFE8F0' }}
       >
-        <ChevronRight size={16} strokeWidth={2} className="text-driftwood transition-colors duration-300 group-hover:text-[#FAF7F4]" />
+        <ChevronRight size={16} strokeWidth={2} className="text-driftwood transition-colors duration-300 group-hover:text-[#FFF0F3]" />
       </div>
     </motion.a>
   )

@@ -20,8 +20,8 @@ export default function HeroSection() {
         className="relative flex flex-col items-center px-6 pt-12 pb-10 text-center overflow-hidden rounded-3xl"
         style={{
           background:
-            'radial-gradient(ellipse at 80% 10%, #E4D8C820 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, #EFF4EB25 0%, transparent 55%), #FAF7F4',
-          boxShadow: '0 4px 20px rgba(58, 43, 31, 0.04)',
+            'radial-gradient(ellipse at 80% 10%, #F4B8CC20 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, #FFE4EC25 0%, transparent 55%), #FFF0F3',
+          boxShadow: '0 4px 20px rgba(42, 10, 20, 0.06)',
         }}
       >
       {/* Decorative orb — top right */}
@@ -29,7 +29,7 @@ export default function HeroSection() {
         className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none"
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(circle, #C4A88230 0%, transparent 70%)',
+          background: 'radial-gradient(circle, #E0326330 0%, transparent 70%)',
           transform: 'translate(30%, -30%)',
         }}
       />
@@ -38,7 +38,7 @@ export default function HeroSection() {
         className="absolute bottom-0 left-0 w-40 h-40 rounded-full pointer-events-none"
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(circle, #7A926820 0%, transparent 70%)',
+          background: 'radial-gradient(circle, #C2184520 0%, transparent 70%)',
           transform: 'translate(-30%, 30%)',
         }}
       />
@@ -55,8 +55,8 @@ export default function HeroSection() {
           <div
             className="absolute inset-[-4px] rounded-full pointer-events-none"
             style={{
-              background: 'conic-gradient(from 0deg, #7A9268, #C4A882, #C99080, #7A9268)',
-              opacity: 0.3,
+              background: 'conic-gradient(from 0deg, #9E0F2F, #E03263, #D01F4F, #9E0F2F)',
+              opacity: 0.35,
               filter: 'blur(6px)',
             }}
           />
@@ -65,7 +65,7 @@ export default function HeroSection() {
             className="absolute inset-0 rounded-full"
             style={{
               padding: '2.5px',
-              background: 'linear-gradient(135deg, #7A9268 0%, #C4A882 50%, #C99080 100%)',
+              background: 'linear-gradient(135deg, #9E0F2F 0%, #E03263 50%, #D01F4F 100%)',
             }}
           >
             <div className="w-full h-full rounded-full overflow-hidden bg-cream">
@@ -75,7 +75,7 @@ export default function HeroSection() {
                 width={108}
                 height={108}
                 className="w-full h-full object-cover"
-                style={{ backgroundColor: '#C4A882' }}
+                style={{ backgroundColor: '#B3123A' }}
               />
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function HeroSection() {
       <motion.div {...fade(0.3)} className="flex items-center gap-2.5 mb-5">
         <div className="w-8 h-px bg-linen" />
         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-          <circle cx="4" cy="4" r="2" fill="#7A9268" opacity="0.6" />
+          <circle cx="4" cy="4" r="2" fill="#C21845" opacity="0.6" />
         </svg>
         <div className="w-8 h-px bg-linen" />
       </motion.div>
@@ -173,12 +173,12 @@ function LeafOrnament() {
     <svg width="48" height="72" viewBox="0 0 48 72" fill="none" aria-hidden="true">
       <path
         d="M24 4C24 4,44 18,44 36C44 54,24 68,24 68C24 68,4 54,4 36C4 18,24 4,24 4Z"
-        fill="#7A9268"
+        fill="#C21845"
       />
-      <path d="M24 4L24 68" stroke="#FAF7F4" strokeWidth="0.8" opacity="0.5" />
+      <path d="M24 4L24 68" stroke="#FFF0F3" strokeWidth="0.8" opacity="0.5" />
       <path
         d="M6 36C14 28,34 28,42 36"
-        stroke="#FAF7F4"
+        stroke="#FFF0F3"
         strokeWidth="0.6"
         opacity="0.4"
         fill="none"
