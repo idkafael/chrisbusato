@@ -137,7 +137,7 @@ export default function HeroSection() {
         <SocialLink href="#" label="YouTube">
           <YouTubeIcon size={16} />
         </SocialLink>
-        <SocialLink href="#" label="TikTok">
+        <SocialLink href="https://www.tiktok.com/@chrisbusato" label="TikTok">
           <TikTokIcon size={15} />
         </SocialLink>
       </motion.div>
