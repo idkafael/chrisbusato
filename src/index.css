@@ -3,17 +3,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-warm:       #FFF0F3;
-  --color-cream:      #FFE4EC;
-  --color-espresso:   #2A0A14;
-  --color-driftwood:  #8B3A52;
-  --color-sage:       #C21845;
-  --color-olive:      #9E0F2F;
-  --color-sage-mist:  #FFE4EC;
-  --color-sand:       #E03263;
-  --color-linen:      #F4B8CC;
-  --color-clay:       #D01F4F;
-  --color-closing-bg: #FFF0F5;
+  --color-warm:       #FAF7F4;
+  --color-cream:      #F2EBE0;
+  --color-espresso:   #3A2B1F;
+  --color-driftwood:  #7A6252;
+  --color-sage:       #7A9268;
+  --color-olive:      #5C7050;
+  --color-sage-mist:  #EFF4EB;
+  --color-sand:       #C4A882;
+  --color-linen:      #E4D8C8;
+  --color-clay:       #C99080;
+  --color-closing-bg: #F5EDE5;
 
   --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-sans:  'Work Sans', system-ui, -apple-system, sans-serif;
