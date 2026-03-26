@@ -16,8 +16,8 @@ export default function CTASection() {
         className="relative rounded-3xl overflow-hidden px-6 py-8"
         style={{
           background:
-            'linear-gradient(145deg, #FFE4EC 0%, #FFDBE8 60%, #FFE0ED 100%)',
-          boxShadow: '0 4px 24px rgba(158, 15, 47, 0.10), 0 1px 4px rgba(158, 15, 47, 0.06)',
+            'linear-gradient(145deg, #F2EBE0 0%, #EFF4EB 60%, #E4D8C8 100%)',
+          boxShadow: '0 4px 24px rgba(92, 112, 80, 0.10), 0 1px 4px rgba(92, 112, 80, 0.06)',
         }}
       >
         {/* Leaf decoration */}
@@ -64,8 +64,8 @@ export default function CTASection() {
           transition={{ duration: 0.1 }}
           className="relative z-10 flex items-center justify-center gap-2.5 w-full py-[17px] rounded-2xl text-[0.82rem] font-medium tracking-wide text-warm"
           style={{
-            background: 'linear-gradient(135deg, #B3123A 0%, #9E0F2F 100%)',
-            boxShadow: '0 4px 16px rgba(158, 15, 47, 0.35)',
+            background: 'linear-gradient(135deg, #5C7050 0%, #7A9268 100%)',
+            boxShadow: '0 4px 16px rgba(92, 112, 80, 0.35)',
           }}
         >
           Entre para a próxima experiência
@@ -86,12 +86,12 @@ function BigLeaf() {
     <svg width="100" height="150" viewBox="0 0 100 150" fill="none" aria-hidden="true">
       <path
         d="M50 5C50 5, 95 35, 95 75C95 115, 50 145, 50 145C50 145, 5 115, 5 75C5 35, 50 5, 50 5Z"
-        fill="#9E0F2F"
+        fill="#7A9268"
       />
-      <path d="M50 5L50 145" stroke="#FFF0F3" strokeWidth="1" opacity="0.3" />
-      <path d="M8 75C25 58, 75 58, 92 75" stroke="#FFF0F3" strokeWidth="0.8" opacity="0.25" fill="none" />
-      <path d="M14 55C30 42, 70 42, 86 55" stroke="#FFF0F3" strokeWidth="0.6" opacity="0.2" fill="none" />
-      <path d="M14 95C30 108, 70 108, 86 95" stroke="#FFF0F3" strokeWidth="0.6" opacity="0.2" fill="none" />
+      <path d="M50 5L50 145" stroke="#EFF4EB" strokeWidth="1" opacity="0.3" />
+      <path d="M8 75C25 58, 75 58, 92 75" stroke="#EFF4EB" strokeWidth="0.8" opacity="0.25" fill="none" />
+      <path d="M14 55C30 42, 70 42, 86 55" stroke="#EFF4EB" strokeWidth="0.6" opacity="0.2" fill="none" />
+      <path d="M14 95C30 108, 70 108, 86 95" stroke="#EFF4EB" strokeWidth="0.6" opacity="0.2" fill="none" />
     </svg>
   )
 }
