@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz — Dança & Consciência</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #EDE8DF;
+  font-family: 'Inter', sans-serif;
+}
+
+.page-bg {
+  min-height: 100vh;
+  background: #EDE8DF;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.card {
+  background: #F2EDE3;
+  border-radius: 28px;
+  padding: 2.5rem 2rem;
+  max-width: 520px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.leaf-deco {
+  position: absolute;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.leaf-tr { top: -10px; right: -10px; width: 90px; }
+.leaf-bl { bottom: -10px; left: -10px; width: 70px; transform: rotate(180deg); }
+
+.leaf-svg { width: 100%; height: auto; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 1rem 0 1.5rem;
+}
+.divider-line { height: 0.5px; width: 60px; background: #C5BAA8; }
+.divider-dot { width: 4px; height: 4px; border-radius: 50%; background: #C5BAA8; }
+
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+.card h1 {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-optical-sizing: auto;
+  letter-spacing: -0.03em;
+  color: #2C2218;
+  text-align: center;
+}
+
+.hero-name {
+  font-size: 30px;
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+}
+
+.hero-sub {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #A08C70;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.body-text {
+  font-size: 14px;
+  color: #5C5043;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.btn-green {
+  display: block;
+  width: 100%;
+  padding: 15px 20px;
+  background: #5C7A5A;
+  color: #F5F0E8;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 1.5rem;
+  letter-spacing: 0.01em;
+}
+.btn-green:hover { background: #4A6548; transform: translateY(-1px); }
+.btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #8A7D6B;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 0.75rem;
+  letter-spacing: 0.01em;
+}
+.btn-ghost:hover { color: #5C5043; }
+
+.progress-wrap {
+  height: 3px;
+  background: #D8D0C4;
+  border-radius: 2px;
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #5C7A5A;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.q-counter {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #A08C70;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.q-emoji-wrap {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 0.75rem;
+}
+
+.q-text {
+  font-size: 20px;
+  line-height: 1.45;
+  margin-bottom: 1.75rem;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.option-btn {
+  background: #EDE8DF;
+  border: 0.5px solid #C5BAA8;
+  border-radius: 16px;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: #4A4035;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.option-btn:hover {
+  border-color: #5C7A5A;
+  background: #E4EDE3;
+}
+.option-btn.selected {
+  border: 1px solid #5C7A5A;
+  background: #E4EDE3;
+}
+
+.opt-letter {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #D8D0C4;
+  color: #5C5043;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.option-btn.selected .opt-letter {
+  background: #5C7A5A;
+  color: #F5F0E8;
+}
+
+.result-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5C7A5A;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.result-title {
+  font-size: 26px;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+.result-desc {
+  font-size: 13.5px;
+  color: #5C5043;
+  line-height: 1.75;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.result-highlight {
+  background: #E4EDE3;
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #3D5C3B;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.pills {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 1rem;
+}
+.pill {
+  font-size: 11px; padding: 4px 12px; border-radius: 20px;
+  background: #E4EDE3; color: #3D5C3B; font-weight: 400;
+  border: 0.5px solid #B5C8B4;
+}
+
+.icon-wrap {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: #E4EDE3;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  margin: 0 auto 1rem;
+}
+
+.cta-section {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.cta-small {
+  font-size: 12px;
+  color: #A08C70;
+  margin-top: 0.75rem;
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+@media (max-width: 480px) {
+  .card { padding: 2rem 1.25rem; border-radius: 20px; }
+  .hero-name { font-size: 26px; }
+  .q-text { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-bg">
+<div class="card">
+
+  <svg class="leaf-deco leaf-tr" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+  <svg class="leaf-deco leaf-bl" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <div class="tag">Dança & Consciência</div>
+    <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente ou musical</h1>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
+    <button class="btn-green" onclick="startQuiz()">Descobrir meu perfil →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="q-counter" id="q-counter">Pergunta 1 de 10</div>
+    <div class="q-emoji-wrap" id="q-emoji"></div>
+    <h1 class="q-text" id="q-text"></h1>
+    <div class="options-list" id="q-options"></div>
+    <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="s-result">
+    <div class="tag" id="r-tag">Transformações</div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <div class="icon-wrap" id="r-icon"></div>
+    <div class="result-label" id="r-label"></div>
+    <h1 class="result-title" id="r-title"></h1>
+    <div class="pills" id="r-pills"></div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="result-highlight" id="r-highlight"></div>
+    <div class="cta-section">
+      <button class="btn-green" onclick="goWpp()">Entrar no grupo gratuito →</button>
+      <p class="cta-small">Não precisa saber dançar</p>
+    </div>
+    <button class="btn-ghost" onclick="restart()">Refazer o quiz</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+const questions = [
+  {
+    emoji: "🩰",
+    text: "Quando você começa a dançar, o que normalmente vem primeiro para você?",
+    options: [
+      { l: "A", t: "Tento lembrar quais passos fazer", type: "R" },
+      { l: "B", t: "Espero sentir o outro me guiando para entrar", type: "D" },
+      { l: "C", t: "Primeiro percebo a música e deixo o corpo responder", type: "M" }
+    ]
+  },
+  {
+    emoji: "📚",
+    text: "Se tirassem os passos que você já conhece, como você se sentiria?",
+    options: [
+      { l: "A", t: "Perdida, sem saber o que fazer", type: "R" },
+      { l: "B", t: "Insegura, precisando que alguém me conduzisse", type: "D" },
+      { l: "C", t: "Livre para explorar o que a música pede", type: "M" }
+    ]
+  },
+  {
+    emoji: "💭",
+    text: "Enquanto dança, você sente que pensa mais ou sente mais?",
+    options: [
+      { l: "A", t: "Penso muito no que estou fazendo", type: "R" },
+      { l: "B", t: "Fico pensando se o outro está confortável ou se estou acompanhando direito", type: "D" },
+      { l: "C", t: "Consigo sentir o corpo e a música com naturalidade", type: "M" }
+    ]
+  },
+  {
+    emoji: "⚡",
+    text: "Quando você erra ou se perde na dança, o que acontece com você?",
+    options: [
+      { l: "A", t: "Fico tensa e tento corrigir na hora", type: "R" },
+      { l: "B", t: "Me desorganizo e dependo do outro para voltar", type: "D" },
+      { l: "C", t: "Respiro, continuo presente e sigo no movimento", type: "M" }
+    ]
+  },
+  {
+    emoji: "🎵",
+    text: "Em relação à música, qual frase mais combina com você?",
+    options: [
+      { l: "A", t: "Eu só percebo melhor a música depois que já comecei a dançar", type: "R" },
+      { l: "B", t: "Eu percebo a música, mas dependo muito do outro para conseguir entrar nela", type: "D" },
+      { l: "C", t: "A música me guia e meu corpo responde a ela", type: "M" }
+    ]
+  },
+  {
+    emoji: "👀",
+    text: "Quando dança na frente de outras pessoas, como você costuma se sentir?",
+    options: [
+      { l: "A", t: "Com medo de errar ou parecer travada", type: "R" },
+      { l: "B", t: "Insegura e muito preocupada com a reação do outro", type: "D" },
+      { l: "C", t: "Mais presente no meu corpo, mesmo que eu ainda esteja evoluindo", type: "M" }
+    ]
+  },
+  {
+    emoji: "💢",
+    text: "O que mais te frustra quando você dança?",
+    options: [
+      { l: "A", t: "Sentir que penso demais e não consigo fluir", type: "R" },
+      { l: "B", t: "Sentir que só consigo dançar bem se o outro ajudar", type: "D" },
+      { l: "C", t: "Sentir que às vezes acesso algo bom, mas ainda não consigo sustentar sempre", type: "M" }
+    ]
+  },
+  {
+    emoji: "🌀",
+    text: "Quando seu corpo não responde como você gostaria, qual é sua reação?",
+    options: [
+      { l: "A", t: "Tento forçar mais para fazer dar certo", type: "R" },
+      { l: "B", t: "Fico insegura e perco minha referência", type: "D" },
+      { l: "C", t: "Escuto meu corpo, ajusto e continuo a partir do que é possível", type: "M" }
+    ]
+  },
+  {
+    emoji: "💬",
+    text: "Qual dessas frases parece mais com o seu momento atual?",
+    options: [
+      { l: "A", t: "“Eu quero acertar, mas acabo travando.”", type: "R" },
+      { l: "B", t: "“Eu até consigo, mas dependo muito da condução ou da segurança que o outro me passa.”", type: "D" },
+      { l: "C", t: "“Eu quero aprofundar minha presença, musicalidade e expressão.”", type: "M" }
+    ]
+  },
+  {
+    emoji: "✨",
+    text: "O que você mais deseja hoje na dança?",
+    options: [
+      { l: "A", t: "Parar de travar e me sentir mais segura", type: "R" },
+      { l: "B", t: "Conseguir me soltar sem depender tanto do outro", type: "D" },
+      { l: "C", t: "Me tornar mais livre, presente e expressiva no meu corpo", type: "M" }
+    ]
+  }
+];
+
+const profiles = {
+  R: {
+    icon: "🧠",
+    label: "Corpo Racional",
+    title: "Sua cabeça lidera,\nmas seu corpo quer falar",
+    pills: ["Autocrítico", "Sensível", "Cheio de potencial"],
+    desc: "Você sente a música, seu corpo quer se mexe mas tem uma voz na cabeça que chega antes e veta tudo. Isso não é falta de talento. É um padrão aprendido. E padrão aprendido, desaprende.",
+    highlight: "\"Seu corpo não precisa de mais cobrança. Ele precisa de escuta.\""
+  },
+  D: {
+    icon: "🫂",
+    label: "Corpo Dependente",
+    title: "Você entra no movimento\nquando sente o outro com você",
+    pills: ["Sensível à condução", "Conectada", "Buscando autonomia"],
+    desc: "Parte de você dança na escuta do par — na segurança da condução, na confirmação de que está \"no caminho certo\". Isso é humano. O próximo passo é cultivar sua própria referência interna, sem perder a conexão.",
+    highlight: "\"Quando sua base vem de dentro e não só da condução externa, a dança se abre de outro jeito.\""
+  },
+  M: {
+    icon: "🎵",
+    label: "Corpo Musical",
+    title: "Música e corpo já conversam —\né hora de ir mais fundo",
+    pills: ["Presente", "Musical", "Em expansão"],
+    desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza.",
+    highlight: "\"Mais do que dançar melhor, é sobre sentir com mais verdade — com ritmo e corpo inteiro.\""
+  }
+};
+
+let cur = 0, answers = [], sel = null;
+
+function startQuiz() {
+  document.getElementById('s-intro').classList.remove('active');
+  document.getElementById('s-quiz').classList.add('active');
+  render();
+}
+
+function render() {
+  const q = questions[cur];
+  document.getElementById('q-counter').textContent = `Pergunta ${cur + 1} de ${questions.length}`;
+  document.getElementById('q-emoji').textContent = q.emoji;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('prog').style.width = `${(cur / questions.length) * 100}%`;
+  document.getElementById('btn-next').disabled = true;
+  sel = null;
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${opt.l}</span><span>${opt.t}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      sel = opt.type;
+      document.getElementById('btn-next').disabled = false;
+    };
+    opts.appendChild(btn);
+  });
+}
+
+function nextQ() {
+  if (!sel) return;
+  answers.push(sel);
+  cur++;
+  if (cur < questions.length) { render(); }
+  else { showResult(); }
+}
+
+function showResult() {
+  const count = { R: 0, D: 0, M: 0 };
+  answers.forEach(a => count[a]++);
+  const top = Object.entries(count).sort((a, b) => b[1] - a[1])[0][0];
+  const p = profiles[top];
+
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  document.getElementById('prog').style.width = '100%';
+
+  document.getElementById('r-icon').textContent = p.icon;
+  document.getElementById('r-label').textContent = p.label;
+  document.getElementById('r-title').textContent = p.title;
+  document.getElementById('r-desc').textContent = p.desc;
+  document.getElementById('r-highlight').textContent = p.highlight;
+
+  const pills = document.getElementById('r-pills');
+  pills.innerHTML = '';
+  p.pills.forEach(txt => {
+    const s = document.createElement('span');
+    s.className = 'pill';
+    s.textContent = txt;
+    pills.appendChild(s);
+  });
+}
+
+function goWpp() {
+  window.open('https://chat.whatsapp.com/LINK_AQUI', '_blank', 'noopener,noreferrer');
+}
+
+function restart() {
+  cur = 0; answers = []; sel = null;
+  document.getElementById('s-result').classList.remove('active');
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-intro').classList.add('active');
+  document.getElementById('prog').style.width = '0%';
+}
+</script>
+</body>
+</html>
