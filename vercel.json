@@ -3,5 +3,6 @@
   "version": 2,
   "cleanUrls": true,
   "installCommand": "npm ci",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }

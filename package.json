@@ -4,6 +4,6 @@
   "version": "1.0.0",
   "description": "Quiz estático (HTML/CSS/JS) — sem dependências npm",
   "scripts": {
-    "build": "echo Static site — sem build"
+    "build": "node build.js"
   }
 }
