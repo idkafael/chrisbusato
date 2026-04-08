@@ -263,12 +263,6 @@ body {
   margin-bottom: 0.75rem;
 }
 
-.q-emoji-wrap {
-  text-align: center;
-  font-size: 26px;
-  margin-bottom: 0.75rem;
-}
-
 .q-text {
   font-size: 20px;
   line-height: 1.45;
@@ -426,7 +420,6 @@ body {
   <div class="screen" id="s-quiz">
     <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
     <div class="q-counter" id="q-counter">Pergunta 1 de 10</div>
-    <div class="q-emoji-wrap" id="q-emoji"></div>
     <h1 class="q-text" id="q-text"></h1>
     <div class="options-list" id="q-options"></div>
     <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
@@ -480,7 +473,6 @@ body {
 <script>
 const questions = [
   {
-    emoji: "🩰",
     text: "Quando você começa a dançar, o que normalmente vem primeiro para você?",
     options: [
       { l: "A", t: "Tento lembrar quais passos fazer", type: "R" },
@@ -489,7 +481,6 @@ const questions = [
     ]
   },
   {
-    emoji: "📚",
     text: "Se tirassem os passos que você já conhece, como você se sentiria?",
     options: [
       { l: "A", t: "Perdida, sem saber o que fazer", type: "R" },
@@ -498,7 +489,6 @@ const questions = [
     ]
   },
   {
-    emoji: "💭",
     text: "Enquanto dança, você sente que pensa mais ou sente mais?",
     options: [
       { l: "A", t: "Penso muito no que estou fazendo", type: "R" },
@@ -507,7 +497,6 @@ const questions = [
     ]
   },
   {
-    emoji: "⚡",
     text: "Quando você erra ou se perde na dança, o que acontece com você?",
     options: [
       { l: "A", t: "Fico tensa e tento corrigir na hora", type: "R" },
@@ -516,7 +505,6 @@ const questions = [
     ]
   },
   {
-    emoji: "🎵",
     text: "Em relação à música, qual frase mais combina com você?",
     options: [
       { l: "A", t: "Eu só percebo melhor a música depois que já comecei a dançar", type: "R" },
@@ -525,7 +513,6 @@ const questions = [
     ]
   },
   {
-    emoji: "👀",
     text: "Quando dança na frente de outras pessoas, como você costuma se sentir?",
     options: [
       { l: "A", t: "Com medo de errar ou parecer travada", type: "R" },
@@ -534,7 +521,6 @@ const questions = [
     ]
   },
   {
-    emoji: "💢",
     text: "O que mais te frustra quando você dança?",
     options: [
       { l: "A", t: "Sentir que penso demais e não consigo fluir", type: "R" },
@@ -543,7 +529,6 @@ const questions = [
     ]
   },
   {
-    emoji: "🌀",
     text: "Quando seu corpo não responde como você gostaria, qual é sua reação?",
     options: [
       { l: "A", t: "Tento forçar mais para fazer dar certo", type: "R" },
@@ -552,7 +537,6 @@ const questions = [
     ]
   },
   {
-    emoji: "💬",
     text: "Qual dessas frases parece mais com o seu momento atual?",
     options: [
       { l: "A", t: "“Eu quero acertar, mas acabo travando.”", type: "R" },
@@ -561,7 +545,6 @@ const questions = [
     ]
   },
   {
-    emoji: "✨",
     text: "O que você mais deseja hoje na dança?",
     options: [
       { l: "A", t: "Parar de travar e me sentir mais segura", type: "R" },
@@ -618,7 +601,6 @@ function startQuizAfterLead() {
 function render() {
   const q = questions[cur];
   document.getElementById('q-counter').textContent = `Pergunta ${cur + 1} de ${questions.length}`;
-  document.getElementById('q-emoji').textContent = q.emoji;
   document.getElementById('q-text').textContent = q.text;
   document.getElementById('prog').style.width = `${(cur / questions.length) * 100}%`;
   document.getElementById('btn-next').disabled = true;
