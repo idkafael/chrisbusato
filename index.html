@@ -557,7 +557,7 @@ body {
   <!-- QUIZ -->
   <div class="screen" id="s-quiz">
     <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
-    <div class="q-counter" id="q-counter">Pergunta 1 de 10</div>
+    <div class="q-counter" id="q-counter">Pergunta 1 de 13</div>
     <h1 class="q-text" id="q-text"></h1>
     <div class="options-list" id="q-options"></div>
     <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
@@ -646,6 +646,38 @@ const questions = [
       { l: "A", t: "Penso muito no que estou fazendo", type: "R" },
       { l: "B", t: "Fico pensando se o outro está confortável ou se estou acompanhando direito", type: "D" },
       { l: "C", t: "Consigo sentir o corpo e a música com naturalidade", type: "M" }
+    ]
+  },
+  {
+    text: "Em relação ao tempo da música, o que mais acontece com você?",
+    options: [
+      { l: "A", t: "Me travo tentando acertar e o fluir some", type: "R" },
+      { l: "B", t: "Fico mais segura quando o outro ajuda a marcar o tempo", type: "D" },
+      { l: "C", t: "Sinto a música, mas oscilo: às vezes me adianto, às vezes atraso", type: "M" }
+    ]
+  },
+  {
+    text: "Quando um movimento deveria continuar com naturalidade, o que você nota com mais frequência?",
+    options: [
+      { l: "A", t: "O fluxo corta porque eu penso demais no que vem depois", type: "R" },
+      { l: "B", t: "O fluir melhora quando o outro sustenta a ideia do movimento", type: "D" },
+      { l: "C", t: "Eu até entro no fluxo, mas quebro fácil e fico inconsistente", type: "M" }
+    ]
+  },
+  {
+    text: "Na dança a dois: quando você sente bastante a música, o que costuma acontecer com a conexão com o par?",
+    options: [
+      { l: "A", t: "Fico tão na cabeça que deixo de perceber o outro direito", type: "R" },
+      { l: "B", t: "Me organizo muito pela resposta e pelo conforto do outro", type: "D" },
+      { l: "C", t: "Às vezes me perco na música e a conexão com o par oscila", type: "M" }
+    ]
+  },
+  {
+    text: "Por dentro, como costuma ser essa sensação de “sentir e dançar ao mesmo tempo”?",
+    options: [
+      { l: "A", t: "Eu sinto, mas entra a cobrança de fazer do jeito certo", type: "R" },
+      { l: "B", t: "Eu me acalmo quando sinto que o outro está comigo", type: "D" },
+      { l: "C", t: "Eu sinto… mas parece que não encaixa, não consigo colocar pra fora direito", type: "M" }
     ]
   },
   {
