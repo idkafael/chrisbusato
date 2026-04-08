@@ -557,7 +557,7 @@ body {
   <!-- QUIZ -->
   <div class="screen" id="s-quiz">
     <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
-    <div class="q-counter" id="q-counter">Pergunta 1 de 13</div>
+    <div class="q-counter" id="q-counter">Pergunta 1 de 10</div>
     <h1 class="q-text" id="q-text"></h1>
     <div class="options-list" id="q-options"></div>
     <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
@@ -629,7 +629,8 @@ const questions = [
     options: [
       { l: "A", t: "Tento lembrar quais passos fazer", type: "R" },
       { l: "B", t: "Espero sentir o outro me guiando para entrar", type: "D" },
-      { l: "C", t: "Primeiro percebo a música e deixo o corpo responder", type: "M" }
+      { l: "C", t: "Primeiro percebo a música e deixo o corpo responder", type: "M" },
+      { l: "D", t: "Sinto que quero entrar, mas já oscilo no tempo ou no encaixe com o par", type: "S" }
     ]
   },
   {
@@ -637,7 +638,8 @@ const questions = [
     options: [
       { l: "A", t: "Perdido(a), sem saber o que fazer", type: "R" },
       { l: "B", t: "Inseguro(a), precisando que alguém me conduzisse", type: "D" },
-      { l: "C", t: "Livre para explorar o que a música pede", type: "M" }
+      { l: "C", t: "Livre para explorar o que a música pede", type: "M" },
+      { l: "D", t: "Eu sinto a música, mas me desorganizo para sustentar isso no movimento", type: "S" }
     ]
   },
   {
@@ -645,7 +647,8 @@ const questions = [
     options: [
       { l: "A", t: "Penso muito no que estou fazendo", type: "R" },
       { l: "B", t: "Fico pensando se o outro está confortável ou se estou acompanhando direito", type: "D" },
-      { l: "C", t: "Consigo sentir o corpo e a música com naturalidade", type: "M" }
+      { l: "C", t: "Consigo sentir o corpo e a música com naturalidade", type: "M" },
+      { l: "D", t: "Eu sinto, mas não consigo manter isso estável: o fluxo quebra fácil", type: "S" }
     ]
   },
   {
@@ -653,31 +656,8 @@ const questions = [
     options: [
       { l: "A", t: "Me travo tentando acertar e o fluir some", type: "R" },
       { l: "B", t: "Fico mais seguro(a) quando o outro ajuda a marcar o tempo", type: "D" },
-      { l: "C", t: "Sinto a música, mas oscilo: às vezes me adianto, às vezes atraso", type: "M" }
-    ]
-  },
-  {
-    text: "Quando um movimento deveria continuar com naturalidade, o que você nota com mais frequência?",
-    options: [
-      { l: "A", t: "O fluxo corta porque eu penso demais no que vem depois", type: "R" },
-      { l: "B", t: "O fluir melhora quando o outro sustenta a ideia do movimento", type: "D" },
-      { l: "C", t: "Eu até entro no fluxo, mas quebro fácil e fico inconsistente", type: "M" }
-    ]
-  },
-  {
-    text: "Na dança a dois: quando você sente bastante a música, o que costuma acontecer com a conexão com o par?",
-    options: [
-      { l: "A", t: "Fico tão na cabeça que deixo de perceber o outro direito", type: "R" },
-      { l: "B", t: "Me organizo muito pela resposta e pelo conforto do outro", type: "D" },
-      { l: "C", t: "Às vezes me perco na música e a conexão com o par oscila", type: "M" }
-    ]
-  },
-  {
-    text: "Por dentro, como costuma ser essa sensação de “sentir e dançar ao mesmo tempo”?",
-    options: [
-      { l: "A", t: "Eu sinto, mas entra a cobrança de fazer do jeito certo", type: "R" },
-      { l: "B", t: "Eu me acalmo quando sinto que o outro está comigo", type: "D" },
-      { l: "C", t: "Eu sinto… mas parece que não encaixa, não consigo colocar pra fora direito", type: "M" }
+      { l: "C", t: "Consigo me sentir dentro do ritmo com consistência", type: "M" },
+      { l: "D", t: "Sinto o tempo, mas me adianto, atraso ou saio da condução sem querer", type: "S" }
     ]
   },
   {
@@ -685,7 +665,8 @@ const questions = [
     options: [
       { l: "A", t: "Fico tenso(a) e tento corrigir na hora", type: "R" },
       { l: "B", t: "Me desorganizo e dependo do outro para voltar", type: "D" },
-      { l: "C", t: "Respiro, continuo presente e sigo no movimento", type: "M" }
+      { l: "C", t: "Respiro, continuo presente e sigo no movimento", type: "M" },
+      { l: "D", t: "Eu continuo, mas demoro a encaixar de novo: fico irregular na conexão", type: "S" }
     ]
   },
   {
@@ -693,7 +674,8 @@ const questions = [
     options: [
       { l: "A", t: "Eu só percebo melhor a música depois que já comecei a dançar", type: "R" },
       { l: "B", t: "Eu percebo a música, mas dependo muito do outro para conseguir entrar nela", type: "D" },
-      { l: "C", t: "A música me guia e meu corpo responde a ela", type: "M" }
+      { l: "C", t: "A música me guia e meu corpo responde a ela", type: "M" },
+      { l: "D", t: "Eu percebo a música, mas não organizo isso no movimento como eu queria", type: "S" }
     ]
   },
   {
@@ -701,7 +683,8 @@ const questions = [
     options: [
       { l: "A", t: "Com medo de errar ou parecer travado(a)", type: "R" },
       { l: "B", t: "Inseguro(a) e muito preocupado(a) com a reação do outro", type: "D" },
-      { l: "C", t: "Mais presente no meu corpo, mesmo ainda evoluindo", type: "M" }
+      { l: "C", t: "Mais presente no corpo, mesmo ainda evoluindo", type: "M" },
+      { l: "D", t: "Eu até entro, mas oscilo: às vezes fluo, às vezes perco presença e encaixe", type: "S" }
     ]
   },
   {
@@ -709,7 +692,8 @@ const questions = [
     options: [
       { l: "A", t: "Sentir que penso demais e não consigo fluir", type: "R" },
       { l: "B", t: "Sentir que só consigo dançar bem se o outro ajudar", type: "D" },
-      { l: "C", t: "Sentir que às vezes acesso algo bom, mas ainda não consigo sustentar sempre", type: "M" }
+      { l: "C", t: "Quando já fluo, quero sustentar isso com mais profundidade", type: "M" },
+      { l: "D", t: "Sentir que eu sinto, mas não sustento: eu me perco ou quebro o fluxo", type: "S" }
     ]
   },
   {
@@ -717,15 +701,8 @@ const questions = [
     options: [
       { l: "A", t: "Tento forçar mais para fazer dar certo", type: "R" },
       { l: "B", t: "Fico inseguro(a) e perco minha referência", type: "D" },
-      { l: "C", t: "Escuto meu corpo, ajusto e continuo a partir do que é possível", type: "M" }
-    ]
-  },
-  {
-    text: "Qual dessas frases parece mais com o seu momento atual?",
-    options: [
-      { l: "A", t: "“Eu quero acertar, mas acabo travando no movimento.”", type: "R" },
-      { l: "B", t: "“Eu até consigo, mas dependo muito da condução ou da segurança que o outro me passa.”", type: "D" },
-      { l: "C", t: "“Eu quero aprofundar presença, musicalidade e expressão.”", type: "M" }
+      { l: "C", t: "Escuto o corpo, ajusto e continuo a partir do que é possível", type: "M" },
+      { l: "D", t: "Eu tento ajustar, mas fico irregular: um momento encaixa, outro não", type: "S" }
     ]
   },
   {
@@ -733,7 +710,8 @@ const questions = [
     options: [
       { l: "A", t: "Parar de travar e me sentir mais seguro(a)", type: "R" },
       { l: "B", t: "Conseguir me soltar sem depender tanto do outro", type: "D" },
-      { l: "C", t: "Me tornar mais livre, presente e expressivo(a) no corpo", type: "M" }
+      { l: "C", t: "Me tornar mais livre, presente e expressivo(a) no corpo", type: "M" },
+      { l: "D", t: "Sustentar o que eu sinto: tempo, fluidez e conexão sem me desorganizar", type: "S" }
     ]
   }
 ];
@@ -884,31 +862,23 @@ function showLoadingThenResult() {
 
 function showResult() {
   const n = questions.length;
-  const mCount = answers.filter(a => a === "M").length;
-  const allPerfect = answers.length === n && mCount === n;
+  const cnt = { R: 0, D: 0, M: 0, S: 0 };
+  answers.forEach(a => {
+    if (cnt[a] !== undefined) cnt[a] += 1;
+  });
+
   let top;
-  if (allPerfect) {
+  if (answers.length === n && cnt.M === n) {
     top = "M";
-  } else if (mCount >= 3 && mCount < n) {
-    // Sente (várias respostas C), mas não sustenta o padrão completo
-    top = "S";
   } else {
-    // Enviesar: respostas C (musical) contam a favor de R/D quando não cai em S.
-    let scoreR = 0;
-    let scoreD = 0;
-
-    answers.forEach(a => {
-      if (a === "R") scoreR += 1;
-      else if (a === "D") scoreD += 1;
-      else if (a === "M") {
-        scoreD += 0.7;
-        scoreR += 0.3;
-      }
-    });
-
-    if (Math.abs(scoreD - scoreR) < 1.1) scoreD += 0.35;
-
-    top = scoreD > scoreR ? "D" : "R";
+    const maxV = Math.max(cnt.R, cnt.D, cnt.M, cnt.S);
+    const tieOrder = ["S", "D", "R", "M"];
+    const best = tieOrder.find(k => cnt[k] === maxV) || "R";
+    if (best === "M") {
+      top = "S";
+    } else {
+      top = best;
+    }
   }
   showResultDirect(top);
 }
