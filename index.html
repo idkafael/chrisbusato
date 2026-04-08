@@ -415,16 +415,12 @@ body {
 }
 
 .result-highlight {
-  background: #E4EDE3;
-  border-radius: 16px;
-  padding: 1rem 1.25rem;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-style: italic;
-  font-size: 14px;
-  color: #3D5C3B;
-  text-align: center;
-  line-height: 1.6;
   margin-bottom: 0;
+  padding: 0;
+  background: transparent;
+}
+.result-highlight .vsl-wrap {
+  margin-top: 0.5rem;
 }
 
 .pills {
@@ -587,7 +583,17 @@ body {
     <h1 class="result-title" id="r-title"></h1>
     <div class="pills" id="r-pills"></div>
     <div class="result-desc" id="r-desc"></div>
-    <div class="result-highlight" id="r-highlight"></div>
+    <div class="result-highlight" id="r-highlight">
+      <div class="vsl-wrap" aria-label="Vídeo curto do resultado">
+        <div class="vsl-frame">
+          <div class="vsl-placeholder">
+            <div class="vsl-play" aria-hidden="true"></div>
+            <div class="vsl-kicker">Mini VSL (placeholder)</div>
+            <div class="vsl-caption">Vídeo vertical no formato TikTok. Aqui entra sua VSL.</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="cta-section">
       <button class="btn-green" onclick="goWpp()">Entrar no grupo gratuito →</button>
       <p class="cta-small">Não precisa saber dançar</p>
@@ -722,32 +728,28 @@ const profiles = {
     label: "Corpo Racional",
     title: "Você quer dançar fluido,\nmas sua cabeça lidera o movimento",
     pills: ["Autocrítico", "Sensível", "Cheio de potencial"],
-    desc: "Mesmo quando a música toca e algo em você quer se mover, você tende a pensar demais, tentar acertar, controlar ou buscar a forma certa de se mover. Não é que você não sinta. É que sua base ainda está mais no controle do que no corpo. E quando a base da dança vira o pensamento, o corpo perde espaço, a presença diminui e a dança tende a ficar mais travada, tensa ou mecânica.",
-    highlight: "\"Seu corpo não precisa de mais cobrança. Precisa de uma base que te dê segurança para sentir e se expressar.\""
+    desc: "Mesmo quando a música toca e algo em você quer se mover, você tende a pensar demais, tentar acertar, controlar ou buscar a forma certa de se mover. Não é que você não sinta. É que sua base ainda está mais no controle do que no corpo. E quando a base da dança vira o pensamento, o corpo perde espaço, a presença diminui e a dança tende a ficar mais travada, tensa ou mecânica."
   },
   D: {
     icon: "🫂",
     label: "Corpo Dependente",
     title: "Seu movimento depende muito\nde quem está dançando com você",
     pills: ["Sensível à condução", "Conectada", "Buscando autonomia"],
-    desc: "Sua atenção vai para a condução… ou para quem você está conduzindo, para os sinais, para o que o outro propõe ou como responde. E, sem perceber, isso vira a sua principal referência para se organizar na dança. A escuta do outro é importante. Mas quando ela vira a única base, você perde autonomia… e presença.",
-    highlight: "\"Quando você constrói uma referência em você, a conexão deixa de ser apoio… e passa a ser troca.\""
+    desc: "Sua atenção vai para a condução… ou para quem você está conduzindo, para os sinais, para o que o outro propõe ou como responde. E, sem perceber, isso vira a sua principal referência para se organizar na dança. A escuta do outro é importante. Mas quando ela vira a única base, você perde autonomia… e presença."
   },
   M: {
     icon: "🎵",
     label: "Corpo Musical",
     title: "Música e corpo já conversam.\nÉ hora de ir mais fundo",
     pills: ["Presente", "Musical", "Em expansão"],
-    desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza.",
-    highlight: "\"Mais do que dançar melhor, é sobre sentir com mais verdade, com ritmo e corpo inteiro.\""
+    desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza."
   },
   S: {
     icon: "🔥",
     label: "Corpo Sensível Desorganizado",
     title: "Você sente a música,\nmas ainda não sustenta no movimento",
     pills: ["Sente, mas não sustenta", "Perde o tempo fácil", "Oscila na conexão"],
-    desc: "Você sente a música, mas ainda não consegue organizar isso dentro do movimento e da relação. Não é falta de musicalidade. É falta de sustentação e clareza no tempo. Quando encaixa, é lindo. Quando não encaixa, você se perde, quebra o fluxo e a conexão balança.",
-    highlight: "\"Sentir sem organizar vira confusão. Organizar sem sentir vira execução.\""
+    desc: "Você sente a música, mas ainda não consegue organizar isso dentro do movimento e da relação. Não é falta de musicalidade. É falta de sustentação e clareza no tempo. Quando encaixa, é lindo. Quando não encaixa, você se perde, quebra o fluxo e a conexão balança."
   }
 };
 
@@ -777,7 +779,6 @@ function showResultDirect(profileKey) {
   document.getElementById('r-label').textContent = p.label;
   document.getElementById('r-title').textContent = p.title;
   document.getElementById('r-desc').textContent = p.desc;
-  document.getElementById('r-highlight').textContent = p.highlight;
 
   const pills = document.getElementById('r-pills');
   pills.innerHTML = '';
