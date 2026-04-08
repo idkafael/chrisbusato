@@ -625,7 +625,7 @@ const profiles = {
     label: "Corpo Racional",
     title: "Sua cabeça lidera,\nmas seu corpo quer falar",
     pills: ["Autocrítico", "Sensível", "Cheio de potencial"],
-    desc: "Você sente a música, seu corpo quer se mexe mas tem uma voz na cabeça que chega antes e veta tudo. Isso não é falta de talento. É um padrão aprendido. E padrão aprendido, desaprende.",
+    desc: "Você sente a música e seu corpo quer se mexer, mas tem uma voz na cabeça que chega antes e veta tudo. Isso não é falta de talento. É um padrão aprendido. E padrão aprendido, desaprende.",
     highlight: "\"Seu corpo não precisa de mais cobrança. Ele precisa de escuta.\""
   },
   D: {
@@ -633,16 +633,16 @@ const profiles = {
     label: "Corpo Dependente",
     title: "Você entra no movimento\nquando sente o outro com você",
     pills: ["Sensível à condução", "Conectada", "Buscando autonomia"],
-    desc: "Parte de você dança na escuta do par — na segurança da condução, na confirmação de que está \"no caminho certo\". Isso é humano. O próximo passo é cultivar sua própria referência interna, sem perder a conexão.",
+    desc: "Parte de você dança na escuta do par, na segurança da condução e na confirmação de que está \"no caminho certo\". Isso é humano. O próximo passo é cultivar sua própria referência interna, sem perder a conexão.",
     highlight: "\"Quando sua base vem de dentro e não só da condução externa, a dança se abre de outro jeito.\""
   },
   M: {
     icon: "🎵",
     label: "Corpo Musical",
-    title: "Música e corpo já conversam —\né hora de ir mais fundo",
+    title: "Música e corpo já conversam.\nÉ hora de ir mais fundo",
     pills: ["Presente", "Musical", "Em expansão"],
     desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza.",
-    highlight: "\"Mais do que dançar melhor, é sobre sentir com mais verdade — com ritmo e corpo inteiro.\""
+    highlight: "\"Mais do que dançar melhor, é sobre sentir com mais verdade, com ritmo e corpo inteiro.\""
   }
 };
 
@@ -712,12 +712,24 @@ function showResult() {
   if (allPerfect) {
     top = "M";
   } else {
-    const count = { R: 0, D: 0 };
+    // Enviesar: respostas C (musical) contam a favor de R/D (e nunca viram "Musical" sozinhas).
+    // Objetivo: na prática, quase sempre cair em Racional ou Dependente, com leve preferência por Dependente.
+    let scoreR = 0;
+    let scoreD = 0;
+
     answers.forEach(a => {
-      if (a === "R") count.R++;
-      if (a === "D") count.D++;
+      if (a === "R") scoreR += 1;
+      else if (a === "D") scoreD += 1;
+      else if (a === "M") {
+        scoreD += 0.7;
+        scoreR += 0.3;
+      }
     });
-    top = count.D > count.R ? "D" : "R";
+
+    // Desempate/viés final: se estiver muito próximo, empurra para Dependente
+    if (Math.abs(scoreD - scoreR) < 1.1) scoreD += 0.35;
+
+    top = scoreD > scoreR ? "D" : "R";
   }
   const p = profiles[top];
 
