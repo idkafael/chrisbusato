@@ -505,7 +505,6 @@ body {
       <button class="btn-green" onclick="goWpp()">Entrar no grupo gratuito →</button>
       <p class="cta-small">Não precisa saber dançar</p>
     </div>
-    <button class="btn-ghost" onclick="restart()">Refazer o quiz</button>
   </div>
 
 </div>
@@ -743,14 +742,6 @@ function showResult() {
 
 function goWpp() {
   window.open('https://chat.whatsapp.com/LINK_AQUI', '_blank', 'noopener,noreferrer');
-}
-
-function restart() {
-  cur = 0; answers = []; sel = null;
-  document.getElementById('s-result').classList.remove('active');
-  document.getElementById('s-quiz').classList.remove('active');
-  document.getElementById('s-intro').classList.add('active');
-  document.getElementById('prog').style.width = '0%';
 }
 
 function normalizePhone(raw) {
