@@ -102,6 +102,67 @@ body {
   text-align: center;
 }
 
+.vsl-wrap {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+.vsl-frame {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  background: #EDE8DF;
+  border: 0.5px solid #C5BAA8;
+  overflow: hidden;
+  position: relative;
+}
+.vsl-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 1rem;
+  text-align: center;
+  color: #5C5043;
+  font-family: 'Inter', sans-serif;
+}
+.vsl-play {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  background: rgba(92, 122, 90, 0.12);
+  border: 1px solid rgba(92, 122, 90, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vsl-play::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 14px solid #5C7A5A;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  margin-left: 3px;
+}
+.vsl-kicker {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+}
+.vsl-caption {
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 280px;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -464,6 +525,15 @@ body {
     <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente ou musical</h1>
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
+    <div class="vsl-wrap" aria-label="Vídeo curto introdutório">
+      <div class="vsl-frame">
+        <div class="vsl-placeholder">
+          <div class="vsl-play" aria-hidden="true"></div>
+          <div class="vsl-kicker">Mini VSL (placeholder)</div>
+          <div class="vsl-caption">Vídeo vertical no formato TikTok. Aqui entra sua VSL.</div>
+        </div>
+      </div>
+    </div>
     <button class="btn-green" onclick="startQuiz()">Descobrir meu perfil →</button>
   </div>
 
