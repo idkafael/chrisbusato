@@ -386,6 +386,57 @@ body {
   font-family: 'Playfair Display', Georgia, serif;
 }
 
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0 0.25rem;
+}
+.loading-spinner {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 3px solid rgba(197, 186, 168, 0.7);
+  border-top-color: #5C7A5A;
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loading-title {
+  font-size: 22px;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+.loading-subtitle {
+  font-size: 13.5px;
+  color: #5C5043;
+  line-height: 1.65;
+  text-align: center;
+  max-width: 420px;
+}
+.loading-dots {
+  display: inline-flex;
+  gap: 6px;
+  margin-top: 0.9rem;
+}
+.loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #5C7A5A;
+  opacity: 0.25;
+  animation: pulse 1.1s infinite ease-in-out;
+}
+.loading-dot:nth-child(2) { animation-delay: 0.12s; }
+.loading-dot:nth-child(3) { animation-delay: 0.24s; }
+@keyframes pulse {
+  0%, 100% { transform: translateY(0); opacity: 0.25; }
+  50% { transform: translateY(-3px); opacity: 0.9; }
+}
+
 @media (max-width: 480px) {
   .card { padding: 2rem 1.25rem; border-radius: 20px; }
   .hero-name { font-size: 26px; }
@@ -423,6 +474,21 @@ body {
     <h1 class="q-text" id="q-text"></h1>
     <div class="options-list" id="q-options"></div>
     <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="s-loading">
+    <div class="tag">Análise</div>
+    <div class="loading-wrap">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h1 class="loading-title">Analisando suas respostas</h1>
+      <div class="loading-subtitle">Só um instante. Estou identificando o estado que está guiando sua dança agora.</div>
+      <div class="loading-dots" aria-hidden="true">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+    </div>
   </div>
 
   <!-- RESULTADO -->
@@ -627,16 +693,35 @@ function nextQ() {
   answers.push(sel);
   cur++;
   if (cur < questions.length) { render(); }
-  else { showResult(); }
+  else { showLoadingThenResult(); }
+}
+
+function showLoadingThenResult() {
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-loading').classList.add('active');
+  document.getElementById('prog').style.width = '100%';
+
+  setTimeout(() => {
+    document.getElementById('s-loading').classList.remove('active');
+    showResult();
+  }, 3000);
 }
 
 function showResult() {
-  const count = { R: 0, D: 0, M: 0 };
-  answers.forEach(a => count[a]++);
-  const top = Object.entries(count).sort((a, b) => b[1] - a[1])[0][0];
+  const allPerfect = answers.length === questions.length && answers.every(a => a === "M");
+  let top;
+  if (allPerfect) {
+    top = "M";
+  } else {
+    const count = { R: 0, D: 0 };
+    answers.forEach(a => {
+      if (a === "R") count.R++;
+      if (a === "D") count.D++;
+    });
+    top = count.D > count.R ? "D" : "R";
+  }
   const p = profiles[top];
 
-  document.getElementById('s-quiz').classList.remove('active');
   document.getElementById('s-result').classList.add('active');
   document.getElementById('prog').style.width = '100%';
 
