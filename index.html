@@ -294,6 +294,9 @@ body {
   background: rgba(92, 122, 90, 0.10);
 }
 
+.intro-stack { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.5rem; }
+.intro-stack .btn-green { margin-top: 0; }
+
 .btn-ghost {
   display: block;
   width: 100%;
@@ -531,7 +534,7 @@ body {
   <!-- INTRO -->
   <div class="screen active" id="s-intro">
     <div class="tag">Dança & Consciência</div>
-    <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente ou musical</h1>
+    <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente, sensível desorganizado ou musical</h1>
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
     <div class="vsl-wrap" aria-label="Vídeo curto introdutório">
@@ -543,8 +546,11 @@ body {
         </div>
       </div>
     </div>
+    <div class="intro-stack">
     <button class="btn-green" onclick="startDirect('D')">Ver resultado: Corpo Dependente →</button>
     <button class="btn-green btn-alt" onclick="startDirect('R')">Ver resultado: Corpo Racional →</button>
+    <button class="btn-green btn-alt" onclick="startDirect('S')">Ver resultado: Corpo Sensível Desorganizado →</button>
+    </div>
   </div>
 
   <!-- QUIZ -->
@@ -723,6 +729,14 @@ const profiles = {
     pills: ["Presente", "Musical", "Em expansão"],
     desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza.",
     highlight: "\"Mais do que dançar melhor, é sobre sentir com mais verdade, com ritmo e corpo inteiro.\""
+  },
+  S: {
+    icon: "🔥",
+    label: "Corpo Sensível Desorganizado",
+    title: "Você sente a música,\nmas ainda não sustenta no movimento",
+    pills: ["Sente mas não sustenta", "Inconsistente no tempo", "Às vezes falha a conexão na dupla"],
+    desc: "É o corpo que sente a música, mas ainda não consegue sustentar esse sentir em movimento e relação. Não é que falta musicalidade. Falta organização do movimento dentro da música. Você se perde no tempo, se adianta ou atrasa, quebra o fluxo e fica inconsistente. Às vezes se desconecta do par ou \"viaja\" na música e esquece a relação. Por dentro pode soar assim: \"eu sinto, mas não consigo colocar pra fora\", \"parece que não encaixa\", \"me perco fácil\". Na dança a dois isso pode virar um corpo que não responde com clareza, quebra a comunicação e gera insegurança no outro. O contraste ajuda: o Corpo Sensível Desorganizado sente, mas não sustenta. Já o Corpo Musical sente, organiza, expressa e compartilha.",
+    highlight: "\"Sentir sem organizar vira confusão. Organizar sem sentir vira execução.\""
   }
 };
 
@@ -831,13 +845,17 @@ function showLoadingThenResult() {
 }
 
 function showResult() {
-  const allPerfect = answers.length === questions.length && answers.every(a => a === "M");
+  const n = questions.length;
+  const mCount = answers.filter(a => a === "M").length;
+  const allPerfect = answers.length === n && mCount === n;
   let top;
   if (allPerfect) {
     top = "M";
+  } else if (mCount >= 3 && mCount < n) {
+    // Sente (várias respostas C), mas não sustenta o padrão completo
+    top = "S";
   } else {
-    // Enviesar: respostas C (musical) contam a favor de R/D (e nunca viram "Musical" sozinhas).
-    // Objetivo: na prática, quase sempre cair em Racional ou Dependente, com leve preferência por Dependente.
+    // Enviesar: respostas C (musical) contam a favor de R/D quando não cai em S.
     let scoreR = 0;
     let scoreD = 0;
 
@@ -850,7 +868,6 @@ function showResult() {
       }
     });
 
-    // Desempate/viés final: se estiver muito próximo, empurra para Dependente
     if (Math.abs(scoreD - scoreR) < 1.1) scoreD += 0.35;
 
     top = scoreD > scoreR ? "D" : "R";
@@ -945,7 +962,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   localStorage.setItem("lead", JSON.stringify(lead));
   closeLeadModal();
   const directTarget = localStorage.getItem("direct_target");
-  if (directTarget === "R" || directTarget === "D") {
+  if (directTarget === "R" || directTarget === "D" || directTarget === "S") {
     localStorage.removeItem("direct_target");
     showLoadingThenResultDirect(directTarget);
     return;
