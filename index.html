@@ -460,11 +460,11 @@ body {
     <form id="lead-form" class="form-grid">
       <div class="field">
         <label class="field-label" for="lead-email">Email</label>
-        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" required>
+        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" pattern=".+@.+" title="O email precisa ter @ (ex: seu@email.com)" required>
       </div>
       <div class="field">
         <label class="field-label" for="lead-phone">WhatsApp</label>
-        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required>
+        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="11 1 1111-1111" maxlength="14" required>
       </div>
 
       <div class="form-error" id="lead-error"></div>
@@ -690,6 +690,16 @@ function normalizePhone(raw) {
   return String(raw || "").replace(/\D/g, "");
 }
 
+function formatPhoneBR11(digitsRaw) {
+  const d = String(digitsRaw || "").replace(/\D/g, "").slice(0, 11);
+  let out = "";
+  if (d.length > 0) out += d.slice(0, 2);
+  if (d.length >= 3) out += " " + d.slice(2, 3);
+  if (d.length >= 4) out += " " + d.slice(3, 7);
+  if (d.length >= 8) out += "-" + d.slice(7, 11);
+  return out;
+}
+
 function isValidEmail(raw) {
   const v = String(raw || "").trim();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -697,7 +707,7 @@ function isValidEmail(raw) {
 
 function isValidPhoneBR(raw) {
   const digits = normalizePhone(raw);
-  return digits.length >= 10 && digits.length <= 13;
+  return digits.length === 11;
 }
 
 function openLeadModal() {
@@ -759,6 +769,12 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   localStorage.setItem("lead", JSON.stringify(lead));
   closeLeadModal();
   startQuizAfterLead();
+});
+
+document.getElementById("lead-phone").addEventListener("input", (e) => {
+  const el = e.target;
+  const digits = normalizePhone(el.value);
+  el.value = formatPhoneBR11(digits);
 });
 </script>
 </body>
