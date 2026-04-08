@@ -102,6 +102,108 @@ body {
   text-align: center;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 34, 24, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  z-index: 999;
+}
+.modal-overlay.active { display: flex; }
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: #F2EDE3;
+  border-radius: 22px;
+  padding: 1.5rem 1.25rem;
+  position: relative;
+  box-shadow: 0 14px 40px rgba(44, 34, 24, 0.18);
+  border: 0.5px solid rgba(197, 186, 168, 0.9);
+}
+.modal-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #2C2218;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+.modal-subtitle {
+  font-size: 13.5px;
+  color: #5C5043;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+  text-align: left;
+  font-weight: 500;
+}
+.field-input {
+  width: 100%;
+  background: #EDE8DF;
+  border: 0.5px solid #C5BAA8;
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: #2C2218;
+  outline: none;
+}
+.field-input:focus {
+  border-color: #5C7A5A;
+  box-shadow: 0 0 0 3px rgba(92, 122, 90, 0.16);
+}
+.form-error {
+  display: none;
+  margin-top: 0.75rem;
+  background: rgba(181, 191, 180, 0.25);
+  border: 0.5px solid rgba(197, 186, 168, 0.9);
+  color: #5C5043;
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+.form-error.active { display: block; }
+.modal-actions { margin-top: 1rem; }
+.btn-muted {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #8A7D6B;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 0.5rem;
+  letter-spacing: 0.01em;
+}
+.btn-muted:hover { color: #5C5043; }
+
 .btn-green {
   display: block;
   width: 100%;
@@ -350,6 +452,31 @@ body {
 </div>
 </div>
 
+<div class="modal-overlay" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-title">
+  <div class="modal-card">
+    <div class="modal-title" id="lead-title">Antes de começar</div>
+    <div class="modal-subtitle">Deixa seu email e WhatsApp pra eu te enviar seu resultado e novidades do conteúdo.</div>
+
+    <form id="lead-form" class="form-grid">
+      <div class="field">
+        <label class="field-label" for="lead-email">Email</label>
+        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="lead-phone">WhatsApp</label>
+        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required>
+      </div>
+
+      <div class="form-error" id="lead-error"></div>
+
+      <div class="modal-actions">
+        <button class="btn-green" type="submit">Continuar →</button>
+        <button class="btn-muted" type="button" onclick="closeLeadModal()">Agora não</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 const questions = [
   {
@@ -472,8 +599,17 @@ const profiles = {
 };
 
 let cur = 0, answers = [], sel = null;
+let lead = { email: "", phone: "" };
 
 function startQuiz() {
+  if (!lead.email || !lead.phone) {
+    openLeadModal();
+    return;
+  }
+  startQuizAfterLead();
+}
+
+function startQuizAfterLead() {
   document.getElementById('s-intro').classList.remove('active');
   document.getElementById('s-quiz').classList.add('active');
   render();
@@ -549,6 +685,81 @@ function restart() {
   document.getElementById('s-intro').classList.add('active');
   document.getElementById('prog').style.width = '0%';
 }
+
+function normalizePhone(raw) {
+  return String(raw || "").replace(/\D/g, "");
+}
+
+function isValidEmail(raw) {
+  const v = String(raw || "").trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+function isValidPhoneBR(raw) {
+  const digits = normalizePhone(raw);
+  return digits.length >= 10 && digits.length <= 13;
+}
+
+function openLeadModal() {
+  const modal = document.getElementById("lead-modal");
+  const err = document.getElementById("lead-error");
+  err.textContent = "";
+  err.classList.remove("active");
+
+  modal.classList.add("active");
+
+  const saved = localStorage.getItem("lead");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === "object") {
+        if (parsed.email) document.getElementById("lead-email").value = parsed.email;
+        if (parsed.phone) document.getElementById("lead-phone").value = parsed.phone;
+      }
+    } catch {}
+  }
+
+  setTimeout(() => document.getElementById("lead-email").focus(), 0);
+}
+
+function closeLeadModal() {
+  document.getElementById("lead-modal").classList.remove("active");
+}
+
+document.getElementById("lead-modal").addEventListener("click", (e) => {
+  if (e.target && e.target.id === "lead-modal") closeLeadModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeLeadModal();
+});
+
+document.getElementById("lead-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("lead-email").value.trim();
+  const phone = document.getElementById("lead-phone").value.trim();
+
+  const err = document.getElementById("lead-error");
+  err.textContent = "";
+  err.classList.remove("active");
+
+  if (!isValidEmail(email)) {
+    err.textContent = "Coloque um email válido para continuar.";
+    err.classList.add("active");
+    return;
+  }
+
+  if (!isValidPhoneBR(phone)) {
+    err.textContent = "Coloque um WhatsApp válido (com DDD) para continuar.";
+    err.classList.add("active");
+    return;
+  }
+
+  lead = { email, phone: normalizePhone(phone) };
+  localStorage.setItem("lead", JSON.stringify(lead));
+  closeLeadModal();
+  startQuizAfterLead();
+});
 </script>
 </body>
 </html>
