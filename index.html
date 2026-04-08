@@ -547,6 +547,7 @@ body {
       </div>
     </div>
     <div class="intro-stack">
+    <button class="btn-green" onclick="startQuizFromIntro()">Fazer o quiz (temporário) →</button>
     <button class="btn-green" onclick="startDirect('D')">Ver resultado: Corpo Dependente →</button>
     <button class="btn-green btn-alt" onclick="startDirect('R')">Ver resultado: Corpo Racional →</button>
     <button class="btn-green btn-alt" onclick="startDirect('S')">Ver resultado: Corpo Sensível Desorganizado →</button>
@@ -785,6 +786,11 @@ function startDirect(profileKey) {
     return;
   }
   showLoadingThenResultDirect(profileKey);
+}
+
+function startQuizFromIntro() {
+  localStorage.removeItem("direct_target");
+  startQuiz();
 }
 
 function startQuiz() {
