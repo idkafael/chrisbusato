@@ -464,7 +464,7 @@ body {
       </div>
       <div class="field">
         <label class="field-label" for="lead-phone">WhatsApp</label>
-        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="11 1 1111-1111" maxlength="14" required>
+        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" maxlength="14" required>
       </div>
 
       <div class="form-error" id="lead-error"></div>
@@ -724,7 +724,7 @@ function openLeadModal() {
       const parsed = JSON.parse(saved);
       if (parsed && typeof parsed === "object") {
         if (parsed.email) document.getElementById("lead-email").value = parsed.email;
-        if (parsed.phone) document.getElementById("lead-phone").value = parsed.phone;
+        if (parsed.phone) document.getElementById("lead-phone").value = formatPhoneBR11(parsed.phone);
       }
     } catch {}
   }
