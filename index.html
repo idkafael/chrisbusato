@@ -658,6 +658,7 @@ body {
   </div>
 </div>
 
+<script src="/site-destinations.js"></script>
 <script>
 const questions = [
   {
@@ -1008,10 +1009,35 @@ function showResult() {
   showPercentageResultFromAnswers(answers);
 }
 
+function siteNormalizePath() {
+  var p = location.pathname || "/";
+  p = p.split("?")[0].split("#")[0];
+  p = p.replace(/\/+$/, "");
+  if (!p) p = "/";
+  return p.toLowerCase();
+}
+
+function getWhatsappInviteUrl() {
+  var path = siteNormalizePath();
+  var pathMap = window.SITE_PATH_DESTINATIONS;
+  if (pathMap && pathMap[path] && pathMap[path].whatsapp) {
+    return pathMap[path].whatsapp;
+  }
+  var host = String(location.hostname || "").toLowerCase();
+  var map = window.SITE_DESTINATIONS;
+  if (map && map[host] && map[host].whatsapp) {
+    return map[host].whatsapp;
+  }
+  if (map && map.default && map.default.whatsapp) {
+    return map.default.whatsapp;
+  }
+  return "https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC";
+}
+
 function goWpp() {
   var btn = document.getElementById("btn-wpp");
   if (btn && btn.disabled) return;
-  window.open('https://chat.whatsapp.com/LINK_AQUI', '_blank', 'noopener,noreferrer');
+  window.open(getWhatsappInviteUrl(), "_blank", "noopener,noreferrer");
 }
 
 function normalizePhone(raw) {
