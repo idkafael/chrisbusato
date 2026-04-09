@@ -757,6 +757,28 @@ const DOMINANT_BODY_TITLE = {
   M: "Corpo musical"
 };
 
+const TYPE_TO_LETTER = { R: "A", D: "B", M: "C", S: "D" };
+
+function submitQuizToSupabase(ansList) {
+  if (!lead || !lead.email || !lead.phone) return;
+  if (!ansList || ansList.length !== 10) return;
+  const payload = {
+    email: lead.email,
+    phone: lead.phone,
+    full_name: lead.full_name || null
+  };
+  for (let i = 0; i < 10; i++) {
+    const L = TYPE_TO_LETTER[ansList[i]];
+    if (!L) return;
+    payload["q" + (i + 1)] = L;
+  }
+  fetch("/api/submit-quiz", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(function () {});
+}
+
 function dominantBodyAmongRDS(pct) {
   const r = pct.R;
   const d = pct.D;
@@ -841,7 +863,8 @@ function renderPercentageMap(pct) {
   });
 }
 
-function showPercentageResultFromAnswers(ansList) {
+function showPercentageResultFromAnswers(ansList, opts) {
+  opts = opts || {};
   const cnt = countAnswerTypes(ansList);
   const pct = computeBodyPercentages(cnt);
   document.getElementById("s-intro").classList.remove("active");
@@ -851,10 +874,13 @@ function showPercentageResultFromAnswers(ansList) {
   document.getElementById("prog").style.width = "100%";
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
+  if (!opts.skipSubmit) {
+    submitQuizToSupabase(ansList);
+  }
 }
 
 let cur = 0, answers = [], sel = null;
-let lead = { email: "", phone: "" };
+let lead = { email: "", phone: "", full_name: "" };
 
 function showLoadingThenResultDirect(profileKey) {
   document.getElementById('s-intro').classList.remove('active');
@@ -865,7 +891,7 @@ function showLoadingThenResultDirect(profileKey) {
   setTimeout(() => {
     document.getElementById('s-loading').classList.remove('active');
     const synth = DIRECT_SYNTH[profileKey];
-    if (synth) showPercentageResultFromAnswers(synth);
+    if (synth) showPercentageResultFromAnswers(synth, { skipSubmit: true });
   }, 3000);
 }
 
@@ -1027,7 +1053,9 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
     return;
   }
 
-  lead = { email, phone: normalizePhone(phone) };
+  var nameEl = document.getElementById("lead-name");
+  var fullName = nameEl ? String(nameEl.value || "").trim() : "";
+  lead = { email, phone: normalizePhone(phone), full_name: fullName };
   localStorage.setItem("lead", JSON.stringify(lead));
   closeLeadModal();
   const directTarget = localStorage.getItem("direct_target");
