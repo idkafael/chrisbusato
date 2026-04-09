@@ -390,56 +390,77 @@ body {
   color: #F5F0E8;
 }
 
-.result-label {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
+.map-diagnosis {
+  margin-bottom: 1.25rem;
+}
+.card .map-diagnosis-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.28;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #5C7A5A;
+  color: #2C2218;
   text-align: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
+  font-style: normal;
 }
 
-.result-title {
-  font-size: 26px;
-  line-height: 1.3;
-  margin-bottom: 1rem;
-}
-
-.result-desc {
-  font-size: 13.5px;
-  color: #5C5043;
-  line-height: 1.75;
-  text-align: center;
+.map-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
+.map-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.map-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5C5043;
+}
+.map-pct {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2C2218;
+  letter-spacing: -0.02em;
+}
+
+.map-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #D8D0C4;
+  overflow: hidden;
+}
+.map-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.85s ease-out;
+}
+.map-bar-fill--r { background: #6B7A6B; }
+.map-bar-fill--d { background: #5C7A5A; }
+.map-bar-fill--s { background: #8A7A68; }
+.map-bar-fill--m { background: #4A6548; }
+
 .result-highlight {
+  margin-top: 0;
   margin-bottom: 0;
-  padding: 0;
+  padding-top: 1.15rem;
+  border-top: 0.5px solid #D8D0C4;
   background: transparent;
 }
 .result-highlight .vsl-wrap {
-  margin-top: 0.5rem;
-}
-
-.pills {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;
-  margin-bottom: 1rem;
-}
-.pill {
-  font-size: 11px; padding: 4px 12px; border-radius: 20px;
-  background: #E4EDE3; color: #3D5C3B; font-weight: 400;
-  border: 0.5px solid #B5C8B4;
-}
-
-.icon-wrap {
-  width: 58px; height: 58px;
-  border-radius: 50%;
-  background: #E4EDE3;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px;
-  margin: 0 auto 1rem;
+  margin-top: 0;
 }
 
 .cta-section {
@@ -510,6 +531,7 @@ body {
   .card { padding: 2rem 1.25rem; border-radius: 20px; }
   .hero-name { font-size: 26px; }
   .q-text { font-size: 18px; }
+  .card .map-diagnosis-title { font-size: 17px; letter-spacing: 0.05em; }
 }
 </style>
 </head>
@@ -576,14 +598,13 @@ body {
 
   <!-- RESULTADO -->
   <div class="screen" id="s-result">
-    <div class="tag" id="r-tag">Transformações</div>
+    <div class="tag">Seu mapa</div>
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
-    <div class="icon-wrap" id="r-icon"></div>
-    <div class="result-label" id="r-label"></div>
-    <h1 class="result-title" id="r-title"></h1>
-    <div class="pills" id="r-pills"></div>
-    <div class="result-desc" id="r-desc"></div>
-    <div class="result-highlight" id="r-highlight">
+    <div class="map-diagnosis">
+      <h1 class="map-diagnosis-title" id="map-diagnosis-title"></h1>
+    </div>
+    <div class="map-bars" id="map-bars" aria-label="Análise em porcentagens"></div>
+    <div class="result-highlight" id="r-highlight" aria-label="Vídeo">
       <div class="vsl-wrap" aria-label="Vídeo curto do resultado">
         <div class="vsl-frame">
           <div class="vsl-placeholder">
@@ -722,36 +743,115 @@ const questions = [
   }
 ];
 
-const profiles = {
-  R: {
-    icon: "🧠",
-    label: "Corpo Racional",
-    title: "Você quer dançar fluido,\nmas sua cabeça lidera o movimento",
-    pills: ["Autocrítico", "Sensível", "Cheio de potencial"],
-    desc: "Mesmo quando a música toca e algo em você quer se mover, você tende a pensar demais, tentar acertar, controlar ou buscar a forma certa de se mover. Não é que você não sinta. É que sua base ainda está mais no controle do que no corpo. E quando a base da dança vira o pensamento, o corpo perde espaço, a presença diminui e a dança tende a ficar mais travada, tensa ou mecânica."
-  },
-  D: {
-    icon: "🫂",
-    label: "Corpo Dependente",
-    title: "Seu movimento depende muito\nde quem está dançando com você",
-    pills: ["Sensível à condução", "Conectada", "Buscando autonomia"],
-    desc: "Sua atenção vai para a condução… ou para quem você está conduzindo, para os sinais, para o que o outro propõe ou como responde. E, sem perceber, isso vira a sua principal referência para se organizar na dança. A escuta do outro é importante. Mas quando ela vira a única base, você perde autonomia… e presença."
-  },
-  M: {
-    icon: "🎵",
-    label: "Corpo Musical",
-    title: "Música e corpo já conversam.\nÉ hora de ir mais fundo",
-    pills: ["Presente", "Musical", "Em expansão"],
-    desc: "Você já percebe a música como guia e consegue soltar o corpo com mais naturalidade. O que costuma aparecer agora é o desejo de sustentar esse estado, aprofundar presença e expressão sem perder a leveza."
-  },
-  S: {
-    icon: "🔥",
-    label: "Corpo Sensível Desorganizado",
-    title: "Você sente a música,\nmas ainda não sustenta no movimento",
-    pills: ["Sente, mas não sustenta", "Perde o tempo fácil", "Oscila na conexão"],
-    desc: "Você sente a música, mas ainda não consegue organizar isso dentro do movimento e da relação. Não é falta de musicalidade. É falta de sustentação e clareza no tempo. Quando encaixa, é lindo. Quando não encaixa, você se perde, quebra o fluxo e a conexão balança."
-  }
+const DIRECT_SYNTH = {
+  R: ["R", "R", "R", "R", "R", "D", "M", "S", "R", "R"],
+  D: ["D", "D", "D", "D", "D", "R", "M", "S", "D", "D"],
+  S: ["S", "S", "S", "R", "D", "M", "R", "D", "S", "S"],
+  M: ["M", "M", "M", "R", "D", "S", "R", "D", "M", "M"]
 };
+
+const DOMINANT_BODY_TITLE = {
+  R: "Corpo racional",
+  D: "Corpo dependente",
+  S: "Corpo sensível desorganizado",
+  M: "Corpo musical"
+};
+
+function dominantBodyAmongRDS(pct) {
+  const r = pct.R;
+  const d = pct.D;
+  const s = pct.S;
+  if (r >= d && r >= s) return "R";
+  if (d >= s) return "D";
+  return "S";
+}
+
+function setDominantBodyTitle(pct) {
+  const key = dominantBodyAmongRDS(pct);
+  document.getElementById("map-diagnosis-title").textContent = DOMINANT_BODY_TITLE[key];
+}
+
+function countAnswerTypes(ansList) {
+  const cnt = { R: 0, D: 0, M: 0, S: 0 };
+  ansList.forEach(a => {
+    if (cnt[a] !== undefined) cnt[a] += 1;
+  });
+  return cnt;
+}
+
+function computeBodyPercentages(cnt) {
+  const M = 3 + Math.floor(Math.random() * 3);
+  const minEach = 15;
+  let r = minEach;
+  let d = minEach;
+  let s = minEach;
+  const pool = 100 - M - r - d - s;
+  const wR = cnt.R + 0.25;
+  const wD = cnt.D + 0.25;
+  const wS = cnt.S + 0.25;
+  const t = wR + wD + wS;
+  const er = Math.floor((pool * wR) / t);
+  const ed = Math.floor((pool * wD) / t);
+  const es = pool - er - ed;
+  r += er;
+  d += ed;
+  s += es;
+  const sum = r + d + s + M;
+  if (sum !== 100) {
+    const fix = 100 - sum;
+    if (cnt.R >= cnt.D && cnt.R >= cnt.S) r += fix;
+    else if (cnt.D >= cnt.S) d += fix;
+    else s += fix;
+  }
+  return { R: r, D: d, S: s, M };
+}
+
+function renderPercentageMap(pct) {
+  const rows = [
+    { key: "R", label: "Corpo racional", cls: "r" },
+    { key: "D", label: "Corpo dependente", cls: "d" },
+    { key: "S", label: "Corpo sensível desorganizado", cls: "s" },
+    { key: "M", label: "Corpo musical", cls: "m" }
+  ];
+  const el = document.getElementById("map-bars");
+  el.innerHTML = "";
+  rows.forEach(({ key, label, cls }) => {
+    const wrap = document.createElement("div");
+    wrap.className = "map-row";
+    const v = pct[key];
+    wrap.innerHTML =
+      '<div class="map-row-head">' +
+      '<span class="map-label">' +
+      label +
+      "</span>" +
+      '<span class="map-pct">' +
+      v +
+      "%</span></div>" +
+      '<div class="map-bar-track"><div class="map-bar-fill map-bar-fill--' +
+      cls +
+      '" data-w="' +
+      v +
+      '"></div></div>';
+    el.appendChild(wrap);
+  });
+  requestAnimationFrame(() => {
+    el.querySelectorAll(".map-bar-fill").forEach(bar => {
+      bar.style.width = bar.getAttribute("data-w") + "%";
+    });
+  });
+}
+
+function showPercentageResultFromAnswers(ansList) {
+  const cnt = countAnswerTypes(ansList);
+  const pct = computeBodyPercentages(cnt);
+  document.getElementById("s-intro").classList.remove("active");
+  document.getElementById("s-quiz").classList.remove("active");
+  document.getElementById("s-loading").classList.remove("active");
+  document.getElementById("s-result").classList.add("active");
+  document.getElementById("prog").style.width = "100%";
+  renderPercentageMap(pct);
+  setDominantBodyTitle(pct);
+}
 
 let cur = 0, answers = [], sel = null;
 let lead = { email: "", phone: "" };
@@ -764,30 +864,9 @@ function showLoadingThenResultDirect(profileKey) {
 
   setTimeout(() => {
     document.getElementById('s-loading').classList.remove('active');
-    showResultDirect(profileKey);
+    const synth = DIRECT_SYNTH[profileKey];
+    if (synth) showPercentageResultFromAnswers(synth);
   }, 3000);
-}
-
-function showResultDirect(profileKey) {
-  const p = profiles[profileKey];
-  if (!p) return;
-
-  document.getElementById('s-result').classList.add('active');
-  document.getElementById('prog').style.width = '100%';
-
-  document.getElementById('r-icon').textContent = p.icon;
-  document.getElementById('r-label').textContent = p.label;
-  document.getElementById('r-title').textContent = p.title;
-  document.getElementById('r-desc').textContent = p.desc;
-
-  const pills = document.getElementById('r-pills');
-  pills.innerHTML = '';
-  p.pills.forEach(txt => {
-    const s = document.createElement('span');
-    s.className = 'pill';
-    s.textContent = txt;
-    pills.appendChild(s);
-  });
 }
 
 function startDirect(profileKey) {
@@ -862,26 +941,7 @@ function showLoadingThenResult() {
 }
 
 function showResult() {
-  const n = questions.length;
-  const cnt = { R: 0, D: 0, M: 0, S: 0 };
-  answers.forEach(a => {
-    if (cnt[a] !== undefined) cnt[a] += 1;
-  });
-
-  let top;
-  if (answers.length === n && cnt.M === n) {
-    top = "M";
-  } else {
-    const maxV = Math.max(cnt.R, cnt.D, cnt.M, cnt.S);
-    const tieOrder = ["S", "D", "R", "M"];
-    const best = tieOrder.find(k => cnt[k] === maxV) || "R";
-    if (best === "M") {
-      top = "S";
-    } else {
-      top = best;
-    }
-  }
-  showResultDirect(top);
+  showPercentageResultFromAnswers(answers);
 }
 
 function goWpp() {
@@ -971,7 +1031,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   localStorage.setItem("lead", JSON.stringify(lead));
   closeLeadModal();
   const directTarget = localStorage.getItem("direct_target");
-  if (directTarget === "R" || directTarget === "D" || directTarget === "S") {
+  if (directTarget === "R" || directTarget === "D" || directTarget === "S" || directTarget === "M") {
     localStorage.removeItem("direct_target");
     showLoadingThenResultDirect(directTarget);
     return;
