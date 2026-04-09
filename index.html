@@ -4,6 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quiz — Dança & Consciência</title>
+  <script>
+  (function () {
+    function loadVturb(src) {
+      if (document.querySelector('script[src="' + src + '"]')) return;
+      var s = document.createElement("script");
+      s.src = src;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+    var base = "https://scripts.converteai.net/1c6e6f27-d6f0-4013-b98a-0067464a2b63/players/";
+    loadVturb(base + "69d7eac790c05b9fa0d7ca14/v4/player.js");
+    loadVturb(base + "69d7eaef683ddf2448c28738/v4/player.js");
+  })();
+  </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
 
@@ -21,6 +35,15 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+}
+
+.vturb-top {
+  margin-bottom: 1.25rem;
+}
+
+.vturb-result {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .card {
@@ -551,21 +574,15 @@ body {
 
   <!-- INTRO -->
   <div class="screen active" id="s-intro">
+    <div class="vturb-top">
+      <vturb-smartplayer id="vid-69d7eac790c05b9fa0d7ca14" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
+    </div>
     <div class="tag">Dança & Consciência</div>
     <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente, sensível desorganizado ou musical</h1>
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
-    <div class="vsl-wrap" aria-label="Vídeo curto introdutório">
-      <div class="vsl-frame">
-        <div class="vsl-placeholder">
-          <div class="vsl-play" aria-hidden="true"></div>
-          <div class="vsl-kicker">Mini VSL (placeholder)</div>
-          <div class="vsl-caption">Vídeo vertical no formato TikTok. Aqui entra sua VSL.</div>
-        </div>
-      </div>
-    </div>
     <div class="intro-stack">
-    <button class="btn-green" onclick="startQuizFromIntro()">Fazer o quiz (temporário) →</button>
+    <button type="button" class="btn-green" id="btn-start-quiz" disabled onclick="startQuizFromIntro()">Fazer o quiz (temporário) →</button>
     <button class="btn-green" onclick="startDirect('D')">Ver resultado: Corpo Dependente →</button>
     <button class="btn-green btn-alt" onclick="startDirect('R')">Ver resultado: Corpo Racional →</button>
     <button class="btn-green btn-alt" onclick="startDirect('S')">Ver resultado: Corpo Sensível Desorganizado →</button>
@@ -605,18 +622,12 @@ body {
     </div>
     <div class="map-bars" id="map-bars" aria-label="Análise em porcentagens"></div>
     <div class="result-highlight" id="r-highlight" aria-label="Vídeo">
-      <div class="vsl-wrap" aria-label="Vídeo curto do resultado">
-        <div class="vsl-frame">
-          <div class="vsl-placeholder">
-            <div class="vsl-play" aria-hidden="true"></div>
-            <div class="vsl-kicker">Mini VSL (placeholder)</div>
-            <div class="vsl-caption">Vídeo vertical no formato TikTok. Aqui entra sua VSL.</div>
-          </div>
-        </div>
+      <div class="vturb-result">
+        <vturb-smartplayer id="vid-69d7eaef683ddf2448c28738" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
       </div>
     </div>
     <div class="cta-section">
-      <button class="btn-green" onclick="goWpp()">Entrar no grupo gratuito →</button>
+      <button type="button" class="btn-green" id="btn-wpp" disabled onclick="goWpp()">Entrar no grupo gratuito →</button>
       <p class="cta-small">Não precisa saber dançar</p>
     </div>
   </div>
@@ -877,12 +888,71 @@ function showPercentageResultFromAnswers(ansList, opts) {
   if (!opts.skipSubmit) {
     submitQuizToSupabase(ansList);
   }
+  startResultWppButtonUnlock();
+}
+
+var RESULT_VSL_MS = 2 * 60 * 1000 + 39 * 1000;
+var resultWppUnlockTimer = null;
+
+function startResultWppButtonUnlock() {
+  var btn = document.getElementById("btn-wpp");
+  if (!btn) return;
+  if (resultWppUnlockTimer != null) {
+    clearTimeout(resultWppUnlockTimer);
+    resultWppUnlockTimer = null;
+  }
+  btn.disabled = true;
+  resultWppUnlockTimer = setTimeout(function () {
+    resultWppUnlockTimer = null;
+    btn.disabled = false;
+  }, RESULT_VSL_MS);
 }
 
 let cur = 0, answers = [], sel = null;
 let lead = { email: "", phone: "", full_name: "" };
 
+var INTRO_VSL_MS = 60 * 1000 + 8 * 1000;
+
+function pauseIntroVturb() {
+  var host = document.querySelector("#s-intro vturb-smartplayer");
+  if (!host) return;
+  try {
+    if (typeof host.pause === "function") host.pause();
+  } catch (e) {}
+  try {
+    if (typeof host.stop === "function") host.stop();
+  } catch (e) {}
+  try {
+    var root = host.shadowRoot;
+    if (root) {
+      var vids = root.querySelectorAll("video");
+      vids.forEach(function (v) {
+        try {
+          v.pause();
+        } catch (e2) {}
+      });
+    }
+  } catch (e) {}
+  try {
+    host.querySelectorAll("video").forEach(function (v) {
+      try {
+        v.pause();
+      } catch (e3) {}
+    });
+  } catch (e) {}
+}
+
+function startIntroQuizButtonUnlock() {
+  var btn = document.getElementById("btn-start-quiz");
+  if (!btn) return;
+  btn.disabled = true;
+  setTimeout(function () {
+    btn.disabled = false;
+  }, INTRO_VSL_MS);
+}
+
 function showLoadingThenResultDirect(profileKey) {
+  pauseIntroVturb();
   document.getElementById('s-intro').classList.remove('active');
   document.getElementById('s-quiz').classList.remove('active');
   document.getElementById('s-loading').classList.add('active');
@@ -896,6 +966,7 @@ function showLoadingThenResultDirect(profileKey) {
 }
 
 function startDirect(profileKey) {
+  pauseIntroVturb();
   localStorage.setItem("direct_target", profileKey);
   if (!lead.email || !lead.phone) {
     openLeadModal();
@@ -905,6 +976,9 @@ function startDirect(profileKey) {
 }
 
 function startQuizFromIntro() {
+  var btn = document.getElementById("btn-start-quiz");
+  if (btn && btn.disabled) return;
+  pauseIntroVturb();
   localStorage.removeItem("direct_target");
   startQuiz();
 }
@@ -918,6 +992,7 @@ function startQuiz() {
 }
 
 function startQuizAfterLead() {
+  pauseIntroVturb();
   document.getElementById('s-intro').classList.remove('active');
   document.getElementById('s-quiz').classList.add('active');
   render();
@@ -971,6 +1046,8 @@ function showResult() {
 }
 
 function goWpp() {
+  var btn = document.getElementById("btn-wpp");
+  if (btn && btn.disabled) return;
   window.open('https://chat.whatsapp.com/LINK_AQUI', '_blank', 'noopener,noreferrer');
 }
 
@@ -1071,6 +1148,10 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
   const el = e.target;
   const digits = normalizePhone(el.value);
   el.value = formatPhoneBR11(digits);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  startIntroQuizButtonUnlock();
 });
 </script>
 </body>
