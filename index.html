@@ -625,8 +625,8 @@ body {
       </div>
     </div>
     <div class="cta-section">
-      <button type="button" class="btn-green" id="btn-wpp" disabled onclick="goWpp()">Entrar no grupo gratuito →</button>
-      <p class="cta-small">Não precisa saber dançar</p>
+      <button type="button" class="btn-green" id="btn-wpp" disabled onclick="goWpp()">Entrar no Grupo</button>
+      <p class="cta-small" id="result-cta-small">Não precisa saber dançar</p>
     </div>
   </div>
 
@@ -866,9 +866,25 @@ function renderPercentageMap(pct) {
   });
 }
 
+function configureResultCtaForPath() {
+  var path = siteNormalizePath();
+  var btn = document.getElementById("btn-wpp");
+  var small = document.getElementById("result-cta-small");
+  if (!btn || !small) return;
+  if (path === "/quizz") {
+    btn.textContent = "Quero Fazer Parte";
+    small.textContent =
+      "É comigo no direct — numa boa, só se você quiser continuar a conversa.";
+  } else {
+    btn.textContent = "Entrar no Grupo";
+    small.textContent = "Não precisa saber dançar";
+  }
+}
+
 function showPercentageResultFromAnswers(ansList) {
   const cnt = countAnswerTypes(ansList);
   const pct = computeBodyPercentages(cnt);
+  configureResultCtaForPath();
   document.getElementById("s-intro").classList.remove("active");
   document.getElementById("s-quiz").classList.remove("active");
   document.getElementById("s-loading").classList.remove("active");
