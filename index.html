@@ -897,6 +897,8 @@ function showPercentageResultFromAnswers(ansList) {
 }
 
 var RESULT_VSL_MS = 2 * 60 * 1000 + 39 * 1000;
+/** Em /quizz o botão final libera 10 s antes do VSL da raiz. */
+var RESULT_VSL_MS_QUIZZ = RESULT_VSL_MS - 10 * 1000;
 var resultWppUnlockTimer = null;
 
 function startResultWppButtonUnlock() {
@@ -906,11 +908,13 @@ function startResultWppButtonUnlock() {
     clearTimeout(resultWppUnlockTimer);
     resultWppUnlockTimer = null;
   }
+  var delayMs =
+    siteNormalizePath() === "/quizz" ? RESULT_VSL_MS_QUIZZ : RESULT_VSL_MS;
   btn.disabled = true;
   resultWppUnlockTimer = setTimeout(function () {
     resultWppUnlockTimer = null;
     btn.disabled = false;
-  }, RESULT_VSL_MS);
+  }, delayMs);
 }
 
 let cur = 0, answers = [], sel = null;
