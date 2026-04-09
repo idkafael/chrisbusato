@@ -1014,7 +1014,11 @@ function siteNormalizePath() {
   p = p.split("?")[0].split("#")[0];
   p = p.replace(/\/+$/, "");
   if (!p) p = "/";
-  return p.toLowerCase();
+  p = p.toLowerCase();
+  if (p === "/quizz/index.html" || p.indexOf("/quizz/") === 0) {
+    return "/quizz";
+  }
+  return p;
 }
 
 function getWhatsappInviteUrl() {
