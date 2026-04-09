@@ -893,8 +893,13 @@ function showPercentageResultFromAnswers(ansList) {
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
   submitQuizToSupabase(ansList);
+  /* Contagem longa só aqui (tela final), depois da análise — não na transição pergunta 10 → loading. */
   startResultWppButtonUnlock();
 }
+
+/** Só a tela “Analisando…” após a última pergunta — independente do VSL do botão final. */
+var LOADING_AFTER_LAST_MS = 3000;
+var LOADING_AFTER_LAST_MS_QUIZZ = 3000;
 
 var RESULT_VSL_MS = 2 * 60 * 1000 + 39 * 1000;
 /** Em /quizz o botão final libera 10 s antes do VSL da raiz. */
@@ -1015,14 +1020,26 @@ function nextQ() {
 }
 
 function showLoadingThenResult() {
+  if (resultWppUnlockTimer != null) {
+    clearTimeout(resultWppUnlockTimer);
+    resultWppUnlockTimer = null;
+  }
+  var wppBtn = document.getElementById("btn-wpp");
+  if (wppBtn) wppBtn.disabled = true;
+
   document.getElementById('s-quiz').classList.remove('active');
   document.getElementById('s-loading').classList.add('active');
   document.getElementById('prog').style.width = '100%';
 
+  var loadingMs =
+    siteNormalizePath() === "/quizz"
+      ? LOADING_AFTER_LAST_MS_QUIZZ
+      : LOADING_AFTER_LAST_MS;
+
   setTimeout(() => {
     document.getElementById('s-loading').classList.remove('active');
     showResult();
-  }, 3000);
+  }, loadingMs);
 }
 
 function showResult() {
