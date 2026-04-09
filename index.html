@@ -873,11 +873,12 @@ function configureResultCtaForPath() {
   if (!btn || !small) return;
   if (path === "/quizz") {
     btn.textContent = "Quero Fazer Parte";
-    small.textContent =
-      "É comigo no direct — numa boa, só se você quiser continuar a conversa.";
+    small.textContent = "";
+    small.hidden = true;
   } else {
     btn.textContent = "Entrar no Grupo";
     small.textContent = "Não precisa saber dançar";
+    small.hidden = false;
   }
 }
 
