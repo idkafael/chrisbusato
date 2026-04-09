@@ -38,6 +38,7 @@ body {
 }
 
 .vturb-top {
+  margin-top: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -574,18 +575,15 @@ body {
 
   <!-- INTRO -->
   <div class="screen active" id="s-intro">
+    <div class="tag">Dança & Consciência</div>
+    <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente, sensível desorganizado ou musical</h1>
     <div class="vturb-top">
       <vturb-smartplayer id="vid-69d7eac790c05b9fa0d7ca14" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
     </div>
-    <div class="tag">Dança & Consciência</div>
-    <h1 class="hero-name">Descubra se hoje você dança a partir do corpo racional, dependente, sensível desorganizado ou musical</h1>
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
     <div class="intro-stack">
-    <button type="button" class="btn-green" id="btn-start-quiz" disabled onclick="startQuizFromIntro()">Fazer o quiz (temporário) →</button>
-    <button class="btn-green" onclick="startDirect('D')">Ver resultado: Corpo Dependente →</button>
-    <button class="btn-green btn-alt" onclick="startDirect('R')">Ver resultado: Corpo Racional →</button>
-    <button class="btn-green btn-alt" onclick="startDirect('S')">Ver resultado: Corpo Sensível Desorganizado →</button>
+    <button type="button" class="btn-green" id="btn-start-quiz" disabled onclick="startQuizFromIntro()">Fazer o quiz →</button>
     </div>
   </div>
 
@@ -754,13 +752,6 @@ const questions = [
   }
 ];
 
-const DIRECT_SYNTH = {
-  R: ["R", "R", "R", "R", "R", "D", "M", "S", "R", "R"],
-  D: ["D", "D", "D", "D", "D", "R", "M", "S", "D", "D"],
-  S: ["S", "S", "S", "R", "D", "M", "R", "D", "S", "S"],
-  M: ["M", "M", "M", "R", "D", "S", "R", "D", "M", "M"]
-};
-
 const DOMINANT_BODY_TITLE = {
   R: "Corpo racional",
   D: "Corpo dependente",
@@ -874,8 +865,7 @@ function renderPercentageMap(pct) {
   });
 }
 
-function showPercentageResultFromAnswers(ansList, opts) {
-  opts = opts || {};
+function showPercentageResultFromAnswers(ansList) {
   const cnt = countAnswerTypes(ansList);
   const pct = computeBodyPercentages(cnt);
   document.getElementById("s-intro").classList.remove("active");
@@ -885,9 +875,7 @@ function showPercentageResultFromAnswers(ansList, opts) {
   document.getElementById("prog").style.width = "100%";
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
-  if (!opts.skipSubmit) {
-    submitQuizToSupabase(ansList);
-  }
+  submitQuizToSupabase(ansList);
   startResultWppButtonUnlock();
 }
 
@@ -951,35 +939,10 @@ function startIntroQuizButtonUnlock() {
   }, INTRO_VSL_MS);
 }
 
-function showLoadingThenResultDirect(profileKey) {
-  pauseIntroVturb();
-  document.getElementById('s-intro').classList.remove('active');
-  document.getElementById('s-quiz').classList.remove('active');
-  document.getElementById('s-loading').classList.add('active');
-  document.getElementById('prog').style.width = '100%';
-
-  setTimeout(() => {
-    document.getElementById('s-loading').classList.remove('active');
-    const synth = DIRECT_SYNTH[profileKey];
-    if (synth) showPercentageResultFromAnswers(synth, { skipSubmit: true });
-  }, 3000);
-}
-
-function startDirect(profileKey) {
-  pauseIntroVturb();
-  localStorage.setItem("direct_target", profileKey);
-  if (!lead.email || !lead.phone) {
-    openLeadModal();
-    return;
-  }
-  showLoadingThenResultDirect(profileKey);
-}
-
 function startQuizFromIntro() {
   var btn = document.getElementById("btn-start-quiz");
   if (btn && btn.disabled) return;
   pauseIntroVturb();
-  localStorage.removeItem("direct_target");
   startQuiz();
 }
 
@@ -1135,12 +1098,6 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   lead = { email, phone: normalizePhone(phone), full_name: fullName };
   localStorage.setItem("lead", JSON.stringify(lead));
   closeLeadModal();
-  const directTarget = localStorage.getItem("direct_target");
-  if (directTarget === "R" || directTarget === "D" || directTarget === "S" || directTarget === "M") {
-    localStorage.removeItem("direct_target");
-    showLoadingThenResultDirect(directTarget);
-    return;
-  }
   startQuizAfterLead();
 });
 
