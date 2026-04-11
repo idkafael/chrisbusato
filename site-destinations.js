@@ -13,7 +13,7 @@
 window.SITE_PATH_DESTINATIONS = {
   "/quizz": {
     whatsapp:
-      "https://wa.me/5511998431233?text=" +
+      "https://wa.me/5511967068271?text=" +
       encodeURIComponent(
         "oii, vim do quizz pode me falar mais sobre o corpo musical?"
       )
