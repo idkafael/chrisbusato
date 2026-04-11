@@ -767,24 +767,84 @@ const DOMINANT_BODY_TITLE = {
 
 const TYPE_TO_LETTER = { R: "A", D: "B", M: "C", S: "D" };
 
+const QUIZ_ROW_STORAGE_KEY = "chrisbusato_quiz_row";
+
+function readQuizRowRef() {
+  try {
+    const raw = localStorage.getItem(QUIZ_ROW_STORAGE_KEY);
+    if (!raw) return null;
+    const o = JSON.parse(raw);
+    if (!o || typeof o !== "object") return null;
+    return o;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveQuizRowRef(o) {
+  try {
+    localStorage.setItem(QUIZ_ROW_STORAGE_KEY, JSON.stringify(o));
+  } catch (e) {}
+}
+
 function submitQuizToSupabase(ansList) {
   if (!lead || !lead.email || !lead.phone) return;
   if (!ansList || ansList.length !== 10) return;
-  const payload = {
-    email: lead.email,
-    phone: lead.phone,
-    full_name: lead.full_name || null
-  };
+  const letterPayload = {};
   for (let i = 0; i < 10; i++) {
     const L = TYPE_TO_LETTER[ansList[i]];
     if (!L) return;
-    payload["q" + (i + 1)] = L;
+    letterPayload["q" + (i + 1)] = L;
   }
-  fetch("/api/submit-quiz", {
+
+  const ref = readQuizRowRef();
+  const rowId =
+    ref && ref.email === lead.email && ref.phone === lead.phone && ref.completed === false && ref.id
+      ? ref.id
+      : null;
+
+  function fallbackFullSubmit() {
+    const payload = {
+      email: lead.email,
+      phone: lead.phone,
+      full_name: lead.full_name || null
+    };
+    for (let j = 1; j <= 10; j++) payload["q" + j] = letterPayload["q" + j];
+    fetch("/api/submit-quiz", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(function () {});
+  }
+
+  if (!rowId) {
+    fallbackFullSubmit();
+    return;
+  }
+
+  const patchBody = { id: rowId };
+  for (let j = 1; j <= 10; j++) patchBody["q" + j] = letterPayload["q" + j];
+
+  fetch("/api/complete-quiz-submission", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  }).catch(function () {});
+    body: JSON.stringify(patchBody)
+  })
+    .then(function (r) {
+      if (r.ok) {
+        saveQuizRowRef({
+          id: rowId,
+          email: lead.email,
+          phone: lead.phone,
+          completed: true
+        });
+      } else {
+        fallbackFullSubmit();
+      }
+    })
+    .catch(function () {
+      fallbackFullSubmit();
+    });
 }
 
 function dominantBodyAmongRDS(pct) {
@@ -1458,8 +1518,54 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   var fullName = nameEl ? String(nameEl.value || "").trim() : "";
   lead = { email, phone: normalizePhone(phone), full_name: fullName };
   localStorage.setItem("lead", JSON.stringify(lead));
-  closeLeadModal();
-  startQuizAfterLead();
+
+  const emailNorm = email;
+  const existingRef = readQuizRowRef();
+
+  function openQuizAfterLeadRow() {
+    closeLeadModal();
+    startQuizAfterLead();
+  }
+
+  if (
+    existingRef &&
+    existingRef.email === emailNorm &&
+    existingRef.phone === lead.phone &&
+    existingRef.completed === false &&
+    existingRef.id
+  ) {
+    openQuizAfterLeadRow();
+    return;
+  }
+
+  fetch("/api/start-quiz-submission", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: lead.email,
+      phone: lead.phone,
+      full_name: lead.full_name || null
+    })
+  })
+    .then(function (r) {
+      return r.json().then(function (j) {
+        return { ok: r.ok, j: j };
+      });
+    })
+    .then(function (x) {
+      if (x.ok && x.j && x.j.id) {
+        saveQuizRowRef({
+          id: String(x.j.id),
+          email: emailNorm,
+          phone: lead.phone,
+          completed: false
+        });
+      }
+      openQuizAfterLeadRow();
+    })
+    .catch(function () {
+      openQuizAfterLeadRow();
+    });
 });
 
 document.getElementById("lead-phone").addEventListener("input", (e) => {
