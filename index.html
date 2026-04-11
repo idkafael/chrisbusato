@@ -308,6 +308,17 @@ body {
 }
 .btn-green:hover { background: #4A6548; transform: translateY(-1px); }
 .btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
+/* Intro: botão invisível até o VSL terminar de fato (liberado só via JS). */
+.intro-stack .btn-green.intro-quiz-locked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.cta-section .btn-green.result-wpp-locked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .btn-alt {
   background: transparent;
@@ -583,7 +594,7 @@ body {
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
     <div class="intro-stack">
-    <button type="button" class="btn-green" id="btn-start-quiz" disabled onclick="startQuizFromIntro()">Fazer o quiz →</button>
+    <button type="button" class="btn-green intro-quiz-locked" id="btn-start-quiz" disabled aria-disabled="true" onclick="startQuizFromIntro()">Fazer o quiz →</button>
     </div>
   </div>
 
@@ -625,7 +636,7 @@ body {
       </div>
     </div>
     <div class="cta-section">
-      <button type="button" class="btn-green" id="btn-wpp" disabled onclick="goWpp()">Entrar no Grupo</button>
+      <button type="button" class="btn-green result-wpp-locked" id="btn-wpp" disabled aria-disabled="true" onclick="goWpp()">Entrar no Grupo</button>
       <p class="cta-small" id="result-cta-small">Não precisa saber dançar</p>
     </div>
   </div>
@@ -895,7 +906,7 @@ function showPercentageResultFromAnswers(ansList) {
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
   submitQuizToSupabase(ansList);
-  /* Botão final só após o usuário dar play no 2º VSL (não por tempo fixo). */
+  /* 2º VSL: mesmo critério da intro — botão só após o vídeo terminar de fato. */
   startResultWppButtonUnlock();
 }
 
@@ -903,112 +914,534 @@ function showPercentageResultFromAnswers(ansList) {
 var LOADING_AFTER_LAST_MS = 3000;
 var LOADING_AFTER_LAST_MS_QUIZZ = 3000;
 
-var resultWppUnlockPollInterval = null;
-var resultWppUnlockBindGen = 0;
+var resultVslBindGen = 0;
+var resultVslUnlockDone = false;
+var resultVslPollInterval = null;
+var resultVslListenersAttached = false;
+var resultVslEndWatchdogInterval = null;
+var resultVslHostEventsBound = false;
+var resultVslLastProgressLogMs = 0;
+var RESULT_VSL_SESSION_KEY = "chrisbusato_result_vsl_completed";
+
+function completeResultVslUnlock(reason) {
+  if (resultVslUnlockDone) return;
+  resultVslUnlockDone = true;
+  try {
+    sessionStorage.setItem(RESULT_VSL_SESSION_KEY, "1");
+  } catch (e) {}
+  var btn = document.getElementById("btn-wpp");
+  if (btn) {
+    btn.disabled = false;
+    btn.removeAttribute("aria-disabled");
+    btn.classList.remove("result-wpp-locked");
+  }
+  if (resultVslPollInterval != null) {
+    clearInterval(resultVslPollInterval);
+    resultVslPollInterval = null;
+  }
+  if (resultVslEndWatchdogInterval != null) {
+    clearInterval(resultVslEndWatchdogInterval);
+    resultVslEndWatchdogInterval = null;
+  }
+  console.log("[result-vsl] botão liberado:", reason);
+}
+
+function syncResultWppButtonAfterVisibility() {
+  if (resultVslUnlockDone) return;
+  var btn = document.getElementById("btn-wpp");
+  var sr = document.getElementById("s-result");
+  if (!btn || !sr || !sr.classList.contains("active")) return;
+  var list = collectResultPlayerVideos();
+  for (var i = 0; i < list.length; i++) {
+    if (shouldUnlockVslForVideo(list[i])) {
+      console.log("[result-vsl] fim detectado ao voltar à aba / foco");
+      completeResultVslUnlock("visibility/focus");
+      return;
+    }
+  }
+}
 
 function startResultWppButtonUnlock() {
   var btn = document.getElementById("btn-wpp");
   if (!btn) return;
-  resultWppUnlockBindGen++;
-  var gen = resultWppUnlockBindGen;
-  if (resultWppUnlockPollInterval != null) {
-    clearInterval(resultWppUnlockPollInterval);
-    resultWppUnlockPollInterval = null;
-  }
-  btn.disabled = true;
 
-  function collectResultVideos(host) {
-    var list = [];
-    if (!host) return list;
-    try {
-      if (host.shadowRoot) {
-        host.shadowRoot.querySelectorAll("video").forEach(function (v) {
-          list.push(v);
-        });
-      }
-    } catch (e) {}
-    try {
-      host.querySelectorAll("video").forEach(function (v) {
-        list.push(v);
-      });
-    } catch (e2) {}
-    return list;
+  resultVslBindGen++;
+  var gen = resultVslBindGen;
+
+  if (resultVslPollInterval != null) {
+    clearInterval(resultVslPollInterval);
+    resultVslPollInterval = null;
+  }
+  if (resultVslEndWatchdogInterval != null) {
+    clearInterval(resultVslEndWatchdogInterval);
+    resultVslEndWatchdogInterval = null;
   }
 
-  function pauseResultNow() {
-    pauseResultVturb();
-  }
+  resultVslListenersAttached = false;
+  resultVslHostEventsBound = false;
+  resultVslUnlockDone = false;
+  resultVslLastProgressLogMs = 0;
 
-  var playUnlockBound = false;
-
-  function tryBindPlayToUnlock() {
-    if (gen !== resultWppUnlockBindGen) return false;
-    if (playUnlockBound) return true;
-    pauseResultNow();
-    var host = document.querySelector("#s-result vturb-smartplayer");
-    var videos = collectResultVideos(host);
-    if (videos.length === 0) return false;
-    playUnlockBound = true;
-    function unlock() {
-      if (gen !== resultWppUnlockBindGen) return;
+  try {
+    if (sessionStorage.getItem(RESULT_VSL_SESSION_KEY) === "1") {
+      console.log("[result-vsl] sessão: 2º VSL já concluído — botão liberado");
+      resultVslUnlockDone = true;
       btn.disabled = false;
-      if (resultWppUnlockPollInterval != null) {
-        clearInterval(resultWppUnlockPollInterval);
-        resultWppUnlockPollInterval = null;
-      }
+      btn.removeAttribute("aria-disabled");
+      btn.classList.remove("result-wpp-locked");
+      return;
     }
-    videos.forEach(function (v) {
-      v.addEventListener("play", unlock, { once: true });
-    });
-    return true;
+  } catch (e) {}
+
+  btn.disabled = true;
+  btn.setAttribute("aria-disabled", "true");
+  btn.classList.add("result-wpp-locked");
+
+  function unlockResultWppButton(reason) {
+    if (gen !== resultVslBindGen || resultVslUnlockDone) return;
+    completeResultVslUnlock(reason);
   }
 
-  pauseResultNow();
-  requestAnimationFrame(function () {
-    pauseResultNow();
-    if (tryBindPlayToUnlock() && resultWppUnlockPollInterval != null) {
-      clearInterval(resultWppUnlockPollInterval);
-      resultWppUnlockPollInterval = null;
+  function maybeUnlockResultIfAtEnd(video, why) {
+    if (gen !== resultVslBindGen || resultVslUnlockDone) return;
+    if (shouldUnlockVslForVideo(video)) {
+      unlockResultWppButton(why);
     }
-  });
+  }
 
-  var deadline = Date.now() + 20000;
-  resultWppUnlockPollInterval = setInterval(function () {
-    if (gen !== resultWppUnlockBindGen) {
-      clearInterval(resultWppUnlockPollInterval);
-      resultWppUnlockPollInterval = null;
+  function startResultVslEndWatchdog() {
+    if (resultVslEndWatchdogInterval != null) return;
+    resultVslEndWatchdogInterval = setInterval(function () {
+      if (gen !== resultVslBindGen || resultVslUnlockDone) return;
+      var list = collectResultPlayerVideos();
+      for (var i = 0; i < list.length; i++) {
+        if (shouldUnlockVslForVideo(list[i])) {
+          console.log("[result-vsl] fim detectado pelo watchdog");
+          unlockResultWppButton("watchdog");
+          return;
+        }
+      }
+    }, 250);
+  }
+
+  function bindResultVturbHostCustomEvents(host) {
+    if (!host || resultVslHostEventsBound) return;
+    resultVslHostEventsBound = true;
+    ["video:ended", "video:end", "player:ended", "vturb:ended"].forEach(function (name) {
+      try {
+        host.addEventListener(
+          name,
+          function (ev) {
+            if (gen !== resultVslBindGen) return;
+            console.log("[result-vsl] evento no host:", name, ev && ev.detail);
+            unlockResultWppButton("host:" + name);
+          },
+          { once: true }
+        );
+      } catch (e) {}
+    });
+  }
+
+  function attachToResultVideos(videos) {
+    if (resultVslListenersAttached || gen !== resultVslBindGen) return;
+    resultVslListenersAttached = true;
+
+    console.log("[result-vsl] vídeo(s) ligado(s):", videos.length);
+
+    videos.forEach(function (video, idx) {
+      video.addEventListener(
+        "loadedmetadata",
+        function () {
+          console.log("[result-vsl] loadedmetadata[" + idx + "] duração (s):", video.duration);
+        },
+        { once: true }
+      );
+
+      video.addEventListener(
+        "ended",
+        function () {
+          if (gen !== resultVslBindGen) return;
+          console.log("[result-vsl] evento ended[" + idx + "]");
+          unlockResultWppButton("ended");
+        },
+        { once: true }
+      );
+
+      video.addEventListener("timeupdate", function () {
+        if (gen !== resultVslBindGen || resultVslUnlockDone) return;
+        if (shouldUnlockVslForVideo(video)) {
+          console.log("[result-vsl] fim via timeupdate[" + idx + "]");
+          unlockResultWppButton("timeupdate");
+          return;
+        }
+        var now = Date.now();
+        if (now - resultVslLastProgressLogMs > 2000) {
+          resultVslLastProgressLogMs = now;
+          var d = video.duration;
+          console.log(
+            "[result-vsl] progresso[" + idx + "]:",
+            video.currentTime.toFixed(2) + " / " + (isFinite(d) ? d.toFixed(2) : "?")
+          );
+        }
+      });
+    });
+
+    videos.forEach(function (v) {
+      maybeUnlockResultIfAtEnd(v, "já no fim ao bind");
+    });
+
+    startResultVslEndWatchdog();
+  }
+
+  var resultVslLoggedPlayer = false;
+  var resultVslLastWaitLogMs = 0;
+
+  function resultVslTick() {
+    if (gen !== resultVslBindGen || resultVslUnlockDone) return;
+    var host = document.querySelector("#s-result vturb-smartplayer");
+    if (!host) return;
+
+    if (!resultVslLoggedPlayer) {
+      resultVslLoggedPlayer = true;
+      console.log("[result-vsl] player encontrado:", host.id || host.tagName);
+      bindResultVturbHostCustomEvents(host);
+      startResultVslEndWatchdog();
+    }
+
+    var videos = collectResultPlayerVideos();
+    if (videos.length === 0) {
+      var nw = Date.now();
+      if (nw - resultVslLastWaitLogMs > 3000) {
+        resultVslLastWaitLogMs = nw;
+        console.log("[result-vsl] aguardando <video> acessível no 2º player…");
+      }
       return;
     }
-    if (!playUnlockBound) pauseResultNow();
-    if (tryBindPlayToUnlock()) {
-      clearInterval(resultWppUnlockPollInterval);
-      resultWppUnlockPollInterval = null;
-      return;
+    console.log("[result-vsl] total de <video> acessível(is):", videos.length);
+    attachToResultVideos(videos);
+    if (resultVslPollInterval != null) {
+      clearInterval(resultVslPollInterval);
+      resultVslPollInterval = null;
     }
-    if (Date.now() > deadline) {
-      clearInterval(resultWppUnlockPollInterval);
-      resultWppUnlockPollInterval = null;
-      if (gen === resultWppUnlockBindGen) btn.disabled = false;
-    }
-  }, 200);
+  }
+
+  resultVslTick();
+  resultVslPollInterval = setInterval(resultVslTick, 400);
 }
 
 let cur = 0, answers = [], sel = null;
 let lead = { email: "", phone: "", full_name: "" };
 
-var INTRO_VSL_MS = 60 * 1000 + 8 * 1000;
-var introQuizUnlockTimer = null;
-/** Momento em que o botão da intro pode ser habilitado (alinha timer com aba em background). */
-var introUnlockDeadlineMs = 0;
+/** sessionStorage: usuário já chegou ao fim do VSL nesta sessão (reload mantém botão liberado). */
+var INTRO_VSL_SESSION_KEY = "chrisbusato_intro_vsl_completed";
+/** Tolerância (s) para currentTime vs duration — vale intro e 2º VSL. */
+var VSL_END_TOLERANCE_S = 0.25;
+/** Pausa no último quadro sem `ended` — intro e 2º VSL. */
+var VSL_PAUSE_END_TOLERANCE_S = 1.5;
 
-function tryEnableIntroQuizButton() {
+var introVslUnlockDone = false;
+var introVslPollInterval = null;
+var introVslListenersAttached = false;
+var introVslMonitoredVideo = null;
+var introVslLastProgressLogMs = 0;
+var introVslEndWatchdogInterval = null;
+var introVslHostEventsBound = false;
+
+function collectVideosUnderVturbHost(host) {
+  var out = [];
+  function walk(r) {
+    if (!r) return;
+    try {
+      if (r.querySelectorAll) {
+        r.querySelectorAll("video").forEach(function (v) {
+          if (out.indexOf(v) === -1) out.push(v);
+        });
+        r.querySelectorAll("*").forEach(function (el) {
+          if (el.shadowRoot) walk(el.shadowRoot);
+        });
+      }
+    } catch (e) {}
+    if (r.shadowRoot) walk(r.shadowRoot);
+  }
+  walk(host);
+  return out;
+}
+
+/** Junta &lt;video&gt; no host, iframes same-origin e light DOM da intro. */
+function collectIntroPlayerVideos() {
+  var out = [];
+  function add(v) {
+    if (v && out.indexOf(v) === -1) out.push(v);
+  }
+  var host = document.querySelector("#s-intro vturb-smartplayer");
+  if (host) {
+    collectVideosUnderVturbHost(host).forEach(add);
+  }
+  var intro = document.getElementById("s-intro");
+  if (intro) {
+    try {
+      intro.querySelectorAll("video").forEach(add);
+    } catch (e) {}
+    try {
+      intro.querySelectorAll("iframe").forEach(function (ifr) {
+        try {
+          var doc = ifr.contentDocument || (ifr.contentWindow && ifr.contentWindow.document);
+          if (doc) doc.querySelectorAll("video").forEach(add);
+        } catch (e2) {
+          /* iframe cross-origin: sem acesso ao &lt;video&gt; */
+        }
+      });
+    } catch (e3) {}
+  }
+  return out;
+}
+
+/** Mesma árvore de coleta da intro, para o player da tela de resultado + iframes. */
+function collectResultPlayerVideos() {
+  var out = [];
+  function add(v) {
+    if (v && out.indexOf(v) === -1) out.push(v);
+  }
+  var host = document.querySelector("#s-result vturb-smartplayer");
+  if (host) {
+    collectVideosUnderVturbHost(host).forEach(add);
+  }
+  var resultEl = document.getElementById("s-result");
+  if (resultEl) {
+    try {
+      resultEl.querySelectorAll("video").forEach(add);
+    } catch (e) {}
+    try {
+      resultEl.querySelectorAll("iframe").forEach(function (ifr) {
+        try {
+          var doc = ifr.contentDocument || (ifr.contentWindow && ifr.contentWindow.document);
+          if (doc) doc.querySelectorAll("video").forEach(add);
+        } catch (e2) {}
+      });
+    } catch (e3) {}
+  }
+  return out;
+}
+
+function isVslVideoAtTrueEnd(video) {
+  if (!video) return false;
+  if (video.ended) return true;
+  var d = video.duration;
+  if (!isFinite(d) || isNaN(d) || d <= 0) return false;
+  if (Math.abs(video.currentTime - d) < 0.2) return true;
+  return video.currentTime >= d - VSL_END_TOLERANCE_S;
+}
+
+function isVslVideoPausedAtEnd(video) {
+  if (!video || !video.paused) return false;
+  var d = video.duration;
+  if (!isFinite(d) || isNaN(d) || d <= 0) return false;
+  if (video.ended) return true;
+  return video.currentTime >= d - VSL_PAUSE_END_TOLERANCE_S;
+}
+
+function shouldUnlockVslForVideo(video) {
+  return isVslVideoAtTrueEnd(video) || isVslVideoPausedAtEnd(video);
+}
+
+function lockIntroQuizButton(btn) {
+  btn.disabled = true;
+  btn.setAttribute("aria-disabled", "true");
+  btn.classList.add("intro-quiz-locked");
+}
+
+function unlockIntroQuizButton(btn, reason) {
+  if (introVslUnlockDone) return;
+  introVslUnlockDone = true;
+  try {
+    sessionStorage.setItem(INTRO_VSL_SESSION_KEY, "1");
+  } catch (e) {}
+  btn.disabled = false;
+  btn.removeAttribute("aria-disabled");
+  btn.classList.remove("intro-quiz-locked");
+  if (introVslPollInterval != null) {
+    clearInterval(introVslPollInterval);
+    introVslPollInterval = null;
+  }
+  if (introVslEndWatchdogInterval != null) {
+    clearInterval(introVslEndWatchdogInterval);
+    introVslEndWatchdogInterval = null;
+  }
+  console.log("[intro-vsl] botão liberado:", reason);
+}
+
+/**
+ * Libera o botão "Fazer o quiz" somente quando o VSL da intro termina de fato (ended ou currentTime ≥ duration).
+ * Sem tempo fixo, sem play como gatilho. Polling só para achar o &lt;video&gt; dentro do vturb-smartplayer.
+ */
+function setupIntroVslQuizButtonUnlock() {
   var btn = document.getElementById("btn-start-quiz");
   if (!btn) return;
+
+  try {
+    if (sessionStorage.getItem(INTRO_VSL_SESSION_KEY) === "1") {
+      console.log("[intro-vsl] sessão: VSL já concluído — botão liberado sem esperar vídeo");
+      introVslUnlockDone = true;
+      btn.disabled = false;
+      btn.removeAttribute("aria-disabled");
+      btn.classList.remove("intro-quiz-locked");
+      return;
+    }
+  } catch (e) {}
+
+  lockIntroQuizButton(btn);
+
+  function maybeUnlockIfAlreadyAtEnd(video, why) {
+    if (introVslUnlockDone) return;
+    if (shouldUnlockVslForVideo(video)) {
+      unlockIntroQuizButton(btn, why);
+    }
+  }
+
+  function startIntroVslEndWatchdog() {
+    if (introVslEndWatchdogInterval != null) return;
+    introVslEndWatchdogInterval = setInterval(function () {
+      if (introVslUnlockDone) return;
+      var list = collectIntroPlayerVideos();
+      for (var i = 0; i < list.length; i++) {
+        if (shouldUnlockVslForVideo(list[i])) {
+          console.log("[intro-vsl] fim detectado pelo watchdog (polling)");
+          unlockIntroQuizButton(btn, "watchdog");
+          return;
+        }
+      }
+    }, 250);
+  }
+
+  function bindVturbHostCustomEvents(host) {
+    if (!host || introVslHostEventsBound) return;
+    introVslHostEventsBound = true;
+    /* Nomes amplos como "complete" podem disparar cedo; priorizar eventos explícitos de fim de vídeo. */
+    ["video:ended", "video:end", "player:ended", "vturb:ended"].forEach(function (name) {
+      try {
+        host.addEventListener(
+          name,
+          function (ev) {
+            console.log("[intro-vsl] evento no host:", name, ev && ev.detail);
+            unlockIntroQuizButton(btn, "host:" + name);
+          },
+          { once: true }
+        );
+      } catch (e) {}
+    });
+  }
+
+  function attachToIntroVideos(videos) {
+    if (introVslListenersAttached) return;
+    introVslListenersAttached = true;
+    introVslMonitoredVideo = videos[0] || null;
+
+    console.log("[intro-vsl] vídeo(s) ligado(s):", videos.length);
+
+    videos.forEach(function (video, idx) {
+      console.log(
+        "[intro-vsl] vídeo[" + idx + "] duration=",
+        video.duration,
+        "readyState=",
+        video.readyState
+      );
+
+      video.addEventListener(
+        "loadedmetadata",
+        function () {
+          console.log("[intro-vsl] loadedmetadata[" + idx + "] duração (s):", video.duration);
+        },
+        { once: true }
+      );
+
+      video.addEventListener(
+        "ended",
+        function () {
+          console.log("[intro-vsl] evento ended[" + idx + "]");
+          unlockIntroQuizButton(btn, "ended");
+        },
+        { once: true }
+      );
+
+      video.addEventListener("timeupdate", function () {
+        if (introVslUnlockDone) return;
+        if (shouldUnlockVslForVideo(video)) {
+          console.log("[intro-vsl] fim via timeupdate[" + idx + "]");
+          unlockIntroQuizButton(btn, "timeupdate");
+          return;
+        }
+        var now = Date.now();
+        if (now - introVslLastProgressLogMs > 2000) {
+          introVslLastProgressLogMs = now;
+          var d = video.duration;
+          console.log(
+            "[intro-vsl] progresso[" + idx + "]:",
+            video.currentTime.toFixed(2) + " / " + (isFinite(d) ? d.toFixed(2) : "?")
+          );
+        }
+      });
+    });
+
+    videos.forEach(function (v) {
+      maybeUnlockIfAlreadyAtEnd(v, "já no fim ao bind");
+    });
+
+    startIntroVslEndWatchdog();
+  }
+
+  var introVslLoggedPlayer = false;
+  var introVslLastWaitLogMs = 0;
+
+  function tick() {
+    if (introVslUnlockDone) return;
+    var host = document.querySelector("#s-intro vturb-smartplayer");
+    if (!host) {
+      return;
+    }
+    if (!introVslLoggedPlayer) {
+      introVslLoggedPlayer = true;
+      console.log("[intro-vsl] player encontrado:", host.id || host.tagName);
+      bindVturbHostCustomEvents(host);
+      /* Watchdog mesmo sem video no DOM ainda (iframe/shadow pode montar depois). */
+      startIntroVslEndWatchdog();
+    }
+
+    var videos = collectIntroPlayerVideos();
+    if (videos.length === 0) {
+      var nw = Date.now();
+      if (nw - introVslLastWaitLogMs > 3000) {
+        introVslLastWaitLogMs = nw;
+        console.log(
+          "[intro-vsl] nenhum <video> acessível (shadow fechado ou iframe cross-origin?). Continuando polling + eventos no host…"
+        );
+      }
+      return;
+    }
+    console.log("[intro-vsl] total de <video> acessível(is):", videos.length);
+    attachToIntroVideos(videos);
+    if (introVslPollInterval != null) {
+      clearInterval(introVslPollInterval);
+      introVslPollInterval = null;
+    }
+  }
+
+  tick();
+  introVslPollInterval = setInterval(tick, 400);
+}
+
+function syncIntroQuizButtonAfterVisibility() {
+  if (introVslUnlockDone) return;
+  var btn = document.getElementById("btn-start-quiz");
   var intro = document.getElementById("s-intro");
-  if (!intro || !intro.classList.contains("active")) return;
-  if (!introUnlockDeadlineMs) return;
-  if (Date.now() < introUnlockDeadlineMs) return;
-  btn.disabled = false;
+  if (!btn || !intro || !intro.classList.contains("active")) return;
+  var list = collectIntroPlayerVideos();
+  for (var i = 0; i < list.length; i++) {
+    if (shouldUnlockVslForVideo(list[i])) {
+      console.log("[intro-vsl] fim detectado ao voltar à aba / foco");
+      unlockIntroQuizButton(btn, "visibility/focus");
+      return;
+    }
+  }
 }
 
 function pauseVturbPlayer(host) {
@@ -1070,21 +1503,6 @@ function startResultVturbIdleGuard() {
   }, 400);
 }
 
-function startIntroQuizButtonUnlock() {
-  var btn = document.getElementById("btn-start-quiz");
-  if (!btn) return;
-  if (introQuizUnlockTimer != null) {
-    clearTimeout(introQuizUnlockTimer);
-    introQuizUnlockTimer = null;
-  }
-  btn.disabled = true;
-  introUnlockDeadlineMs = Date.now() + INTRO_VSL_MS;
-  introQuizUnlockTimer = setTimeout(function () {
-    introQuizUnlockTimer = null;
-    tryEnableIntroQuizButton();
-  }, INTRO_VSL_MS);
-}
-
 function startQuizFromIntro() {
   var btn = document.getElementById("btn-start-quiz");
   if (btn && btn.disabled) return;
@@ -1140,9 +1558,13 @@ function nextQ() {
 }
 
 function showLoadingThenResult() {
-  if (resultWppUnlockPollInterval != null) {
-    clearInterval(resultWppUnlockPollInterval);
-    resultWppUnlockPollInterval = null;
+  if (resultVslPollInterval != null) {
+    clearInterval(resultVslPollInterval);
+    resultVslPollInterval = null;
+  }
+  if (resultVslEndWatchdogInterval != null) {
+    clearInterval(resultVslEndWatchdogInterval);
+    resultVslEndWatchdogInterval = null;
   }
   var wppBtn = document.getElementById("btn-wpp");
   if (wppBtn) wppBtn.disabled = true;
@@ -1294,17 +1716,23 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
   el.value = formatPhoneBR11(digits);
 });
 
-(function () {
-  function catchUpIntroUnlock() {
-    tryEnableIntroQuizButton();
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible") {
+    syncIntroQuizButtonAfterVisibility();
+    syncResultWppButtonAfterVisibility();
   }
-  document.addEventListener("visibilitychange", catchUpIntroUnlock);
-  window.addEventListener("pageshow", catchUpIntroUnlock);
-  window.addEventListener("focus", catchUpIntroUnlock);
-})();
+});
+window.addEventListener("pageshow", function () {
+  syncIntroQuizButtonAfterVisibility();
+  syncResultWppButtonAfterVisibility();
+});
+window.addEventListener("focus", function () {
+  syncIntroQuizButtonAfterVisibility();
+  syncResultWppButtonAfterVisibility();
+});
 
 document.addEventListener("DOMContentLoaded", function () {
-  startIntroQuizButtonUnlock();
+  setupIntroVslQuizButtonUnlock();
   startResultVturbIdleGuard();
 });
 </script>
