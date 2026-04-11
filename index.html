@@ -997,6 +997,19 @@ let cur = 0, answers = [], sel = null;
 let lead = { email: "", phone: "", full_name: "" };
 
 var INTRO_VSL_MS = 60 * 1000 + 8 * 1000;
+var introQuizUnlockTimer = null;
+/** Momento em que o botão da intro pode ser habilitado (alinha timer com aba em background). */
+var introUnlockDeadlineMs = 0;
+
+function tryEnableIntroQuizButton() {
+  var btn = document.getElementById("btn-start-quiz");
+  if (!btn) return;
+  var intro = document.getElementById("s-intro");
+  if (!intro || !intro.classList.contains("active")) return;
+  if (!introUnlockDeadlineMs) return;
+  if (Date.now() < introUnlockDeadlineMs) return;
+  btn.disabled = false;
+}
 
 function pauseVturbPlayer(host) {
   if (!host) return;
@@ -1060,9 +1073,15 @@ function startResultVturbIdleGuard() {
 function startIntroQuizButtonUnlock() {
   var btn = document.getElementById("btn-start-quiz");
   if (!btn) return;
+  if (introQuizUnlockTimer != null) {
+    clearTimeout(introQuizUnlockTimer);
+    introQuizUnlockTimer = null;
+  }
   btn.disabled = true;
-  setTimeout(function () {
-    btn.disabled = false;
+  introUnlockDeadlineMs = Date.now() + INTRO_VSL_MS;
+  introQuizUnlockTimer = setTimeout(function () {
+    introQuizUnlockTimer = null;
+    tryEnableIntroQuizButton();
   }, INTRO_VSL_MS);
 }
 
@@ -1274,6 +1293,15 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
   const digits = normalizePhone(el.value);
   el.value = formatPhoneBR11(digits);
 });
+
+(function () {
+  function catchUpIntroUnlock() {
+    tryEnableIntroQuizButton();
+  }
+  document.addEventListener("visibilitychange", catchUpIntroUnlock);
+  window.addEventListener("pageshow", catchUpIntroUnlock);
+  window.addEventListener("focus", catchUpIntroUnlock);
+})();
 
 document.addEventListener("DOMContentLoaded", function () {
   startIntroQuizButtonUnlock();
