@@ -308,12 +308,6 @@ body {
 }
 .btn-green:hover { background: #4A6548; transform: translateY(-1px); }
 .btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
-/* Intro: botão invisível até o VSL terminar de fato (liberado só via JS). */
-.intro-stack .btn-green.intro-quiz-locked {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
 .cta-section .btn-green.result-wpp-locked {
   opacity: 0;
   visibility: hidden;
@@ -594,7 +588,7 @@ body {
     <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
     <p class="body-text">Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.</p>
     <div class="intro-stack">
-    <button type="button" class="btn-green intro-quiz-locked" id="btn-start-quiz" disabled aria-disabled="true" onclick="startQuizFromIntro()">Fazer o quiz →</button>
+    <button type="button" class="btn-green" id="btn-start-quiz" onclick="startQuizFromIntro()">Fazer o quiz →</button>
     </div>
   </div>
 
@@ -906,7 +900,7 @@ function showPercentageResultFromAnswers(ansList) {
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
   submitQuizToSupabase(ansList);
-  /* 2º VSL: mesmo critério da intro — botão só após o vídeo terminar de fato. */
+  /* 2º VSL: botão WhatsApp só após o vídeo terminar de fato. */
   startResultWppButtonUnlock();
 }
 
@@ -1132,20 +1126,9 @@ function startResultWppButtonUnlock() {
 let cur = 0, answers = [], sel = null;
 let lead = { email: "", phone: "", full_name: "" };
 
-/** sessionStorage: usuário já chegou ao fim do VSL nesta sessão (reload mantém botão liberado). */
-var INTRO_VSL_SESSION_KEY = "chrisbusato_intro_vsl_completed";
-/** Tolerância (s) para currentTime vs duration — vale intro e 2º VSL. */
+/** Detecção de fim do 2º VSL (tela de resultado). */
 var VSL_END_TOLERANCE_S = 0.25;
-/** Pausa no último quadro sem `ended` — intro e 2º VSL. */
 var VSL_PAUSE_END_TOLERANCE_S = 1.5;
-
-var introVslUnlockDone = false;
-var introVslPollInterval = null;
-var introVslListenersAttached = false;
-var introVslMonitoredVideo = null;
-var introVslLastProgressLogMs = 0;
-var introVslEndWatchdogInterval = null;
-var introVslHostEventsBound = false;
 
 function collectVideosUnderVturbHost(host) {
   var out = [];
@@ -1167,36 +1150,7 @@ function collectVideosUnderVturbHost(host) {
   return out;
 }
 
-/** Junta &lt;video&gt; no host, iframes same-origin e light DOM da intro. */
-function collectIntroPlayerVideos() {
-  var out = [];
-  function add(v) {
-    if (v && out.indexOf(v) === -1) out.push(v);
-  }
-  var host = document.querySelector("#s-intro vturb-smartplayer");
-  if (host) {
-    collectVideosUnderVturbHost(host).forEach(add);
-  }
-  var intro = document.getElementById("s-intro");
-  if (intro) {
-    try {
-      intro.querySelectorAll("video").forEach(add);
-    } catch (e) {}
-    try {
-      intro.querySelectorAll("iframe").forEach(function (ifr) {
-        try {
-          var doc = ifr.contentDocument || (ifr.contentWindow && ifr.contentWindow.document);
-          if (doc) doc.querySelectorAll("video").forEach(add);
-        } catch (e2) {
-          /* iframe cross-origin: sem acesso ao &lt;video&gt; */
-        }
-      });
-    } catch (e3) {}
-  }
-  return out;
-}
-
-/** Mesma árvore de coleta da intro, para o player da tela de resultado + iframes. */
+/** Vídeos do player da tela de resultado + iframes same-origin. */
 function collectResultPlayerVideos() {
   var out = [];
   function add(v) {
@@ -1242,206 +1196,6 @@ function isVslVideoPausedAtEnd(video) {
 
 function shouldUnlockVslForVideo(video) {
   return isVslVideoAtTrueEnd(video) || isVslVideoPausedAtEnd(video);
-}
-
-function lockIntroQuizButton(btn) {
-  btn.disabled = true;
-  btn.setAttribute("aria-disabled", "true");
-  btn.classList.add("intro-quiz-locked");
-}
-
-function unlockIntroQuizButton(btn, reason) {
-  if (introVslUnlockDone) return;
-  introVslUnlockDone = true;
-  try {
-    sessionStorage.setItem(INTRO_VSL_SESSION_KEY, "1");
-  } catch (e) {}
-  btn.disabled = false;
-  btn.removeAttribute("aria-disabled");
-  btn.classList.remove("intro-quiz-locked");
-  if (introVslPollInterval != null) {
-    clearInterval(introVslPollInterval);
-    introVslPollInterval = null;
-  }
-  if (introVslEndWatchdogInterval != null) {
-    clearInterval(introVslEndWatchdogInterval);
-    introVslEndWatchdogInterval = null;
-  }
-  console.log("[intro-vsl] botão liberado:", reason);
-}
-
-/**
- * Libera o botão "Fazer o quiz" somente quando o VSL da intro termina de fato (ended ou currentTime ≥ duration).
- * Sem tempo fixo, sem play como gatilho. Polling só para achar o &lt;video&gt; dentro do vturb-smartplayer.
- */
-function setupIntroVslQuizButtonUnlock() {
-  var btn = document.getElementById("btn-start-quiz");
-  if (!btn) return;
-
-  try {
-    if (sessionStorage.getItem(INTRO_VSL_SESSION_KEY) === "1") {
-      console.log("[intro-vsl] sessão: VSL já concluído — botão liberado sem esperar vídeo");
-      introVslUnlockDone = true;
-      btn.disabled = false;
-      btn.removeAttribute("aria-disabled");
-      btn.classList.remove("intro-quiz-locked");
-      return;
-    }
-  } catch (e) {}
-
-  lockIntroQuizButton(btn);
-
-  function maybeUnlockIfAlreadyAtEnd(video, why) {
-    if (introVslUnlockDone) return;
-    if (shouldUnlockVslForVideo(video)) {
-      unlockIntroQuizButton(btn, why);
-    }
-  }
-
-  function startIntroVslEndWatchdog() {
-    if (introVslEndWatchdogInterval != null) return;
-    introVslEndWatchdogInterval = setInterval(function () {
-      if (introVslUnlockDone) return;
-      var list = collectIntroPlayerVideos();
-      for (var i = 0; i < list.length; i++) {
-        if (shouldUnlockVslForVideo(list[i])) {
-          console.log("[intro-vsl] fim detectado pelo watchdog (polling)");
-          unlockIntroQuizButton(btn, "watchdog");
-          return;
-        }
-      }
-    }, 250);
-  }
-
-  function bindVturbHostCustomEvents(host) {
-    if (!host || introVslHostEventsBound) return;
-    introVslHostEventsBound = true;
-    /* Nomes amplos como "complete" podem disparar cedo; priorizar eventos explícitos de fim de vídeo. */
-    ["video:ended", "video:end", "player:ended", "vturb:ended"].forEach(function (name) {
-      try {
-        host.addEventListener(
-          name,
-          function (ev) {
-            console.log("[intro-vsl] evento no host:", name, ev && ev.detail);
-            unlockIntroQuizButton(btn, "host:" + name);
-          },
-          { once: true }
-        );
-      } catch (e) {}
-    });
-  }
-
-  function attachToIntroVideos(videos) {
-    if (introVslListenersAttached) return;
-    introVslListenersAttached = true;
-    introVslMonitoredVideo = videos[0] || null;
-
-    console.log("[intro-vsl] vídeo(s) ligado(s):", videos.length);
-
-    videos.forEach(function (video, idx) {
-      console.log(
-        "[intro-vsl] vídeo[" + idx + "] duration=",
-        video.duration,
-        "readyState=",
-        video.readyState
-      );
-
-      video.addEventListener(
-        "loadedmetadata",
-        function () {
-          console.log("[intro-vsl] loadedmetadata[" + idx + "] duração (s):", video.duration);
-        },
-        { once: true }
-      );
-
-      video.addEventListener(
-        "ended",
-        function () {
-          console.log("[intro-vsl] evento ended[" + idx + "]");
-          unlockIntroQuizButton(btn, "ended");
-        },
-        { once: true }
-      );
-
-      video.addEventListener("timeupdate", function () {
-        if (introVslUnlockDone) return;
-        if (shouldUnlockVslForVideo(video)) {
-          console.log("[intro-vsl] fim via timeupdate[" + idx + "]");
-          unlockIntroQuizButton(btn, "timeupdate");
-          return;
-        }
-        var now = Date.now();
-        if (now - introVslLastProgressLogMs > 2000) {
-          introVslLastProgressLogMs = now;
-          var d = video.duration;
-          console.log(
-            "[intro-vsl] progresso[" + idx + "]:",
-            video.currentTime.toFixed(2) + " / " + (isFinite(d) ? d.toFixed(2) : "?")
-          );
-        }
-      });
-    });
-
-    videos.forEach(function (v) {
-      maybeUnlockIfAlreadyAtEnd(v, "já no fim ao bind");
-    });
-
-    startIntroVslEndWatchdog();
-  }
-
-  var introVslLoggedPlayer = false;
-  var introVslLastWaitLogMs = 0;
-
-  function tick() {
-    if (introVslUnlockDone) return;
-    var host = document.querySelector("#s-intro vturb-smartplayer");
-    if (!host) {
-      return;
-    }
-    if (!introVslLoggedPlayer) {
-      introVslLoggedPlayer = true;
-      console.log("[intro-vsl] player encontrado:", host.id || host.tagName);
-      bindVturbHostCustomEvents(host);
-      /* Watchdog mesmo sem video no DOM ainda (iframe/shadow pode montar depois). */
-      startIntroVslEndWatchdog();
-    }
-
-    var videos = collectIntroPlayerVideos();
-    if (videos.length === 0) {
-      var nw = Date.now();
-      if (nw - introVslLastWaitLogMs > 3000) {
-        introVslLastWaitLogMs = nw;
-        console.log(
-          "[intro-vsl] nenhum <video> acessível (shadow fechado ou iframe cross-origin?). Continuando polling + eventos no host…"
-        );
-      }
-      return;
-    }
-    console.log("[intro-vsl] total de <video> acessível(is):", videos.length);
-    attachToIntroVideos(videos);
-    if (introVslPollInterval != null) {
-      clearInterval(introVslPollInterval);
-      introVslPollInterval = null;
-    }
-  }
-
-  tick();
-  introVslPollInterval = setInterval(tick, 400);
-}
-
-function syncIntroQuizButtonAfterVisibility() {
-  if (introVslUnlockDone) return;
-  var btn = document.getElementById("btn-start-quiz");
-  var intro = document.getElementById("s-intro");
-  if (!btn || !intro || !intro.classList.contains("active")) return;
-  var list = collectIntroPlayerVideos();
-  for (var i = 0; i < list.length; i++) {
-    if (shouldUnlockVslForVideo(list[i])) {
-      console.log("[intro-vsl] fim detectado ao voltar à aba / foco");
-      unlockIntroQuizButton(btn, "visibility/focus");
-      return;
-    }
-  }
 }
 
 function pauseVturbPlayer(host) {
@@ -1504,8 +1258,6 @@ function startResultVturbIdleGuard() {
 }
 
 function startQuizFromIntro() {
-  var btn = document.getElementById("btn-start-quiz");
-  if (btn && btn.disabled) return;
   pauseIntroVturb();
   startQuiz();
 }
@@ -1718,21 +1470,17 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
 
 document.addEventListener("visibilitychange", function () {
   if (document.visibilityState === "visible") {
-    syncIntroQuizButtonAfterVisibility();
     syncResultWppButtonAfterVisibility();
   }
 });
 window.addEventListener("pageshow", function () {
-  syncIntroQuizButtonAfterVisibility();
   syncResultWppButtonAfterVisibility();
 });
 window.addEventListener("focus", function () {
-  syncIntroQuizButtonAfterVisibility();
   syncResultWppButtonAfterVisibility();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  setupIntroVslQuizButtonUnlock();
   startResultVturbIdleGuard();
 });
 </script>
