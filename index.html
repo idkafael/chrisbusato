@@ -883,6 +883,7 @@ function configureResultCtaForPath() {
 }
 
 function showPercentageResultFromAnswers(ansList) {
+  stopResultVturbIdleGuard();
   const cnt = countAnswerTypes(ansList);
   const pct = computeBodyPercentages(cnt);
   configureResultCtaForPath();
@@ -894,7 +895,7 @@ function showPercentageResultFromAnswers(ansList) {
   renderPercentageMap(pct);
   setDominantBodyTitle(pct);
   submitQuizToSupabase(ansList);
-  /* Contagem longa só aqui (tela final), depois da análise — não na transição pergunta 10 → loading. */
+  /* Botão final só após o usuário dar play no 2º VSL (não por tempo fixo). */
   startResultWppButtonUnlock();
 }
 
@@ -902,25 +903,94 @@ function showPercentageResultFromAnswers(ansList) {
 var LOADING_AFTER_LAST_MS = 3000;
 var LOADING_AFTER_LAST_MS_QUIZZ = 3000;
 
-var RESULT_VSL_MS = 2 * 60 * 1000 + 39 * 1000;
-/** Em /quizz o botão final libera 10 s antes do VSL da raiz. */
-var RESULT_VSL_MS_QUIZZ = RESULT_VSL_MS - 10 * 1000;
-var resultWppUnlockTimer = null;
+var resultWppUnlockPollInterval = null;
+var resultWppUnlockBindGen = 0;
 
 function startResultWppButtonUnlock() {
   var btn = document.getElementById("btn-wpp");
   if (!btn) return;
-  if (resultWppUnlockTimer != null) {
-    clearTimeout(resultWppUnlockTimer);
-    resultWppUnlockTimer = null;
+  resultWppUnlockBindGen++;
+  var gen = resultWppUnlockBindGen;
+  if (resultWppUnlockPollInterval != null) {
+    clearInterval(resultWppUnlockPollInterval);
+    resultWppUnlockPollInterval = null;
   }
-  var delayMs =
-    siteNormalizePath() === "/quizz" ? RESULT_VSL_MS_QUIZZ : RESULT_VSL_MS;
   btn.disabled = true;
-  resultWppUnlockTimer = setTimeout(function () {
-    resultWppUnlockTimer = null;
-    btn.disabled = false;
-  }, delayMs);
+
+  function collectResultVideos(host) {
+    var list = [];
+    if (!host) return list;
+    try {
+      if (host.shadowRoot) {
+        host.shadowRoot.querySelectorAll("video").forEach(function (v) {
+          list.push(v);
+        });
+      }
+    } catch (e) {}
+    try {
+      host.querySelectorAll("video").forEach(function (v) {
+        list.push(v);
+      });
+    } catch (e2) {}
+    return list;
+  }
+
+  function pauseResultNow() {
+    pauseResultVturb();
+  }
+
+  var playUnlockBound = false;
+
+  function tryBindPlayToUnlock() {
+    if (gen !== resultWppUnlockBindGen) return false;
+    if (playUnlockBound) return true;
+    pauseResultNow();
+    var host = document.querySelector("#s-result vturb-smartplayer");
+    var videos = collectResultVideos(host);
+    if (videos.length === 0) return false;
+    playUnlockBound = true;
+    function unlock() {
+      if (gen !== resultWppUnlockBindGen) return;
+      btn.disabled = false;
+      if (resultWppUnlockPollInterval != null) {
+        clearInterval(resultWppUnlockPollInterval);
+        resultWppUnlockPollInterval = null;
+      }
+    }
+    videos.forEach(function (v) {
+      v.addEventListener("play", unlock, { once: true });
+    });
+    return true;
+  }
+
+  pauseResultNow();
+  requestAnimationFrame(function () {
+    pauseResultNow();
+    if (tryBindPlayToUnlock() && resultWppUnlockPollInterval != null) {
+      clearInterval(resultWppUnlockPollInterval);
+      resultWppUnlockPollInterval = null;
+    }
+  });
+
+  var deadline = Date.now() + 20000;
+  resultWppUnlockPollInterval = setInterval(function () {
+    if (gen !== resultWppUnlockBindGen) {
+      clearInterval(resultWppUnlockPollInterval);
+      resultWppUnlockPollInterval = null;
+      return;
+    }
+    if (!playUnlockBound) pauseResultNow();
+    if (tryBindPlayToUnlock()) {
+      clearInterval(resultWppUnlockPollInterval);
+      resultWppUnlockPollInterval = null;
+      return;
+    }
+    if (Date.now() > deadline) {
+      clearInterval(resultWppUnlockPollInterval);
+      resultWppUnlockPollInterval = null;
+      if (gen === resultWppUnlockBindGen) btn.disabled = false;
+    }
+  }, 200);
 }
 
 let cur = 0, answers = [], sel = null;
@@ -928,8 +998,7 @@ let lead = { email: "", phone: "", full_name: "" };
 
 var INTRO_VSL_MS = 60 * 1000 + 8 * 1000;
 
-function pauseIntroVturb() {
-  var host = document.querySelector("#s-intro vturb-smartplayer");
+function pauseVturbPlayer(host) {
   if (!host) return;
   try {
     if (typeof host.pause === "function") host.pause();
@@ -940,8 +1009,7 @@ function pauseIntroVturb() {
   try {
     var root = host.shadowRoot;
     if (root) {
-      var vids = root.querySelectorAll("video");
-      vids.forEach(function (v) {
+      root.querySelectorAll("video").forEach(function (v) {
         try {
           v.pause();
         } catch (e2) {}
@@ -955,6 +1023,38 @@ function pauseIntroVturb() {
       } catch (e3) {}
     });
   } catch (e) {}
+}
+
+function pauseIntroVturb() {
+  pauseVturbPlayer(document.querySelector("#s-intro vturb-smartplayer"));
+}
+
+function pauseResultVturb() {
+  pauseVturbPlayer(document.querySelector("#s-result vturb-smartplayer"));
+}
+
+/** Enquanto a tela final estiver oculta, o 2º player ainda inicializa e pode dar autoplay — seguramos até o usuário chegar lá. */
+var resultVturbGuardInterval = null;
+
+function stopResultVturbIdleGuard() {
+  if (resultVturbGuardInterval != null) {
+    clearInterval(resultVturbGuardInterval);
+    resultVturbGuardInterval = null;
+  }
+}
+
+function startResultVturbIdleGuard() {
+  stopResultVturbIdleGuard();
+  pauseResultVturb();
+  resultVturbGuardInterval = setInterval(function () {
+    var sr = document.getElementById("s-result");
+    if (!sr) return;
+    if (sr.classList.contains("active")) {
+      stopResultVturbIdleGuard();
+      return;
+    }
+    pauseResultVturb();
+  }, 400);
 }
 
 function startIntroQuizButtonUnlock() {
@@ -1021,9 +1121,9 @@ function nextQ() {
 }
 
 function showLoadingThenResult() {
-  if (resultWppUnlockTimer != null) {
-    clearTimeout(resultWppUnlockTimer);
-    resultWppUnlockTimer = null;
+  if (resultWppUnlockPollInterval != null) {
+    clearInterval(resultWppUnlockPollInterval);
+    resultWppUnlockPollInterval = null;
   }
   var wppBtn = document.getElementById("btn-wpp");
   if (wppBtn) wppBtn.disabled = true;
@@ -1177,6 +1277,7 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
 
 document.addEventListener("DOMContentLoaded", function () {
   startIntroQuizButtonUnlock();
+  startResultVturbIdleGuard();
 });
 </script>
 </body>
