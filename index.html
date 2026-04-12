@@ -1436,7 +1436,12 @@ function goWpp() {
 }
 
 function normalizePhone(raw) {
-  return String(raw || "").replace(/\D/g, "");
+  let d = String(raw || "").replace(/\D/g, "");
+  /* Saída internacional 00 39 … → 39… (12 dígitos típicos) */
+  if (d.startsWith("0039") && d.length >= 4) {
+    d = "39" + d.slice(4);
+  }
+  return d;
 }
 
 function formatPhoneBR11(digitsRaw) {
@@ -1454,9 +1459,18 @@ function isValidEmail(raw) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
 
-function isValidPhoneBR(raw) {
-  const digits = normalizePhone(raw);
-  return digits.length === 11;
+/** BR: 11 dígitos (DDD + celular). IT: +39 e móvel (10 dígitos nacionais começam com 3) → 12 dígitos totais. */
+function isValidPhoneLead(raw) {
+  const d = normalizePhone(raw);
+  if (d.length === 11) return true;
+  if (d.length === 12 && d.startsWith("39") && d.charAt(2) === "3") return true;
+  return false;
+}
+
+function formatPhoneLeadDisplay(storedDigits) {
+  const d = normalizePhone(storedDigits);
+  if (d.length === 12 && d.startsWith("39")) return d;
+  return formatPhoneBR11(storedDigits);
 }
 
 function openLeadModal() {
@@ -1473,7 +1487,7 @@ function openLeadModal() {
       const parsed = JSON.parse(saved);
       if (parsed && typeof parsed === "object") {
         if (parsed.email) document.getElementById("lead-email").value = parsed.email;
-        if (parsed.phone) document.getElementById("lead-phone").value = formatPhoneBR11(parsed.phone);
+        if (parsed.phone) document.getElementById("lead-phone").value = formatPhoneLeadDisplay(parsed.phone);
       }
     } catch {}
   }
@@ -1508,7 +1522,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
     return;
   }
 
-  if (!isValidPhoneBR(phone)) {
+  if (!isValidPhoneLead(phone)) {
     err.textContent = "Coloque um WhatsApp válido (com DDD) para continuar.";
     err.classList.add("active");
     return;
@@ -1571,7 +1585,11 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
 document.getElementById("lead-phone").addEventListener("input", (e) => {
   const el = e.target;
   const digits = normalizePhone(el.value);
-  el.value = formatPhoneBR11(digits);
+  if (digits.length <= 11 && !digits.startsWith("39")) {
+    el.value = formatPhoneBR11(digits);
+  } else {
+    el.value = digits.slice(0, 15);
+  }
 });
 
 document.addEventListener("visibilitychange", function () {
