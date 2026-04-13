@@ -15,3 +15,10 @@ fs.copyFileSync(
   path.join(__dirname, "dist", "index.html"),
   path.join(quizzDir, "index.html")
 );
+
+var dashboardDir = path.join(__dirname, "dist", "dashboard");
+fs.mkdirSync(dashboardDir, { recursive: true });
+fs.copyFileSync(
+  path.join(__dirname, "dashboard.html"),
+  path.join(dashboardDir, "index.html")
+);
