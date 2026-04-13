@@ -259,6 +259,36 @@ body {
   border-color: #5C7A5A;
   box-shadow: 0 0 0 3px rgba(92, 122, 90, 0.16);
 }
+.phone-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+.phone-field-row .field-input--cc {
+  flex: 0 0 auto;
+  min-width: 118px;
+  max-width: 46%;
+  padding-left: 0.65rem;
+  padding-right: 0.45rem;
+  font-size: 13px;
+  cursor: pointer;
+}
+.phone-field-row .field-input--cc-custom {
+  display: none;
+  flex: 0 0 76px;
+  width: 76px;
+  text-align: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.phone-field-row .field-input--cc-custom.is-visible {
+  display: block;
+}
+.phone-field-row .field-input--national {
+  flex: 1 1 160px;
+  min-width: 0;
+}
 .form-error {
   display: none;
   margin-top: 0.75rem;
@@ -649,8 +679,35 @@ body {
         <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" pattern=".+@.+" title="O email precisa ter @ (ex: seu@email.com)" required>
       </div>
       <div class="field">
-        <label class="field-label" for="lead-phone">WhatsApp</label>
-        <input class="field-input" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" maxlength="14" required>
+        <label class="field-label" for="lead-phone-cc">WhatsApp</label>
+        <div class="phone-field-row">
+          <select class="field-input field-input--cc" id="lead-phone-cc" name="phone_cc" aria-label="País (DDI)" autocomplete="off" data-lpignore="true" data-form-type="other">
+            <option value="55" selected>🇧🇷 +55</option>
+            <option value="351">🇵🇹 +351</option>
+            <option value="1">🇺🇸 +1</option>
+            <option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option>
+            <option value="57">🇨🇴 +57</option>
+            <option value="51">🇵🇪 +51</option>
+            <option value="598">🇺🇾 +598</option>
+            <option value="595">🇵🇾 +595</option>
+            <option value="34">🇪🇸 +34</option>
+            <option value="39">🇮🇹 +39</option>
+            <option value="33">🇫🇷 +33</option>
+            <option value="49">🇩🇪 +49</option>
+            <option value="44">🇬🇧 +44</option>
+            <option value="52">🇲🇽 +52</option>
+            <option value="81">🇯🇵 +81</option>
+            <option value="86">🇨🇳 +86</option>
+            <option value="91">🇮🇳 +91</option>
+            <option value="244">🇦🇴 +244</option>
+            <option value="258">🇲🇿 +258</option>
+            <option value="238">🇨🇻 +238</option>
+            <option value="__custom__">🌐 Outro DDI</option>
+          </select>
+          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="DDI" maxlength="4" aria-label="Código do país (somente dígitos)">
+          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="14" required>
+        </div>
       </div>
 
       <div class="form-error" id="lead-error"></div>
@@ -799,7 +856,11 @@ function submitQuizToSupabase(ansList) {
 
   const ref = readQuizRowRef();
   const rowId =
-    ref && ref.email === lead.email && ref.phone === lead.phone && ref.completed === false && ref.id
+    ref &&
+    ref.email === lead.email &&
+    canonicalLeadPhoneDigits(ref.phone) === canonicalLeadPhoneDigits(lead.phone) &&
+    ref.completed === false &&
+    ref.id
       ? ref.id
       : null;
 
@@ -1444,6 +1505,109 @@ function normalizePhone(raw) {
   return d;
 }
 
+/**
+ * DDI para inferir país ao reabrir o modal (maior primeiro).
+ * Não inclui "1" (+1 EUA): qualquer número começando com 1 seria confundido com +1 (ex.: DDD 11 no BR).
+ * Quem usa +1 grava phone_dial "1" ou escolhe no select.
+ */
+const LEAD_PHONE_CC_PREFIXES = [
+  "598", "595", "351", "244", "258", "238", "86", "81", "91", "57", "56", "54", "52", "51", "49", "44", "39", "34", "33", "55"
+];
+
+function leadPhoneSyncCustomCcVisibility() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel || !custom) return;
+  const on = sel.value === "__custom__";
+  custom.classList.toggle("is-visible", on);
+  if (!on) custom.value = "";
+}
+
+function leadPhoneGetDialCode() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return "55";
+  if (sel.value === "__custom__") {
+    const c = normalizePhone(custom && custom.value ? custom.value : "");
+    return c.replace(/^0+/, "") || "";
+  }
+  return sel.value;
+}
+
+function leadPhoneGetNationalDigits() {
+  const el = document.getElementById("lead-phone");
+  return normalizePhone(el && el.value ? el.value : "");
+}
+
+function leadPhoneFullDigitsFromForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!cc || !nat) return "";
+  return cc + nat;
+}
+
+/** Número completo em dígitos para comparar com quiz salvo (compatível com lead antigo só BR). */
+function canonicalLeadPhoneDigits(stored) {
+  let d = normalizePhone(stored);
+  if (!d) return "";
+  if (d.length === 11 && d.charAt(0) !== "0") return "55" + d;
+  return d;
+}
+
+function splitStoredDigitsToCcAndNational(fullDigits, savedDial) {
+  const d = normalizePhone(fullDigits);
+  if (!d) return { cc: "55", national: "" };
+  const saved = savedDial ? normalizePhone(savedDial).replace(/^0+/, "") : "";
+  if (saved && d.startsWith(saved) && d.length > saved.length) {
+    return { cc: saved, national: d.slice(saved.length) };
+  }
+  /* BR já com DDI 55 (13–15 dígitos) */
+  if (d.startsWith("55") && d.length >= 13 && d.length <= 15) {
+    return { cc: "55", national: d.slice(2) };
+  }
+  /* Itália (12 dígitos com 39…) */
+  if (d.length === 12 && d.startsWith("39") && d.charAt(2) === "3") {
+    return { cc: "39", national: d.slice(2) };
+  }
+  /* BR só DDD+número (11 dígitos) — antes do loop para nunca cair em +1 por engano */
+  if (d.length === 11) {
+    return { cc: "55", national: d };
+  }
+  const merged = LEAD_PHONE_CC_PREFIXES.slice().sort(function (a, b) {
+    return b.length - a.length;
+  });
+  for (let i = 0; i < merged.length; i++) {
+    const p = merged[i];
+    if (d.startsWith(p) && d.length > p.length) return { cc: p, national: d.slice(p.length) };
+  }
+  return { cc: "55", national: d };
+}
+
+function leadPhoneSetDialInUi(ccDigits) {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return;
+  const cc = String(ccDigits || "").replace(/\D/g, "").replace(/^0+/, "") || "55";
+  let found = false;
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === cc) {
+      sel.selectedIndex = i;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    for (let j = 0; j < sel.options.length; j++) {
+      if (sel.options[j].value === "__custom__") {
+        sel.selectedIndex = j;
+        break;
+      }
+    }
+    if (custom) custom.value = cc;
+  } else if (custom) custom.value = "";
+  leadPhoneSyncCustomCcVisibility();
+}
+
 function formatPhoneBR11(digitsRaw) {
   const d = String(digitsRaw || "").replace(/\D/g, "").slice(0, 11);
   let out = "";
@@ -1459,18 +1623,17 @@ function isValidEmail(raw) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
 
-/** BR: 11 dígitos (DDD + celular). IT: +39 e móvel (10 dígitos nacionais começam com 3) → 12 dígitos totais. */
-function isValidPhoneLead(raw) {
-  const d = normalizePhone(raw);
-  if (d.length === 11) return true;
-  if (d.length === 12 && d.startsWith("39") && d.charAt(2) === "3") return true;
-  return false;
-}
-
-function formatPhoneLeadDisplay(storedDigits) {
-  const d = normalizePhone(storedDigits);
-  if (d.length === 12 && d.startsWith("39")) return d;
-  return formatPhoneBR11(storedDigits);
+/** Valida DDI + número nacional (E.164 até 15 dígitos no total). */
+function isValidPhoneLeadForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!/^[1-9]\d{0,2}$/.test(cc)) return false;
+  if (!nat) return false;
+  const full = cc + nat;
+  if (full.length < 10 || full.length > 15) return false;
+  if (cc === "55") return nat.length === 11;
+  if (cc === "39") return nat.length === 10 && nat.charAt(0) === "3";
+  return true;
 }
 
 function openLeadModal() {
@@ -1481,16 +1644,36 @@ function openLeadModal() {
 
   modal.classList.add("active");
 
+  /* Sempre começa em 🇧🇷 +55; só troca DDI se houver lead salvo com outro país. */
+  document.getElementById("lead-email").value = "";
+  leadPhoneSetDialInUi("55");
+  document.getElementById("lead-phone").value = "";
+  const ccCustomEl = document.getElementById("lead-phone-cc-custom");
+  if (ccCustomEl) ccCustomEl.value = "";
+
   const saved = localStorage.getItem("lead");
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
       if (parsed && typeof parsed === "object") {
         if (parsed.email) document.getElementById("lead-email").value = parsed.email;
-        if (parsed.phone) document.getElementById("lead-phone").value = formatPhoneLeadDisplay(parsed.phone);
+        if (parsed.phone) {
+          const full = normalizePhone(parsed.phone);
+          const dialSaved = parsed.phone_dial ? String(parsed.phone_dial) : "";
+          const parts = splitStoredDigitsToCcAndNational(full, dialSaved);
+          leadPhoneSetDialInUi(parts.cc);
+          const natEl = document.getElementById("lead-phone");
+          if (parts.cc === "55" && parts.national.length <= 11) {
+            natEl.value = formatPhoneBR11(parts.national);
+          } else {
+            natEl.value = parts.national;
+          }
+        }
       }
     } catch {}
   }
+
+  leadPhoneSyncCustomCcVisibility();
 
   setTimeout(() => document.getElementById("lead-email").focus(), 0);
 }
@@ -1510,7 +1693,6 @@ document.addEventListener("keydown", (e) => {
 document.getElementById("lead-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const email = document.getElementById("lead-email").value.trim();
-  const phone = document.getElementById("lead-phone").value.trim();
 
   const err = document.getElementById("lead-error");
   err.textContent = "";
@@ -1522,15 +1704,18 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
     return;
   }
 
-  if (!isValidPhoneLead(phone)) {
-    err.textContent = "Coloque um WhatsApp válido (com DDD) para continuar.";
+  if (!isValidPhoneLeadForm()) {
+    err.textContent =
+      "Coloque um WhatsApp válido (DDI do país e número com DDD local, ex.: Brasil +55 e 11 dígitos).";
     err.classList.add("active");
     return;
   }
 
   var nameEl = document.getElementById("lead-name");
   var fullName = nameEl ? String(nameEl.value || "").trim() : "";
-  lead = { email, phone: normalizePhone(phone), full_name: fullName };
+  const phoneFull = leadPhoneFullDigitsFromForm();
+  const dialUsed = leadPhoneGetDialCode();
+  lead = { email, phone: phoneFull, phone_dial: dialUsed, full_name: fullName };
   localStorage.setItem("lead", JSON.stringify(lead));
 
   const emailNorm = email;
@@ -1544,7 +1729,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   if (
     existingRef &&
     existingRef.email === emailNorm &&
-    existingRef.phone === lead.phone &&
+    canonicalLeadPhoneDigits(existingRef.phone) === canonicalLeadPhoneDigits(lead.phone) &&
     existingRef.completed === false &&
     existingRef.id
   ) {
@@ -1585,11 +1770,27 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
 document.getElementById("lead-phone").addEventListener("input", (e) => {
   const el = e.target;
   const digits = normalizePhone(el.value);
-  if (digits.length <= 11 && !digits.startsWith("39")) {
+  const cc = leadPhoneGetDialCode();
+  if (cc === "55" && digits.length <= 11 && !digits.startsWith("39")) {
     el.value = formatPhoneBR11(digits);
   } else {
-    el.value = digits.slice(0, 15);
+    const maxNat = Math.max(4, 15 - String(cc || "").length);
+    el.value = digits.slice(0, maxNat);
   }
+});
+
+document.getElementById("lead-phone-cc").addEventListener("change", () => {
+  leadPhoneSyncCustomCcVisibility();
+  const nat = document.getElementById("lead-phone");
+  const d = normalizePhone(nat.value);
+  if (leadPhoneGetDialCode() === "55" && d.length <= 11 && !d.startsWith("39")) {
+    nat.value = formatPhoneBR11(d);
+  }
+});
+
+document.getElementById("lead-phone-cc-custom").addEventListener("input", (e) => {
+  const el = e.target;
+  el.value = normalizePhone(el.value).slice(0, 4);
 });
 
 document.addEventListener("visibilitychange", function () {
