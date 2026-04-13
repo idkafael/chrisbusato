@@ -705,8 +705,8 @@ body {
             <option value="238">🇨🇻 +238</option>
             <option value="__custom__">🌐 Outro DDI</option>
           </select>
-          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="DDI" maxlength="4" aria-label="Código do país (somente dígitos)">
-          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="14" required>
+          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="DDI" maxlength="3" aria-label="Código do país (somente dígitos)">
+          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required>
         </div>
       </div>
 
@@ -1514,6 +1514,69 @@ const LEAD_PHONE_CC_PREFIXES = [
   "598", "595", "351", "244", "258", "238", "86", "81", "91", "57", "56", "54", "52", "51", "49", "44", "39", "34", "33", "55"
 ];
 
+/** Quantidade de dígitos do número nacional (sem DDI), por país do select. */
+const LEAD_PHONE_NATIONAL_BY_CC = {
+  "55": { min: 11, max: 11 },
+  "39": { min: 10, max: 10, firstDigit: "3" },
+  "351": { min: 9, max: 9 },
+  "1": { min: 10, max: 10 },
+  "54": { min: 10, max: 11 },
+  "56": { min: 9, max: 9 },
+  "57": { min: 10, max: 10 },
+  "51": { min: 9, max: 9 },
+  "598": { min: 8, max: 9 },
+  "595": { min: 9, max: 9 },
+  "34": { min: 9, max: 9 },
+  "33": { min: 9, max: 9 },
+  "49": { min: 10, max: 11 },
+  "44": { min: 10, max: 10 },
+  "52": { min: 10, max: 10 },
+  "81": { min: 10, max: 10 },
+  "86": { min: 11, max: 11 },
+  "91": { min: 10, max: 10 },
+  "244": { min: 9, max: 9 },
+  "258": { min: 9, max: 9 },
+  "238": { min: 7, max: 7 }
+};
+
+function leadPhoneNationalBounds(cc) {
+  let t = String(cc || "").replace(/\D/g, "").replace(/^0+/, "");
+  if (t.length > 3) t = t.slice(0, 3);
+  if (!t) return { min: 6, max: 12 };
+  const row = LEAD_PHONE_NATIONAL_BY_CC[t];
+  if (row) return { min: row.min, max: row.max, firstDigit: row.firstDigit };
+  const maxNat = 15 - t.length;
+  const minNat = Math.max(4, 10 - t.length);
+  return { min: Math.min(minNat, maxNat), max: maxNat };
+}
+
+/** Ajusta maxlength, placeholder e corta dígitos a mais ao mudar o país. */
+function leadPhoneRefreshNationalFieldConstraints() {
+  const nat = document.getElementById("lead-phone");
+  if (!nat) return;
+  const cc = leadPhoneGetDialCode() || "55";
+  const b = leadPhoneNationalBounds(cc);
+  if (cc === "55") {
+    nat.maxLength = 14;
+    nat.placeholder = "(11) 99999-9999";
+    nat.title = "Brasil: 11 dígitos (DDD + celular)";
+  } else {
+    nat.maxLength = b.max;
+    nat.placeholder =
+      b.min === b.max ? b.max + " dígitos (sem DDI)" : b.min + "–" + b.max + " dígitos (sem DDI)";
+    nat.title =
+      "Somente dígitos: " +
+      b.min +
+      (b.min === b.max ? "" : " a " + b.max) +
+      " após o código do país";
+  }
+  let d = normalizePhone(nat.value);
+  if (d.length > b.max) {
+    d = d.slice(0, b.max);
+    nat.value = cc === "55" ? formatPhoneBR11(d) : d;
+  }
+}
+
 function leadPhoneSyncCustomCcVisibility() {
   const sel = document.getElementById("lead-phone-cc");
   const custom = document.getElementById("lead-phone-cc-custom");
@@ -1529,7 +1592,7 @@ function leadPhoneGetDialCode() {
   if (!sel) return "55";
   if (sel.value === "__custom__") {
     const c = normalizePhone(custom && custom.value ? custom.value : "");
-    return c.replace(/^0+/, "") || "";
+    return c.replace(/^0+/, "").slice(0, 3) || "";
   }
   return sel.value;
 }
@@ -1623,16 +1686,17 @@ function isValidEmail(raw) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
 
-/** Valida DDI + número nacional (E.164 até 15 dígitos no total). */
+/** Valida DDI + número nacional (regras por país + limite E.164 15 dígitos). */
 function isValidPhoneLeadForm() {
   const cc = leadPhoneGetDialCode();
   const nat = leadPhoneGetNationalDigits();
   if (!/^[1-9]\d{0,2}$/.test(cc)) return false;
   if (!nat) return false;
+  const b = leadPhoneNationalBounds(cc);
+  if (nat.length < b.min || nat.length > b.max) return false;
+  if (b.firstDigit && nat.charAt(0) !== b.firstDigit) return false;
   const full = cc + nat;
   if (full.length < 10 || full.length > 15) return false;
-  if (cc === "55") return nat.length === 11;
-  if (cc === "39") return nat.length === 10 && nat.charAt(0) === "3";
   return true;
 }
 
@@ -1674,6 +1738,7 @@ function openLeadModal() {
   }
 
   leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
 
   setTimeout(() => document.getElementById("lead-email").focus(), 0);
 }
@@ -1705,8 +1770,12 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   }
 
   if (!isValidPhoneLeadForm()) {
+    const b = leadPhoneNationalBounds(leadPhoneGetDialCode());
     err.textContent =
-      "Coloque um WhatsApp válido (DDI do país e número com DDD local, ex.: Brasil +55 e 11 dígitos).";
+      "WhatsApp inválido para o país escolhido: use " +
+      b.min +
+      (b.min === b.max ? "" : " a " + b.max) +
+      " dígitos no número (sem o DDI), depois do código do país.";
     err.classList.add("active");
     return;
   }
@@ -1771,26 +1840,30 @@ document.getElementById("lead-phone").addEventListener("input", (e) => {
   const el = e.target;
   const digits = normalizePhone(el.value);
   const cc = leadPhoneGetDialCode();
-  if (cc === "55" && digits.length <= 11 && !digits.startsWith("39")) {
-    el.value = formatPhoneBR11(digits);
+  const b = leadPhoneNationalBounds(cc);
+  const slice = digits.slice(0, b.max);
+  if (cc === "55" && !slice.startsWith("39")) {
+    el.value = formatPhoneBR11(slice);
   } else {
-    const maxNat = Math.max(4, 15 - String(cc || "").length);
-    el.value = digits.slice(0, maxNat);
+    el.value = slice;
   }
 });
 
 document.getElementById("lead-phone-cc").addEventListener("change", () => {
   leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
   const nat = document.getElementById("lead-phone");
   const d = normalizePhone(nat.value);
-  if (leadPhoneGetDialCode() === "55" && d.length <= 11 && !d.startsWith("39")) {
+  const cc = leadPhoneGetDialCode();
+  if (cc === "55" && !d.startsWith("39")) {
     nat.value = formatPhoneBR11(d);
   }
 });
 
 document.getElementById("lead-phone-cc-custom").addEventListener("input", (e) => {
   const el = e.target;
-  el.value = normalizePhone(el.value).slice(0, 4);
+  el.value = normalizePhone(el.value).slice(0, 3);
+  leadPhoneRefreshNationalFieldConstraints();
 });
 
 document.addEventListener("visibilitychange", function () {
@@ -1807,6 +1880,7 @@ window.addEventListener("focus", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   startResultVturbIdleGuard();
+  leadPhoneRefreshNationalFieldConstraints();
 });
 </script>
 </body>
