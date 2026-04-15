@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "cleanUrls": true,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/quizz", "destination": "/index.html" },
+    { "source": "/quizz/", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/dashboard/", "destination": "/dashboard/index.html" },
+    { "source": "/valentine", "destination": "/valentine/index.html" },
+    { "source": "/valentine/", "destination": "/valentine/index.html" }
+  ]
+}

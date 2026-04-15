@@ -1,0 +1,9 @@
+{
+  "name": "chrisbusato-quiz",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Quiz estático (HTML/CSS/JS) — sem dependências npm",
+  "scripts": {
+    "build": "node build.js"
+  }
+}
