@@ -11,6 +11,8 @@
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/dashboard/", "destination": "/dashboard/index.html" },
     { "source": "/valentine", "destination": "/valentine/index.html" },
-    { "source": "/valentine/", "destination": "/valentine/index.html" }
+    { "source": "/valentine/", "destination": "/valentine/index.html" },
+    { "source": "/teste", "destination": "/teste/index.html" },
+    { "source": "/teste/", "destination": "/teste/index.html" }
   ]
 }

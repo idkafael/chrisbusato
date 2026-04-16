@@ -2,8 +2,11 @@
   "name": "chrisbusato-quiz",
   "private": true,
   "version": "1.0.0",
-  "description": "Quiz estático (HTML/CSS/JS) — sem dependências npm",
+  "description": "Quiz estático (HTML/CSS/JS) + API serverless (Vercel + Supabase)",
   "scripts": {
     "build": "node build.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4"
   }
 }

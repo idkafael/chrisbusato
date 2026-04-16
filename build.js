@@ -29,3 +29,10 @@ fs.copyFileSync(
   path.join(__dirname, "valentine.html"),
   path.join(valentineDir, "index.html")
 );
+
+var testeDir = path.join(__dirname, "dist", "teste");
+fs.mkdirSync(testeDir, { recursive: true });
+fs.copyFileSync(
+  path.join(__dirname, "teste.html"),
+  path.join(testeDir, "index.html")
+);

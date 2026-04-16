@@ -24,6 +24,13 @@ window.SITE_PATH_DESTINATIONS = {
       encodeURIComponent(
         "oii, vim do quiz do casal, pode me falar mais?"
       )
+  },
+  "/teste": {
+    whatsapp:
+      "https://wa.me/5511967068271?text=" +
+      encodeURIComponent(
+        "oii, vim do quiz e quero participar do evento do dia 20!"
+      )
   }
 };
 

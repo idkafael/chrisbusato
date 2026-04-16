@@ -455,6 +455,46 @@
       font-style: italic;
     }
 
+    /* ─── SOURCE TABS ─── */
+    .source-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: #F2EDE3;
+      color: #8A7D6B;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .tab-btn:hover { border-color: #5C7A5A; color: #5C7A5A; }
+    .tab-btn.active {
+      background: #5C7A5A;
+      border-color: #5C7A5A;
+      color: #F5F0E8;
+    }
+    .tab-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      border-radius: 50px;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.22);
+      vertical-align: middle;
+    }
+    .tab-btn:not(.active) .tab-badge {
+      background: rgba(92,122,90,0.12);
+      color: #5C7A5A;
+    }
+
     /* Pagination */
     .pagination {
       display: flex;
@@ -673,6 +713,16 @@
 
   <div class="dash-main">
 
+    <!-- Source Tabs -->
+    <div class="source-tabs">
+      <button class="tab-btn active" id="tab-organic" onclick="switchTab('organic')">
+        Orgânico<span class="tab-badge" id="tab-organic-count">—</span>
+      </button>
+      <button class="tab-btn" id="tab-ads" onclick="switchTab('ads')">
+        Anúncios<span class="tab-badge" id="tab-ads-count">—</span>
+      </button>
+    </div>
+
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
@@ -773,6 +823,8 @@
   let allRows      = [];
   let filteredRows = [];
   let currentPage  = 0;
+  let currentSource = "organic"; // "organic" | "ads"
+  const tabCounts = { organic: null, ads: null };
 
   // ── elements
   const $  = id => document.getElementById(id);
@@ -809,7 +861,7 @@
     if (!v) { showError("Digite a senha de acesso."); return; }
     secret = v;
     clearError();
-    loadData();
+    showDash();
   }
 
   function showError(msg) {
@@ -834,13 +886,32 @@
     secretInput.value = "";
   });
 
+  // ── tab switch
+  window.switchTab = function(source) {
+    if (source === currentSource) return;
+    currentSource = source;
+    document.getElementById("tab-organic").classList.toggle("active", source === "organic");
+    document.getElementById("tab-ads").classList.toggle("active", source === "ads");
+    stopAutoRefresh();
+    loadData();
+  };
+
+  function updateTabCounts() {
+    if (tabCounts.organic !== null) $("tab-organic-count").textContent = tabCounts.organic;
+    if (tabCounts.ads     !== null) $("tab-ads-count").textContent     = tabCounts.ads;
+  }
+
   // ── load
   async function loadData() {
     tableBody.innerHTML = `<tr><td colspan="8" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
     statusBar.textContent = "";
 
+    const endpoint = currentSource === "ads"
+      ? `/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
+      : `/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`;
+
     try {
-      const res  = await fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`);
+      const res  = await fetch(endpoint);
       const data = await res.json();
 
       if (res.status === 401) {
@@ -860,6 +931,8 @@
       dashboard.style.display   = "block";
 
       allRows = data.rows || [];
+      tabCounts[currentSource] = allRows.length;
+      updateTabCounts();
       currentPage = 0;
       applyFilters();
       renderStats();
@@ -1011,7 +1084,8 @@
     btn.classList.add("loading");
 
     try {
-      const res = await fetch("/api/follow-up", {
+      const fuEndpoint = currentSource === "ads" ? "/api/follow-up-ads" : "/api/follow-up";
+      const res = await fetch(fuEndpoint, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secret, id, done: nowDone })
@@ -1116,7 +1190,7 @@
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement("a");
     a.href     = url;
-    a.download = `leads_quiz_${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = `leads_${currentSource}_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   });
