@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
 
   const { data, error } = await supabase
     .from("quiz_submissions_ads")
-    .select("id, email, phone, full_name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, quiz_completed, completed_at, follow_up_done, follow_up_at, created_at")
+    .select("id, email, phone, full_name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, quiz_completed, completed_at, follow_up_done, follow_up_at, created_at, stage, notes, starred, archived, dominant_type, payment_day, payment_value, payment_notes")
     .order("created_at", { ascending: false })
     .limit(500);
 
