@@ -1443,12 +1443,31 @@
     transition: opacity .15s;
   }
   .kanban-card-wa:hover { opacity: 1; }
-  .kanban-drop-zone {
-    min-height: 60px; border: 1.5px dashed #D8D0C4; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: #C5BAA8; transition: border-color .15s, background .15s;
+  /* coluna inteira como drop target */
+  .kanban-col {
+    transition: background .15s, box-shadow .15s;
   }
-  .kanban-drop-zone.drag-over { border-color: #8A7D6B; background: rgba(138,125,107,.06); color: #8A7D6B; }
+  .kanban-col.drag-target {
+    background: rgba(138,125,107,.07);
+    box-shadow: inset 0 0 0 2px rgba(138,125,107,.35);
+    border-radius: 14px;
+  }
+  /* hint de "soltar aqui" — aparece só durante o drag */
+  .kanban-col-drop-hint {
+    display: none;
+    align-items: center; justify-content: center;
+    min-height: 48px; border: 1.5px dashed #C5BAA8; border-radius: 12px;
+    font-size: 12px; color: #C5BAA8; margin: 0 0 0.4rem;
+    transition: border-color .15s, color .15s;
+  }
+  .kanban-col-drop-hint.visible {
+    display: flex;
+    border-color: #8A7D6B; color: #8A7D6B;
+    background: rgba(138,125,107,.04);
+  }
+  /* card sendo arrastado */
+  .kanban-card[draggable="true"] { cursor: grab; }
+  .kanban-card[draggable="true"]:active { cursor: grabbing; }
   .kanban-col-add-btn {
     width: 100%; padding: 0.45rem; background: transparent;
     border: 0.5px dashed #C5BAA8; border-radius: 10px;
@@ -3104,7 +3123,10 @@
       const stageRows = rows.filter(r => (r.stage || "novo") === stage);
       const color = KANBAN_COLOR[stage];
       const label = KANBAN_LABEL[stage];
-      return `<div class="kanban-col" data-stage="${stage}">
+      return `<div class="kanban-col" data-stage="${stage}"
+        ondragover="kanbanColDragOver(event,'${stage}')"
+        ondragleave="kanbanColDragLeave(event)"
+        ondrop="kanbanColDrop(event,'${stage}')">
         <div class="kanban-col-header">
           <span class="kanban-col-title" style="color:${color}">${label}</span>
           <span class="kanban-col-count">${stageRows.length}</span>
@@ -3124,7 +3146,8 @@
             const gIdx = allRows.findIndex(ar => String(ar.id) === String(r.id));
             const openFn = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
             return `<div class="kanban-card" draggable="true"
-              ondragstart="dragStart(event,'${r.id}')"
+              ondragstart="kanbanDragStart(event,'${r.id}')"
+              ondragend="kanbanDragEnd(event)"
               onclick="${openFn}">
               ${waBtn}
               <div class="kanban-card-name">${esc(r.full_name || r.email || "Lead")}</div>
@@ -3141,10 +3164,7 @@
             </div>`;
           }).join("")}
         </div>
-        <div class="kanban-drop-zone" data-stage="${stage}"
-          ondragover="event.preventDefault();this.classList.add('drag-over')"
-          ondragleave="this.classList.remove('drag-over')"
-          ondrop="dropCard(event,'${stage}')">Soltar aqui</div>
+        <div class="kanban-col-drop-hint" id="kh-${stage}">Soltar aqui</div>
         <button class="kanban-col-add-btn" onclick="openKanbanAddLead('${stage}')">+ Adicionar lead</button>
       </div>`;
     }).join("");
@@ -3302,14 +3322,60 @@
     showToast(`${row?.full_name || "Lead"} adicionado ✓`);
   };
 
-  // Drag & drop
-  let _dragLeadId = null;
-  window.dragStart = function(e, leadId) { _dragLeadId = leadId; };
-  window.dropCard  = function(e, stage) {
-    e.preventDefault();
-    e.currentTarget.classList.remove("drag-over");
-    if (_dragLeadId) { moveKanbanCard(_dragLeadId, stage); _dragLeadId = null; }
+  // ── Drag & drop — coluna inteira como zona de drop
+  let _dragLeadId  = null;
+  let _dragCounter = {}; // contador por stage para evitar flicker no dragleave
+
+  window.kanbanDragStart = function(e, leadId) {
+    _dragLeadId = leadId;
+    e.dataTransfer.effectAllowed = "move";
+    // Pequeno delay para o ghost aparecer antes do card ficar transparente
+    setTimeout(() => { e.target.style.opacity = "0.4"; }, 0);
   };
+
+  window.kanbanDragEnd = function(e) {
+    e.target.style.opacity = "";
+    // Limpar todos os highlights
+    document.querySelectorAll(".kanban-col.drag-target").forEach(el => el.classList.remove("drag-target"));
+    document.querySelectorAll(".kanban-col-drop-hint.visible").forEach(el => el.classList.remove("visible"));
+    _dragCounter = {};
+  };
+
+  window.kanbanColDragOver = function(e, stage) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    const col = e.currentTarget;
+    col.classList.add("drag-target");
+    const hint = document.getElementById("kh-" + stage);
+    if (hint) hint.classList.add("visible");
+  };
+
+  window.kanbanColDragLeave = function(e) {
+    // Só remove o highlight se saiu realmente da coluna (não entrou num filho)
+    const col = e.currentTarget;
+    if (!col.contains(e.relatedTarget)) {
+      col.classList.remove("drag-target");
+      const stage = col.dataset.stage;
+      const hint = document.getElementById("kh-" + stage);
+      if (hint) hint.classList.remove("visible");
+    }
+  };
+
+  window.kanbanColDrop = function(e, stage) {
+    e.preventDefault();
+    const col = e.currentTarget;
+    col.classList.remove("drag-target");
+    const hint = document.getElementById("kh-" + stage);
+    if (hint) hint.classList.remove("visible");
+    if (_dragLeadId) {
+      moveKanbanCard(_dragLeadId, stage);
+      _dragLeadId = null;
+    }
+  };
+
+  // Legacy aliases (mantém compatibilidade com dragStart antigo)
+  window.dragStart = window.kanbanDragStart;
+  window.dropCard  = window.kanbanColDrop;
 
   // Offer modal keyboard
   $("offer-modal-overlay").addEventListener("keydown", e => { if (e.key === "Enter") saveOffer(); });
