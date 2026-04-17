@@ -724,10 +724,11 @@
       font-weight: 600;
       border: 0.5px solid transparent;
     }
-    .type-R { background: rgba(107,122,107,0.18); color: #6B7A6B; border-color: rgba(107,122,107,0.3); }
-    .type-D { background: rgba(92,122,90,0.18);  color: #5C7A5A; border-color: rgba(92,122,90,0.3); }
-    .type-M { background: rgba(74,101,72,0.18);  color: #4A6548; border-color: rgba(74,101,72,0.3); }
-    .type-S { background: rgba(138,122,104,0.18); color: #8A7A68; border-color: rgba(138,122,104,0.3); }
+    .type-R { background: rgba(107,122,107,0.18); color: #4A6060; border-color: rgba(107,122,107,0.3); }
+    .type-D { background: rgba(92,122,90,0.18);  color: #3A6A38; border-color: rgba(92,122,90,0.3); }
+    .type-S { background: rgba(160,100,60,0.15); color: #8A5030; border-color: rgba(160,100,60,0.3); }
+    .type-E { background: rgba(112,96,160,0.15); color: #6050A0; border-color: rgba(112,96,160,0.3); }
+    .type-M { background: rgba(138,122,104,0.15); color: #8A7A68; border-color: rgba(138,122,104,0.3); }
 
     /* Score badge */
     .score-badge {
@@ -1602,10 +1603,10 @@
           <span class="fp-label">Tipo de corpo</span>
           <select id="fp-type">
             <option value="">Todos</option>
-            <option value="R">R — Racional</option>
-            <option value="D">D — Dependente</option>
-            <option value="M">M — Musical</option>
-            <option value="S">S — Sensível</option>
+            <option value="R">Racional</option>
+            <option value="D">Dependente</option>
+            <option value="S">Sensível</option>
+            <option value="E">Empate</option>
           </select>
         </label>
         <label>
@@ -1758,8 +1759,8 @@
   const SESSION_KEY = "cb_dash_secret";
   const PAGE_SIZE   = 100;
 
-  const LETTER_TO_TYPE = { A: "R", B: "D", C: "M", D: "S" };
-  const TYPE_LABEL     = { R: "Racional", D: "Dependente", M: "Musical", S: "Sensível" };
+  const LETTER_TO_TYPE = { A: "R", B: "D", C: "M", D: "S" }; // C=M conta nas respostas mas não vira tipo dominante
+  const TYPE_LABEL     = { R: "Racional", D: "Dependente", S: "Sensível", E: "Empate", M: "Musical" };
 
   const STAGE_LABELS = {
     novo: "Novo", contatado: "Contatado", interessado: "Interessado",
@@ -1976,15 +1977,20 @@
   }
 
   // ── dominant type calculation
+  // M (Musical) é um valor base neutro — não entra como tipo dominante.
+  // Apenas R, D, S competem. Em caso de empate retorna "E" (Empate).
   function calcDominantType(row) {
-    const counts = { R: 0, D: 0, M: 0, S: 0 };
+    const counts = { R: 0, D: 0, S: 0 };
     ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].forEach(q => {
-      const letter = row[q];
-      if (letter && LETTER_TO_TYPE[letter]) counts[LETTER_TO_TYPE[letter]]++;
+      const t = LETTER_TO_TYPE[row[q]];
+      if (t && counts[t] !== undefined) counts[t]++;
     });
     const total = Object.values(counts).reduce((a,b) => a+b, 0);
     if (total === 0) return "";
-    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    // Empate: os dois primeiros com mesmo valor
+    if (sorted[0][1] === sorted[1][1]) return "E";
+    return sorted[0][0];
   }
 
   // ── lead score
@@ -1995,7 +2001,7 @@
     else if (row.stage === "proposta") score += 25;
     else if (row.stage === "fechado") score += 50;
     if (row.starred) score += 10;
-    if (row.dominant_type === "M") score += 10;
+    if (row.dominant_type === "D") score += 10; // Dependente = maior engajamento
     if (row.created_at) {
       const daysAgo = (Date.now() - new Date(row.created_at).getTime()) / (1000 * 60 * 60 * 24);
       if (daysAgo < 7) score += 10;
@@ -2057,13 +2063,13 @@
       </div>
     `).join("");
 
-    // Type distribution
-    const typeCounts = { R: 0, D: 0, M: 0, S: 0 };
+    // Type distribution (M não é tipo dominante — mostra R, D, S, E)
+    const typeCounts = { R: 0, D: 0, S: 0, E: 0 };
     rows.filter(r => r.dominant_type && typeCounts[r.dominant_type] !== undefined)
         .forEach(r => typeCounts[r.dominant_type]++);
     $("type-dist-content").innerHTML = Object.entries(typeCounts).map(([t, c]) => `
       <div class="type-dist-chip" data-t="${t}">
-        <span class="tdc-letter">${t}</span>
+        <span class="tdc-letter type-badge type-${t}" style="padding:2px 7px">${TYPE_LABEL[t]||t}</span>
         <span class="tdc-count">${c}</span>
       </div>
     `).join("");
@@ -2217,7 +2223,7 @@
 
       const dt = row.dominant_type || "";
       const typeBadge = dt
-        ? `<span class="type-badge type-${dt}" title="${TYPE_LABEL[dt]||""}">${dt}</span>`
+        ? `<span class="type-badge type-${dt}">${TYPE_LABEL[dt] || dt}</span>`
         : `<span class="td-muted">—</span>`;
 
       let scoreCls = "score-low";
@@ -2571,7 +2577,7 @@
 
     detailBadgesRow.innerHTML = `
       <span class="${stageCls}">${stageLabel}</span>
-      ${dt ? `<span class="type-badge type-${dt}">${dt} — ${TYPE_LABEL[dt]||""}</span>` : ""}
+      ${dt ? `<span class="type-badge type-${dt}">${TYPE_LABEL[dt] || dt}</span>` : ""}
       <span class="score-badge ${scoreCls}">Score: ${score}</span>
       ${row.starred ? `<span style="font-size:15px" title="Lead estrelado">★</span>` : ""}
       ${row.archived ? `<span class="badge badge-no">Arquivado</span>` : ""}
@@ -3017,90 +3023,101 @@
   // ══════════════════════════════════════════════════════════════
   //  KANBAN — pipeline de ofertas
   // ══════════════════════════════════════════════════════════════
-  const KANBAN_KEY    = "cb_kanban_data";
-  const KANBAN_STAGES = ["Interesse", "Apresentou", "Proposta", "Negociando", "Fechado", "Perdido"];
-  const KANBAN_STAGE_COLORS = {
-    "Interesse": "#8A7D6B", "Apresentou": "#5C7A5A", "Proposta": "#A08030",
-    "Negociando": "#7060A0", "Fechado": "#4A6548", "Perdido": "#8A5050"
-  };
+  // ══════════════════════════════════════════════════════════════
+  //  KANBAN — sincronizado com o campo stage do Supabase
+  //  Colunas = estágios CRM. Mover card = chama /api/update-lead.
+  //  Ofertas = filtros/tags salvas em localStorage por leadId.
+  // ══════════════════════════════════════════════════════════════
 
-  // kanbanData = { offers: [{id, name}], cards: [{id, offerId, leadId, leadName, phone, stage, notes}] }
-  let kanbanData = { offers: [], cards: [] };
+  // CRM stage → label e cor no Kanban
+  const KANBAN_STAGES = ["novo","contatado","interessado","proposta","fechado","perdido"];
+  const KANBAN_LABEL  = { novo:"Novo", contatado:"Contatado", interessado:"Interessado", proposta:"Proposta", fechado:"Fechado", perdido:"Perdido" };
+  const KANBAN_COLOR  = { novo:"#8A7D6B", contatado:"#5C7A5A", interessado:"#A08030", proposta:"#7060A0", fechado:"#4A6548", perdido:"#8A5050" };
+
+  // localStorage: ofertas e mapeamento leadId → offerId
+  const KB_OFFERS_KEY = "cb_kb_offers";
+  const KB_ASSIGN_KEY = "cb_kb_assign"; // { leadId: offerId }
+
+  let kbOffers      = [];   // [{id, name}]
+  let kbAssign      = {};   // { leadId: offerId }
   let currentOfferId = null;
 
-  function loadKanbanData() {
-    try {
-      const raw = localStorage.getItem(KANBAN_KEY);
-      if (raw) kanbanData = JSON.parse(raw);
-      // Default offers if empty
-      if (!kanbanData.offers.length) {
-        kanbanData.offers = [
-          { id: "offer_1", name: "Data em Casal" },
-          { id: "offer_2", name: "Corpo Musical" }
-        ];
-        kanbanData.cards = [];
-        saveKanbanData();
-      }
-    } catch(e) { kanbanData = { offers: [], cards: [] }; }
-    if (!currentOfferId && kanbanData.offers.length) currentOfferId = kanbanData.offers[0].id;
+  function loadKbMeta() {
+    try { kbOffers = JSON.parse(localStorage.getItem(KB_OFFERS_KEY) || "[]"); } catch(e) { kbOffers = []; }
+    try { kbAssign = JSON.parse(localStorage.getItem(KB_ASSIGN_KEY) || "{}"); } catch(e) { kbAssign = {}; }
+    if (!kbOffers.length) {
+      kbOffers = [{ id:"offer_1", name:"Data em Casal" }, { id:"offer_2", name:"Corpo Musical" }];
+      localStorage.setItem(KB_OFFERS_KEY, JSON.stringify(kbOffers));
+    }
+    if (!currentOfferId) currentOfferId = kbOffers[0]?.id || null;
   }
-
-  function saveKanbanData() {
-    localStorage.setItem(KANBAN_KEY, JSON.stringify(kanbanData));
+  function saveKbMeta() {
+    localStorage.setItem(KB_OFFERS_KEY, JSON.stringify(kbOffers));
+    localStorage.setItem(KB_ASSIGN_KEY, JSON.stringify(kbAssign));
   }
 
   window.renderKanban = function() {
-    loadKanbanData();
+    loadKbMeta();
     const tabsEl  = $("kanban-offer-tabs");
     const boardEl = $("kanban-board");
-    const q       = ($("kanban-search")?.value || "").toLowerCase().trim();
+    const q = ($("kanban-search")?.value || "").toLowerCase().trim();
 
-    // Offer tabs
-    tabsEl.innerHTML = kanbanData.offers.map(o =>
-      `<button class="kanban-offer-tab${o.id === currentOfferId ? ' active' : ''}" onclick="selectOffer('${o.id}')">${esc(o.name)}</button>`
-    ).join("") + (kanbanData.offers.length > 1
-      ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>`
-      : "");
+    // Offer tabs (+ "Todos")
+    tabsEl.innerHTML =
+      `<button class="kanban-offer-tab${!currentOfferId ? ' active' : ''}" onclick="selectOffer(null)">Todos</button>` +
+      kbOffers.map(o =>
+        `<button class="kanban-offer-tab${o.id === currentOfferId ? ' active' : ''}" onclick="selectOffer('${o.id}')">${esc(o.name)}</button>`
+      ).join("") +
+      (currentOfferId ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>` : "");
 
-    if (!currentOfferId) { boardEl.innerHTML = `<div style="color:#8A7D6B;padding:2rem">Crie uma oferta para começar.</div>`; return; }
+    // Filter allRows by offer and search
+    const rows = allRows.filter(r => {
+      if (r.archived) return false;
+      if (currentOfferId && kbAssign[String(r.id)] !== currentOfferId) return false;
+      if (q && !(r.full_name||"").toLowerCase().includes(q) && !(r.email||"").toLowerCase().includes(q)) return false;
+      return true;
+    });
 
-    const offerCards = kanbanData.cards.filter(c => c.offerId === currentOfferId
-      && (!q || c.leadName.toLowerCase().includes(q)));
+    // Count all assigned leads for tab badge
+    const totalAssigned = currentOfferId
+      ? allRows.filter(r => !r.archived && kbAssign[String(r.id)] === currentOfferId).length
+      : allRows.filter(r => !r.archived && kbAssign[String(r.id)]).length;
 
     boardEl.innerHTML = KANBAN_STAGES.map(stage => {
-      const stageCards = offerCards.filter(c => c.stage === stage);
-      const color = KANBAN_STAGE_COLORS[stage] || "#8A7D6B";
+      const stageRows = rows.filter(r => (r.stage || "novo") === stage);
+      const color = KANBAN_COLOR[stage];
+      const label = KANBAN_LABEL[stage];
       return `<div class="kanban-col" data-stage="${stage}">
         <div class="kanban-col-header">
-          <span class="kanban-col-title" style="color:${color}">${stage}</span>
-          <span class="kanban-col-count">${stageCards.length}</span>
+          <span class="kanban-col-title" style="color:${color}">${label}</span>
+          <span class="kanban-col-count">${stageRows.length}</span>
         </div>
-        <div class="kanban-cards" id="kcol-${stage.replace(/\s/g,'_')}">
-          ${stageCards.map(c => {
-            const rawPhone = c.phone ? c.phone.replace(/\D/g,"") : "";
+        <div class="kanban-cards">
+          ${stageRows.map(r => {
+            const rawPhone = r.phone ? r.phone.replace(/\D/g,"") : "";
             const waPhone  = rawPhone ? (rawPhone.startsWith("55") ? rawPhone : "55"+rawPhone) : "";
             const waUrl    = waPhone ? `https://wa.me/${waPhone}` : "";
             const waBtn    = waUrl
               ? `<a class="kanban-card-wa" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱</a>`
               : "";
-            const badge    = `<span class="kanban-card-badge" style="background:${color}22;color:${color}">${stage}</span>`;
-            const gIdx     = allRows.findIndex(r => String(r.id) === String(c.leadId));
-            const openFn   = gIdx >= 0 ? `openDetail(${gIdx})` : "void(0)";
+            const typeLabel = r.dominant_type ? `<span class="kanban-card-badge" style="background:#E8E0D0;color:#5C5043">${TYPE_LABEL[r.dominant_type] || r.dominant_type}</span>` : "";
+            const gIdx = allRows.indexOf(r);
+            const assignedOffer = kbOffers.find(o => o.id === kbAssign[String(r.id)]);
+            const offerTag = assignedOffer ? `<span class="kanban-card-badge" style="background:${color}18;color:${color}">${esc(assignedOffer.name)}</span>` : "";
             return `<div class="kanban-card" draggable="true"
-              ondragstart="dragStart(event,'${c.id}')"
-              ondragover="event.preventDefault();this.closest('.kanban-col').querySelector('.kanban-drop-zone').classList.add('drag-over')"
-              onclick="${openFn}">
+              ondragstart="dragStart(event,'${r.id}')"
+              onclick="openDetail(${gIdx})">
               ${waBtn}
-              <div class="kanban-card-name">${esc(c.leadName)}</div>
-              <div class="kanban-card-meta">
-                ${badge}
-                ${c.notes ? `<span>${esc(c.notes)}</span>` : ''}
-              </div>
-              <div style="display:flex;gap:0.4rem;margin-top:0.45rem;flex-wrap:wrap">
-                ${KANBAN_STAGES.map(s => s !== stage
-                  ? `<button onclick="event.stopPropagation();moveKanbanCard('${c.id}','${s}')" style="font-size:10px;padding:1px 6px;border-radius:6px;background:#E8E0D0;border:none;cursor:pointer;color:#5C5043">${s} →</button>`
-                  : "").join("")}
-                <button onclick="event.stopPropagation();removeKanbanCard('${c.id}')" style="font-size:10px;padding:1px 6px;border-radius:6px;background:#F2E8E8;border:none;cursor:pointer;color:#8A5050">✕</button>
+              <div class="kanban-card-name">${esc(r.full_name || r.email || "Lead")}</div>
+              <div class="kanban-card-meta">${typeLabel}${offerTag}</div>
+              <div style="display:flex;gap:0.35rem;margin-top:0.45rem;flex-wrap:wrap">
+                ${KANBAN_STAGES.filter(s => s !== stage).map(s =>
+                  `<button onclick="event.stopPropagation();moveKanbanCard('${r.id}','${s}')"
+                    style="font-size:10px;padding:1px 6px;border-radius:6px;background:#E8E0D0;border:none;cursor:pointer;color:#5C5043">
+                    ${KANBAN_LABEL[s]} →</button>`
+                ).join("")}
+                <button onclick="event.stopPropagation();unassignKanbanCard('${r.id}')"
+                  style="font-size:10px;padding:1px 6px;border-radius:6px;background:#F2E8E8;border:none;cursor:pointer;color:#8A5050">✕ Remover</button>
               </div>
             </div>`;
           }).join("")}
@@ -3116,113 +3133,149 @@
 
   window.selectOffer = function(id) { currentOfferId = id; renderKanban(); };
 
-  window.openOfferModal = function(editId) {
-    $("offer-modal-title").textContent = editId ? "Editar Oferta" : "Nova Oferta";
-    $("offer-modal-name").value = editId ? (kanbanData.offers.find(o=>o.id===editId)?.name||"") : "";
-    $("offer-modal-overlay").dataset.editId = editId || "";
+  window.openOfferModal = function() {
+    $("offer-modal-title").textContent = "Nova Oferta";
+    $("offer-modal-name").value = "";
+    $("offer-modal-overlay").dataset.editId = "";
     $("offer-modal-overlay").classList.add("open");
     setTimeout(() => $("offer-modal-name").focus(), 50);
   };
   window.closeOfferModal = function() { $("offer-modal-overlay").classList.remove("open"); };
   window.saveOffer = function() {
-    const name   = $("offer-modal-name").value.trim();
+    const name = $("offer-modal-name").value.trim();
     if (!name) { showToast("Digite o nome da oferta"); return; }
-    const editId = $("offer-modal-overlay").dataset.editId;
-    if (editId) {
-      const o = kanbanData.offers.find(o => o.id === editId);
-      if (o) o.name = name;
-    } else {
-      const id = "offer_" + Date.now();
-      kanbanData.offers.push({ id, name });
-      currentOfferId = id;
-    }
-    saveKanbanData();
+    loadKbMeta();
+    const id = "offer_" + Date.now();
+    kbOffers.push({ id, name });
+    currentOfferId = id;
+    saveKbMeta();
     closeOfferModal();
     renderKanban();
-    showToast("Oferta salva ✓");
+    showToast("Oferta criada ✓");
   };
   window.deleteOffer = function(id) {
-    if (!confirm("Remover esta oferta e todos os cards?")) return;
-    kanbanData.offers = kanbanData.offers.filter(o => o.id !== id);
-    kanbanData.cards  = kanbanData.cards.filter(c => c.offerId !== id);
-    currentOfferId = kanbanData.offers[0]?.id || null;
-    saveKanbanData();
+    if (!confirm("Remover esta oferta? Os leads não serão apagados.")) return;
+    loadKbMeta();
+    kbOffers = kbOffers.filter(o => o.id !== id);
+    // unassign leads from this offer
+    Object.keys(kbAssign).forEach(lid => { if (kbAssign[lid] === id) delete kbAssign[lid]; });
+    currentOfferId = kbOffers[0]?.id || null;
+    saveKbMeta();
     renderKanban();
   };
 
-  // Add lead modal (reutiliza o detail overlay como picker)
-  let _kanbanAddStage = null;
-  window.openKanbanAddLead = function(stage) {
-    _kanbanAddStage = stage;
-    // Mostrar picker de lead: pequeno overlay com busca
-    const existing = kanbanData.cards.filter(c => c.offerId === currentOfferId).map(c => String(c.leadId));
-    const candidates = allRows.filter(r => !existing.includes(String(r.id)));
-    if (!candidates.length) { showToast("Todos os leads já estão no board"); return; }
-
-    const items = candidates.slice(0, 100).map((r, i) =>
-      `<div onclick="addKanbanLead('${r.id}','${esc(r.full_name || r.email || "Lead").replace(/'/g,"\\'")}','${(r.phone||'').replace(/'/g,"\\'")}','${stage}')"
-        style="padding:.55rem .85rem;cursor:pointer;border-radius:10px;font-size:13px;transition:background .12s"
-        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''"
-       >${esc(r.full_name || r.email || "Lead")} <span style="font-size:11px;color:#8A7D6B">${esc(r.email || "")}</span></div>`
-    ).join("");
-
-    $("detail-content").innerHTML = `
-      <div style="margin-bottom:.75rem;font-size:12px;color:#8A7D6B">Escolha um lead para a coluna <b>${esc(stage)}</b>:</div>
-      <input type="text" placeholder="Buscar…" oninput="filterKanbanPicker(this.value)"
-        style="width:100%;padding:.55rem .85rem;border:0.5px solid #C5BAA8;border-radius:12px;background:#EDE8DF;font-size:13px;outline:none;margin-bottom:.6rem" />
-      <div id="kanban-picker-list" style="max-height:340px;overflow-y:auto">${items}</div>`;
-    $("detail-name").textContent = "Adicionar lead ao Kanban";
-    $("detail-badges-row").innerHTML = "";
-    $("detail-overlay").classList.add("open");
+  // Move card = update stage via API + atualiza allRows em memória
+  window.moveKanbanCard = async function(leadId, newStage) {
+    const row = allRows.find(r => String(r.id) === String(leadId));
+    if (!row) return;
+    const prevStage = row.stage;
+    row.stage = newStage; // otimista
+    renderKanban();
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id: leadId, source: currentSource, stage: newStage })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { row.stage = prevStage; renderKanban(); showToast("Erro ao mover"); }
+      else { renderTable(); renderStats(); showToast(`Movido para ${KANBAN_LABEL[newStage]}`); }
+    } catch(e) { row.stage = prevStage; renderKanban(); showToast("Falha na conexão"); }
   };
 
-  window.filterKanbanPicker = function(q) {
-    const existing = kanbanData.cards.filter(c => c.offerId === currentOfferId).map(c => String(c.leadId));
-    const candidates = allRows.filter(r => !existing.includes(String(r.id)));
-    const ql = q.toLowerCase();
-    const filtered = candidates.filter(r =>
-      (r.full_name||"").toLowerCase().includes(ql) || (r.email||"").toLowerCase().includes(ql)
-    ).slice(0, 100);
-    const stage = _kanbanAddStage;
-    $("kanban-picker-list").innerHTML = filtered.map(r =>
-      `<div onclick="addKanbanLead('${r.id}','${esc(r.full_name || r.email || "Lead").replace(/'/g,"\\'")}','${(r.phone||'').replace(/'/g,"\\'")}','${stage}')"
+  window.unassignKanbanCard = function(leadId) {
+    loadKbMeta();
+    delete kbAssign[String(leadId)];
+    saveKbMeta();
+    renderKanban();
+  };
+
+  // Picker de lead para adicionar ao Kanban
+  let _kanbanAddStage = "novo";
+  window.openKanbanAddLead = function(stage) {
+    _kanbanAddStage = stage;
+    loadKbMeta();
+    const assigned = new Set(Object.keys(kbAssign).filter(k => !currentOfferId || kbAssign[k] === currentOfferId));
+    const candidates = allRows.filter(r => !r.archived && !assigned.has(String(r.id)));
+    if (!candidates.length) { showToast("Todos os leads já estão no board"); return; }
+
+    const renderItems = (list) => list.slice(0, 120).map(r =>
+      `<div onclick="addToKanban('${r.id}','${stage}')"
         style="padding:.55rem .85rem;cursor:pointer;border-radius:10px;font-size:13px;transition:background .12s"
-        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''"
-       >${esc(r.full_name || r.email || "Lead")} <span style="font-size:11px;color:#8A7D6B">${esc(r.email || "")}</span></div>`
+        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''">
+        ${esc(r.full_name || r.email || "Lead")}
+        <span style="font-size:11px;color:#8A7D6B;margin-left:4px">${esc(r.email || "")}</span>
+        ${r.stage && r.stage !== "novo" ? `<span style="font-size:10px;color:${KANBAN_COLOR[r.stage]||'#8A7D6B'};margin-left:4px">[${KANBAN_LABEL[r.stage]||r.stage}]</span>` : ""}
+      </div>`
+    ).join("") || `<div style="padding:.75rem;color:#8A7D6B;font-size:13px">Nenhum resultado</div>`;
+
+    $("detail-content").innerHTML = `
+      <div style="margin-bottom:.75rem;font-size:12px;color:#8A7D6B">
+        Adicionar lead na coluna <b>${KANBAN_LABEL[stage]}</b>${currentOfferId ? ` da oferta <b>${esc(kbOffers.find(o=>o.id===currentOfferId)?.name||"")}</b>` : ""}:
+      </div>
+      <input type="text" id="kb-picker-input" placeholder="Buscar por nome ou email…" oninput="filterKbPicker(this.value)"
+        style="width:100%;padding:.55rem .85rem;border:0.5px solid #C5BAA8;border-radius:12px;background:#EDE8DF;font-size:13px;outline:none;margin-bottom:.6rem" />
+      <div id="kb-picker-list" style="max-height:340px;overflow-y:auto">${renderItems(candidates)}</div>`;
+    $("detail-name").textContent = "Adicionar ao Kanban";
+    $("detail-badges-row").innerHTML = "";
+    $("detail-overlay").classList.add("open");
+    setTimeout(() => $("kb-picker-input")?.focus(), 80);
+
+    window._kbPickerCandidates = candidates;
+  };
+
+  window.filterKbPicker = function(q) {
+    const ql = q.toLowerCase();
+    const filtered = (window._kbPickerCandidates || []).filter(r =>
+      (r.full_name||"").toLowerCase().includes(ql) || (r.email||"").toLowerCase().includes(ql)
+    );
+    const stage = _kanbanAddStage;
+    $("kb-picker-list").innerHTML = filtered.slice(0, 120).map(r =>
+      `<div onclick="addToKanban('${r.id}','${stage}')"
+        style="padding:.55rem .85rem;cursor:pointer;border-radius:10px;font-size:13px;transition:background .12s"
+        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''">
+        ${esc(r.full_name || r.email || "Lead")}
+        <span style="font-size:11px;color:#8A7D6B;margin-left:4px">${esc(r.email || "")}</span>
+        ${r.stage && r.stage !== "novo" ? `<span style="font-size:10px;color:${KANBAN_COLOR[r.stage]||'#8A7D6B'};margin-left:4px">[${KANBAN_LABEL[r.stage]||r.stage}]</span>` : ""}
+      </div>`
     ).join("") || `<div style="padding:.75rem;color:#8A7D6B;font-size:13px">Nenhum resultado</div>`;
   };
 
-  window.addKanbanLead = function(leadId, leadName, phone, stage) {
-    if (!currentOfferId) return;
-    const id = "card_" + Date.now();
-    kanbanData.cards.push({ id, offerId: currentOfferId, leadId, leadName, phone, stage, notes: "" });
-    saveKanbanData();
+  // Adicionar lead ao Kanban: atribui oferta + move pro stage certo via API
+  window.addToKanban = async function(leadId, stage) {
+    loadKbMeta();
+    if (currentOfferId) kbAssign[String(leadId)] = currentOfferId;
+    saveKbMeta();
     $("detail-overlay").classList.remove("open");
-    renderKanban();
-    showToast(`${leadName} adicionado ✓`);
-  };
 
-  window.moveKanbanCard = function(cardId, newStage) {
-    const c = kanbanData.cards.find(c => c.id === cardId);
-    if (c) { c.stage = newStage; saveKanbanData(); renderKanban(); }
-  };
-  window.removeKanbanCard = function(cardId) {
-    kanbanData.cards = kanbanData.cards.filter(c => c.id !== cardId);
-    saveKanbanData(); renderKanban();
+    // Se o stage for diferente do atual, atualiza via API
+    const row = allRows.find(r => String(r.id) === String(leadId));
+    if (row && (row.stage || "novo") !== stage) {
+      row.stage = stage;
+      fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id: leadId, source: currentSource, stage })
+      }).then(r => r.json()).then(d => {
+        if (d.ok) { renderTable(); renderStats(); }
+      }).catch(() => {});
+    }
+    renderKanban();
+    showToast(`${row?.full_name || "Lead"} adicionado ✓`);
   };
 
   // Drag & drop
-  let _dragCardId = null;
-  window.dragStart = function(e, cardId) { _dragCardId = cardId; };
+  let _dragLeadId = null;
+  window.dragStart = function(e, leadId) { _dragLeadId = leadId; };
   window.dropCard  = function(e, stage) {
     e.preventDefault();
     e.currentTarget.classList.remove("drag-over");
-    if (_dragCardId) { moveKanbanCard(_dragCardId, stage); _dragCardId = null; }
+    if (_dragLeadId) { moveKanbanCard(_dragLeadId, stage); _dragLeadId = null; }
   };
 
-  // Keyboard shortcut para salvar oferta modal
+  // Offer modal keyboard
   $("offer-modal-overlay").addEventListener("keydown", e => { if (e.key === "Enter") saveOffer(); });
-  $("offer-modal-overlay").addEventListener("click", e => { if (e.target === $("offer-modal-overlay")) closeOfferModal(); });
+  $("offer-modal-overlay").addEventListener("click",   e => { if (e.target === $("offer-modal-overlay")) closeOfferModal(); });
 
 })();
 </script>
