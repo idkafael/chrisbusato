@@ -1330,6 +1330,157 @@
   transition: border-color 0.2s;
 }
 .payment-field-input:focus { border-color: #8A7D6B; }
+
+  /* ─── COBRANÇAS VIEW ─── */
+  #cobrancas-view { display: none; padding-bottom: 2rem; }
+  #cobrancas-view.active { display: block; }
+  .cob-month-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .cob-month-title {
+    font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 500;
+    letter-spacing: -0.02em; color: #2C2218; text-transform: capitalize;
+  }
+  .cob-month-sub { font-size: 12px; color: #8A7D6B; margin-top: 2px; }
+  .cob-total-badge {
+    background: #E8E0D0; border-radius: 20px; padding: 0.4rem 1rem;
+    font-size: 13px; font-weight: 600; color: #4A6548;
+  }
+  .cob-day-group { margin-bottom: 0.6rem; }
+  .cob-day-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .cob-day-num {
+    width: 44px; height: 44px; border-radius: 50%; background: #E8E0D0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #5C5043; flex-shrink: 0;
+  }
+  .cob-day-num.is-today { background: #D4A840; color: #fff; box-shadow: 0 2px 8px rgba(212,168,64,.35); }
+  .cob-day-num.is-past  { background: #D8D0C4; color: #9A9080; }
+  .cob-day-info-title {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #8A7D6B;
+  }
+  .cob-day-info-title.is-today { color: #B09050; }
+  .cob-day-info-total { font-size: 12px; color: #8A7D6B; }
+  .cob-cards { display: flex; flex-direction: column; gap: 0.4rem; padding-left: 56px; }
+  .cob-card {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: #F2EDE3; border: 0.5px solid #C5BAA8; border-radius: 14px;
+    padding: 0.7rem 1rem; cursor: pointer; transition: background 0.15s;
+  }
+  .cob-card:hover { background: #EBE4D8; }
+  .cob-card.is-today { background: #F8F2E0; border-color: #C8A840; }
+  .cob-card-name { font-size: 14px; font-weight: 500; color: #2C2218; flex: 1; }
+  .cob-card-notes { font-size: 12px; color: #8A7D6B; flex: 1; }
+  .cob-card-value { font-size: 14px; font-weight: 700; color: #4A6548; white-space: nowrap; }
+  .cob-card.is-today .cob-card-value { color: #A08030; }
+  .cob-wa-btn {
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:50%;
+    background: rgba(92,122,90,.12); font-size:16px; text-decoration:none;
+    flex-shrink:0; transition: background .15s, transform .15s;
+  }
+  .cob-wa-btn:hover { background: rgba(92,122,90,.25); transform: scale(1.1); }
+  .cob-empty { text-align:center; padding:3rem 1rem; color:#8A7D6B; font-size:14px; }
+  .cob-divider { height:0.5px; background:#D8D0C4; margin:1.1rem 0; }
+
+  /* ─── KANBAN VIEW ─── */
+  #kanban-view { display: none; padding-bottom: 2rem; }
+  #kanban-view.active { display: block; }
+  .kanban-toolbar {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.25rem; flex-wrap: wrap;
+  }
+  .kanban-toolbar-title {
+    font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500;
+    color: #2C2218; letter-spacing: -0.02em; flex: 1;
+  }
+  .kanban-offer-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .kanban-offer-tab {
+    padding: 0.35rem 0.9rem; border-radius: 20px; font-size: 12px; font-weight: 500;
+    background: #E8E0D0; color: #5C5043; border: none; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .kanban-offer-tab.active { background: #4A6548; color: #fff; }
+  .kanban-offer-tab:hover:not(.active) { background: #DDD6C8; }
+  .kanban-add-offer-btn {
+    padding: 0.35rem 0.9rem; border-radius: 20px; font-size: 12px; font-weight: 500;
+    background: transparent; color: #8A7D6B; border: 0.5px dashed #C5BAA8;
+    cursor: pointer; transition: background .15s;
+  }
+  .kanban-add-offer-btn:hover { background: #E8E0D0; }
+  .kanban-board {
+    display: flex; gap: 1rem; overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .kanban-col {
+    min-width: 230px; max-width: 260px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .kanban-col-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #E8E0D0; border-radius: 12px; padding: 0.55rem 0.9rem;
+  }
+  .kanban-col-title { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5C5043; }
+  .kanban-col-count { font-size: 11px; color: #8A7D6B; background: #D8D0C4; border-radius: 10px; padding: 1px 7px; }
+  .kanban-cards { display: flex; flex-direction: column; gap: 0.45rem; min-height: 80px; }
+  .kanban-card {
+    background: #F2EDE3; border: 0.5px solid #C5BAA8; border-radius: 12px;
+    padding: 0.65rem 0.85rem; cursor: pointer; transition: background .15s, box-shadow .15s;
+    position: relative;
+  }
+  .kanban-card:hover { background: #EBE4D8; box-shadow: 0 2px 8px rgba(44,34,24,.08); }
+  .kanban-card-name { font-size: 13px; font-weight: 500; color: #2C2218; margin-bottom: 3px; }
+  .kanban-card-meta { font-size: 11px; color: #8A7D6B; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .kanban-card-badge {
+    display: inline-block; padding: 1px 7px; border-radius: 8px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+  }
+  .kanban-card-wa {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    font-size: 14px; text-decoration: none; opacity: 0.6;
+    transition: opacity .15s;
+  }
+  .kanban-card-wa:hover { opacity: 1; }
+  .kanban-drop-zone {
+    min-height: 60px; border: 1.5px dashed #D8D0C4; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #C5BAA8; transition: border-color .15s, background .15s;
+  }
+  .kanban-drop-zone.drag-over { border-color: #8A7D6B; background: rgba(138,125,107,.06); color: #8A7D6B; }
+  .kanban-col-add-btn {
+    width: 100%; padding: 0.45rem; background: transparent;
+    border: 0.5px dashed #C5BAA8; border-radius: 10px;
+    font-size: 12px; color: #A08C70; cursor: pointer; transition: background .15s;
+  }
+  .kanban-col-add-btn:hover { background: #E8E0D0; }
+  .kanban-search-input {
+    background: #EDE8DF; border: 0.5px solid #C5BAA8; border-radius: 12px;
+    padding: 0.5rem 0.85rem; font-size: 13px; color: #2C2218;
+    outline: none; width: 200px;
+  }
+  /* Offer modal */
+  #offer-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(44,34,24,.45); align-items: center; justify-content: center;
+  }
+  #offer-modal-overlay.open { display: flex; }
+  .offer-modal {
+    background: #F2EDE3; border-radius: 20px; padding: 2rem;
+    max-width: 420px; width: 90%; box-shadow: 0 12px 40px rgba(44,34,24,.18);
+  }
+  .offer-modal-title {
+    font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500;
+    color: #2C2218; margin-bottom: 1.25rem;
+  }
+  .offer-modal-field { margin-bottom: 0.75rem; }
+  .offer-modal-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #8A7D6B; font-weight: 500; margin-bottom: 4px; }
+  .offer-modal-input {
+    width: 100%; background: #EDE8DF; border: 0.5px solid #C5BAA8;
+    border-radius: 12px; padding: 0.65rem 0.85rem; font-size: 13.5px;
+    color: #2C2218; outline: none;
+  }
+  .offer-modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.25rem; }
   </style>
 </head>
 <body>
@@ -1384,6 +1535,28 @@
       <button class="tab-btn" id="tab-ads" onclick="switchTab('ads')">
         Anúncios<span class="tab-badge" id="tab-ads-count">—</span>
       </button>
+      <button class="tab-btn" id="tab-payments" onclick="switchTab('payments')">
+        💳 Cobranças<span class="tab-badge" id="tab-payments-count">—</span>
+      </button>
+      <button class="tab-btn" id="tab-kanban" onclick="switchTab('kanban')">
+        🗂 Kanban
+      </button>
+    </div>
+
+    <!-- Cobranças View -->
+    <div id="cobrancas-view">
+      <div id="cobrancas-content"><div class="cob-empty"><span class="spin-ring"></span> Carregando…</div></div>
+    </div>
+
+    <!-- Kanban View -->
+    <div id="kanban-view">
+      <div class="kanban-toolbar">
+        <div class="kanban-toolbar-title">🗂 Kanban de Ofertas</div>
+        <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
+        <div class="kanban-offer-tabs" id="kanban-offer-tabs"></div>
+        <button class="kanban-add-offer-btn" onclick="openOfferModal()">+ Oferta</button>
+      </div>
+      <div class="kanban-board" id="kanban-board"></div>
     </div>
 
     <!-- Stats -->
@@ -1530,6 +1703,21 @@
 
   </div><!-- /.dash-main -->
 </div><!-- /#dashboard -->
+
+<!-- ══════════════════════ OFFER MODAL ══════════════════════ -->
+<div id="offer-modal-overlay">
+  <div class="offer-modal">
+    <div class="offer-modal-title" id="offer-modal-title">Nova Oferta</div>
+    <div class="offer-modal-field">
+      <div class="offer-modal-label">Nome da oferta</div>
+      <input class="offer-modal-input" id="offer-modal-name" placeholder="Ex: Data em Casal, Corpo Musical…" />
+    </div>
+    <div class="offer-modal-actions">
+      <button class="btn-sm btn-outline-warm" onclick="closeOfferModal()">Cancelar</button>
+      <button class="btn-sm btn-sage" onclick="saveOffer()">Salvar</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════ BULK TOOLBAR ══════════════════════ -->
 <div id="bulk-toolbar">
@@ -1690,10 +1878,26 @@
   window.switchTab = function(source) {
     if (source === currentSource) return;
     currentSource = source;
-    $("tab-organic").classList.toggle("active", source === "organic");
-    $("tab-ads").classList.toggle("active",     source === "ads");
+    $("tab-organic").classList.toggle("active",  source === "organic");
+    $("tab-ads").classList.toggle("active",      source === "ads");
+    $("tab-payments").classList.toggle("active", source === "payments");
+    $("tab-kanban").classList.toggle("active",   source === "kanban");
+
+    const isSpecial = source === "payments" || source === "kanban";
+    $("cobrancas-view").classList.toggle("active", source === "payments");
+    $("kanban-view").classList.toggle("active",    source === "kanban");
+    $("stats-grid").style.display        = isSpecial ? "none" : "";
+    $("payment-reminders").style.display = isSpecial ? "none" : "";
+    $("filter-panel").style.display      = isSpecial ? "none" : "";
+    document.querySelector(".toolbar").style.display    = isSpecial ? "none" : "";
+    document.querySelector(".table-wrap").style.display = isSpecial ? "none" : "";
+    document.querySelector(".status-bar").style.display = isSpecial ? "none" : "";
+    document.querySelector(".pagination").style.display = isSpecial ? "none" : "";
+
     clearSelection();
     stopAutoRefresh();
+    if (source === "payments") { loadCobrancas(); return; }
+    if (source === "kanban")   { renderKanban();  return; }
     loadData();
   };
 
@@ -2708,6 +2912,317 @@
     btn.disabled = false;
     btn.classList.remove("saving");
   };
+
+
+  // ══════════════════════════════════════════════════════════════
+  //  COBRANÇAS — calendário mensal com leads pagadores
+  // ══════════════════════════════════════════════════════════════
+  async function loadCobrancas() {
+    $("cobrancas-content").innerHTML = `<div class="cob-empty"><span class="spin-ring"></span> Carregando cobranças…</div>`;
+    try {
+      const [r1, r2] = await Promise.all([
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
+      ]);
+      let rows = [];
+      if (r1.ok) { const d = await r1.json(); if (d.ok) rows = rows.concat(d.rows || []); }
+      if (r2.ok) { const d = await r2.json(); if (d.ok) rows = rows.concat(d.rows || []); }
+      const payers = rows.filter(r => r.payment_day && !r.archived);
+      $("tab-payments-count").textContent = payers.length || "—";
+      renderCobrancas(payers);
+    } catch(e) {
+      $("cobrancas-content").innerHTML = `<div class="cob-empty">Erro: ${esc(e.message)}</div>`;
+    }
+  }
+
+  function renderCobrancas(payers) {
+    const el = $("cobrancas-content");
+    if (!payers.length) {
+      el.innerHTML = `<div class="cob-empty">Nenhuma cobrança cadastrada ainda.<br><small>Abra um lead, defina o dia e valor do pagamento e salve.</small></div>`;
+      return;
+    }
+    const today    = new Date();
+    const todayDay = today.getDate();
+    const monthDays= new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const monthName= today.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+
+    function daysUntil(d) {
+      if (d === todayDay) return 0;
+      if (d > todayDay)  return d - todayDay;
+      return (monthDays - todayDay) + d;
+    }
+
+    // group by day
+    const byDay = {};
+    payers.forEach(r => { const d = r.payment_day; (byDay[d] = byDay[d] || []).push(r); });
+    const days = Object.keys(byDay).map(Number).sort((a,b) => daysUntil(a) - daysUntil(b));
+    const totalMonthly = payers.reduce((s,r) => s + (r.payment_value ? Number(r.payment_value) : 0), 0);
+    const totalStr = totalMonthly > 0
+      ? `R$ ${totalMonthly.toLocaleString("pt-BR",{minimumFractionDigits:2})} / mês`
+      : `${payers.length} pessoa${payers.length !== 1 ? 's' : ''}`;
+
+    let html = `<div class="cob-month-header">
+      <div>
+        <div class="cob-month-title">${monthName}</div>
+        <div class="cob-month-sub">${payers.length} cobrança${payers.length !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="cob-total-badge">${totalStr}</div>
+    </div>`;
+
+    days.forEach((day, idx) => {
+      const isToday = day === todayDay;
+      const isPast  = day < todayDay && !isToday;
+      const group   = byDay[day];
+      const gTotal  = group.reduce((s,r) => s + (r.payment_value ? Number(r.payment_value) : 0), 0);
+      if (idx > 0) html += `<div class="cob-divider"></div>`;
+      html += `<div class="cob-day-group">
+        <div class="cob-day-label">
+          <div class="cob-day-num${isToday ? ' is-today' : isPast ? ' is-past' : ''}">${day}</div>
+          <div>
+            <div class="cob-day-info-title${isToday ? ' is-today' : ''}">${isToday ? '⚡ Hoje' : `Dia ${day}`}</div>
+            ${gTotal > 0 ? `<div class="cob-day-info-total">R$ ${gTotal.toLocaleString("pt-BR",{minimumFractionDigits:2})}</div>` : ''}
+          </div>
+        </div>
+        <div class="cob-cards">
+          ${group.map(r => {
+            const name      = r.full_name || r.email || "Lead";
+            const firstName = (r.full_name || "você").split(" ")[0];
+            const rawPhone  = r.phone ? r.phone.replace(/\D/g,"") : "";
+            const waPhone   = rawPhone ? (rawPhone.startsWith("55") ? rawPhone : "55"+rawPhone) : "";
+            const valStr    = r.payment_value ? ` de R$ ${Number(r.payment_value).toLocaleString("pt-BR",{minimumFractionDigits:2})}` : "";
+            const waMsg     = isToday
+              ? `Oi ${firstName}! Passando para lembrar que seu pagamento${valStr} vence hoje, dia ${day} 😊 Qualquer dúvida estou por aqui!`
+              : `Oi ${firstName}! Passando para lembrar que seu pagamento${valStr} vence no dia ${day} 😊 Qualquer dúvida estou por aqui!`;
+            const waUrl     = waPhone ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMsg)}` : "";
+            const waBtn     = waUrl
+              ? `<a class="cob-wa-btn" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱</a>`
+              : `<span class="cob-wa-btn" style="opacity:.3;cursor:default">📱</span>`;
+            const valLabel  = r.payment_value ? `<div class="cob-card-value">R$ ${Number(r.payment_value).toLocaleString("pt-BR",{minimumFractionDigits:2})}</div>` : "";
+            const gIdx      = allRows.findIndex(ar => String(ar.id) === String(r.id));
+            const openFn    = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
+            return `<div class="cob-card${isToday ? ' is-today' : ''}" onclick="${openFn}">
+              <div style="flex:1;min-width:0">
+                <div class="cob-card-name">${esc(name)}</div>
+                ${r.payment_notes ? `<div class="cob-card-notes">${esc(r.payment_notes)}</div>` : ''}
+              </div>
+              ${valLabel}${waBtn}
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`;
+    });
+    el.innerHTML = html;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  KANBAN — pipeline de ofertas
+  // ══════════════════════════════════════════════════════════════
+  const KANBAN_KEY    = "cb_kanban_data";
+  const KANBAN_STAGES = ["Interesse", "Apresentou", "Proposta", "Negociando", "Fechado", "Perdido"];
+  const KANBAN_STAGE_COLORS = {
+    "Interesse": "#8A7D6B", "Apresentou": "#5C7A5A", "Proposta": "#A08030",
+    "Negociando": "#7060A0", "Fechado": "#4A6548", "Perdido": "#8A5050"
+  };
+
+  // kanbanData = { offers: [{id, name}], cards: [{id, offerId, leadId, leadName, phone, stage, notes}] }
+  let kanbanData = { offers: [], cards: [] };
+  let currentOfferId = null;
+
+  function loadKanbanData() {
+    try {
+      const raw = localStorage.getItem(KANBAN_KEY);
+      if (raw) kanbanData = JSON.parse(raw);
+      // Default offers if empty
+      if (!kanbanData.offers.length) {
+        kanbanData.offers = [
+          { id: "offer_1", name: "Data em Casal" },
+          { id: "offer_2", name: "Corpo Musical" }
+        ];
+        kanbanData.cards = [];
+        saveKanbanData();
+      }
+    } catch(e) { kanbanData = { offers: [], cards: [] }; }
+    if (!currentOfferId && kanbanData.offers.length) currentOfferId = kanbanData.offers[0].id;
+  }
+
+  function saveKanbanData() {
+    localStorage.setItem(KANBAN_KEY, JSON.stringify(kanbanData));
+  }
+
+  window.renderKanban = function() {
+    loadKanbanData();
+    const tabsEl  = $("kanban-offer-tabs");
+    const boardEl = $("kanban-board");
+    const q       = ($("kanban-search")?.value || "").toLowerCase().trim();
+
+    // Offer tabs
+    tabsEl.innerHTML = kanbanData.offers.map(o =>
+      `<button class="kanban-offer-tab${o.id === currentOfferId ? ' active' : ''}" onclick="selectOffer('${o.id}')">${esc(o.name)}</button>`
+    ).join("") + (kanbanData.offers.length > 1
+      ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>`
+      : "");
+
+    if (!currentOfferId) { boardEl.innerHTML = `<div style="color:#8A7D6B;padding:2rem">Crie uma oferta para começar.</div>`; return; }
+
+    const offerCards = kanbanData.cards.filter(c => c.offerId === currentOfferId
+      && (!q || c.leadName.toLowerCase().includes(q)));
+
+    boardEl.innerHTML = KANBAN_STAGES.map(stage => {
+      const stageCards = offerCards.filter(c => c.stage === stage);
+      const color = KANBAN_STAGE_COLORS[stage] || "#8A7D6B";
+      return `<div class="kanban-col" data-stage="${stage}">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title" style="color:${color}">${stage}</span>
+          <span class="kanban-col-count">${stageCards.length}</span>
+        </div>
+        <div class="kanban-cards" id="kcol-${stage.replace(/\s/g,'_')}">
+          ${stageCards.map(c => {
+            const rawPhone = c.phone ? c.phone.replace(/\D/g,"") : "";
+            const waPhone  = rawPhone ? (rawPhone.startsWith("55") ? rawPhone : "55"+rawPhone) : "";
+            const waUrl    = waPhone ? `https://wa.me/${waPhone}` : "";
+            const waBtn    = waUrl
+              ? `<a class="kanban-card-wa" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱</a>`
+              : "";
+            const badge    = `<span class="kanban-card-badge" style="background:${color}22;color:${color}">${stage}</span>`;
+            const gIdx     = allRows.findIndex(r => String(r.id) === String(c.leadId));
+            const openFn   = gIdx >= 0 ? `openDetail(${gIdx})` : "void(0)";
+            return `<div class="kanban-card" draggable="true"
+              ondragstart="dragStart(event,'${c.id}')"
+              ondragover="event.preventDefault();this.closest('.kanban-col').querySelector('.kanban-drop-zone').classList.add('drag-over')"
+              onclick="${openFn}">
+              ${waBtn}
+              <div class="kanban-card-name">${esc(c.leadName)}</div>
+              <div class="kanban-card-meta">
+                ${badge}
+                ${c.notes ? `<span>${esc(c.notes)}</span>` : ''}
+              </div>
+              <div style="display:flex;gap:0.4rem;margin-top:0.45rem;flex-wrap:wrap">
+                ${KANBAN_STAGES.map(s => s !== stage
+                  ? `<button onclick="event.stopPropagation();moveKanbanCard('${c.id}','${s}')" style="font-size:10px;padding:1px 6px;border-radius:6px;background:#E8E0D0;border:none;cursor:pointer;color:#5C5043">${s} →</button>`
+                  : "").join("")}
+                <button onclick="event.stopPropagation();removeKanbanCard('${c.id}')" style="font-size:10px;padding:1px 6px;border-radius:6px;background:#F2E8E8;border:none;cursor:pointer;color:#8A5050">✕</button>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+        <div class="kanban-drop-zone" data-stage="${stage}"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="dropCard(event,'${stage}')">Soltar aqui</div>
+        <button class="kanban-col-add-btn" onclick="openKanbanAddLead('${stage}')">+ Adicionar lead</button>
+      </div>`;
+    }).join("");
+  };
+
+  window.selectOffer = function(id) { currentOfferId = id; renderKanban(); };
+
+  window.openOfferModal = function(editId) {
+    $("offer-modal-title").textContent = editId ? "Editar Oferta" : "Nova Oferta";
+    $("offer-modal-name").value = editId ? (kanbanData.offers.find(o=>o.id===editId)?.name||"") : "";
+    $("offer-modal-overlay").dataset.editId = editId || "";
+    $("offer-modal-overlay").classList.add("open");
+    setTimeout(() => $("offer-modal-name").focus(), 50);
+  };
+  window.closeOfferModal = function() { $("offer-modal-overlay").classList.remove("open"); };
+  window.saveOffer = function() {
+    const name   = $("offer-modal-name").value.trim();
+    if (!name) { showToast("Digite o nome da oferta"); return; }
+    const editId = $("offer-modal-overlay").dataset.editId;
+    if (editId) {
+      const o = kanbanData.offers.find(o => o.id === editId);
+      if (o) o.name = name;
+    } else {
+      const id = "offer_" + Date.now();
+      kanbanData.offers.push({ id, name });
+      currentOfferId = id;
+    }
+    saveKanbanData();
+    closeOfferModal();
+    renderKanban();
+    showToast("Oferta salva ✓");
+  };
+  window.deleteOffer = function(id) {
+    if (!confirm("Remover esta oferta e todos os cards?")) return;
+    kanbanData.offers = kanbanData.offers.filter(o => o.id !== id);
+    kanbanData.cards  = kanbanData.cards.filter(c => c.offerId !== id);
+    currentOfferId = kanbanData.offers[0]?.id || null;
+    saveKanbanData();
+    renderKanban();
+  };
+
+  // Add lead modal (reutiliza o detail overlay como picker)
+  let _kanbanAddStage = null;
+  window.openKanbanAddLead = function(stage) {
+    _kanbanAddStage = stage;
+    // Mostrar picker de lead: pequeno overlay com busca
+    const existing = kanbanData.cards.filter(c => c.offerId === currentOfferId).map(c => String(c.leadId));
+    const candidates = allRows.filter(r => !existing.includes(String(r.id)));
+    if (!candidates.length) { showToast("Todos os leads já estão no board"); return; }
+
+    const items = candidates.slice(0, 100).map((r, i) =>
+      `<div onclick="addKanbanLead('${r.id}','${esc(r.full_name || r.email || "Lead").replace(/'/g,"\\'")}','${(r.phone||'').replace(/'/g,"\\'")}','${stage}')"
+        style="padding:.55rem .85rem;cursor:pointer;border-radius:10px;font-size:13px;transition:background .12s"
+        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''"
+       >${esc(r.full_name || r.email || "Lead")} <span style="font-size:11px;color:#8A7D6B">${esc(r.email || "")}</span></div>`
+    ).join("");
+
+    $("detail-content").innerHTML = `
+      <div style="margin-bottom:.75rem;font-size:12px;color:#8A7D6B">Escolha um lead para a coluna <b>${esc(stage)}</b>:</div>
+      <input type="text" placeholder="Buscar…" oninput="filterKanbanPicker(this.value)"
+        style="width:100%;padding:.55rem .85rem;border:0.5px solid #C5BAA8;border-radius:12px;background:#EDE8DF;font-size:13px;outline:none;margin-bottom:.6rem" />
+      <div id="kanban-picker-list" style="max-height:340px;overflow-y:auto">${items}</div>`;
+    $("detail-name").textContent = "Adicionar lead ao Kanban";
+    $("detail-badges-row").innerHTML = "";
+    $("detail-overlay").classList.add("open");
+  };
+
+  window.filterKanbanPicker = function(q) {
+    const existing = kanbanData.cards.filter(c => c.offerId === currentOfferId).map(c => String(c.leadId));
+    const candidates = allRows.filter(r => !existing.includes(String(r.id)));
+    const ql = q.toLowerCase();
+    const filtered = candidates.filter(r =>
+      (r.full_name||"").toLowerCase().includes(ql) || (r.email||"").toLowerCase().includes(ql)
+    ).slice(0, 100);
+    const stage = _kanbanAddStage;
+    $("kanban-picker-list").innerHTML = filtered.map(r =>
+      `<div onclick="addKanbanLead('${r.id}','${esc(r.full_name || r.email || "Lead").replace(/'/g,"\\'")}','${(r.phone||'').replace(/'/g,"\\'")}','${stage}')"
+        style="padding:.55rem .85rem;cursor:pointer;border-radius:10px;font-size:13px;transition:background .12s"
+        onmouseover="this.style.background='#E8E0D0'" onmouseout="this.style.background=''"
+       >${esc(r.full_name || r.email || "Lead")} <span style="font-size:11px;color:#8A7D6B">${esc(r.email || "")}</span></div>`
+    ).join("") || `<div style="padding:.75rem;color:#8A7D6B;font-size:13px">Nenhum resultado</div>`;
+  };
+
+  window.addKanbanLead = function(leadId, leadName, phone, stage) {
+    if (!currentOfferId) return;
+    const id = "card_" + Date.now();
+    kanbanData.cards.push({ id, offerId: currentOfferId, leadId, leadName, phone, stage, notes: "" });
+    saveKanbanData();
+    $("detail-overlay").classList.remove("open");
+    renderKanban();
+    showToast(`${leadName} adicionado ✓`);
+  };
+
+  window.moveKanbanCard = function(cardId, newStage) {
+    const c = kanbanData.cards.find(c => c.id === cardId);
+    if (c) { c.stage = newStage; saveKanbanData(); renderKanban(); }
+  };
+  window.removeKanbanCard = function(cardId) {
+    kanbanData.cards = kanbanData.cards.filter(c => c.id !== cardId);
+    saveKanbanData(); renderKanban();
+  };
+
+  // Drag & drop
+  let _dragCardId = null;
+  window.dragStart = function(e, cardId) { _dragCardId = cardId; };
+  window.dropCard  = function(e, stage) {
+    e.preventDefault();
+    e.currentTarget.classList.remove("drag-over");
+    if (_dragCardId) { moveKanbanCard(_dragCardId, stage); _dragCardId = null; }
+  };
+
+  // Keyboard shortcut para salvar oferta modal
+  $("offer-modal-overlay").addEventListener("keydown", e => { if (e.key === "Enter") saveOffer(); });
+  $("offer-modal-overlay").addEventListener("click", e => { if (e.target === $("offer-modal-overlay")) closeOfferModal(); });
 
 })();
 </script>
