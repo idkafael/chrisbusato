@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — Dança & Consciência</title>
+  <title>CRM — Dança &amp; Consciência</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -149,6 +149,9 @@
       gap: 12px;
       flex-wrap: wrap;
       box-shadow: 0 1px 8px rgba(44,34,24,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
     .dash-header-left { display: flex; align-items: center; gap: 14px; }
@@ -183,6 +186,17 @@
       font-weight: 500;
       color: #5C5043;
       letter-spacing: -0.01em;
+    }
+
+    #selection-indicator {
+      display: none;
+      font-size: 12px;
+      color: #5C7A5A;
+      font-weight: 500;
+      background: rgba(92,122,90,0.1);
+      padding: 4px 12px;
+      border-radius: 50px;
+      border: 0.5px solid rgba(92,122,90,0.3);
     }
 
     .header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -220,22 +234,69 @@
     }
     .btn-ghost-warm:hover { background: rgba(197,186,168,0.2); }
 
+    .btn-amber {
+      background: rgba(197,162,80,0.15);
+      border: 0.5px solid rgba(197,162,80,0.4);
+      color: #A08030;
+    }
+    .btn-amber:hover { background: rgba(197,162,80,0.25); }
+
     /* Main */
-    .dash-main { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+    .dash-main { padding: 2rem 1.5rem; max-width: 1500px; margin: 0 auto; }
+
+    /* Source Tabs */
+    .source-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: #F2EDE3;
+      color: #8A7D6B;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .tab-btn:hover { border-color: #5C7A5A; color: #5C7A5A; }
+    .tab-btn.active {
+      background: #5C7A5A;
+      border-color: #5C7A5A;
+      color: #F5F0E8;
+    }
+    .tab-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      border-radius: 50px;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.22);
+      vertical-align: middle;
+    }
+    .tab-btn:not(.active) .tab-badge {
+      background: rgba(92,122,90,0.12);
+      color: #5C7A5A;
+    }
 
     /* Stats */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 14px;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .stat-card {
       background: #F2EDE3;
       border: 0.5px solid #C5BAA8;
       border-radius: 22px;
-      padding: 1.4rem 1.5rem;
+      padding: 1.2rem 1.4rem;
       box-shadow: 0 2px 10px rgba(44,34,24,0.05);
     }
 
@@ -245,12 +306,12 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: #8A7D6B;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.55rem;
     }
 
     .stat-value {
       font-family: 'DM Sans', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 600;
       letter-spacing: -0.04em;
       line-height: 1;
@@ -262,6 +323,175 @@
       color: #A08C70;
       margin-top: 6px;
     }
+
+    /* Stage mini-bar inside stat card */
+    .stage-bar { margin-top: 8px; }
+    .stage-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+    .stage-bar-label { width: 64px; color: #8A7D6B; flex-shrink: 0; }
+    .stage-bar-track {
+      flex: 1;
+      height: 5px;
+      background: #D8D0C4;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .stage-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+    .stage-bar-count { color: #5C5043; font-weight: 500; min-width: 20px; text-align: right; }
+
+    /* Type distribution */
+    .type-dist { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .type-dist-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 10px;
+    }
+    .type-dist-chip .tdc-letter {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .type-dist-chip .tdc-count { color: #8A7D6B; margin-top: 2px; }
+    .type-dist-chip[data-t="R"] { background: rgba(107,122,107,0.12); border-color: rgba(107,122,107,0.3); }
+    .type-dist-chip[data-t="D"] { background: rgba(92,122,90,0.12); border-color: rgba(92,122,90,0.3); }
+    .type-dist-chip[data-t="M"] { background: rgba(74,101,72,0.12); border-color: rgba(74,101,72,0.3); }
+    .type-dist-chip[data-t="S"] { background: rgba(138,122,104,0.12); border-color: rgba(138,122,104,0.3); }
+
+    /* Filter panel */
+    .filter-panel {
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 18px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+    .filter-panel.open { display: block; }
+
+    .filter-panel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .filter-panel label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .filter-panel .fp-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+    }
+
+    .filter-panel input[type="date"],
+    .filter-panel select {
+      padding: 8px 12px;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      color: #2C2218;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .filter-panel input[type="date"]:focus,
+    .filter-panel select:focus { border-color: #5C7A5A; }
+
+    .filter-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 4px;
+    }
+    .filter-checkbox-row input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: #5C7A5A;
+      cursor: pointer;
+    }
+    .filter-checkbox-row span {
+      font-size: 12.5px;
+      color: #5C5043;
+    }
+
+    .filter-panel-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    /* Bulk toolbar */
+    #bulk-toolbar {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: #2C2218;
+      border-radius: 50px;
+      padding: 10px 18px;
+      box-shadow: 0 8px 28px rgba(44,34,24,0.35);
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    #bulk-toolbar.visible { display: flex; }
+
+    .bulk-info {
+      font-size: 12.5px;
+      color: #D8D0C4;
+      font-weight: 500;
+      padding-right: 6px;
+      border-right: 0.5px solid rgba(197,186,168,0.3);
+    }
+
+    .bulk-select {
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #EDE8DF;
+      outline: none;
+      cursor: pointer;
+    }
+    .bulk-select option { background: #2C2218; color: #EDE8DF; }
+
+    .bulk-btn {
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: #EDE8DF;
+      transition: background 0.2s;
+    }
+    .bulk-btn:hover { background: rgba(255,255,255,0.2); }
+    .bulk-btn.bulk-cancel { color: #A08C70; }
 
     /* Toolbar */
     .toolbar {
@@ -319,6 +549,42 @@
     }
     .filter-select:focus { border-color: #5C7A5A; }
 
+    .toolbar-toggle-filters {
+      padding: 9px 16px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: #F2EDE3;
+      color: #8A7D6B;
+      transition: all 0.2s;
+    }
+    .toolbar-toggle-filters:hover,
+    .toolbar-toggle-filters.active {
+      border-color: #5C7A5A;
+      color: #5C7A5A;
+      background: rgba(92,122,90,0.07);
+    }
+
+    .toolbar-star-filter {
+      padding: 9px 14px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: #F2EDE3;
+      color: #8A7D6B;
+      transition: all 0.2s;
+    }
+    .toolbar-star-filter.active {
+      background: rgba(197,162,80,0.15);
+      border-color: rgba(197,162,80,0.5);
+      color: #A08030;
+    }
+
     /* Table */
     .table-wrap {
       background: #F2EDE3;
@@ -332,12 +598,12 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      min-width: 860px;
+      min-width: 1000px;
     }
 
     thead th {
       background: #EDE8DF;
-      padding: 11px 14px;
+      padding: 11px 12px;
       text-align: left;
       font-size: 9px;
       font-weight: 500;
@@ -349,7 +615,12 @@
       top: 0;
       z-index: 1;
       border-bottom: 0.5px solid #C5BAA8;
+      user-select: none;
     }
+    thead th.sortable { cursor: pointer; }
+    thead th.sortable:hover { color: #5C7A5A; }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    thead th.sorted .sort-arrow { opacity: 1; color: #5C7A5A; }
 
     tbody tr {
       border-bottom: 0.5px solid #D8D0C4;
@@ -358,9 +629,11 @@
     }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #EDE8DF; }
+    tbody tr.selected { background: rgba(92,122,90,0.07); }
+    tbody tr.archived-row { opacity: 0.55; }
 
     tbody td {
-      padding: 11px 14px;
+      padding: 10px 12px;
       vertical-align: middle;
       white-space: nowrap;
       color: #2C2218;
@@ -369,9 +642,54 @@
     .td-muted { color: #8A7D6B; font-size: 12px; }
     .td-email { color: #5C7A5A; }
 
+    /* Checkbox column */
+    .cb-cell { width: 38px; padding: 10px 6px 10px 14px !important; }
+    .row-cb {
+      width: 15px;
+      height: 15px;
+      accent-color: #5C7A5A;
+      cursor: pointer;
+    }
+
+    /* Star button */
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 2px 4px;
+      border-radius: 6px;
+      line-height: 1;
+      transition: transform 0.15s, opacity 0.2s;
+      opacity: 0.35;
+    }
+    .star-btn.starred { opacity: 1; }
+    .star-btn:hover { transform: scale(1.2); opacity: 0.8; }
+    .star-btn.starred:hover { transform: scale(1.2); opacity: 1; }
+
+    /* WhatsApp button in table */
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(92,122,90,0.1);
+      border: 0.5px solid rgba(92,122,90,0.3);
+      color: #5C7A5A;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .wa-btn:hover { background: rgba(92,122,90,0.22); transform: scale(1.1); }
+
+    /* Badges */
     .badge {
       display: inline-block;
-      padding: 3px 11px;
+      padding: 3px 10px;
       border-radius: 50px;
       font-size: 11px;
       font-weight: 500;
@@ -380,15 +698,59 @@
     .badge-done { background: rgba(92,122,90,0.15); color: #5C7A5A; border: 0.5px solid rgba(92,122,90,0.3); }
     .badge-no   { background: rgba(197,186,168,0.3); color: #8A7D6B; border: 0.5px solid #C5BAA8; }
 
-    /* ─── FOLLOW-UP TOGGLE ─── */
+    /* Stage badges */
+    .stage-badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      border: 0.5px solid transparent;
+    }
+    .stage-novo       { background: #D8D0C4; color: #8A7D6B; border-color: #C5BAA8; }
+    .stage-contatado  { background: rgba(92,122,90,0.15); color: #5C7A5A; border-color: rgba(92,122,90,0.3); }
+    .stage-interessado{ background: rgba(197,162,80,0.15); color: #A08030; border-color: rgba(197,162,80,0.35); }
+    .stage-proposta   { background: rgba(160,140,112,0.15); color: #8A7040; border-color: rgba(160,140,112,0.35); }
+    .stage-fechado    { background: rgba(74,101,72,0.2); color: #4A6548; border-color: rgba(74,101,72,0.4); }
+    .stage-perdido    { background: rgba(158,120,120,0.15); color: #8A5050; border-color: rgba(158,120,120,0.35); }
+
+    /* Type badges */
+    .type-badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 0.5px solid transparent;
+    }
+    .type-R { background: rgba(107,122,107,0.18); color: #6B7A6B; border-color: rgba(107,122,107,0.3); }
+    .type-D { background: rgba(92,122,90,0.18);  color: #5C7A5A; border-color: rgba(92,122,90,0.3); }
+    .type-M { background: rgba(74,101,72,0.18);  color: #4A6548; border-color: rgba(74,101,72,0.3); }
+    .type-S { background: rgba(138,122,104,0.18); color: #8A7A68; border-color: rgba(138,122,104,0.3); }
+
+    /* Score badge */
+    .score-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .score-low  { background: #D8D0C4; color: #8A7D6B; }
+    .score-mid  { background: rgba(197,162,80,0.18); color: #A08030; border: 0.5px solid rgba(197,162,80,0.4); }
+    .score-high { background: rgba(74,101,72,0.18); color: #4A6548; border: 0.5px solid rgba(74,101,72,0.4); }
+
+    /* Follow-up toggle */
     .fu-btn {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 50px;
       font-family: 'Inter', sans-serif;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
       border: 0.5px solid #C5BAA8;
@@ -404,7 +766,7 @@
       color: #5C7A5A;
     }
     .fu-btn .fu-box {
-      width: 14px; height: 14px;
+      width: 13px; height: 13px;
       border-radius: 4px;
       border: 1.5px solid currentColor;
       display: flex; align-items: center; justify-content: center;
@@ -428,15 +790,14 @@
     .answers-cell { display: flex; gap: 3px; }
 
     .ans-chip {
-      width: 20px;
-      height: 20px;
+      width: 19px;
+      height: 19px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
-      font-size: 10px;
+      border-radius: 5px;
+      font-size: 9.5px;
       font-weight: 600;
-      letter-spacing: 0;
       background: #D8D0C4;
       color: #8A7D6B;
       border: 0.5px solid transparent;
@@ -453,46 +814,6 @@
       font-size: 14px;
       font-family: 'Playfair Display', serif;
       font-style: italic;
-    }
-
-    /* ─── SOURCE TABS ─── */
-    .source-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 1.5rem;
-    }
-    .tab-btn {
-      padding: 9px 20px;
-      border-radius: 50px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12.5px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 0.5px solid #C5BAA8;
-      background: #F2EDE3;
-      color: #8A7D6B;
-      transition: all 0.2s;
-      letter-spacing: 0.01em;
-    }
-    .tab-btn:hover { border-color: #5C7A5A; color: #5C7A5A; }
-    .tab-btn.active {
-      background: #5C7A5A;
-      border-color: #5C7A5A;
-      color: #F5F0E8;
-    }
-    .tab-badge {
-      display: inline-block;
-      margin-left: 6px;
-      padding: 1px 7px;
-      border-radius: 50px;
-      font-size: 10px;
-      font-weight: 600;
-      background: rgba(255,255,255,0.22);
-      vertical-align: middle;
-    }
-    .tab-btn:not(.active) .tab-badge {
-      background: rgba(92,122,90,0.12);
-      color: #5C7A5A;
     }
 
     /* Pagination */
@@ -540,24 +861,25 @@
       inset: 0;
       background: rgba(44,34,24,0.35);
       z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem 1rem;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 0;
     }
     #detail-overlay.open { display: flex; }
 
     .detail-panel {
       background: #F2EDE3;
-      border: 0.5px solid #C5BAA8;
-      border-radius: 28px;
+      border-left: 0.5px solid #C5BAA8;
       padding: 2rem 1.75rem;
       width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
+      max-width: 480px;
+      height: 100vh;
       overflow-y: auto;
-      box-shadow: 0 14px 40px rgba(44,34,24,0.18);
+      box-shadow: -8px 0 32px rgba(44,34,24,0.16);
       position: relative;
+      animation: slideIn 0.22s ease;
     }
+    @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     .detail-close {
       position: absolute;
@@ -594,7 +916,16 @@
       font-weight: 500;
       letter-spacing: -0.02em;
       color: #2C2218;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
+      padding-right: 36px;
+    }
+
+    .detail-badges-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      align-items: center;
     }
 
     .detail-div {
@@ -607,7 +938,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 8px 0;
+      padding: 7px 0;
       gap: 16px;
     }
 
@@ -628,6 +959,155 @@
       word-break: break-word;
     }
 
+    /* Stage select in detail */
+    .detail-stage-select {
+      padding: 6px 12px;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #2C2218;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .detail-stage-select:focus { border-color: #5C7A5A; }
+
+    /* Notes textarea */
+    .detail-notes-wrap { margin-top: 0.5rem; }
+    .detail-notes-textarea {
+      width: 100%;
+      min-height: 90px;
+      padding: 10px 12px;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #2C2218;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      line-height: 1.5;
+    }
+    .detail-notes-textarea:focus {
+      border-color: #5C7A5A;
+      box-shadow: 0 0 0 3px rgba(92,122,90,0.12);
+    }
+    .detail-notes-textarea::placeholder { color: #A08C70; }
+
+    .detail-section-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      margin-bottom: 8px;
+    }
+
+    /* WA templates in detail */
+    .wa-template-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 0.5rem;
+    }
+    .wa-template-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
+    .wa-template-btn:hover {
+      background: rgba(92,122,90,0.08);
+      border-color: rgba(92,122,90,0.35);
+    }
+    .wa-template-type {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5C7A5A;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .wa-template-text {
+      font-size: 12px;
+      color: #5C5043;
+      line-height: 1.45;
+    }
+    .wa-open-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: #5C7A5A;
+      color: #F5F0E8;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .wa-open-btn:hover { background: #4A6548; }
+
+    /* Detail action buttons */
+    .detail-actions-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .detail-archive-btn {
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: transparent;
+      color: #8A7D6B;
+      transition: all 0.2s;
+    }
+    .detail-archive-btn:hover {
+      background: rgba(158,120,120,0.1);
+      border-color: rgba(158,120,120,0.4);
+      color: #8A5050;
+    }
+    .detail-archive-btn.unarchive:hover {
+      background: rgba(92,122,90,0.1);
+      border-color: rgba(92,122,90,0.4);
+      color: #5C7A5A;
+    }
+
+    /* Duplicate warning badge */
+    .dup-badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(158,120,120,0.15);
+      color: #8A5050;
+      border: 0.5px solid rgba(158,120,120,0.35);
+    }
+
+    /* Detail answers grid */
     .detail-answers {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -668,6 +1148,188 @@
     .detail-ans-item[data-t="D"] { background: rgba(92,122,90,0.12); border-color: rgba(92,122,90,0.3); }
     .detail-ans-item[data-t="M"] { background: rgba(74,101,72,0.12); border-color: rgba(74,101,72,0.3); }
     .detail-ans-item[data-t="S"] { background: rgba(138,122,104,0.12); border-color: rgba(138,122,104,0.3); }
+
+    /* Save notes btn feedback */
+    .save-notes-btn {
+      margin-top: 8px;
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid rgba(92,122,90,0.4);
+      background: rgba(92,122,90,0.1);
+      color: #5C7A5A;
+      transition: background 0.2s;
+    }
+    .save-notes-btn:hover { background: rgba(92,122,90,0.18); }
+    .save-notes-btn.saving { opacity: 0.6; pointer-events: none; }
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2C2218;
+      color: #EDE8DF;
+      padding: 9px 18px;
+      border-radius: 50px;
+      font-size: 12.5px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 200;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+/* ─── PAYMENT REMINDERS ─── */
+#payment-reminders {
+  margin-bottom: 1.25rem;
+  display: none;
+}
+#payment-reminders.has-payments { display: block; }
+
+.payment-reminders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.payment-reminders-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+}
+.payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.payment-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #F2EDE3;
+  border: 0.5px solid #C5BAA8;
+  border-radius: 14px;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.payment-item:hover { background: #EBE4D8; }
+.payment-item.today {
+  background: #F0EDD8;
+  border-color: #B09050;
+}
+.payment-item.overdue {
+  background: #F2E8E8;
+  border-color: #C08080;
+}
+.payment-day-badge {
+  min-width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #E8E0D0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5C5043;
+  flex-shrink: 0;
+}
+.payment-item.today .payment-day-badge {
+  background: #D4A840;
+  color: #fff;
+}
+.payment-item.overdue .payment-day-badge {
+  background: #C08080;
+  color: #fff;
+}
+.payment-item-info { flex: 1; min-width: 0; }
+.payment-item-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #2C2218;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.payment-item-sub {
+  font-size: 11.5px;
+  color: #8A7D6B;
+  margin-top: 1px;
+}
+.payment-item-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4A6548;
+  white-space: nowrap;
+}
+.payment-item.today .payment-item-value { color: #A08030; }
+.payment-item.overdue .payment-item-value { color: #8A4040; }
+.payment-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(92,122,90,0.12);
+  font-size: 16px;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.15s;
+}
+.payment-wa-btn:hover { background: rgba(92,122,90,0.25); transform: scale(1.1); }
+.payment-today-banner {
+  background: linear-gradient(90deg, #D4A840 0%, #B09050 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  display: none;
+}
+.payment-today-banner.visible { display: block; }
+
+/* payment fields in detail panel */
+.payment-fields-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.payment-field-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+.payment-field-input {
+  width: 100%;
+  background: #EDE8DF;
+  border: 0.5px solid #C5BAA8;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  font-size: 13px;
+  color: #2C2218;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.payment-field-input:focus { border-color: #8A7D6B; }
   </style>
 </head>
 <body>
@@ -677,7 +1339,7 @@
   <div class="login-card">
     <div class="tag">Painel Administrativo</div>
     <h1>Dança &amp; Consciência</h1>
-    <p class="login-sub" style="margin-bottom:0.5rem">Quiz — Dashboard de Leads</p>
+    <p class="login-sub" style="margin-bottom:0.5rem">CRM — Dashboard de Leads</p>
     <div class="divider">
       <div class="divider-line"></div>
       <div class="divider-dot"></div>
@@ -702,7 +1364,8 @@
         <span>Chris Busato</span>
       </div>
       <div class="header-sep"></div>
-      <div class="dash-page-title">Dashboard de Leads</div>
+      <div class="dash-page-title">CRM de Leads</div>
+      <div id="selection-indicator"></div>
     </div>
     <div class="header-actions">
       <button class="btn-sm btn-outline-warm" id="refresh-btn">↻ Atualizar <span id="refresh-countdown"></span></button>
@@ -724,11 +1387,11 @@
     </div>
 
     <!-- Stats -->
-    <div class="stats-grid">
+    <div class="stats-grid" id="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Total de Leads</div>
         <div class="stat-value" id="stat-total">—</div>
-        <div class="stat-sub">cadastros únicos</div>
+        <div class="stat-sub" id="stat-total-sub">cadastros únicos</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Completaram</div>
@@ -736,14 +1399,73 @@
         <div class="stat-sub" id="stat-completed-pct"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Não completaram</div>
-        <div class="stat-value" id="stat-incomplete" style="color:#A08C70">—</div>
-        <div class="stat-sub" id="stat-incomplete-pct"></div>
-      </div>
-      <div class="stat-card">
         <div class="stat-label">Taxa de conclusão</div>
         <div class="stat-value" id="stat-rate" style="color:#4A6548">—</div>
         <div class="stat-sub">% finalizaram o quiz</div>
+      </div>
+      <div class="stat-card" id="stat-card-stages">
+        <div class="stat-label">Por Estágio</div>
+        <div class="stage-bar" id="stage-bar-content"></div>
+      </div>
+      <div class="stat-card" id="stat-card-types">
+        <div class="stat-label">Tipo de Corpo</div>
+        <div class="type-dist" id="type-dist-content"></div>
+      </div>
+    </div>
+
+    <!-- Payment Reminders -->
+    <div id="payment-reminders">
+      <div class="payment-reminders-header">
+        <div class="payment-reminders-title">💳 Lembretes de Pagamento</div>
+      </div>
+      <div class="payment-today-banner" id="payment-today-banner"></div>
+      <div class="payment-list" id="payment-list"></div>
+    </div>
+
+    <!-- Filter Panel -->
+    <div class="filter-panel" id="filter-panel">
+      <div class="filter-panel-grid">
+        <label>
+          <span class="fp-label">Tipo de corpo</span>
+          <select id="fp-type">
+            <option value="">Todos</option>
+            <option value="R">R — Racional</option>
+            <option value="D">D — Dependente</option>
+            <option value="M">M — Musical</option>
+            <option value="S">S — Sensível</option>
+          </select>
+        </label>
+        <label>
+          <span class="fp-label">Estágio</span>
+          <select id="fp-stage">
+            <option value="">Todos</option>
+            <option value="novo">Novo</option>
+            <option value="contatado">Contatado</option>
+            <option value="interessado">Interessado</option>
+            <option value="proposta">Proposta</option>
+            <option value="fechado">Fechado</option>
+            <option value="perdido">Perdido</option>
+          </select>
+        </label>
+        <label>
+          <span class="fp-label">Data início</span>
+          <input type="date" id="fp-date-from" />
+        </label>
+        <label>
+          <span class="fp-label">Data fim</span>
+          <input type="date" id="fp-date-to" />
+        </label>
+        <label>
+          <span class="fp-label">Opções</span>
+          <div class="filter-checkbox-row">
+            <input type="checkbox" id="fp-show-archived" />
+            <span>Mostrar arquivados</span>
+          </div>
+        </label>
+      </div>
+      <div class="filter-panel-actions">
+        <button class="btn-sm btn-outline-warm" id="fp-reset-btn">Limpar filtros</button>
+        <button class="btn-sm btn-sage" id="fp-apply-btn">Aplicar</button>
       </div>
     </div>
 
@@ -760,6 +1482,8 @@
         <option value="completed">Completaram</option>
         <option value="incomplete">Não completaram</option>
       </select>
+      <button class="toolbar-star-filter" id="star-filter-btn" title="Mostrar apenas estrelados" onclick="toggleStarFilter()">★ Estrelados</button>
+      <button class="toolbar-toggle-filters" id="toggle-filters-btn" onclick="toggleFilterPanel()">⊞ Filtros</button>
     </div>
 
     <!-- Table -->
@@ -767,20 +1491,26 @@
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Status</th>
-            <th>Respostas Q1–Q10</th>
+            <th class="cb-cell">
+              <input type="checkbox" class="row-cb" id="select-all-cb" onchange="selectAll(this.checked)" title="Selecionar todos" />
+            </th>
+            <th>★</th>
+            <th class="sortable" data-sort="full_name" onclick="sortBy('full_name')">Nome <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-sort="email" onclick="sortBy('email')">Email <span class="sort-arrow">↕</span></th>
+            <th>Tel.</th>
+            <th class="sortable" data-sort="stage" onclick="sortBy('stage')">Estágio <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-sort="dominant_type" onclick="sortBy('dominant_type')">Tipo <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-sort="score" onclick="sortBy('score')">Score <span class="sort-arrow">↕</span></th>
+            <th>Quiz</th>
             <th>Follow-up</th>
-            <th>Cadastro</th>
-            <th>Concluiu em</th>
+            <th>Respostas</th>
+            <th class="sortable" data-sort="created_at" onclick="sortBy('created_at')">Cadastro <span class="sort-arrow">↕</span></th>
+            <th>WA</th>
           </tr>
         </thead>
         <tbody id="table-body">
           <tr>
-            <td colspan="8" class="empty-state">
+            <td colspan="13" class="empty-state">
               <span class="spin-ring"></span> Carregando leads…
             </td>
           </tr>
@@ -798,36 +1528,100 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /.dash-main -->
+</div><!-- /#dashboard -->
+
+<!-- ══════════════════════ BULK TOOLBAR ══════════════════════ -->
+<div id="bulk-toolbar">
+  <span class="bulk-info" id="bulk-info">0 selecionados</span>
+  <select class="bulk-select" id="bulk-stage-select">
+    <option value="">Mudar estágio…</option>
+    <option value="novo">Novo</option>
+    <option value="contatado">Contatado</option>
+    <option value="interessado">Interessado</option>
+    <option value="proposta">Proposta</option>
+    <option value="fechado">Fechado</option>
+    <option value="perdido">Perdido</option>
+  </select>
+  <button class="bulk-btn" onclick="applyBulkAction('set_archived', true)">Arquivar</button>
+  <button class="bulk-btn" onclick="applyBulkAction('set_follow_up', true)">✓ Follow-up</button>
+  <button class="bulk-btn" onclick="applyBulkAction('set_starred', true)">★ Estrelar</button>
+  <button class="bulk-btn bulk-cancel" onclick="clearSelection()">Cancelar</button>
 </div>
 
-<!-- Detail Overlay -->
+<!-- ══════════════════════ DETAIL OVERLAY ══════════════════════ -->
 <div id="detail-overlay">
-  <div class="detail-panel">
+  <div class="detail-panel" id="detail-panel">
     <button class="detail-close" id="close-detail">&times;</button>
     <div class="detail-tag">Detalhes do Lead</div>
     <div class="detail-name" id="detail-name">—</div>
+    <div class="detail-badges-row" id="detail-badges-row"></div>
     <div id="detail-content"></div>
   </div>
 </div>
 
+<!-- ══════════════════════ TOAST ══════════════════════ -->
+<div id="toast"></div>
+
 <script>
 (function () {
+  'use strict';
+
   const SESSION_KEY = "cb_dash_secret";
   const PAGE_SIZE   = 100;
 
   const LETTER_TO_TYPE = { A: "R", B: "D", C: "M", D: "S" };
   const TYPE_LABEL     = { R: "Racional", D: "Dependente", M: "Musical", S: "Sensível" };
 
-  let secret       = "";
-  let allRows      = [];
-  let filteredRows = [];
-  let currentPage  = 0;
-  let currentSource = "organic"; // "organic" | "ads"
-  const tabCounts = { organic: null, ads: null };
+  const STAGE_LABELS = {
+    novo: "Novo", contatado: "Contatado", interessado: "Interessado",
+    proposta: "Proposta", fechado: "Fechado", perdido: "Perdido"
+  };
 
-  // ── elements
-  const $  = id => document.getElementById(id);
+  const WA_TEMPLATES = {
+    R: (name) => `Oi ${name}! Vi que você tem o corpo racional na dança. Tenho algo que pode te ajudar muito a soltar o controle — posso te contar mais?`,
+    D: (name) => `Oi ${name}! Vi que você tem o corpo dependente na dança. Existe um caminho específico pra isso — quer saber mais?`,
+    M: (name) => `Oi ${name}! Que legal que você tem o corpo musical! Tenho um conteúdo incrível pra aprofundar isso — posso compartilhar?`,
+    S: (name) => `Oi ${name}! Vi que você tem o corpo sensível desorganizado. Tem um trabalho específico pra isso — posso te explicar?`,
+  };
+
+  const STAGE_COLORS = {
+    novo:        "#8A7D6B",
+    contatado:   "#5C7A5A",
+    interessado: "#A08030",
+    proposta:    "#8A7040",
+    fechado:     "#4A6548",
+    perdido:     "#8A5050",
+  };
+
+  let secret        = "";
+  let allRows       = [];
+  let filteredRows  = [];
+  let currentPage   = 0;
+  let currentSource = "organic";
+  let sortField     = "created_at";
+  let sortDir       = "desc";
+  let onlyStarred   = false;
+  let filterPanelOpen = false;
+  const tabCounts   = { organic: null, ads: null };
+  const selectedIds = new Set();
+
+  // Filter panel state
+  let fpType        = "";
+  let fpStage       = "";
+  let fpDateFrom    = "";
+  let fpDateTo      = "";
+  let fpShowArchived= false;
+
+  // Duplicate sets
+  let dupEmails  = new Set();
+  let dupPhones  = new Set();
+
+  // Current detail row reference
+  let currentDetailRow = null;
+
+  const $ = id => document.getElementById(id);
+
   const loginScreen   = $("login-screen");
   const dashboard     = $("dashboard");
   const secretInput   = $("secret-input");
@@ -846,7 +1640,13 @@
   const detailOverlay = $("detail-overlay");
   const detailName    = $("detail-name");
   const detailContent = $("detail-content");
+  const detailBadgesRow = $("detail-badges-row");
   const closeDetail   = $("close-detail");
+  const bulkToolbar   = $("bulk-toolbar");
+  const bulkInfo      = $("bulk-info");
+  const bulkStageSelect = $("bulk-stage-select");
+  const selectAllCb   = $("select-all-cb");
+  const toast         = $("toast");
 
   // ── auto-login from session
   const saved = sessionStorage.getItem(SESSION_KEY);
@@ -890,8 +1690,9 @@
   window.switchTab = function(source) {
     if (source === currentSource) return;
     currentSource = source;
-    document.getElementById("tab-organic").classList.toggle("active", source === "organic");
-    document.getElementById("tab-ads").classList.toggle("active", source === "ads");
+    $("tab-organic").classList.toggle("active", source === "organic");
+    $("tab-ads").classList.toggle("active",     source === "ads");
+    clearSelection();
     stopAutoRefresh();
     loadData();
   };
@@ -903,7 +1704,7 @@
 
   // ── load
   async function loadData() {
-    tableBody.innerHTML = `<tr><td colspan="8" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="13" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
     statusBar.textContent = "";
 
     const endpoint = currentSource === "ads"
@@ -922,40 +1723,146 @@
       }
 
       if (!res.ok || !data.ok) {
-        tableBody.innerHTML = `<tr><td colspan="8" class="empty-state">Erro ao carregar: ${esc(data.error || "desconhecido")}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="13" class="empty-state">Erro ao carregar: ${esc(data.error || "desconhecido")}</td></tr>`;
         return;
       }
 
       sessionStorage.setItem(SESSION_KEY, secret);
-      loginScreen.style.display = "none";
-      dashboard.style.display   = "block";
 
       allRows = data.rows || [];
+
+      // Calculate dominant_type client-side for rows that don't have it
+      const rowsToUpdate = [];
+      allRows.forEach(row => {
+        if (!row.dominant_type && row.quiz_completed) {
+          const dt = calcDominantType(row);
+          if (dt) {
+            row.dominant_type = dt;
+            rowsToUpdate.push({ id: row.id, dominant_type: dt });
+          }
+        } else if (!row.dominant_type) {
+          row.dominant_type = calcDominantType(row) || "";
+        }
+        if (!row.stage) row.stage = "novo";
+      });
+
+      // Save dominant_type to backend asynchronously (fire-and-forget)
+      rowsToUpdate.forEach(u => {
+        fetch("/api/update-lead", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ secret, id: u.id, source: currentSource, dominant_type: u.dominant_type })
+        }).catch(() => {});
+      });
+
+      // Detect duplicates
+      detectDuplicates();
+
       tabCounts[currentSource] = allRows.length;
       updateTabCounts();
       currentPage = 0;
       applyFilters();
       renderStats();
+      renderPaymentReminders();
       startAutoRefresh();
 
     } catch (e) {
-      tableBody.innerHTML = `<tr><td colspan="8" class="empty-state">Falha na conexão: ${esc(e.message)}</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="13" class="empty-state">Falha na conexão: ${esc(e.message)}</td></tr>`;
     }
+  }
+
+  // ── dominant type calculation
+  function calcDominantType(row) {
+    const counts = { R: 0, D: 0, M: 0, S: 0 };
+    ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].forEach(q => {
+      const letter = row[q];
+      if (letter && LETTER_TO_TYPE[letter]) counts[LETTER_TO_TYPE[letter]]++;
+    });
+    const total = Object.values(counts).reduce((a,b) => a+b, 0);
+    if (total === 0) return "";
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  // ── lead score
+  function calcScore(row) {
+    let score = 0;
+    if (row.quiz_completed) score += 40;
+    if (row.stage === "interessado") score += 15;
+    else if (row.stage === "proposta") score += 25;
+    else if (row.stage === "fechado") score += 50;
+    if (row.starred) score += 10;
+    if (row.dominant_type === "M") score += 10;
+    if (row.created_at) {
+      const daysAgo = (Date.now() - new Date(row.created_at).getTime()) / (1000 * 60 * 60 * 24);
+      if (daysAgo < 7) score += 10;
+    }
+    return Math.min(score, 100);
+  }
+
+  // ── duplicate detection
+  function detectDuplicates() {
+    const emailCount = {};
+    const phoneCount = {};
+    allRows.forEach(row => {
+      if (row.email) emailCount[row.email.toLowerCase()] = (emailCount[row.email.toLowerCase()] || 0) + 1;
+      if (row.phone) {
+        const p = row.phone.replace(/\D/g,"");
+        if (p) phoneCount[p] = (phoneCount[p] || 0) + 1;
+      }
+    });
+    dupEmails = new Set(Object.entries(emailCount).filter(([,v]) => v > 1).map(([k]) => k));
+    dupPhones = new Set(Object.entries(phoneCount).filter(([,v]) => v > 1).map(([k]) => k));
+  }
+
+  function isDuplicate(row) {
+    if (row.email && dupEmails.has(row.email.toLowerCase())) return true;
+    if (row.phone) {
+      const p = row.phone.replace(/\D/g,"");
+      if (p && dupPhones.has(p)) return true;
+    }
+    return false;
   }
 
   // ── stats
   function renderStats() {
-    const total      = allRows.length;
-    const completed  = allRows.filter(r => r.quiz_completed).length;
-    const incomplete = total - completed;
+    const rows = allRows.filter(r => !r.archived);
+    const total      = rows.length;
+    const completed  = rows.filter(r => r.quiz_completed).length;
     const rate       = total > 0 ? Math.round(completed / total * 100) : 0;
 
     $("stat-total").textContent         = total;
+    $("stat-total-sub").textContent     = allRows.filter(r => r.archived).length > 0
+      ? `+${allRows.filter(r=>r.archived).length} arquivados` : "cadastros únicos";
     $("stat-completed").textContent     = completed;
     $("stat-completed-pct").textContent = total > 0 ? `${Math.round(completed/total*100)}% do total` : "";
-    $("stat-incomplete").textContent    = incomplete;
-    $("stat-incomplete-pct").textContent= total > 0 ? `${Math.round(incomplete/total*100)}% do total` : "";
     $("stat-rate").textContent          = `${rate}%`;
+
+    // Stage bar
+    const stages = ["novo","contatado","interessado","proposta","fechado","perdido"];
+    const stageCounts = {};
+    stages.forEach(s => stageCounts[s] = 0);
+    rows.forEach(r => { if (stageCounts[r.stage] !== undefined) stageCounts[r.stage]++; });
+    const maxStage = Math.max(...Object.values(stageCounts), 1);
+    $("stage-bar-content").innerHTML = stages.map(s => `
+      <div class="stage-bar-row">
+        <span class="stage-bar-label">${STAGE_LABELS[s]}</span>
+        <div class="stage-bar-track">
+          <div class="stage-bar-fill" style="width:${Math.round(stageCounts[s]/maxStage*100)}%;background:${STAGE_COLORS[s]}"></div>
+        </div>
+        <span class="stage-bar-count">${stageCounts[s]}</span>
+      </div>
+    `).join("");
+
+    // Type distribution
+    const typeCounts = { R: 0, D: 0, M: 0, S: 0 };
+    rows.filter(r => r.dominant_type && typeCounts[r.dominant_type] !== undefined)
+        .forEach(r => typeCounts[r.dominant_type]++);
+    $("type-dist-content").innerHTML = Object.entries(typeCounts).map(([t, c]) => `
+      <div class="type-dist-chip" data-t="${t}">
+        <span class="tdc-letter">${t}</span>
+        <span class="tdc-count">${c}</span>
+      </div>
+    `).join("");
   }
 
   // ── filters
@@ -964,13 +1871,51 @@
     const status = filterStatus.value;
 
     filteredRows = allRows.filter(row => {
-      const matchQ = !q || [row.full_name||"", row.email||"", row.phone||""]
-        .some(v => v.toLowerCase().includes(q));
-      const matchS =
-        status === "all" ||
-        (status === "completed"  &&  row.quiz_completed) ||
-        (status === "incomplete" && !row.quiz_completed);
-      return matchQ && matchS;
+      // Archived
+      if (row.archived && !fpShowArchived) return false;
+
+      // Quick search
+      if (q && !([row.full_name||"", row.email||"", row.phone||""]
+        .some(v => v.toLowerCase().includes(q)))) return false;
+
+      // Status filter
+      if (status === "completed"  && !row.quiz_completed) return false;
+      if (status === "incomplete" &&  row.quiz_completed) return false;
+
+      // Starred filter
+      if (onlyStarred && !row.starred) return false;
+
+      // Filter panel: type
+      if (fpType && row.dominant_type !== fpType) return false;
+
+      // Filter panel: stage
+      if (fpStage && row.stage !== fpStage) return false;
+
+      // Filter panel: date range
+      if (fpDateFrom && row.created_at) {
+        if (new Date(row.created_at) < new Date(fpDateFrom)) return false;
+      }
+      if (fpDateTo && row.created_at) {
+        const to = new Date(fpDateTo);
+        to.setDate(to.getDate() + 1);
+        if (new Date(row.created_at) > to) return false;
+      }
+
+      return true;
+    });
+
+    // Sort
+    const dir = sortDir === "asc" ? 1 : -1;
+    filteredRows.sort((a, b) => {
+      let va, vb;
+      if (sortField === "score") {
+        va = calcScore(a); vb = calcScore(b);
+      } else {
+        va = a[sortField] || ""; vb = b[sortField] || "";
+      }
+      if (va < vb) return -1 * dir;
+      if (va > vb) return  1 * dir;
+      return 0;
     });
 
     currentPage = 0;
@@ -980,64 +1925,162 @@
   searchInput.addEventListener("input", applyFilters);
   filterStatus.addEventListener("change", applyFilters);
 
+  // ── sort
+  window.sortBy = function(field) {
+    if (sortField === field) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+    } else {
+      sortField = field;
+      sortDir   = "asc";
+    }
+    // Update header arrows
+    document.querySelectorAll("thead th.sortable").forEach(th => {
+      th.classList.remove("sorted");
+      const arrow = th.querySelector(".sort-arrow");
+      if (arrow) arrow.textContent = "↕";
+    });
+    const active = document.querySelector(`thead th[data-sort="${field}"]`);
+    if (active) {
+      active.classList.add("sorted");
+      const arrow = active.querySelector(".sort-arrow");
+      if (arrow) arrow.textContent = sortDir === "asc" ? "↑" : "↓";
+    }
+    applyFilters();
+  };
+
+  // ── filter panel
+  window.toggleFilterPanel = function() {
+    filterPanelOpen = !filterPanelOpen;
+    $("filter-panel").classList.toggle("open", filterPanelOpen);
+    $("toggle-filters-btn").classList.toggle("active", filterPanelOpen);
+  };
+
+  $("fp-apply-btn").addEventListener("click", () => {
+    fpType     = $("fp-type").value;
+    fpStage    = $("fp-stage").value;
+    fpDateFrom = $("fp-date-from").value;
+    fpDateTo   = $("fp-date-to").value;
+    fpShowArchived = $("fp-show-archived").checked;
+    applyFilters();
+  });
+
+  $("fp-reset-btn").addEventListener("click", () => {
+    $("fp-type").value        = "";
+    $("fp-stage").value       = "";
+    $("fp-date-from").value   = "";
+    $("fp-date-to").value     = "";
+    $("fp-show-archived").checked = false;
+    fpType = fpStage = fpDateFrom = fpDateTo = "";
+    fpShowArchived = false;
+    applyFilters();
+  });
+
+  // ── star filter
+  window.toggleStarFilter = function() {
+    onlyStarred = !onlyStarred;
+    $("star-filter-btn").classList.toggle("active", onlyStarred);
+    applyFilters();
+  };
+
   // ── table render
   function renderTable() {
     const start    = currentPage * PAGE_SIZE;
     const end      = start + PAGE_SIZE;
     const pageRows = filteredRows.slice(start, end);
 
+    const COLSPAN = 13;
+
     if (!pageRows.length) {
-      tableBody.innerHTML = `<tr><td colspan="8" class="empty-state" style="font-family:'Playfair Display',serif;font-style:italic">Nenhum registro encontrado.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="${COLSPAN}" class="empty-state">Nenhum registro encontrado.</td></tr>`;
       pageInfo.textContent = "";
       prevBtn.disabled = nextBtn.disabled = true;
       statusBar.textContent = "";
+      selectAllCb.checked = false;
       return;
     }
 
     tableBody.innerHTML = pageRows.map((row, i) => {
-      const idx  = start + i + 1;
-      const name = esc(row.full_name || "—");
-      const email= esc(row.email     || "—");
-      const phone= esc(fmtPhone(row.phone || ""));
+      const globalIdx = start + i;
+      const idx       = start + i + 1;
+      const name      = esc(row.full_name || "—");
+      const email     = esc(row.email     || "—");
+      const phone     = esc(fmtPhone(row.phone || ""));
+      const score     = calcScore(row);
+      const isSelected = selectedIds.has(String(row.id));
 
-      const badge = row.quiz_completed
-        ? `<span class="badge badge-done">✓ Completou</span>`
-        : `<span class="badge badge-no">✗ Incompleto</span>`;
+      const stageCls  = `stage-badge stage-${row.stage || "novo"}`;
+      const stageLabel = STAGE_LABELS[row.stage] || row.stage || "Novo";
 
-      const chips = ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].map(q => {
-        const letter = row[q];
-        const tipo   = letter ? (LETTER_TO_TYPE[letter] || "") : "";
-        return `<span class="ans-chip" data-t="${tipo}" title="${letter||"—"}: ${TYPE_LABEL[tipo]||"—"}">${letter||"·"}</span>`;
-      }).join("");
+      const dt = row.dominant_type || "";
+      const typeBadge = dt
+        ? `<span class="type-badge type-${dt}" title="${TYPE_LABEL[dt]||""}">${dt}</span>`
+        : `<span class="td-muted">—</span>`;
+
+      let scoreCls = "score-low";
+      if (score >= 70) scoreCls = "score-high";
+      else if (score >= 40) scoreCls = "score-mid";
+      const scoreBadge = `<span class="score-badge ${scoreCls}">${score}</span>`;
+
+      const quizBadge = row.quiz_completed
+        ? `<span class="badge badge-done">✓</span>`
+        : `<span class="badge badge-no">✗</span>`;
 
       const fuDone = !!row.follow_up_done;
       const fuBtn = `<button
         class="fu-btn${fuDone ? ' done' : ''}"
         onclick="event.stopPropagation(); toggleFollowUp('${row.id}', this)"
         title="${fuDone ? 'Clique para desmarcar' : 'Marcar como contatado'}"
-      ><span class="fu-box"></span>${fuDone ? 'Contatado' : 'Contatar'}</button>`;
+      ><span class="fu-box"></span>${fuDone ? 'Feito' : 'Contatar'}</button>`;
 
-      return `<tr onclick="openDetail(${start + i})">
-        <td class="td-muted">${idx}</td>
+      const chips = ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].map(q => {
+        const letter = row[q];
+        const tipo   = letter ? (LETTER_TO_TYPE[letter] || "") : "";
+        return `<span class="ans-chip" data-t="${tipo}" title="${letter||"—"}">${letter||"·"}</span>`;
+      }).join("");
+
+      const starCls = row.starred ? "star-btn starred" : "star-btn";
+
+      // WhatsApp
+      const rawPhone = (row.phone || "").replace(/\D/g, "");
+      const waUrl = rawPhone ? `https://wa.me/${rawPhone.startsWith("55") ? rawPhone : "55"+rawPhone}` : "#";
+      const waBtn = rawPhone
+        ? `<a class="wa-btn" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="WhatsApp">📱</a>`
+        : `<span class="wa-btn" style="opacity:0.3;cursor:default">📱</span>`;
+
+      return `<tr onclick="openDetail(${globalIdx})" class="${isSelected ? 'selected' : ''}${row.archived ? ' archived-row' : ''}">
+        <td class="cb-cell"><input type="checkbox" class="row-cb" ${isSelected ? 'checked' : ''} onchange="event.stopPropagation(); toggleSelect('${row.id}', this)" /></td>
+        <td onclick="event.stopPropagation()">
+          <button class="${starCls}" onclick="toggleStar('${row.id}', this)" title="${row.starred ? 'Remover estrela' : 'Estrelar'}">★</button>
+        </td>
         <td>${name}</td>
-        <td class="td-email">${email}</td>
+        <td class="td-email" style="font-size:12px">${email}</td>
         <td class="td-muted">${phone}</td>
-        <td>${badge}</td>
+        <td><span class="${stageCls}">${stageLabel}</span></td>
+        <td>${typeBadge}</td>
+        <td>${scoreBadge}</td>
+        <td>${quizBadge}</td>
         <td>${fuBtn}</td>
         <td><div class="answers-cell">${chips}</div></td>
-        <td class="td-muted">${fmtDate(row.created_at)}</td>
-        <td class="td-muted">${row.completed_at ? fmtDate(row.completed_at) : "—"}</td>
+        <td class="td-muted" style="font-size:11.5px">${fmtDateShort(row.created_at)}</td>
+        <td>${waBtn}</td>
       </tr>`;
     }).join("");
 
     const total = filteredRows.length;
     pageInfo.textContent = `${start + 1}–${Math.min(end, total)} de ${total} leads`;
+
+    const archived = allRows.filter(r => r.archived).length;
     statusBar.textContent = allRows.length !== filteredRows.length
-      ? `Filtro ativo — exibindo ${filteredRows.length} de ${allRows.length} leads`
-      : `${allRows.length} leads no total`;
+      ? `Filtro ativo — exibindo ${filteredRows.length} de ${allRows.length} leads${archived > 0 ? ` (${archived} arquivados)` : ""}`
+      : `${allRows.length} leads no total${archived > 0 ? ` · ${archived} arquivados` : ""}`;
 
     prevBtn.disabled = currentPage === 0;
     nextBtn.disabled = end >= filteredRows.length;
+
+    // Sync select-all checkbox
+    const pageIds = pageRows.map(r => String(r.id));
+    selectAllCb.checked = pageIds.length > 0 && pageIds.every(id => selectedIds.has(id));
+    updateBulkToolbar();
   }
 
   prevBtn.addEventListener("click", () => { if (currentPage > 0) { currentPage--; renderTable(); } });
@@ -1045,93 +2088,296 @@
     if ((currentPage + 1) * PAGE_SIZE < filteredRows.length) { currentPage++; renderTable(); }
   });
 
-  // ── auto-refresh a cada 60 segundos
+  // ── selection
+  window.toggleSelect = function(id, cb) {
+    if (cb.checked) selectedIds.add(String(id));
+    else selectedIds.delete(String(id));
+    updateBulkToolbar();
+    updateSelectionIndicator();
+    const row = cb.closest("tr");
+    if (row) row.classList.toggle("selected", cb.checked);
+  };
+
+  window.selectAll = function(checked) {
+    const start = currentPage * PAGE_SIZE;
+    const end   = start + PAGE_SIZE;
+    const pageRows = filteredRows.slice(start, end);
+    pageRows.forEach(row => {
+      if (checked) selectedIds.add(String(row.id));
+      else selectedIds.delete(String(row.id));
+    });
+    renderTable();
+  };
+
+  function clearSelection() {
+    selectedIds.clear();
+    updateBulkToolbar();
+    updateSelectionIndicator();
+    renderTable();
+  }
+  window.clearSelection = clearSelection;
+
+  function updateBulkToolbar() {
+    const count = selectedIds.size;
+    bulkToolbar.classList.toggle("visible", count > 0);
+    bulkInfo.textContent = `${count} selecionado${count !== 1 ? "s" : ""}`;
+  }
+
+  function updateSelectionIndicator() {
+    const ind = $("selection-indicator");
+    if (selectedIds.size > 0) {
+      ind.style.display = "inline-block";
+      ind.textContent   = `${selectedIds.size} selecionado${selectedIds.size !== 1 ? "s" : ""}`;
+    } else {
+      ind.style.display = "none";
+    }
+  }
+
+  // Bulk action
+  window.applyBulkAction = async function(action, value) {
+    if (selectedIds.size === 0) return;
+
+    // Stage change from select
+    if (action === "set_stage") {
+      value = bulkStageSelect.value;
+      if (!value) return;
+    }
+
+    const ids = Array.from(selectedIds);
+    try {
+      const res  = await fetch("/api/bulk-action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, ids, source: currentSource, action, value })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        showToast("Erro: " + (data.error || "desconhecido"));
+        return;
+      }
+
+      // Update local rows
+      ids.forEach(id => {
+        const row = allRows.find(r => String(r.id) === String(id));
+        if (!row) return;
+        if (action === "set_stage")     row.stage        = value;
+        if (action === "set_archived")  row.archived     = value;
+        if (action === "set_starred")   row.starred      = value;
+        if (action === "set_follow_up") row.follow_up_done = value;
+      });
+
+      showToast(`${ids.length} lead${ids.length !== 1 ? "s" : ""} atualizados`);
+      clearSelection();
+      bulkStageSelect.value = "";
+      renderStats();
+      applyFilters();
+    } catch(e) {
+      showToast("Falha na conexão");
+    }
+  };
+
+  // Bulk stage select auto-submit
+  bulkStageSelect.addEventListener("change", () => {
+    if (bulkStageSelect.value) applyBulkAction("set_stage");
+  });
+
+  // ── auto-refresh
   const REFRESH_INTERVAL = 60;
-  let countdown = REFRESH_INTERVAL;
-  let autoTimer = null;
+  let countdown      = REFRESH_INTERVAL;
   let countdownTimer = null;
 
   function startAutoRefresh() {
     stopAutoRefresh();
     countdown = REFRESH_INTERVAL;
     updateCountdown();
-
     countdownTimer = setInterval(() => {
       countdown--;
       updateCountdown();
-      if (countdown <= 0) {
-        countdown = REFRESH_INTERVAL;
-        loadData();
-      }
+      if (countdown <= 0) { countdown = REFRESH_INTERVAL; loadData(); }
     }, 1000);
   }
 
-  function stopAutoRefresh() {
-    clearInterval(autoTimer);
-    clearInterval(countdownTimer);
-  }
+  function stopAutoRefresh() { clearInterval(countdownTimer); }
 
   function updateCountdown() {
     const el = $("refresh-countdown");
     if (el) el.textContent = countdown > 0 ? `(${countdown}s)` : "";
   }
 
+  refreshBtn.addEventListener("click", () => { countdown = REFRESH_INTERVAL; loadData(); });
+
   // ── follow-up toggle
-  window.toggleFollowUp = async function (id, btn) {
+  window.toggleFollowUp = async function(id, btn) {
     const wasDone = btn.classList.contains("done");
     const nowDone = !wasDone;
-
     btn.classList.add("loading");
-
     try {
       const fuEndpoint = currentSource === "ads" ? "/api/follow-up-ads" : "/api/follow-up";
-      const res = await fetch(fuEndpoint, {
+      const res  = await fetch(fuEndpoint, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secret, id, done: nowDone })
       });
       const data = await res.json();
-
       if (!res.ok || !data.ok) {
-        alert("Erro ao salvar: " + (data.error || "desconhecido"));
+        showToast("Erro ao salvar: " + (data.error || "desconhecido"));
         btn.classList.remove("loading");
         return;
       }
-
-      // Atualiza o dado local para manter estado sem recarregar tudo
       const row = allRows.find(r => String(r.id) === String(id));
-      if (row) {
-        row.follow_up_done = nowDone;
-        row.follow_up_at   = nowDone ? new Date().toISOString() : null;
-      }
-
+      if (row) { row.follow_up_done = nowDone; row.follow_up_at = nowDone ? new Date().toISOString() : null; }
       btn.classList.remove("loading");
       btn.classList.toggle("done", nowDone);
-      btn.title = nowDone ? "Clique para desmarcar" : "Marcar como contatado";
-      btn.innerHTML = `<span class="fu-box"></span>${nowDone ? "Contatado" : "Contatar"}`;
-
-    } catch (e) {
-      alert("Falha na conexão: " + e.message);
+      btn.title   = nowDone ? "Clique para desmarcar" : "Marcar como contatado";
+      btn.innerHTML = `<span class="fu-box"></span>${nowDone ? "Feito" : "Contatar"}`;
+    } catch(e) {
+      showToast("Falha na conexão: " + e.message);
       btn.classList.remove("loading");
     }
   };
 
-  refreshBtn.addEventListener("click", () => {
-    countdown = REFRESH_INTERVAL;
-    loadData();
-  });
+  // ── star toggle
+  window.toggleStar = async function(id, btn) {
+    const wasStarred = btn.classList.contains("starred");
+    const nowStarred = !wasStarred;
+    btn.style.opacity = "0.5";
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, starred: nowStarred })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar"); btn.style.opacity = ""; return; }
+      const row = allRows.find(r => String(r.id) === String(id));
+      if (row) row.starred = nowStarred;
+      btn.classList.toggle("starred", nowStarred);
+      btn.title = nowStarred ? "Remover estrela" : "Estrelar";
+      btn.style.opacity = "";
+      if (onlyStarred) applyFilters();
+      renderStats();
+    } catch(e) {
+      showToast("Falha na conexão");
+      btn.style.opacity = "";
+    }
+  };
 
-  // ── detail
-  window.openDetail = function (idx) {
+  // ── change stage (detail panel)
+  window.changeStage = async function(id, select) {
+    const newStage = select.value;
+    select.disabled = true;
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, stage: newStage })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar estágio"); select.disabled = false; return; }
+      const row = allRows.find(r => String(r.id) === String(id));
+      if (row) row.stage = newStage;
+      showToast("Estágio atualizado");
+      select.disabled = false;
+      renderTable();
+      renderStats();
+    } catch(e) {
+      showToast("Falha na conexão");
+      select.disabled = false;
+    }
+  };
+
+  // ── save lead (notes from detail panel)
+  window.saveLead = async function(id, btn) {
+    const textarea = document.getElementById(`notes-${id}`);
+    if (!textarea) return;
+    const notes = textarea.value;
+    btn.classList.add("saving");
+    btn.textContent = "Salvando…";
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, notes })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        showToast("Erro ao salvar notas");
+        btn.classList.remove("saving");
+        btn.textContent = "Salvar notas";
+        return;
+      }
+      const row = allRows.find(r => String(r.id) === String(id));
+      if (row) { row.notes = notes; if (currentDetailRow) currentDetailRow.notes = notes; }
+      showToast("Notas salvas");
+      btn.classList.remove("saving");
+      btn.textContent = "Salvar notas";
+    } catch(e) {
+      showToast("Falha na conexão");
+      btn.classList.remove("saving");
+      btn.textContent = "Salvar notas";
+    }
+  };
+
+  // ── archive lead
+  window.archiveLead = async function(id, btn) {
+    const row = allRows.find(r => String(r.id) === String(id));
+    if (!row) return;
+    const nowArchived = !row.archived;
+    btn.disabled = true;
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, archived: nowArchived })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao arquivar"); btn.disabled = false; return; }
+      row.archived = nowArchived;
+      showToast(nowArchived ? "Lead arquivado" : "Lead restaurado");
+      btn.disabled = false;
+      btn.textContent = nowArchived ? "↩ Restaurar" : "Arquivar lead";
+      btn.classList.toggle("unarchive", nowArchived);
+      tabCounts[currentSource] = allRows.filter(r => !r.archived).length;
+      updateTabCounts();
+      renderStats();
+      applyFilters();
+    } catch(e) {
+      showToast("Falha na conexão");
+      btn.disabled = false;
+    }
+  };
+
+  // ── detail panel
+  window.openDetail = function(idx) {
     const row = filteredRows[idx];
     if (!row) return;
+    currentDetailRow = row;
 
     detailName.textContent = row.full_name || row.email || "—";
 
-    const badge = row.quiz_completed
-      ? `<span class="badge badge-done">✓ Completou o quiz</span>`
-      : `<span class="badge badge-no">✗ Não completou</span>`;
+    // Badges row
+    const stageCls   = `stage-badge stage-${row.stage || "novo"}`;
+    const stageLabel = STAGE_LABELS[row.stage] || "Novo";
+    const dt         = row.dominant_type || "";
+    const score      = calcScore(row);
+    let scoreCls = "score-low";
+    if (score >= 70) scoreCls = "score-high";
+    else if (score >= 40) scoreCls = "score-mid";
+    const isDup = isDuplicate(row);
 
+    detailBadgesRow.innerHTML = `
+      <span class="${stageCls}">${stageLabel}</span>
+      ${dt ? `<span class="type-badge type-${dt}">${dt} — ${TYPE_LABEL[dt]||""}</span>` : ""}
+      <span class="score-badge ${scoreCls}">Score: ${score}</span>
+      ${row.starred ? `<span style="font-size:15px" title="Lead estrelado">★</span>` : ""}
+      ${row.archived ? `<span class="badge badge-no">Arquivado</span>` : ""}
+      ${isDup ? `<span class="dup-badge">⚠ Duplicado</span>` : ""}
+    `;
+
+    const rawPhone = (row.phone || "").replace(/\D/g, "");
+    const waUrl = rawPhone ? `https://wa.me/${rawPhone.startsWith("55") ? rawPhone : "55"+rawPhone}` : "";
+
+    // Answer grid
     const answerGrid = ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].map((q, i) => {
       const letter = row[q];
       const tipo   = letter ? (LETTER_TO_TYPE[letter] || "") : "";
@@ -1140,6 +2386,18 @@
         <div class="detail-ans-q">Q${i+1}</div>
         <div class="detail-ans-letter">${letter || "—"}</div>
         <div class="detail-ans-type">${tlabel}</div>
+      </div>`;
+    }).join("");
+
+    // WA templates
+    const templateBtns = Object.entries(WA_TEMPLATES).map(([t, fn]) => {
+      const firstName = (row.full_name || "").split(" ")[0] || "você";
+      const msg = fn(firstName);
+      const encoded = encodeURIComponent(msg);
+      const targetUrl = waUrl ? `${waUrl}?text=${encoded}` : "";
+      return `<div class="wa-template-btn" onclick="${targetUrl ? `window.open('${targetUrl}','_blank')` : `copyText('${msg.replace(/'/g,"\\'")}','Mensagem copiada!')`}">
+        <span class="wa-template-type">${t}</span>
+        <span class="wa-template-text">${esc(msg)}</span>
       </div>`;
     }).join("");
 
@@ -1152,35 +2410,151 @@
         <span class="detail-label">Telefone</span>
         <span class="detail-value">${esc(fmtPhone(row.phone||""))}</span>
       </div>
+      ${waUrl ? `<div class="detail-row">
+        <span class="detail-label">WhatsApp</span>
+        <span class="detail-value"><a class="wa-open-btn" href="${waUrl}" target="_blank" rel="noopener">📱 Abrir WhatsApp</a></span>
+      </div>` : ""}
       <div class="detail-row">
-        <span class="detail-label">Status</span>
-        <span class="detail-value">${badge}</span>
+        <span class="detail-label">Quiz</span>
+        <span class="detail-value">${row.quiz_completed ? '<span class="badge badge-done">✓ Completou</span>' : '<span class="badge badge-no">✗ Incompleto</span>'}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Cadastro</span>
         <span class="detail-value">${fmtDate(row.created_at)}</span>
       </div>
-      <div class="detail-row">
+      ${row.completed_at ? `<div class="detail-row">
         <span class="detail-label">Concluiu em</span>
-        <span class="detail-value">${row.completed_at ? fmtDate(row.completed_at) : "—"}</span>
-      </div>
+        <span class="detail-value">${fmtDate(row.completed_at)}</span>
+      </div>` : ""}
+      ${row.follow_up_at ? `<div class="detail-row">
+        <span class="detail-label">Follow-up em</span>
+        <span class="detail-value">${fmtDate(row.follow_up_at)}</span>
+      </div>` : ""}
+
       <div class="detail-div"></div>
-      <div class="detail-label" style="margin-bottom:8px">Respostas do Quiz</div>
+
+      <div class="detail-section-label">Estágio do Lead</div>
+      <select class="detail-stage-select" onchange="changeStage('${row.id}', this)">
+        <option value="novo"        ${row.stage==="novo"        ? "selected":""}>Novo</option>
+        <option value="contatado"   ${row.stage==="contatado"   ? "selected":""}>Contatado</option>
+        <option value="interessado" ${row.stage==="interessado" ? "selected":""}>Interessado</option>
+        <option value="proposta"    ${row.stage==="proposta"    ? "selected":""}>Proposta</option>
+        <option value="fechado"     ${row.stage==="fechado"     ? "selected":""}>Fechado</option>
+        <option value="perdido"     ${row.stage==="perdido"     ? "selected":""}>Perdido</option>
+      </select>
+
+      <div class="detail-div"></div>
+
+      <div class="detail-section-label">Notas</div>
+      <div class="detail-notes-wrap">
+        <textarea class="detail-notes-textarea" id="notes-${row.id}" placeholder="Adicione observações sobre este lead…">${esc(row.notes || "")}</textarea>
+        <button class="save-notes-btn" onclick="saveLead('${row.id}', this)">Salvar notas</button>
+      </div>
+
+      <div class="detail-div"></div>
+
+      <div class="detail-section-label">💳 Pagamento Recorrente</div>
+      <div class="payment-fields-row">
+        <div>
+          <div class="payment-field-label">Dia do mês (1–31)</div>
+          <input class="payment-field-input" type="number" min="1" max="31" id="pay-day-${row.id}" value="${row.payment_day || ''}" placeholder="Ex: 20" />
+        </div>
+        <div>
+          <div class="payment-field-label">Valor (R$)</div>
+          <input class="payment-field-input" type="number" min="0" step="0.01" id="pay-val-${row.id}" value="${row.payment_value || ''}" placeholder="Ex: 150.00" />
+        </div>
+      </div>
+      <div style="margin-bottom:0.6rem">
+        <div class="payment-field-label">Observação</div>
+        <input class="payment-field-input" type="text" id="pay-notes-${row.id}" value="${esc(row.payment_notes || '')}" placeholder="Ex: mensalidade turma segunda" />
+      </div>
+      <button class="save-notes-btn" onclick="savePayment('${row.id}', this)">Salvar pagamento</button>
+
+      <div class="detail-div"></div>
+
+      <div class="detail-section-label">Templates WhatsApp</div>
+      <div class="wa-template-btns">${templateBtns}</div>
+
+      <div class="detail-div"></div>
+
+      <div class="detail-section-label">Respostas do Quiz</div>
       <div class="detail-answers">${answerGrid}</div>
+
+      <div class="detail-div"></div>
+
+      <div class="detail-actions-row">
+        <button class="detail-archive-btn ${row.archived ? 'unarchive' : ''}" onclick="archiveLead('${row.id}', this)">
+          ${row.archived ? "↩ Restaurar" : "Arquivar lead"}
+        </button>
+        <button class="save-notes-btn" style="margin-top:0" onclick="toggleStarFromDetail('${row.id}', this)">${row.starred ? "☆ Remover estrela" : "★ Estrelar"}</button>
+      </div>
     `;
 
     detailOverlay.classList.add("open");
   };
 
-  closeDetail.addEventListener("click", () => detailOverlay.classList.remove("open"));
-  detailOverlay.addEventListener("click", e => { if (e.target === detailOverlay) detailOverlay.classList.remove("open"); });
+  window.toggleStarFromDetail = async function(id, btn) {
+    const row = allRows.find(r => String(r.id) === String(id));
+    if (!row) return;
+    const nowStarred = !row.starred;
+    btn.disabled = true;
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, starred: nowStarred })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar"); btn.disabled = false; return; }
+      row.starred = nowStarred;
+      btn.textContent = nowStarred ? "☆ Remover estrela" : "★ Estrelar";
+      btn.disabled = false;
+      // Update badges row
+      if (currentDetailRow) currentDetailRow.starred = nowStarred;
+      renderTable();
+      renderStats();
+      showToast(nowStarred ? "Lead estrelado" : "Estrela removida");
+    } catch(e) {
+      showToast("Falha na conexão");
+      btn.disabled = false;
+    }
+  };
+
+  // copy text helper
+  window.copyText = function(text, msg) {
+    navigator.clipboard.writeText(text).then(() => showToast(msg || "Copiado!")).catch(() => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast(msg || "Copiado!");
+    });
+  };
+
+  closeDetail.addEventListener("click", () => {
+    detailOverlay.classList.remove("open");
+    currentDetailRow = null;
+  });
+  detailOverlay.addEventListener("click", e => {
+    if (e.target === detailOverlay) { detailOverlay.classList.remove("open"); currentDetailRow = null; }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && detailOverlay.classList.contains("open")) {
+      detailOverlay.classList.remove("open");
+      currentDetailRow = null;
+    }
+  });
 
   // ── export CSV
   exportBtn.addEventListener("click", () => {
     const rows = filteredRows.length ? filteredRows : allRows;
-    if (!rows.length) { alert("Sem dados para exportar."); return; }
+    if (!rows.length) { showToast("Sem dados para exportar."); return; }
 
-    const headers = ["id","full_name","email","phone","quiz_completed","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","created_at","completed_at"];
+    const headers = ["id","full_name","email","phone","stage","dominant_type","notes","starred","archived",
+      "quiz_completed","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","follow_up_done","created_at","completed_at"];
     const lines = [
       headers.join(","),
       ...rows.map(r => headers.map(h => `"${String(r[h]??'').replace(/"/g,'""')}"`).join(","))
@@ -1193,7 +2567,17 @@
     a.download = `leads_${currentSource}_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    showToast("CSV exportado");
   });
+
+  // ── toast
+  let toastTimer = null;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+  }
 
   // ── helpers
   function fmtDate(iso) {
@@ -1206,9 +2590,20 @@
     } catch { return iso; }
   }
 
+  function fmtDateShort(iso) {
+    if (!iso) return "—";
+    try {
+      return new Intl.DateTimeFormat("pt-BR", {
+        day:"2-digit", month:"2-digit", year:"2-digit"
+      }).format(new Date(iso));
+    } catch { return iso; }
+  }
+
   function fmtPhone(phone) {
+    if (!phone) return "—";
     const d = phone.replace(/\D/g, "");
     if (d.startsWith("39") && d.length === 12) return `+${d.slice(0,2)} ${d.slice(2,5)} ${d.slice(5,8)} ${d.slice(8)}`;
+    if (d.length === 13 && d.startsWith("55")) return `+55 (${d.slice(2,4)}) ${d.slice(4,9)}-${d.slice(9)}`;
     if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
     if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
     return phone;
@@ -1219,6 +2614,101 @@
       .replace(/&/g,"&amp;").replace(/</g,"&lt;")
       .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
+
+  // ── payment reminders
+  function renderPaymentReminders() {
+    const payers = allRows.filter(r => r.payment_day && !r.archived);
+    const widget = $("payment-reminders");
+    if (!payers.length) { widget.classList.remove("has-payments"); return; }
+    widget.classList.add("has-payments");
+
+    const today = new Date();
+    const todayDay = today.getDate();
+    const monthDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+    // Sort: today first, then by upcoming day (next 30 days window)
+    function daysUntil(day) {
+      if (day === todayDay) return 0;
+      if (day > todayDay) return day - todayDay;
+      return (monthDays - todayDay) + day; // wraps to next month
+    }
+
+    const sorted = [...payers].sort((a, b) => daysUntil(a.payment_day) - daysUntil(b.payment_day));
+    const todayPayers = sorted.filter(r => r.payment_day === todayDay);
+    const banner = $("payment-today-banner");
+
+    if (todayPayers.length) {
+      banner.textContent = `⚠️ ${todayPayers.length} pagamento${todayPayers.length > 1 ? 's' : ''} hoje — dia ${todayDay}`;
+      banner.classList.add("visible");
+    } else {
+      banner.classList.remove("visible");
+    }
+
+    const list = $("payment-list");
+    list.innerHTML = sorted.map(r => {
+      const du = daysUntil(r.payment_day);
+      const isToday = du === 0;
+      const cls = isToday ? "today" : "";
+      const subLabel = r.payment_notes ? esc(r.payment_notes) : (isToday ? "Pagamento hoje!" : `em ${du} dia${du !== 1 ? 's' : ''}`);
+      const valLabel = r.payment_value ? `R$ ${Number(r.payment_value).toLocaleString("pt-BR", {minimumFractionDigits:2})}` : "";
+      const globalIdx = allRows.indexOf(r);
+      const name = r.full_name ? r.full_name.split(" ")[0] : "você";
+      const rawPhone = r.phone ? r.phone.replace(/\D/g,"") : "";
+      const waPhone  = rawPhone ? (rawPhone.startsWith("55") ? rawPhone : "55" + rawPhone) : "";
+      const valStr   = r.payment_value ? ` de R$ ${Number(r.payment_value).toLocaleString("pt-BR", {minimumFractionDigits:2})}` : "";
+      const waMsg    = isToday
+        ? `Oi ${name}! Passando para lembrar que seu pagamento${valStr} vence hoje, dia ${r.payment_day} 😊 Qualquer dúvida estou por aqui!`
+        : `Oi ${name}! Passando para lembrar que seu pagamento${valStr} vence no dia ${r.payment_day} 😊 Qualquer dúvida estou por aqui!`;
+      const waUrl    = waPhone ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMsg)}` : "";
+      const waBtn    = waUrl
+        ? `<a class="payment-wa-btn" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Enviar lembrete no WhatsApp">📱</a>`
+        : `<span class="payment-wa-btn" style="opacity:0.3;cursor:default" title="Sem telefone cadastrado">📱</span>`;
+      return `<div class="payment-item ${cls}" onclick="openDetail(${globalIdx})">
+        <div class="payment-day-badge">${r.payment_day}</div>
+        <div class="payment-item-info">
+          <div class="payment-item-name">${esc(r.full_name || r.email || "Lead")}</div>
+          <div class="payment-item-sub">${subLabel}</div>
+        </div>
+        ${valLabel ? `<div class="payment-item-value">${valLabel}</div>` : ""}
+        ${waBtn}
+      </div>`;
+    }).join("");
+  }
+
+  window.savePayment = async function(id, btn) {
+    const row = allRows.find(r => String(r.id) === String(id));
+    if (!row) return;
+    const dayVal  = document.getElementById(`pay-day-${id}`)?.value;
+    const valVal  = document.getElementById(`pay-val-${id}`)?.value;
+    const notesVal= document.getElementById(`pay-notes-${id}`)?.value || "";
+    const payment_day   = dayVal   ? parseInt(dayVal,   10) : null;
+    const payment_value = valVal   ? parseFloat(valVal)     : null;
+    const payment_notes = notesVal || null;
+    if (payment_day !== null && (payment_day < 1 || payment_day > 31)) {
+      showToast("Dia inválido (1–31)"); return;
+    }
+    btn.disabled = true;
+    btn.classList.add("saving");
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, payment_day, payment_value, payment_notes })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar"); btn.disabled = false; btn.classList.remove("saving"); return; }
+      row.payment_day   = payment_day;
+      row.payment_value = payment_value;
+      row.payment_notes = payment_notes;
+      showToast("Pagamento salvo ✓");
+      renderPaymentReminders();
+    } catch(e) {
+      showToast("Falha na conexão");
+    }
+    btn.disabled = false;
+    btn.classList.remove("saving");
+  };
+
 })();
 </script>
 </body>
