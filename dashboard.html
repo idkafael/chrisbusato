@@ -1898,7 +1898,7 @@
     clearSelection();
     stopAutoRefresh();
     if (source === "payments") { loadCobrancas(); return; }
-    if (source === "kanban")   { renderKanban();  return; }
+    if (source === "kanban")   { loadKanban();    return; }
     loadData();
   };
 
@@ -1934,7 +1934,7 @@
 
       sessionStorage.setItem(SESSION_KEY, secret);
 
-      allRows = data.rows || [];
+      allRows = (data.rows || []).map(r => ({ ...r, _source: currentSource }));
 
       // Calculate dominant_type client-side for rows that don't have it
       const rowsToUpdate = [];
@@ -3056,8 +3056,30 @@
     localStorage.setItem(KB_ASSIGN_KEY, JSON.stringify(kbAssign));
   }
 
+  // allRows para o Kanban (orgânico + ads juntos, com _source em cada row)
+  let kanbanAllRows = [];
+
+  async function loadKanban() {
+    $("kanban-board").innerHTML = `<div style="color:#8A7D6B;padding:2rem;display:flex;align-items:center;gap:.5rem"><span class="spin-ring"></span> Carregando leads…</div>`;
+    try {
+      const [r1, r2] = await Promise.all([
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
+      ]);
+      kanbanAllRows = [];
+      if (r1.ok) { const d = await r1.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"organic"}))); }
+      if (r2.ok) { const d = await r2.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"ads"}))); }
+      kanbanAllRows.forEach(r => { if (!r.stage) r.stage = "novo"; });
+    } catch(e) {
+      $("kanban-board").innerHTML = `<div style="color:#8A5050;padding:2rem">Erro ao carregar: ${esc(e.message)}</div>`;
+      return;
+    }
+    renderKanban();
+  }
+
   window.renderKanban = function() {
     loadKbMeta();
+    const rows_src = kanbanAllRows.length ? kanbanAllRows : allRows.map(r => ({...r, _source: r._source || currentSource}));
     const tabsEl  = $("kanban-offer-tabs");
     const boardEl = $("kanban-board");
     const q = ($("kanban-search")?.value || "").toLowerCase().trim();
@@ -3071,17 +3093,12 @@
       (currentOfferId ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>` : "");
 
     // Filter allRows by offer and search
-    const rows = allRows.filter(r => {
+    const rows = rows_src.filter(r => {
       if (r.archived) return false;
       if (currentOfferId && kbAssign[String(r.id)] !== currentOfferId) return false;
       if (q && !(r.full_name||"").toLowerCase().includes(q) && !(r.email||"").toLowerCase().includes(q)) return false;
       return true;
     });
-
-    // Count all assigned leads for tab badge
-    const totalAssigned = currentOfferId
-      ? allRows.filter(r => !r.archived && kbAssign[String(r.id)] === currentOfferId).length
-      : allRows.filter(r => !r.archived && kbAssign[String(r.id)]).length;
 
     boardEl.innerHTML = KANBAN_STAGES.map(stage => {
       const stageRows = rows.filter(r => (r.stage || "novo") === stage);
@@ -3101,15 +3118,17 @@
               ? `<a class="kanban-card-wa" href="${waUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱</a>`
               : "";
             const typeLabel = r.dominant_type ? `<span class="kanban-card-badge" style="background:#E8E0D0;color:#5C5043">${TYPE_LABEL[r.dominant_type] || r.dominant_type}</span>` : "";
-            const gIdx = allRows.indexOf(r);
             const assignedOffer = kbOffers.find(o => o.id === kbAssign[String(r.id)]);
             const offerTag = assignedOffer ? `<span class="kanban-card-badge" style="background:${color}18;color:${color}">${esc(assignedOffer.name)}</span>` : "";
+            const srcLabel = r._source === "ads" ? `<span class="kanban-card-badge" style="background:#EDE4D4;color:#8A7050">Anúncio</span>` : "";
+            const gIdx = allRows.findIndex(ar => String(ar.id) === String(r.id));
+            const openFn = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
             return `<div class="kanban-card" draggable="true"
               ondragstart="dragStart(event,'${r.id}')"
-              onclick="openDetail(${gIdx})">
+              onclick="${openFn}">
               ${waBtn}
               <div class="kanban-card-name">${esc(r.full_name || r.email || "Lead")}</div>
-              <div class="kanban-card-meta">${typeLabel}${offerTag}</div>
+              <div class="kanban-card-meta">${typeLabel}${offerTag}${srcLabel}</div>
               <div style="display:flex;gap:0.35rem;margin-top:0.45rem;flex-wrap:wrap">
                 ${KANBAN_STAGES.filter(s => s !== stage).map(s =>
                   `<button onclick="event.stopPropagation();moveKanbanCard('${r.id}','${s}')"
@@ -3166,21 +3185,35 @@
 
   // Move card = update stage via API + atualiza allRows em memória
   window.moveKanbanCard = async function(leadId, newStage) {
-    const row = allRows.find(r => String(r.id) === String(leadId));
-    if (!row) return;
-    const prevStage = row.stage;
-    row.stage = newStage; // otimista
+    // Busca em kanbanAllRows (tem _source correto) e em allRows para atualizar a tabela CRM
+    const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
+    const aRow = allRows.find(r => String(r.id) === String(leadId));
+    if (!kRow) return;
+    const rowSource = kRow._source || "organic";
+    const prevStage = kRow.stage;
+    kRow.stage = newStage;
+    if (aRow) aRow.stage = newStage;
     renderKanban();
     try {
       const res  = await fetch("/api/update-lead", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret, id: leadId, source: currentSource, stage: newStage })
+        body: JSON.stringify({ secret, id: leadId, source: rowSource, stage: newStage })
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) { row.stage = prevStage; renderKanban(); showToast("Erro ao mover"); }
-      else { renderTable(); renderStats(); showToast(`Movido para ${KANBAN_LABEL[newStage]}`); }
-    } catch(e) { row.stage = prevStage; renderKanban(); showToast("Falha na conexão"); }
+      if (!res.ok || !data.ok) {
+        kRow.stage = prevStage;
+        if (aRow) aRow.stage = prevStage;
+        renderKanban(); showToast("Erro ao mover");
+      } else {
+        renderTable(); renderStats();
+        showToast(`Movido para ${KANBAN_LABEL[newStage]}`);
+      }
+    } catch(e) {
+      kRow.stage = prevStage;
+      if (aRow) aRow.stage = prevStage;
+      renderKanban(); showToast("Falha na conexão");
+    }
   };
 
   window.unassignKanbanCard = function(leadId) {
@@ -3196,7 +3229,8 @@
     _kanbanAddStage = stage;
     loadKbMeta();
     const assigned = new Set(Object.keys(kbAssign).filter(k => !currentOfferId || kbAssign[k] === currentOfferId));
-    const candidates = allRows.filter(r => !r.archived && !assigned.has(String(r.id)));
+    const srcRows = kanbanAllRows.length ? kanbanAllRows : allRows;
+    const candidates = srcRows.filter(r => !r.archived && !assigned.has(String(r.id)));
     if (!candidates.length) { showToast("Todos os leads já estão no board"); return; }
 
     const renderItems = (list) => list.slice(0, 120).map(r =>
@@ -3248,14 +3282,18 @@
     saveKbMeta();
     $("detail-overlay").classList.remove("open");
 
-    // Se o stage for diferente do atual, atualiza via API
-    const row = allRows.find(r => String(r.id) === String(leadId));
+    // Se o stage for diferente do atual, atualiza via API usando _source correto
+    const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
+    const aRow = allRows.find(r => String(r.id) === String(leadId));
+    const rowSource = kRow?._source || aRow?._source || "organic";
+    const row = kRow || aRow;
     if (row && (row.stage || "novo") !== stage) {
-      row.stage = stage;
+      if (kRow) kRow.stage = stage;
+      if (aRow) aRow.stage = stage;
       fetch("/api/update-lead", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret, id: leadId, source: currentSource, stage })
+        body: JSON.stringify({ secret, id: leadId, source: rowSource, stage })
       }).then(r => r.json()).then(d => {
         if (d.ok) { renderTable(); renderStats(); }
       }).catch(() => {});
