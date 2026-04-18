@@ -695,11 +695,6 @@ body {
       <div class="vturb-result" id="vturb-result-mount"></div>
     </div>
     <div class="cta-section">
-      <div class="cta-event-box" id="cta-event-box" hidden>
-        <div class="event-badge">Ao vivo</div>
-        <div class="event-date-line">20 de Abril · 12h</div>
-        <p class="event-desc">Uma aula especial para entender o que está bloqueando sua dança — e como sair disso.</p>
-      </div>
       <button type="button" class="btn-green result-wpp-locked" id="btn-wpp" disabled aria-disabled="true" onclick="goWpp()">Entrar no Grupo</button>
       <p class="cta-small" id="result-cta-small">Não precisa saber dançar</p>
     </div>
@@ -1036,18 +1031,15 @@ function configureResultCtaForPath() {
   var path = siteNormalizePath();
   var btn = document.getElementById("btn-wpp");
   var small = document.getElementById("result-cta-small");
-  var eventBox = document.getElementById("cta-event-box");
   if (!btn || !small) return;
   if (path === "/quizz") {
     btn.textContent = "Quero Fazer Parte";
     small.textContent = "";
     small.hidden = true;
-    if (eventBox) eventBox.hidden = true;
   } else if (path === "/teste") {
-    btn.textContent = "Garantir minha vaga →";
-    small.textContent = "Gratuito · Apenas para inscritos";
+    btn.textContent = "Entrar no Grupo";
+    small.textContent = "Não precisa saber dançar";
     small.hidden = false;
-    if (eventBox) eventBox.hidden = false;
   } else {
     btn.textContent = "Entrar no Grupo";
     small.textContent = "Não precisa saber dançar";
