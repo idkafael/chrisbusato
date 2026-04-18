@@ -12,24 +12,16 @@
  */
 window.SITE_PATH_DESTINATIONS = {
   "/quizz": {
-    whatsapp:
-      "https://wa.me/5511967068271?text=" +
-      encodeURIComponent(
-        "oii, vim do quizz pode me falar mais sobre o corpo musical?"
-      )
+    whatsapp: "https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC"
+  },
+  "/teste": {
+    whatsapp: "https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC"
   },
   "/valentine": {
     whatsapp:
       "https://wa.me/5511967068271?text=" +
       encodeURIComponent(
         "oii, vim do quiz do casal, pode me falar mais?"
-      )
-  },
-  "/teste": {
-    whatsapp:
-      "https://wa.me/5511967068271?text=" +
-      encodeURIComponent(
-        "oii, vim do quiz e quero participar do evento do dia 20!"
       )
   }
 };
