@@ -584,6 +584,47 @@
       border-color: rgba(197,162,80,0.5);
       color: #A08030;
     }
+    .toolbar-duplicates-btn {
+      padding: 9px 14px; border-radius: 50px;
+      font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 500;
+      border: 1px solid #C5BAA8; cursor: pointer;
+      background: #F2EDE3; color: #8A7D6B; transition: all 0.2s;
+    }
+    .toolbar-duplicates-btn:hover { border-color: #8A5050; color: #8A5050; background: rgba(138,80,80,0.06); }
+    /* Duplicates modal */
+    #dup-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(44,34,24,.45); align-items: center; justify-content: center;
+    }
+    #dup-modal-overlay.open { display: flex; }
+    .dup-modal {
+      background: #F2EDE3; border-radius: 20px; padding: 1.75rem;
+      max-width: 580px; width: 94%; max-height: 85vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 12px 40px rgba(44,34,24,.2);
+    }
+    .dup-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .dup-modal-title { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500; color: #2C2218; }
+    .dup-modal-close { background: none; border: none; font-size: 22px; color: #8A7D6B; cursor: pointer; line-height: 1; }
+    .dup-modal-body { flex: 1; overflow-y: auto; margin-bottom: 1rem; }
+    .dup-group {
+      background: #EDE8DF; border-radius: 12px; padding: 0.75rem 1rem;
+      margin-bottom: 0.65rem;
+    }
+    .dup-group-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; color: #8A7D6B; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .dup-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.3rem 0; font-size: 13px; color: #2C2218;
+    }
+    .dup-row input[type=checkbox] { flex-shrink: 0; }
+    .dup-row-name { flex: 1; font-weight: 500; }
+    .dup-row-meta { font-size: 11px; color: #8A7D6B; }
+    .dup-keep-badge { font-size: 10px; background: #C8DCC7; color: #4A6548; border-radius: 6px; padding: 1px 7px; font-weight: 600; }
+    .dup-modal-footer { display: flex; gap: 0.6rem; justify-content: flex-end; flex-wrap: wrap; }
+    .bulk-btn-delete { background: #8A5050 !important; }
 
     /* Table */
     .table-wrap {
@@ -1331,6 +1372,14 @@
   transition: border-color 0.2s;
 }
 .payment-field-input:focus { border-color: #8A7D6B; }
+.pay-method-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.pay-method-chip {
+  padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  border: 1px solid #C5BAA8; background: #EDE8DF; color: #8A7D6B;
+  cursor: pointer; transition: all .15s;
+}
+.pay-method-chip.active { background: #4A6548; color: #fff; border-color: #4A6548; }
+.pay-method-chip:hover:not(.active) { background: #E0D8CC; }
 
   /* ─── COBRANÇAS VIEW ─── */
   #cobrancas-view { display: none; padding-bottom: 2rem; }
@@ -1410,6 +1459,78 @@
     cursor: pointer; transition: background .15s;
   }
   .kanban-add-offer-btn:hover { background: #E8E0D0; }
+  /* Follow-up button no card */
+  .fu-btn {
+    width: 100%; padding: 5px 8px; border-radius: 8px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: none; transition: background .15s, opacity .15s;
+    display: flex; align-items: center; gap: 5px; justify-content: center;
+    margin-bottom: 0.4rem;
+  }
+  .fu-btn.pending { background: #FDF0E0; color: #B06820; border: 1px solid #E8C890; }
+  .fu-btn.pending:hover { background: #F5E4C0; }
+  .fu-btn.done { background: #E4EDE4; color: #4A6548; border: 1px solid #B8D4B8; }
+  .fu-btn.done:hover { background: #D4E8D4; opacity: 0.8; }
+  /* Log modal */
+  #fu-log-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(44,34,24,.45); align-items: center; justify-content: center;
+  }
+  #fu-log-overlay.open { display: flex; }
+  .fu-log-modal {
+    background: #F2EDE3; border-radius: 20px; padding: 1.75rem;
+    max-width: 520px; width: 94%; max-height: 85vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 12px 40px rgba(44,34,24,.2);
+  }
+  .fu-log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .fu-log-title { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 500; color: #2C2218; }
+  .fu-log-close { background: none; border: none; font-size: 22px; color: #8A7D6B; cursor: pointer; }
+  .fu-log-body { flex: 1; overflow-y: auto; }
+  .fu-log-day { margin-bottom: 1rem; }
+  .fu-log-day-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #8A7D6B; margin-bottom: .45rem; }
+  .fu-log-entry { display: flex; align-items: center; gap: .5rem; padding: .3rem .5rem; border-radius: 8px; font-size: 13px; }
+  .fu-log-entry.ok { background: #E8F0E8; color: #4A6548; }
+  .fu-log-entry.miss { background: #F2E8E8; color: #8A5050; }
+  .fu-log-entry.today-pending { background: #FDF0E0; color: #B06820; }
+  .fu-log-badge { font-size: 15px; }
+  /* Notification badge no botão log */
+  .fu-log-btn { position: relative; }
+  .fu-log-badge-count {
+    position: absolute; top: -6px; right: -6px; background: #B06820; color: #fff;
+    border-radius: 50%; width: 16px; height: 16px; font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kanban-add-guest-btn {
+    width: 30px; height: 30px; border-radius: 50%; font-size: 18px; font-weight: 400;
+    background: #4A6548; color: #fff; border: none;
+    cursor: pointer; transition: background .15s; line-height: 1;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .kanban-add-guest-btn:hover { background: #3A5038; }
+  #guest-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(44,34,24,.45); align-items: center; justify-content: center;
+  }
+  #guest-modal-overlay.open { display: flex; }
+  /* Kanban source toggle */
+  .kanban-source-toggle { display: flex; gap: 0.35rem; background: #E8E0D0; border-radius: 20px; padding: 3px; }
+  .kanban-source-btn {
+    padding: 5px 14px; border-radius: 18px; font-size: 12px; font-weight: 500;
+    border: none; cursor: pointer; background: transparent; color: #8A7D6B;
+    transition: background .15s, color .15s;
+  }
+  .kanban-source-btn.active { background: #fff; color: #2C2218; box-shadow: 0 1px 4px rgba(44,34,24,.12); }
+  .kanban-novo-search-wrap {
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+  #kanban-view.active .kanban-novo-search-wrap { display: block; }
+  .kanban-novo-search {
+    width: 100%; max-width: 380px;
+    background: #EDE8DF; border: 0.5px solid #C5BAA8; border-radius: 12px;
+    padding: 0.55rem 1rem; font-size: 13px; color: #2C2218; outline: none;
+  }
+  .kanban-novo-search::placeholder { color: #A08C70; }
   .kanban-board {
     display: flex; gap: 1rem; overflow-x: auto;
     padding-bottom: 0.5rem;
@@ -1572,9 +1693,19 @@
     <div id="kanban-view">
       <div class="kanban-toolbar">
         <div class="kanban-toolbar-title">🗂 Kanban de Ofertas</div>
+        <div class="kanban-source-toggle">
+          <button class="kanban-source-btn active" id="kb-src-organic" onclick="switchKanbanSource('organic')">🌱 Orgânico</button>
+          <button class="kanban-source-btn" id="kb-src-ads" onclick="switchKanbanSource('ads')">📢 Anúncios</button>
+        </div>
         <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
+        <button class="kanban-add-guest-btn" onclick="openAddGuestModal()" title="Adicionar pessoa convidada">+</button>
         <div class="kanban-offer-tabs" id="kanban-offer-tabs"></div>
+        <button class="kanban-add-offer-btn fu-log-btn" id="fu-log-btn" onclick="openFuLogPanel()" title="Log de Follow-up">📋 Follow-up</button>
         <button class="kanban-add-offer-btn" onclick="openOfferModal()">+ Oferta</button>
+      </div>
+      <div class="kanban-novo-search-wrap">
+        <input class="kanban-novo-search" id="kanban-novo-search" type="text"
+          placeholder="🔍  Pesquisar leads em Novo…" oninput="renderKanban()" />
       </div>
       <div class="kanban-board" id="kanban-board"></div>
     </div>
@@ -1676,6 +1807,7 @@
         <option value="incomplete">Não completaram</option>
       </select>
       <button class="toolbar-star-filter" id="star-filter-btn" title="Mostrar apenas estrelados" onclick="toggleStarFilter()">★ Estrelados</button>
+      <button class="toolbar-duplicates-btn" onclick="openDuplicatesPanel()">⊕ Duplicados</button>
       <button class="toolbar-toggle-filters" id="toggle-filters-btn" onclick="toggleFilterPanel()">⊞ Filtros</button>
     </div>
 
@@ -1739,6 +1871,54 @@
   </div>
 </div>
 
+<div id="guest-modal-overlay">
+  <div class="offer-modal" style="max-width:500px;width:94%">
+    <div class="offer-modal-title">Adicionar Convidadas</div>
+    <div class="offer-modal-field">
+      <div class="offer-modal-label">E-mails ou nomes — separados por vírgula</div>
+      <textarea class="offer-modal-input" id="guest-modal-bulk" rows="4"
+        placeholder="fulana@email.com, outra@yahoo.com, Maria Silva…"
+        style="resize:vertical;font-family:inherit;line-height:1.5"
+        oninput="updateGuestPreview()"></textarea>
+    </div>
+    <div id="guest-modal-preview" style="margin-top:0.5rem;max-height:160px;overflow-y:auto;display:none">
+      <div class="offer-modal-label" style="margin-bottom:6px">Serão adicionadas:</div>
+      <div id="guest-preview-list" style="display:flex;flex-direction:column;gap:4px"></div>
+    </div>
+    <div class="offer-modal-actions">
+      <button class="btn-sm btn-outline-warm" onclick="closeGuestModal()">Cancelar</button>
+      <button class="btn-sm btn-sage" id="guest-save-btn" onclick="saveGuest()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ FOLLOW-UP LOG MODAL ══════════════════════ -->
+<div id="fu-log-overlay">
+  <div class="fu-log-modal">
+    <div class="fu-log-header">
+      <div class="fu-log-title">📋 Log de Follow-up</div>
+      <button class="fu-log-close" onclick="closeFuLogPanel()">×</button>
+    </div>
+    <div class="fu-log-body" id="fu-log-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DUPLICATES MODAL ══════════════════════ -->
+<div id="dup-modal-overlay">
+  <div class="dup-modal">
+    <div class="dup-modal-header">
+      <div class="dup-modal-title">Leads Duplicados</div>
+      <button class="dup-modal-close" onclick="closeDuplicatesPanel()">×</button>
+    </div>
+    <div class="dup-modal-body" id="dup-modal-body"></div>
+    <div class="dup-modal-footer">
+      <button class="btn-sm btn-outline-warm" onclick="closeDuplicatesPanel()">Fechar</button>
+      <button class="btn-sm btn-outline-warm" onclick="copyDuplicateEmails()">📋 Copiar e-mails</button>
+      <button class="btn-sm" style="background:#8A5050;color:#fff;border:none;border-radius:20px;padding:.4rem 1rem;font-size:12px;cursor:pointer" onclick="deleteSelectedDuplicates()">🗑 Excluir selecionados</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════ BULK TOOLBAR ══════════════════════ -->
 <div id="bulk-toolbar">
   <span class="bulk-info" id="bulk-info">0 selecionados</span>
@@ -1754,6 +1934,7 @@
   <button class="bulk-btn" onclick="applyBulkAction('set_archived', true)">Arquivar</button>
   <button class="bulk-btn" onclick="applyBulkAction('set_follow_up', true)">✓ Follow-up</button>
   <button class="bulk-btn" onclick="applyBulkAction('set_starred', true)">★ Estrelar</button>
+  <button class="bulk-btn bulk-btn-delete" onclick="deleteBulkLeads()">🗑 Excluir</button>
   <button class="bulk-btn bulk-cancel" onclick="clearSelection()">Cancelar</button>
 </div>
 
@@ -2410,6 +2591,134 @@
     if (bulkStageSelect.value) applyBulkAction("set_stage");
   });
 
+  // ── Excluir leads (permanente)
+  async function deleteLeads(ids, source) {
+    const res  = await fetch("/api/delete-leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret, ids, source: source || currentSource })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || "Erro ao excluir");
+    // Remove da memória local
+    ids.forEach(id => {
+      const idx = allRows.findIndex(r => String(r.id) === String(id));
+      if (idx >= 0) allRows.splice(idx, 1);
+      const ki = kanbanAllRows.findIndex(r => String(r.id) === String(id));
+      if (ki >= 0) kanbanAllRows.splice(ki, 1);
+    });
+    return data.deleted;
+  }
+
+  window.deleteBulkLeads = async function() {
+    if (selectedIds.size === 0) return;
+    const n = selectedIds.size;
+    if (!confirm(`Excluir permanentemente ${n} lead${n > 1 ? "s" : ""}? Esta ação não pode ser desfeita.`)) return;
+    const ids = Array.from(selectedIds);
+    try {
+      await deleteLeads(ids, currentSource);
+      showToast(`${n} lead${n > 1 ? "s" : ""} excluído${n > 1 ? "s" : ""} ✓`);
+      clearSelection();
+      renderStats();
+      applyFilters();
+    } catch(e) {
+      showToast("Erro ao excluir: " + e.message);
+    }
+  };
+
+  // ── Duplicados
+  function findDuplicates() {
+    const byEmail = {};
+    const byPhone = {};
+    allRows.forEach(r => {
+      const email = (r.email || "").toLowerCase().trim();
+      const phone = (r.phone || "").replace(/\D/g, "").slice(-9); // últimos 9 dígitos
+      if (email) { if (!byEmail[email]) byEmail[email] = []; byEmail[email].push(r); }
+      if (phone && phone.length >= 8) { if (!byPhone[phone]) byPhone[phone] = []; byPhone[phone].push(r); }
+    });
+    const groups = [];
+    const seen = new Set();
+    // Grupos por e-mail
+    Object.entries(byEmail).forEach(([key, rows]) => {
+      if (rows.length < 2) return;
+      const ids = rows.map(r => String(r.id)).sort().join("|");
+      if (seen.has(ids)) return;
+      seen.add(ids);
+      groups.push({ key: "E-mail: " + key, rows });
+    });
+    // Grupos por telefone
+    Object.entries(byPhone).forEach(([key, rows]) => {
+      if (rows.length < 2) return;
+      const ids = rows.map(r => String(r.id)).sort().join("|");
+      if (seen.has(ids)) return;
+      seen.add(ids);
+      groups.push({ key: "Tel: …" + key, rows });
+    });
+    return groups;
+  }
+
+  window.openDuplicatesPanel = function() {
+    const groups = findDuplicates();
+    const body = $("dup-modal-body");
+    if (!groups.length) {
+      body.innerHTML = `<div style="padding:2rem;text-align:center;color:#8A7D6B;font-size:14px">Nenhum duplicado encontrado ✓</div>`;
+    } else {
+      body.innerHTML = groups.map((g, gi) => {
+        const sorted = [...g.rows].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        return `<div class="dup-group">
+          <div class="dup-group-label">${esc(g.key)} — ${g.rows.length} registros</div>
+          ${sorted.map((r, ri) => {
+            const isOldest = ri === 0;
+            const date = r.created_at ? new Date(r.created_at).toLocaleDateString("pt-BR") : "—";
+            return `<div class="dup-row">
+              <input type="checkbox" class="dup-chk" data-id="${r.id}" data-source="${r._source || currentSource}" ${isOldest ? "" : "checked"} ${isOldest ? "disabled" : ""} />
+              <span class="dup-row-name">${esc(r.full_name || r.email || "Lead")}</span>
+              <span class="dup-row-meta">${esc(r.email || "")} · ${date}</span>
+              ${isOldest ? `<span class="dup-keep-badge">manter</span>` : ""}
+            </div>`;
+          }).join("")}
+        </div>`;
+      }).join("");
+    }
+    $("dup-modal-overlay").classList.add("open");
+  };
+
+  window.closeDuplicatesPanel = function() { $("dup-modal-overlay").classList.remove("open"); };
+
+  window.copyDuplicateEmails = function() {
+    const groups = findDuplicates();
+    const emails = [...new Set(groups.flatMap(g => g.rows.map(r => r.email).filter(Boolean)))];
+    if (!emails.length) { showToast("Nenhum e-mail para copiar"); return; }
+    navigator.clipboard.writeText(emails.join(", ")).then(() => showToast(`${emails.length} e-mails copiados ✓`));
+  };
+
+  window.deleteSelectedDuplicates = async function() {
+    const chks = [...document.querySelectorAll(".dup-chk:checked:not(:disabled)")];
+    if (!chks.length) { showToast("Nenhum lead selecionado"); return; }
+    if (!confirm(`Excluir permanentemente ${chks.length} lead${chks.length > 1 ? "s" : ""}? Esta ação não pode ser desfeita.`)) return;
+    // Agrupa por source para fazer uma chamada por tabela
+    const bySource = {};
+    chks.forEach(c => {
+      const src = c.dataset.source || currentSource;
+      if (!bySource[src]) bySource[src] = [];
+      bySource[src].push(c.dataset.id);
+    });
+    try {
+      let total = 0;
+      for (const [src, ids] of Object.entries(bySource)) {
+        total += await deleteLeads(ids, src);
+      }
+      showToast(`${total} lead${total > 1 ? "s" : ""} excluído${total > 1 ? "s" : ""} ✓`);
+      closeDuplicatesPanel();
+      renderStats();
+      applyFilters();
+    } catch(e) {
+      showToast("Erro: " + e.message);
+    }
+  };
+
+  $("dup-modal-overlay").addEventListener("click", e => { if (e.target === $("dup-modal-overlay")) closeDuplicatesPanel(); });
+
   // ── auto-refresh
   const REFRESH_INTERVAL = 60;
   let countdown      = REFRESH_INTERVAL;
@@ -2683,6 +2992,13 @@
       <div class="detail-div"></div>
 
       <div class="detail-section-label">💳 Pagamento Recorrente</div>
+      <div class="payment-field-label" style="margin-bottom:6px">Prefere pagar via</div>
+      <div class="pay-method-chips">
+        ${["Cartão","Pix","TMB","Boca a boca"].map(m =>
+          `<button class="pay-method-chip${(row.payment_method||"")=== m ? " active":""}"
+            onclick="savePaymentMethod('${row.id}','${m}',this)">${m}</button>`
+        ).join("")}
+      </div>
       <div class="payment-fields-row">
         <div>
           <div class="payment-field-label">Dia do mês (1–31)</div>
@@ -2904,6 +3220,26 @@
     }).join("");
   }
 
+  window.savePaymentMethod = async function(id, method, btn) {
+    const row = allRows.find(r => String(r.id) === String(id));
+    // Toggle: clicar no mesmo desmarca
+    const newVal = (row?.payment_method === method) ? null : method;
+    // Atualiza chips na UI
+    btn.closest(".pay-method-chips").querySelectorAll(".pay-method-chip").forEach(c => c.classList.remove("active"));
+    if (newVal) btn.classList.add("active");
+    try {
+      const res = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source: currentSource, payment_method: newVal })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar"); return; }
+      if (row) row.payment_method = newVal;
+      showToast(newVal ? `Preferência: ${newVal} ✓` : "Preferência removida");
+    } catch(e) { showToast("Falha na conexão"); }
+  };
+
   window.savePayment = async function(id, btn) {
     const row = allRows.find(r => String(r.id) === String(id));
     if (!row) return;
@@ -3050,29 +3386,56 @@
 
   // CRM stage → label e cor no Kanban
   const KANBAN_STAGES = ["novo","contatado","interessado","proposta","fechado","perdido"];
-  const KANBAN_LABEL  = { novo:"Novo", contatado:"Contatado", interessado:"Interessado", proposta:"Proposta", fechado:"Fechado", perdido:"Perdido" };
-  const KANBAN_COLOR  = { novo:"#8A7D6B", contatado:"#5C7A5A", interessado:"#A08030", proposta:"#7060A0", fechado:"#4A6548", perdido:"#8A5050" };
+  const KANBAN_LABEL  = { novo:"Novo", contatado:"Contatado", interessado:"Interessado", proposta:"Follow Up", fechado:"Fechado", perdido:"Perdido" };
+  const KANBAN_COLOR  = { novo:"#8A7D6B", contatado:"#5C7A5A", interessado:"#A08030", proposta:"#B06820", fechado:"#4A6548", perdido:"#8A5050" };
 
   // localStorage: ofertas e mapeamento leadId → offerId
   const KB_OFFERS_KEY = "cb_kb_offers";
   const KB_ASSIGN_KEY = "cb_kb_assign"; // { leadId: offerId }
+  const KB_GUESTS_KEY = "cb_kb_guests"; // [{id, name, phone, email, stage, offerId}]
+  const KB_FU_LOG_KEY = "cb_kb_fu_log"; // { leadId: { "YYYY-MM-DD": true/false, _entered:"YYYY-MM-DD" } }
+  const KB_STAGE_KEY  = "cb_kb_stage";  // { leadId: "novo"|"contatado"|... } — stage próprio do kanban
 
   let kbOffers      = [];   // [{id, name}]
   let kbAssign      = {};   // { leadId: offerId }
-  let currentOfferId = null;
+  let kbGuests      = [];   // [{id, name, phone, email, stage}]
+  let kbFuLog       = {};   // { leadId: { "YYYY-MM-DD": bool, _entered: str } }
+  let kbStage            = {};   // { "source_id": stage } — stage do kanban por source
+  let currentOfferId     = null;
+  let currentKanbanSource = "organic"; // "organic" | "ads"
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
+  // Chave única por lead considerando a fonte (evita colisão de IDs entre tabelas)
+  function kbKey(r) { return r._source === "guest" ? String(r.id) : `${r._source||"organic"}_${r.id}`; }
 
   function loadKbMeta() {
     try { kbOffers = JSON.parse(localStorage.getItem(KB_OFFERS_KEY) || "[]"); } catch(e) { kbOffers = []; }
     try { kbAssign = JSON.parse(localStorage.getItem(KB_ASSIGN_KEY) || "{}"); } catch(e) { kbAssign = {}; }
+    try { kbGuests = JSON.parse(localStorage.getItem(KB_GUESTS_KEY) || "[]"); } catch(e) { kbGuests = []; }
+    try { kbFuLog  = JSON.parse(localStorage.getItem(KB_FU_LOG_KEY)  || "{}"); } catch(e) { kbFuLog = {}; }
+    try { kbStage  = JSON.parse(localStorage.getItem(KB_STAGE_KEY)  || "{}"); } catch(e) { kbStage = {}; }
     if (!kbOffers.length) {
-      kbOffers = [{ id:"offer_1", name:"Data em Casal" }, { id:"offer_2", name:"Corpo Musical" }];
+      kbOffers = [
+        { id:"offer_1", name:"Corpo Musical" },
+        { id:"offer_2", name:"Date fora do comum" },
+        { id:"offer_3", name:"Profissionais Musicais" }
+      ];
       localStorage.setItem(KB_OFFERS_KEY, JSON.stringify(kbOffers));
     }
-    if (!currentOfferId) currentOfferId = kbOffers[0]?.id || null;
+    if (currentOfferId === undefined) currentOfferId = null;
   }
   function saveKbMeta() {
     localStorage.setItem(KB_OFFERS_KEY, JSON.stringify(kbOffers));
     localStorage.setItem(KB_ASSIGN_KEY, JSON.stringify(kbAssign));
+    localStorage.setItem(KB_GUESTS_KEY, JSON.stringify(kbGuests));
+    localStorage.setItem(KB_FU_LOG_KEY,  JSON.stringify(kbFuLog));
+    localStorage.setItem(KB_STAGE_KEY,   JSON.stringify(kbStage));
+  }
+
+  // Stage do kanban (independente do CRM, com namespace por source)
+  function getKbStage(r) {
+    if (r._source === "guest") return r.stage || "novo";
+    return kbStage[kbKey(r)] || "novo";
   }
 
   // allRows para o Kanban (orgânico + ads juntos, com _source em cada row)
@@ -3094,14 +3457,30 @@
       return;
     }
     renderKanban();
+    backfillFuLog();
   }
+
+  window.switchKanbanSource = function(src) {
+    currentKanbanSource = src;
+    $("kb-src-organic").classList.toggle("active", src === "organic");
+    $("kb-src-ads").classList.toggle("active", src === "ads");
+    renderKanban();
+  };
 
   window.renderKanban = function() {
     loadKbMeta();
-    const rows_src = kanbanAllRows.length ? kanbanAllRows : allRows.map(r => ({...r, _source: r._source || currentSource}));
+    const allLeads = kanbanAllRows.length ? kanbanAllRows : allRows.map(r => ({...r, _source: r._source || currentSource}));
+    // Filtra pela fonte ativa do kanban
+    const rows_src = allLeads.filter(r => r._source === currentKanbanSource);
+    const guestRows = kbGuests.map(g => ({
+      id: g.id, full_name: g.name, email: g.email || "", phone: g.phone || "",
+      stage: g.stage || "novo", _source: "guest", archived: false
+    }));
+    const allSrcRows = [...rows_src, ...guestRows];
     const tabsEl  = $("kanban-offer-tabs");
     const boardEl = $("kanban-board");
-    const q = ($("kanban-search")?.value || "").toLowerCase().trim();
+    const q     = ($("kanban-search")?.value      || "").toLowerCase().trim();
+    const novoQ = ($("kanban-novo-search")?.value || "").toLowerCase().trim();
 
     // Offer tabs (+ "Todos")
     tabsEl.innerHTML =
@@ -3111,16 +3490,24 @@
       ).join("") +
       (currentOfferId ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>` : "");
 
-    // Filter allRows by offer and search
-    const rows = rows_src.filter(r => {
+    // Filter rows by offer and global search
+    const rows = allSrcRows.filter(r => {
       if (r.archived) return false;
       if (currentOfferId && kbAssign[String(r.id)] !== currentOfferId) return false;
       if (q && !(r.full_name||"").toLowerCase().includes(q) && !(r.email||"").toLowerCase().includes(q)) return false;
       return true;
     });
 
+    const matchNovo = r => !novoQ
+      || (r.full_name||"").toLowerCase().includes(novoQ)
+      || (r.email||"").toLowerCase().includes(novoQ)
+      || (r.phone||"").includes(novoQ);
+
     boardEl.innerHTML = KANBAN_STAGES.map(stage => {
-      const stageRows = rows.filter(r => (r.stage || "novo") === stage);
+      // NOVO usa kbStage e busca própria; outras colunas usam kbStage normal
+      const stageRows = stage === "novo"
+        ? rows.filter(r => getKbStage(r) === "novo" && matchNovo(r))
+        : rows.filter(r => getKbStage(r) === stage);
       const color = KANBAN_COLOR[stage];
       const label = KANBAN_LABEL[stage];
       return `<div class="kanban-col" data-stage="${stage}"
@@ -3142,15 +3529,28 @@
             const typeLabel = r.dominant_type ? `<span class="kanban-card-badge" style="background:#E8E0D0;color:#5C5043">${TYPE_LABEL[r.dominant_type] || r.dominant_type}</span>` : "";
             const assignedOffer = kbOffers.find(o => o.id === kbAssign[String(r.id)]);
             const offerTag = assignedOffer ? `<span class="kanban-card-badge" style="background:${color}18;color:${color}">${esc(assignedOffer.name)}</span>` : "";
-            const srcLabel = r._source === "ads" ? `<span class="kanban-card-badge" style="background:#EDE4D4;color:#8A7050">Anúncio</span>` : "";
-            const gIdx = allRows.findIndex(ar => String(ar.id) === String(r.id));
+            const srcLabel = r._source === "ads"
+              ? `<span class="kanban-card-badge" style="background:#EDE4D4;color:#8A7050">Anúncio</span>`
+              : r._source === "guest"
+              ? `<span class="kanban-card-badge" style="background:#E4EDE4;color:#4A6548">Convidada</span>`
+              : "";
+            const gIdx = r._source === "guest" ? -1 : allRows.findIndex(ar => String(ar.id) === String(r.id));
             const openFn = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
+            // Follow-up button (só na coluna Follow Up)
+            const fuBtn = getKbStage(r) === "proposta" ? (() => {
+              const log = kbFuLog[kbKey(r)] || {};
+              const done = log[todayStr()] === true;
+              return done
+                ? `<button class="fu-btn done" onclick="event.stopPropagation();toggleFuToday('${r.id}')">✓ Follow-up feito hoje</button>`
+                : `<button class="fu-btn pending" onclick="event.stopPropagation();toggleFuToday('${r.id}')">⚠ Marcar follow-up de hoje</button>`;
+            })() : "";
             return `<div class="kanban-card" draggable="true"
               ondragstart="kanbanDragStart(event,'${r.id}')"
               ondragend="kanbanDragEnd(event)"
               onclick="${openFn}">
               ${waBtn}
               <div class="kanban-card-name">${esc(r.full_name || r.email || "Lead")}</div>
+              ${fuBtn}
               <div class="kanban-card-meta">${typeLabel}${offerTag}${srcLabel}</div>
               <div style="display:flex;gap:0.35rem;margin-top:0.45rem;flex-wrap:wrap">
                 ${KANBAN_STAGES.filter(s => s !== stage).map(s =>
@@ -3168,6 +3568,7 @@
         <button class="kanban-col-add-btn" onclick="openKanbanAddLead('${stage}')">+ Adicionar lead</button>
       </div>`;
     }).join("");
+    setTimeout(updateFuLogBtn, 0);
   };
 
   window.selectOffer = function(id) { currentOfferId = id; renderKanban(); };
@@ -3203,41 +3604,211 @@
     renderKanban();
   };
 
+  function parseGuestEntries(raw) {
+    return raw.split(",")
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+  }
+
+  window.openAddGuestModal = function() {
+    $("guest-modal-bulk").value = "";
+    $("guest-modal-preview").style.display = "none";
+    $("guest-preview-list").innerHTML = "";
+    $("guest-save-btn").textContent = "Adicionar";
+    $("guest-modal-overlay").classList.add("open");
+    setTimeout(() => $("guest-modal-bulk").focus(), 50);
+  };
+  window.closeGuestModal = function() { $("guest-modal-overlay").classList.remove("open"); };
+  window.updateGuestPreview = function() {
+    const entries = parseGuestEntries($("guest-modal-bulk").value);
+    const preview = $("guest-modal-preview");
+    const list    = $("guest-preview-list");
+    if (!entries.length) {
+      preview.style.display = "none";
+      $("guest-save-btn").textContent = "Adicionar";
+      return;
+    }
+    preview.style.display = "block";
+    $("guest-save-btn").textContent = `Adicionar ${entries.length}`;
+    list.innerHTML = entries.map(e =>
+      `<div style="font-size:12px;background:#EDE8DF;border-radius:8px;padding:4px 10px;color:#2C2218">${esc(e)}</div>`
+    ).join("");
+  };
+  window.saveGuest = function() {
+    const entries = parseGuestEntries($("guest-modal-bulk").value);
+    if (!entries.length) { showToast("Cole ao menos um nome ou e-mail"); return; }
+    loadKbMeta();
+    entries.forEach((entry, i) => {
+      const id = "guest_" + (Date.now() + i);
+      const isEmail = entry.includes("@");
+      kbGuests.push({ id, name: entry, email: isEmail ? entry : "", phone: "", stage: "novo" });
+      if (currentOfferId) kbAssign[id] = currentOfferId;
+    });
+    saveKbMeta();
+    closeGuestModal();
+    renderKanban();
+    showToast(`${entries.length} convidada${entries.length > 1 ? "s" : ""} adicionada${entries.length > 1 ? "s" : ""} ✓`);
+  };
+
+  // ── Follow-up diário
+  window.toggleFuToday = function(leadId) {
+    loadKbMeta();
+    const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
+    const key = kRow ? kbKey(kRow) : (String(leadId).startsWith("guest_") ? String(leadId) : `${currentKanbanSource}_${leadId}`);
+    if (!kbFuLog[key]) kbFuLog[key] = {};
+    kbFuLog[key][todayStr()] = kbFuLog[key][todayStr()] !== true;
+    saveKbMeta();
+    updateFuLogBtn();
+    renderKanban();
+  };
+
+  function updateFuLogBtn() {
+    loadKbMeta();
+    const fuLeads = [...kanbanAllRows.filter(r => r._source === currentKanbanSource), ...kbGuests.map(g => ({...g, _source:"guest"}))].filter(r => getKbStage(r) === "proposta");
+    const pending = fuLeads.filter(r => kbFuLog[kbKey(r)]?.[todayStr()] !== true).length;
+    const btn = $("fu-log-btn");
+    if (!btn) return;
+    const badge = btn.querySelector(".fu-log-badge-count");
+    if (pending > 0) {
+      if (!badge) {
+        const b = document.createElement("span");
+        b.className = "fu-log-badge-count";
+        b.textContent = pending;
+        btn.appendChild(b);
+      } else { badge.textContent = pending; }
+    } else {
+      if (badge) badge.remove();
+    }
+  }
+
+  // Preenche dias sem registro como "não fez" (retroativo)
+  function backfillFuLog() {
+    loadKbMeta();
+    const today = todayStr();
+    const fuLeads = [...kanbanAllRows.filter(r => r._source === currentKanbanSource), ...kbGuests.map(g => ({...g, _source:"guest"}))].filter(r => getKbStage(r) === "proposta");
+    fuLeads.forEach(r => {
+      const id = kbKey(r);
+      if (!kbFuLog[id]) kbFuLog[id] = {};
+      const log = kbFuLog[id];
+      // Registra data de entrada se ainda não tiver
+      if (!log._entered) log._entered = today;
+      // Preenche dias passados sem registro como false (não fez)
+      const entered = new Date(log._entered);
+      const todayD  = new Date(today);
+      const d = new Date(entered);
+      while (d < todayD) {
+        const ds = d.toISOString().slice(0,10);
+        if (log[ds] === undefined) log[ds] = false;
+        d.setDate(d.getDate() + 1);
+      }
+    });
+    saveKbMeta();
+    updateFuLogBtn();
+  }
+
+  window.openFuLogPanel = function() {
+    loadKbMeta();
+    const fuLeads = [...kanbanAllRows.filter(r => r._source === currentKanbanSource), ...kbGuests.map(g => ({...g, _source:"guest"}))].filter(r => getKbStage(r) === "proposta");
+    // Coleta todos os dias únicos que aparecem nos logs
+    const allDays = new Set();
+    fuLeads.forEach(r => {
+      Object.keys(kbFuLog[kbKey(r)] || {}).forEach(k => { if (k !== "_entered") allDays.add(k); });
+    });
+    allDays.add(todayStr());
+    const days = [...allDays].sort().reverse(); // mais recente primeiro
+
+    const body = $("fu-log-body");
+    if (!fuLeads.length) {
+      body.innerHTML = `<div style="padding:2rem;text-align:center;color:#8A7D6B;font-size:14px">Nenhum lead na coluna Follow Up</div>`;
+    } else {
+      body.innerHTML = days.map(day => {
+        const isToday = day === todayStr();
+        const dateLabel = isToday ? `Hoje (${day})` : day;
+        const entries = fuLeads.map(r => {
+          const log = kbFuLog[kbKey(r)] || {};
+          const val = log[day];
+          const name = esc(r.full_name || r.email || "Lead");
+          if (val === true)  return `<div class="fu-log-entry ok"><span class="fu-log-badge">✓</span> ${name}</div>`;
+          if (val === false) return `<div class="fu-log-entry miss"><span class="fu-log-badge">✗</span> NÃO FEZ FOLLOW UP EM ${name.toUpperCase()} ${day}</div>`;
+          if (isToday)       return `<div class="fu-log-entry today-pending"><span class="fu-log-badge">⚠</span> ${name} — pendente</div>`;
+          return ""; // lead não estava no FU nesse dia
+        }).filter(Boolean).join("");
+        if (!entries) return "";
+        return `<div class="fu-log-day">
+          <div class="fu-log-day-label">${dateLabel}</div>
+          ${entries}
+        </div>`;
+      }).filter(Boolean).join("") || `<div style="padding:1rem;color:#8A7D6B;font-size:13px">Nenhum registro ainda — marque os follow-ups diários.</div>`;
+    }
+    $("fu-log-overlay").classList.add("open");
+  };
+
+  window.closeFuLogPanel = function() { $("fu-log-overlay").classList.remove("open"); };
+  $("fu-log-overlay").addEventListener("click", e => { if (e.target === $("fu-log-overlay")) closeFuLogPanel(); });
+
   // Move card = update stage via API + atualiza allRows em memória
   window.moveKanbanCard = async function(leadId, newStage) {
-    // Busca em kanbanAllRows (tem _source correto) e em allRows para atualizar a tabela CRM
+    // Convidadas: só atualiza localStorage
+    if (String(leadId).startsWith("guest_")) {
+      loadKbMeta();
+      const g = kbGuests.find(g => g.id === String(leadId));
+      if (g) {
+        g.stage = newStage;
+        // Registra entrada no Follow Up
+        if (newStage === "proposta") {
+          if (!kbFuLog[g.id]) kbFuLog[g.id] = {};
+          if (!kbFuLog[g.id]._entered) kbFuLog[g.id]._entered = todayStr();
+        }
+        saveKbMeta();
+      }
+      renderKanban();
+      showToast(`Movido para ${KANBAN_LABEL[newStage]}`);
+      return;
+    }
+    // Atualiza kbStage local imediatamente (kanban independente do CRM)
+    loadKbMeta();
     const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
     const aRow = allRows.find(r => String(r.id) === String(leadId));
-    if (!kRow) return;
-    const rowSource = kRow._source || "organic";
-    const prevStage = kRow.stage;
-    kRow.stage = newStage;
-    if (aRow) aRow.stage = newStage;
+    const key = kRow ? kbKey(kRow) : `${currentKanbanSource}_${leadId}`;
+    const prevKbStage = kbStage[key] || "novo";
+    kbStage[key] = newStage;
+    // Registra entrada no Follow Up
+    if (newStage === "proposta") {
+      if (!kbFuLog[key]) kbFuLog[key] = {};
+      if (!kbFuLog[key]._entered) kbFuLog[key]._entered = todayStr();
+    }
+    saveKbMeta();
+    if (kRow) { kRow.stage = newStage; }
+    if (aRow) { aRow.stage = newStage; }
     renderKanban();
-    try {
-      const res  = await fetch("/api/update-lead", {
+    showToast(`Movido para ${KANBAN_LABEL[newStage]}`);
+    // Sincroniza com o CRM via API em background
+    if (kRow) {
+      const rowSource = kRow._source || "organic";
+      fetch("/api/update-lead", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secret, id: leadId, source: rowSource, stage: newStage })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        kRow.stage = prevStage;
-        if (aRow) aRow.stage = prevStage;
-        renderKanban(); showToast("Erro ao mover");
-      } else {
-        renderTable(); renderStats();
-        showToast(`Movido para ${KANBAN_LABEL[newStage]}`);
-      }
-    } catch(e) {
-      kRow.stage = prevStage;
-      if (aRow) aRow.stage = prevStage;
-      renderKanban(); showToast("Falha na conexão");
+      }).then(r => r.json()).then(d => {
+        if (d.ok) { renderTable(); renderStats(); }
+        else {
+          kbStage[key] = prevKbStage;
+          saveKbMeta(); renderKanban(); showToast("Erro ao sincronizar com CRM");
+        }
+      }).catch(() => {});
     }
   };
 
   window.unassignKanbanCard = function(leadId) {
     loadKbMeta();
+    if (String(leadId).startsWith("guest_")) {
+      kbGuests = kbGuests.filter(g => g.id !== String(leadId));
+      delete kbStage[String(leadId)];
+    } else {
+      const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
+      const key = kRow ? kbKey(kRow) : `${currentKanbanSource}_${leadId}`;
+      delete kbStage[key];
+    }
     delete kbAssign[String(leadId)];
     saveKbMeta();
     renderKanban();

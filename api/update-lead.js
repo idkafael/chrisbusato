@@ -2,7 +2,7 @@
 // Body: { secret, id, source, ...campos }
 const { getSupabase, checkSecret, cors, tableFor } = require("./_lib");
 
-const ALLOWED_FIELDS = ["stage", "notes", "starred", "archived", "dominant_type", "follow_up_done", "follow_up_at", "payment_day", "payment_value", "payment_notes"];
+const ALLOWED_FIELDS = ["stage", "notes", "starred", "archived", "dominant_type", "follow_up_done", "follow_up_at", "payment_day", "payment_value", "payment_notes", "payment_method"];
 
 module.exports = async function handler(req, res) {
   cors(res);
