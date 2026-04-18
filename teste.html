@@ -692,7 +692,9 @@ body {
     </div>
     <div class="map-bars" id="map-bars" aria-label="Análise em porcentagens"></div>
     <div class="result-highlight" id="r-highlight" aria-label="Vídeo">
-      <div class="vturb-result" id="vturb-result-mount"></div>
+      <div class="vturb-result" id="vturb-result-mount">
+        <vturb-smartplayer id="vid-69d7eaef683ddf2448c28738" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
+      </div>
     </div>
     <div class="cta-section">
       <button type="button" class="btn-green result-wpp-locked" id="btn-wpp" disabled aria-disabled="true" onclick="goWpp()">Entrar no Grupo</button>
@@ -1050,13 +1052,7 @@ function configureResultCtaForPath() {
 
 function showPercentageResultFromAnswers(ansList) {
   stopResultVturbIdleGuard();
-  var mount = document.getElementById("vturb-result-mount");
-  if (mount && !mount.querySelector("vturb-smartplayer")) {
-    var player = document.createElement("vturb-smartplayer");
-    player.id = "vid-69d7eaef683ddf2448c28738";
-    player.style.cssText = "display:block;margin:0 auto;width:100%;max-width:400px;";
-    mount.appendChild(player);
-  }
+  // player já está fixo no HTML — nada a injetar
   const cnt = countAnswerTypes(ansList);
   const pct = computeBodyPercentages(cnt);
   configureResultCtaForPath();
