@@ -2593,10 +2593,10 @@
 
   // ── Excluir leads (permanente)
   async function deleteLeads(ids, source) {
-    const res  = await fetch("/api/delete-leads", {
+    const res  = await fetch("/api/bulk-action", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ secret, ids, source: source || currentSource })
+      body: JSON.stringify({ secret, ids, source: source || currentSource, action: "delete" })
     });
     const data = await res.json();
     if (!res.ok || !data.ok) throw new Error(data.error || "Erro ao excluir");
