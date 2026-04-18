@@ -854,13 +854,9 @@ const questions = [
     ]
   },
   {
-    text: "Para fechar: no dia 20 de Abril às 12h vou fazer uma aula ao vivo criada para o seu tipo de corpo na dança. Você estaria lá?",
-    options: [
-      { l: "A", t: "Com certeza, quero estar lá", type: "M" },
-      { l: "B", t: "Sim, se for gratuito", type: "M" },
-      { l: "C", t: "Talvez, dependeria do conteúdo", type: "R" },
-      { l: "D", t: "Provavelmente não conseguiria nesse horário", type: "D" }
-    ]
+    text: "Última coisa: vou fazer uma aula ao vivo criada especialmente para o seu tipo de corpo na dança — e quero te avisar em primeira mão quando a data for confirmada. Posso te chamar no grupo?",
+    open: true,
+    openMessage: "A data será confirmada em breve no grupo. Te vejo por lá! 🎉"
   }
 ];
 
@@ -1472,6 +1468,17 @@ function render() {
 
   const opts = document.getElementById('q-options');
   opts.innerHTML = '';
+
+  if (q.open) {
+    const msg = document.createElement('p');
+    msg.style.cssText = 'text-align:center;font-size:1.1rem;color:#4a6741;margin:1.5rem 0;line-height:1.6;';
+    msg.textContent = q.openMessage || '';
+    opts.appendChild(msg);
+    document.getElementById('btn-next').disabled = false;
+    document.getElementById('btn-next').textContent = 'Quero participar →';
+    return;
+  }
+
   q.options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
@@ -1487,9 +1494,13 @@ function render() {
 }
 
 function nextQ() {
-  if (!sel) return;
-  answers.push(sel);
+  const q = questions[cur];
+  if (!q.open) {
+    if (!sel) return;
+    answers.push(sel);
+  }
   cur++;
+  document.getElementById('btn-next').textContent = 'Próxima →';
   if (cur < questions.length) { render(); }
   else { showLoadingThenResult(); }
 }
