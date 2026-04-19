@@ -349,7 +349,7 @@ body {
 .vsl-play-overlay {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -1229,14 +1229,23 @@ function startVslOverlaySync() {
     var overlay = document.getElementById("vsl-play-overlay");
     if (!overlay) return;
     var videos = collectResultPlayerVideos();
-    if (!videos.length) { overlay.classList.remove("is-playing"); return; }
+    if (!videos.length) { overlay.style.display = "none"; return; }
     var v = videos[0];
+    var dur = v.duration || 0;
+    var ct  = v.currentTime || 0;
+    // só mostra overlay se o vídeo já começou (>2s) e ainda não terminou (>5s do fim)
+    var midVideo = ct > 2 && (dur === 0 || ct < dur - 5);
+    if (!midVideo) {
+      overlay.style.display = "none";
+      return;
+    }
+    overlay.style.display = "flex";
     if (!v.paused && !v.ended) {
       overlay.classList.add("is-playing");
     } else {
       overlay.classList.remove("is-playing");
     }
-  }, 500);
+  }, 400);
 }
 /* ------------------------------------------------- */
 
