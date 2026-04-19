@@ -338,10 +338,57 @@ body {
 }
 .btn-green:hover { background: #4A6548; transform: translateY(-1px); }
 .btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
-.cta-section .btn-green.result-wpp-locked {
+/* overlay play/pause no vídeo de resultado */
+.result-vsl-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.vsl-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.vsl-play-overlay .play-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, opacity 0.2s;
+  opacity: 0.9;
+}
+.vsl-play-overlay:hover .play-icon {
+  transform: scale(1.08);
+  opacity: 1;
+}
+.vsl-play-overlay .play-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: #fff;
+  margin-left: 4px;
+}
+.vsl-play-overlay.is-playing {
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
+  transition: opacity 0.3s;
+}
+.vsl-play-overlay.is-playing:hover {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .btn-alt {
@@ -732,11 +779,18 @@ body {
     <div class="map-bars" id="map-bars" aria-label="Análise em porcentagens"></div>
     <div class="result-highlight" id="r-highlight" aria-label="Vídeo">
       <div class="vturb-result" id="vturb-result-mount">
-        <vturb-smartplayer id="vid-69d7eaef683ddf2448c28738" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
+        <div class="result-vsl-wrap">
+          <vturb-smartplayer id="vid-69d7eaef683ddf2448c28738" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
+          <button class="vsl-play-overlay" id="vsl-play-overlay" aria-label="Play/Pause" onclick="toggleResultVslPlayPause()">
+            <span class="play-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="cta-section">
-      <button type="button" class="btn-green result-wpp-locked" id="btn-wpp" disabled aria-disabled="true" onclick="goWpp()">Entrar no Grupo</button>
+      <button type="button" class="btn-green" id="btn-wpp" onclick="goWpp()">Entrar no Grupo</button>
       <p class="cta-small" id="result-cta-small">Não precisa saber dançar</p>
     </div>
   </div>
@@ -1160,9 +1214,38 @@ function syncResultWppButtonAfterVisibility() {
   }
 }
 
+/* ---- overlay play/pause da VSL de resultado ---- */
+var _vslOverlayInterval = null;
+function toggleResultVslPlayPause() {
+  var videos = collectResultPlayerVideos();
+  if (!videos.length) return;
+  var v = videos[0];
+  if (v.paused) { try { v.play(); } catch(e){} }
+  else          { try { v.pause(); } catch(e){} }
+}
+function startVslOverlaySync() {
+  if (_vslOverlayInterval) return;
+  _vslOverlayInterval = setInterval(function() {
+    var overlay = document.getElementById("vsl-play-overlay");
+    if (!overlay) return;
+    var videos = collectResultPlayerVideos();
+    if (!videos.length) { overlay.classList.remove("is-playing"); return; }
+    var v = videos[0];
+    if (!v.paused && !v.ended) {
+      overlay.classList.add("is-playing");
+    } else {
+      overlay.classList.remove("is-playing");
+    }
+  }, 500);
+}
+/* ------------------------------------------------- */
+
 function startResultWppButtonUnlock() {
   var btn = document.getElementById("btn-wpp");
   if (!btn) return;
+
+  // Botão sempre disponível — sem lock
+  startVslOverlaySync();
 
   resultVslBindGen++;
   var gen = resultVslBindGen;
@@ -1181,20 +1264,15 @@ function startResultWppButtonUnlock() {
   resultVslUnlockDone = false;
   resultVslLastProgressLogMs = 0;
 
+  // Não travar o botão — apenas iniciar a escuta do fim para registrar sessão
   try {
     if (sessionStorage.getItem(RESULT_VSL_SESSION_KEY) === "1") {
-      console.log("[result-vsl] sessão: 2º VSL já concluído — botão liberado");
       resultVslUnlockDone = true;
-      btn.disabled = false;
-      btn.removeAttribute("aria-disabled");
-      btn.classList.remove("result-wpp-locked");
       return;
     }
   } catch (e) {}
 
-  btn.disabled = true;
-  btn.setAttribute("aria-disabled", "true");
-  btn.classList.add("result-wpp-locked");
+  // sem lock: botão já visível
 
   function unlockResultWppButton(reason) {
     if (gen !== resultVslBindGen || resultVslUnlockDone) return;
