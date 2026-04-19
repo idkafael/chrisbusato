@@ -1662,6 +1662,7 @@
     <div class="header-actions">
       <button class="btn-sm btn-outline-warm" id="refresh-btn">↻ Atualizar <span id="refresh-countdown"></span></button>
       <button class="btn-sm btn-sage" id="export-btn">↓ Exportar CSV</button>
+      <button class="btn-sm btn-outline-warm" id="export-meta-btn" title="Exporta no formato do Gerenciador de Eventos da Meta">↓ Meta CSV</button>
       <button class="btn-sm btn-ghost-warm" id="logout-btn">Sair</button>
     </div>
   </header>
@@ -2018,6 +2019,7 @@
   const loginError    = $("login-error");
   const refreshBtn    = $("refresh-btn");
   const exportBtn     = $("export-btn");
+  const exportMetaBtn = $("export-meta-btn");
   const logoutBtn     = $("logout-btn");
   const searchInput   = $("search-input");
   const filterStatus  = $("filter-status");
@@ -3113,6 +3115,58 @@
     a.click();
     URL.revokeObjectURL(url);
     showToast("CSV exportado");
+  });
+
+  // ── export Meta Pixel CSV
+  exportMetaBtn.addEventListener("click", () => {
+    const rows = filteredRows.length ? filteredRows : allRows;
+    if (!rows.length) { showToast("Sem dados para exportar."); return; }
+
+    // Normaliza telefone pro formato internacional sem formatação
+    function normalizePhone(p) {
+      if (!p) return "";
+      const digits = p.replace(/\D/g, "");
+      if (digits.length === 0) return "";
+      // Adiciona 55 se não tiver código de país
+      return digits.startsWith("55") ? digits : "55" + digits;
+    }
+
+    // Divide nome em primeiro e último
+    function splitName(full) {
+      if (!full) return { fn: "", ln: "" };
+      const parts = full.trim().split(/\s+/);
+      return { fn: parts[0] || "", ln: parts.slice(1).join(" ") || "" };
+    }
+
+    const header = "email,email,email,phone,phone,phone,madid,fn,ln,zip,ct,st,country,dob,doby,gen,age,event_name,event_time,value,currency";
+
+    const lines = rows.map(r => {
+      const { fn, ln } = splitName(r.full_name);
+      const phone      = normalizePhone(r.phone);
+      const eventTime  = r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString();
+      // Campos opcionais que não temos: deixar vazio
+      return [
+        r.email || "", "", "",   // 3 colunas email
+        phone, "", "",            // 3 colunas phone
+        "",                       // madid
+        fn, ln,                   // fn, ln
+        "", "", "", "BR",         // zip, ct, st, country
+        "", "", "", "",           // dob, doby, gen, age
+        "Lead",                   // event_name
+        eventTime,                // event_time
+        "", ""                    // value, currency
+      ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(",");
+    });
+
+    const csv  = [header, ...lines].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `meta_leads_${currentSource}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("Meta CSV exportado ✓");
   });
 
   // ── toast
