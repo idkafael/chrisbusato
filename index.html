@@ -606,6 +606,33 @@ body {
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel Code -->
+  <script>
+  // Advanced Matching: hasheia email + telefone e dispara evento Meta
+  function fbqTrack(eventName, contentName, email, phone) {
+    if (typeof fbq === 'undefined') return;
+    var enc = new TextEncoder();
+    function sha256hex(str) {
+      return crypto.subtle.digest('SHA-256', enc.encode(str)).then(function(buf) {
+        return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+      });
+    }
+    var emNorm = (email  || '').toLowerCase().trim();
+    var phNorm = (phone  || '').replace(/\D/g,'');
+    if (!phNorm.startsWith('55')) phNorm = '55' + phNorm;
+    Promise.all([
+      emNorm ? sha256hex(emNorm) : Promise.resolve(''),
+      phNorm ? sha256hex(phNorm) : Promise.resolve('')
+    ]).then(function(h) {
+      var ud = {};
+      if (h[0]) ud.em = h[0];
+      if (h[1]) ud.ph = h[1];
+      fbq('init', '1659916645332253', ud);
+      fbq('track', eventName, { content_name: contentName });
+    }).catch(function() {
+      fbq('track', eventName, { content_name: contentName });
+    });
+  }
+  </script>
 </head>
 <body>
 
@@ -912,7 +939,7 @@ function submitQuizToSupabase(ansList) {
           phone: lead.phone,
           completed: true
         });
-        if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration', { content_name: 'Quiz Orgânico' });
+        fbqTrack('CompleteRegistration', 'Quiz Orgânico', lead.email, lead.phone);
       } else {
         fallbackFullSubmit();
       }
@@ -1842,7 +1869,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
           phone: lead.phone,
           completed: false
         });
-        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Quiz Orgânico' });
+        fbqTrack('Lead', 'Quiz Orgânico', emailNorm, lead.phone);
       }
       openQuizAfterLeadRow();
     })
