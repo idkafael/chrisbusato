@@ -952,6 +952,7 @@ function submitQuizToSupabase(ansList) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }).catch(function () {});
+    fbqTrack('CompleteRegistration', 'Quiz Anúncios', lead.email, lead.phone);
   }
 
   if (!rowId) {
