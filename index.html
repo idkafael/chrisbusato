@@ -912,7 +912,7 @@ function submitQuizToSupabase(ansList) {
           phone: lead.phone,
           completed: true
         });
-        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Quiz Orgânico' });
+        if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration', { content_name: 'Quiz Orgânico' });
       } else {
         fallbackFullSubmit();
       }
@@ -1842,6 +1842,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
           phone: lead.phone,
           completed: false
         });
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Quiz Orgânico' });
       }
       openQuizAfterLeadRow();
     })

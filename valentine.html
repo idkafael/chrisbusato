@@ -951,7 +951,7 @@ function submitQuizToSupabase(ansList) {
           phone: lead.phone,
           completed: true
         });
-        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Quiz Casal' });
+        if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration', { content_name: 'Quiz Casal' });
       } else {
         fallbackFullSubmit();
       }
@@ -1885,6 +1885,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
           phone: lead.phone,
           completed: false
         });
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Quiz Casal' });
       }
     })
     .catch(function () {});
