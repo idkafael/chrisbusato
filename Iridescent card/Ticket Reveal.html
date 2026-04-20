@@ -708,41 +708,44 @@
     }
     .tear { top: 72%; }
 
-    /* Body: coluna única em vez de grid 2 colunas */
+    /* Body: coluna única — height: auto para o container não forçar altura fixa */
     .ticket-body .content {
+      height: auto;           /* ← derruba o height:100% herdado do desktop */
       padding: 16px 20px 14px;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
       gap: 0;
       grid-template-columns: unset;
       grid-template-rows: unset;
     }
     .brand-row {
       grid-column: unset;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .event-title {
       grid-column: unset;
       align-self: auto;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .event-title .name {
       font-size: clamp(20px, 6.5vw, 26px);
     }
-    /* Meta fica abaixo do título, sem borda esquerda */
+    /* Meta fica logo abaixo do título, sem borda esquerda */
     .event-meta {
       grid-column: unset;
       align-self: auto;
       padding-left: 0;
       border-left: none;
       border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
-      padding-top: 12px;
-      gap: 10px 8px;
+      padding-top: 10px;
+      gap: 8px 8px;
     }
     .meta-cell .v { font-size: 15px; }
+    /* bottom-row: margem pequena e fixa, sem auto */
     .bottom-row {
       grid-column: unset;
-      margin-top: 12px;
+      margin-top: 10px;
       padding-top: 0;
       font-size: 7.5px;
       letter-spacing: 0.18em;
