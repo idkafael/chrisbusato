@@ -46,7 +46,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
     width: 100%;
   }
 
@@ -57,7 +57,7 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: 0;
+    margin-top: -4px;
   }
   .btn-main {
     padding: 14px 34px;
@@ -494,6 +494,8 @@
   /* When folded, visually crop the ticket to show only the front/body.
      This avoids the "empty stub area" while keeping the object upright. */
   .ticket.folded {
+    /* also shrink layout height so CTA sits right below */
+    aspect-ratio: 760 / 238;
     clip-path: inset(0 0 30% 0 round 14px);
   }
   .ticket.folded .ticket-body {
@@ -720,6 +722,7 @@
 
     /* folded crop matches portrait stub */
     .ticket.folded {
+      aspect-ratio: 360 / 410;
       clip-path: inset(0 0 27% 0 round 18px);
     }
     .ticket.folded .ticket-body {
@@ -843,6 +846,18 @@
     </div>
   </div>
 
+  <!-- Botão abaixo do ticket -->
+  <div class="pre-cta" id="pre-cta">
+    <button class="btn-main" id="openFormBtn">
+      Quero meu ingresso <span style="font-size:16px">→</span>
+    </button>
+    <span class="pre-cta-hint">Ingresso · Acesso online</span>
+  </div>
+
+  <div class="post-msg" id="post-msg">
+    <strong>Obrigado.</strong> Vamos entrar em contato com você no WhatsApp.
+  </div>
+
 <!-- Modal de coleta (fica atrás do ticket) -->
 <div class="capture" id="capture">
   <div class="cap-head">
@@ -894,17 +909,6 @@
   <button class="skip" id="skip">Agora não</button>
 </div>
 
-  <!-- Botão para abrir o formulário -->
-  <div class="pre-cta" id="pre-cta">
-    <button class="btn-main" id="openFormBtn">
-      Quero meu ingresso <span style="font-size:16px">→</span>
-    </button>
-    <span class="pre-cta-hint">Ingresso · Acesso online</span>
-  </div>
-
-  <div class="post-msg" id="post-msg">
-    <strong>Obrigado.</strong> Vamos entrar em contato com você no WhatsApp.
-  </div>
 </div>
 
 <script>
