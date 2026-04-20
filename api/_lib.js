@@ -20,7 +20,9 @@ function cors(res) {
 }
 
 function tableFor(source) {
-  return source === "ads" ? "quiz_submissions_ads" : "quiz_submissions";
+  if (source === "ads") return "quiz_submissions_ads";
+  if (source === "ingresso") return "quiz_submissions_ingresso";
+  return "quiz_submissions";
 }
 
 module.exports = { getSupabase, checkSecret, cors, tableFor };

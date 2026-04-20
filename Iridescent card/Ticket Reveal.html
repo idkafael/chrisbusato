@@ -1,29 +1,15 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Ingresso — O Caminho Musical</title>
-
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1659916645332253');
-fbq('track','PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
-
+<title>Ticket Reveal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
   :root {
+    /*EDITMODE-BEGIN*/
     --cream: #F5F0E8;
     --cream-deep: #EBE3D5;
     --olive: #3D5140;
@@ -33,6 +19,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     --ink: #22281E;
     --accent: #B89C6B;
   }
+  /*EDITMODE-END*/
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -46,14 +33,52 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     color: var(--ink);
     font-family: "Work Sans", ui-sans-serif, system-ui, sans-serif;
     overflow-x: hidden;
-    padding: 64px 24px 100px;
+    padding: 24px 24px 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    justify-content: center;
+    gap: 56px;
   }
 
-  /* ambient grain */
+  /* CTA below ticket (opens capture form) */
+  .pre-cta {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: -10px;
+  }
+  .btn-main {
+    padding: 14px 34px;
+    border: none;
+    border-radius: 12px;
+    background: var(--olive);
+    color: var(--offwhite);
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 160ms, transform 150ms, box-shadow 160ms;
+    box-shadow: 0 10px 28px rgba(42,58,45,0.22);
+  }
+  .btn-main:hover { background: var(--olive-deep); transform: translateY(-1px); }
+  .btn-main:active { transform: translateY(0); }
+  .pre-cta-hint {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 55%, transparent);
+  }
+
+  /* ambient grain across whole page */
   body::before {
     content: "";
     position: fixed; inset: 0;
@@ -64,7 +89,6 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     z-index: 1;
   }
 
-  /* ── Header ── */
   .page-header {
     text-align: center;
     z-index: 2;
@@ -93,25 +117,24 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     color: color-mix(in oklab, var(--ink) 60%, var(--cream));
   }
 
-  /* ── Ticket stage ── */
+  /* ===== Ticket stage ===== */
   .stage {
     position: relative;
-    width: min(360px, 92vw);
+    width: min(760px, 96vw);
+    perspective: 1600px;
     z-index: 2;
   }
 
   .ticket {
     position: relative;
     width: 100%;
-    aspect-ratio: 360 / 560;
-  }
-
-  /* 3D só durante a animação de abertura */
-  .ticket.animating {
-    perspective: 1000px;
+    aspect-ratio: 760 / 340;
     transform-style: preserve-3d;
+    transition: transform 220ms cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
   }
 
+  /* fold origin + split */
   .ticket-half {
     position: absolute;
     left: 0; right: 0;
@@ -125,17 +148,22 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     backface-visibility: hidden;
   }
 
+  /* Main body (top 70%) */
   .ticket-body {
-    top: 0; height: 73%;
-    border-radius: 18px 18px 2px 2px;
+    top: 0;
+    height: 70%;
+    border-radius: 14px 14px 2px 2px;
     transform-origin: 50% 100%;
   }
+  /* Stub (bottom 30%) */
   .ticket-stub {
-    bottom: 0; height: 27%;
-    border-radius: 2px 2px 18px 18px;
+    bottom: 0;
+    height: 30%;
+    border-radius: 2px 2px 14px 14px;
     transform-origin: 50% 0%;
   }
 
+  /* subtle paper texture */
   .ticket-half::before {
     content: "";
     position: absolute; inset: 0;
@@ -145,6 +173,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
       linear-gradient(180deg, rgba(61,81,64,0.03), transparent 40%);
     pointer-events: none;
   }
+  /* grain overlay w/ tunable opacity */
   .ticket-half::after {
     content: "";
     position: absolute; inset: 0;
@@ -154,7 +183,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     pointer-events: none;
   }
 
-  /* Iridescent shimmer */
+  /* Iridescent shimmer layer (follows cursor) */
   .shimmer {
     position: absolute; inset: 0;
     pointer-events: none;
@@ -171,6 +200,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
       );
     filter: saturate(1.1);
   }
+  /* specular soft glow */
   .glow {
     position: absolute; inset: 0;
     pointer-events: none;
@@ -182,63 +212,68 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     );
   }
 
-  /* ── Body content (coluna única, retrato) ── */
+  /* ===== BODY content ===== */
   .ticket-body .content {
     position: relative;
     height: 100%;
-    padding: 22px 24px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    padding: 26px 32px 38px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px 28px;
     z-index: 2;
   }
   .brand-row {
+    grid-column: 1 / -1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px dashed color-mix(in oklab, var(--olive) 35%, transparent);
     padding-bottom: 12px;
-    margin-bottom: 18px;
   }
   .brand-mark {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-family: "JetBrains Mono", monospace;
-    font-size: 9px;
-    letter-spacing: 0.22em;
+    font-size: 10px;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--olive);
   }
   .brand-mark .dot {
-    width: 8px; height: 8px;
+    width: 10px; height: 10px;
     border-radius: 50%;
     background: var(--sage);
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--sage) 25%, transparent);
   }
   .serial {
     font-family: "JetBrains Mono", monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    color: color-mix(in oklab, var(--olive) 60%, transparent);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: color-mix(in oklab, var(--olive) 70%, transparent);
   }
 
-  .event-title { margin-bottom: 20px; }
+  .event-title {
+    grid-column: 1 / 2;
+    align-self: end;
+  }
   .event-title .label {
     font-family: "JetBrains Mono", monospace;
     font-size: 9px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: color-mix(in oklab, var(--olive) 70%, transparent);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .event-title .name {
     font-family: "Cormorant Garamond", serif;
     font-weight: 500;
-    font-size: 32px;
-    line-height: 1.05;
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height: 1.02;
     color: var(--olive-deep);
     letter-spacing: 0.005em;
+    outline: none;
   }
   .event-title .name em {
     font-style: italic;
@@ -246,12 +281,13 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   }
 
   .event-meta {
+    grid-column: 2 / 3;
+    align-self: end;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px 12px;
-    border-top: 1px solid color-mix(in oklab, var(--olive) 14%, transparent);
-    padding-top: 16px;
-    margin-top: auto;
+    border-left: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
+    padding-left: 22px;
   }
   .meta-cell .k {
     font-family: "JetBrains Mono", monospace;
@@ -265,38 +301,41 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     font-family: "Cormorant Garamond", serif;
     font-size: 17px;
     color: var(--olive-deep);
+    outline: none;
   }
   .meta-cell.wide { grid-column: 1 / -1; }
 
   .bottom-row {
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-family: "JetBrains Mono", monospace;
-    font-size: 8px;
-    letter-spacing: 0.22em;
+    font-size: 9px;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--olive) 55%, transparent);
-    margin-top: 14px;
+    color: color-mix(in oklab, var(--olive) 65%, transparent);
   }
   .bottom-row .ornament {
-    flex: 1; margin: 0 10px; height: 1px;
+    flex: 1;
+    margin: 0 16px;
+    height: 1px;
     background: repeating-linear-gradient(
       90deg,
-      color-mix(in oklab, var(--olive) 25%, transparent) 0 5px,
-      transparent 5px 10px
+      color-mix(in oklab, var(--olive) 35%, transparent) 0 6px,
+      transparent 6px 12px
     );
   }
 
-  /* ── Stub content ── */
+  /* ===== STUB content ===== */
   .ticket-stub .content {
     position: relative;
     height: 100%;
-    padding: 16px 24px;
+    padding: 18px 32px;
     display: grid;
-    grid-template-columns: 1.4fr 1fr 0.7fr;
+    grid-template-columns: 1.5fr 1fr 0.9fr;
     align-items: center;
-    gap: 12px;
+    gap: 22px;
     z-index: 2;
   }
   .stub-block .k {
@@ -312,10 +351,19 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     font-size: 18px;
     color: var(--olive-deep);
   }
+
   .barcode {
-    display: flex; align-items: flex-end; gap: 2px; height: 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 40px;
   }
-  .barcode i { display: block; width: 2px; height: 100%; background: var(--olive-deep); }
+  .barcode i {
+    display: block;
+    width: 2px;
+    height: 100%;
+    background: var(--olive-deep);
+  }
   .barcode i.t { height: 70%; }
   .barcode i.s { height: 55%; }
   .barcode i.w { width: 4px; }
@@ -327,7 +375,10 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     letter-spacing: 0.3em;
     color: color-mix(in oklab, var(--olive) 75%, transparent);
   }
-  .admit { text-align: right; }
+
+  .admit {
+    text-align: right;
+  }
   .admit .big {
     font-family: "Cormorant Garamond", serif;
     font-style: italic;
@@ -344,21 +395,28 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     margin-top: 4px;
   }
 
-  /* ── Tear line ── */
+  /* ===== Perforation / tear line ===== */
   .tear {
     position: absolute;
-    left: 0; right: 0; top: 73%;
+    left: 0; right: 0;
+    top: 70%;
     height: 22px;
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 3;
   }
+  /* iridescent strip along tear */
   .tear .iri {
     position: absolute;
-    left: 28px; right: 28px; top: 50%;
+    left: 28px; right: 28px;
+    top: 50%;
     transform: translateY(-50%);
-    height: 6px; border-radius: 3px;
-    background: linear-gradient(90deg, #c3a6e0, #9fd4e6, #b9e4c1, #f1e3a1, #e9b79f, #c3a6e0);
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      #c3a6e0, #9fd4e6, #b9e4c1, #f1e3a1, #e9b79f, #c3a6e0
+    );
     background-size: 200% 100%;
     animation: iriShift 6s linear infinite;
     opacity: 0.85;
@@ -370,18 +428,27 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     0% { background-position: 0% 0; }
     100% { background-position: 200% 0; }
   }
+
+  /* decorative circular cutouts */
   .tear .cut {
-    position: absolute; top: 50%;
-    width: 24px; height: 24px; border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    width: 24px; height: 24px;
+    border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, #EFE7D6, #DED2BA);
     transform: translateY(-50%);
-    box-shadow: inset 0 2px 4px rgba(42,58,45,0.28), inset 0 -1px 2px rgba(255,255,255,0.5);
+    box-shadow:
+      inset 0 2px 4px rgba(42,58,45,0.28),
+      inset 0 -1px 2px rgba(255,255,255,0.5);
   }
   .tear .cut.l { left: -12px; }
   .tear .cut.r { right: -12px; }
+
+  /* perforation dots (between cutouts) */
   .tear .perf {
     position: absolute;
-    left: 28px; right: 28px; top: 50%;
+    left: 28px; right: 28px;
+    top: 50%;
     transform: translateY(-50%);
     height: 2px;
     background-image: radial-gradient(circle, color-mix(in oklab, var(--olive) 40%, transparent) 1.2px, transparent 1.6px);
@@ -390,10 +457,11 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     opacity: 0.7;
   }
 
-  /* ── Unfold animation ── */
+  /* ===== Unfold animation ===== */
   /* Keep folded state upright (no "lying back") */
   .ticket.folded .ticket-body { transform: rotateX(0deg) translateZ(2px); }
-  .ticket.folded .ticket-stub { transform: rotateX(0deg) translateZ(2px); }
+  /* Fold ONLY the stub away from camera until unlocked */
+  .ticket.folded .ticket-stub { transform: rotateX(-88deg) translateZ(2px); }
   .ticket.folded .tear .iri { opacity: 0; }
   .ticket.folded .tear .cut { opacity: 0; }
   .ticket.folded .tear .perf { opacity: 0; }
@@ -405,21 +473,25 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     transition: opacity 400ms ease 700ms;
   }
 
-  /* shards */
+  /* tearing shards that fly apart on reveal */
   .shard {
-    position: absolute; left: 50%; top: 73%;
-    width: 14px; height: 10px; border-radius: 2px;
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    width: 14px; height: 10px;
+    border-radius: 2px;
     background: var(--offwhite);
     box-shadow: 0 2px 4px rgba(42,58,45,0.2);
     transform: translate(-50%, -50%) rotate(var(--r, 0deg));
-    opacity: 0; pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
   }
   .ticket.revealing .shard {
     animation: shardFly 900ms cubic-bezier(.2,.8,.2,1) forwards;
   }
   @keyframes shardFly {
-    0%   { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r,0deg)) scale(0.7); }
-    25%  { opacity: 1; }
+    0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r,0deg)) scale(0.7); }
+    25% { opacity: 1; }
     100% {
       opacity: 0;
       transform:
@@ -429,10 +501,11 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     }
   }
 
-  /* ── Frosted capture overlay ── */
+  /* ===== Frosted glass capture overlay ===== */
   .capture {
-    position: absolute;
-    top: 50%; left: 50%;
+    position: fixed;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%) scale(0.96);
     width: min(430px, 86%);
     padding: 28px 28px 22px;
@@ -458,7 +531,11 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     transform: translate(-50%, -50%) scale(1);
     pointer-events: auto;
   }
-  .capture .cap-head { text-align: center; margin-bottom: 18px; }
+
+  .capture .cap-head {
+    text-align: center;
+    margin-bottom: 18px;
+  }
   .capture .cap-eyebrow {
     font-family: "JetBrains Mono", monospace;
     font-size: 9px;
@@ -468,22 +545,19 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   }
   .capture h2 {
     font-family: "Cormorant Garamond", serif;
-    font-weight: 500; font-size: 26px;
-    margin: 6px 0 4px; color: var(--olive-deep);
+    font-weight: 500;
+    font-size: 26px;
+    margin: 6px 0 4px;
+    color: var(--olive-deep);
   }
   .capture .cap-sub {
     font-size: 12px;
     color: color-mix(in oklab, var(--ink) 65%, var(--cream));
   }
-  .capture .cap-error {
-    font-size: 12px;
-    color: #8A5050;
-    text-align: center;
-    min-height: 16px;
-    margin-top: 4px;
-  }
 
-  .field { margin-bottom: 12px; }
+  .field {
+    margin-bottom: 12px;
+  }
   .field label {
     display: block;
     font-family: "JetBrains Mono", monospace;
@@ -509,125 +583,85 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     border-color: var(--olive);
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--sage) 30%, transparent);
   }
-  .input.error { border-color: #C08080; }
+  .wa-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px;
+  }
+  select.input {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--olive) 50%),
+                      linear-gradient(-45deg, transparent 50%, var(--olive) 50%);
+    background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 28px;
+  }
 
   .cta {
-    width: 100%; margin-top: 8px;
-    padding: 13px 16px; border: none; border-radius: 10px;
-    background: var(--olive); color: var(--offwhite);
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--olive);
+    color: var(--offwhite);
     font-family: "Work Sans", sans-serif;
-    font-weight: 500; font-size: 14px; letter-spacing: 0.02em;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     transition: background 160ms, transform 120ms;
   }
   .cta:hover { background: var(--olive-deep); }
   .cta:active { transform: translateY(1px); }
-  .cta:disabled { background: color-mix(in oklab, var(--olive) 50%, transparent); cursor: not-allowed; transform: none; }
   .cta .arrow { transition: transform 180ms; }
-  .cta:hover:not(:disabled) .arrow { transform: translateX(3px); }
-  .cta .spinner {
-    width: 15px; height: 15px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
-  .cta.loading .spinner { display: block; }
-  .cta.loading .cta-label { display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .cta:hover .arrow { transform: translateX(3px); }
 
-  /* ── CTA externo (abaixo do ticket) ── */
-  .pre-cta {
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    transition: opacity 300ms, transform 300ms;
-  }
-  .pre-cta.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
-
-  .btn-main {
-    padding: 15px 40px;
-    border: none; border-radius: 12px;
-    background: var(--olive); color: var(--offwhite);
-    font-family: "Work Sans", sans-serif;
-    font-weight: 500; font-size: 15px; letter-spacing: 0.03em;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 10px;
-    transition: background 160ms, transform 150ms, box-shadow 160ms;
-    box-shadow: 0 6px 20px rgba(42,58,45,0.25);
-  }
-  .btn-main:hover { background: var(--olive-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,58,45,0.3); }
-  .btn-main:active { transform: translateY(0); }
-
-  .pre-cta-hint {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: color-mix(in oklab, var(--olive) 55%, transparent);
-  }
-
-  /* ── Botão pós-reveal ── */
-  .post-reveal {
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    transform: translateY(16px);
-    pointer-events: none;
-    transition: opacity 500ms ease, transform 500ms cubic-bezier(.2,.8,.4,1);
-  }
-  .post-reveal.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-  .btn-grupo {
-    padding: 15px 40px;
-    border: none; border-radius: 12px;
-    background: var(--olive); color: var(--offwhite);
-    font-family: "Work Sans", sans-serif;
-    font-weight: 500; font-size: 15px; letter-spacing: 0.03em;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 10px;
-    transition: background 160ms, transform 150ms, box-shadow 160ms;
-    box-shadow: 0 6px 20px rgba(42,58,45,0.25);
+  .skip {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 12px;
+    color: color-mix(in oklab, var(--olive) 70%, transparent);
     text-decoration: none;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
   }
-  .btn-grupo:hover { background: var(--olive-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,58,45,0.3); }
+  .skip:hover { color: var(--olive-deep); text-decoration: underline; }
 
-  .post-reveal-hint {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: color-mix(in oklab, var(--olive) 55%, transparent);
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 480px) {
-    body { padding: 40px 16px 80px; gap: 32px; }
-    .capture { width: 94%; padding: 20px 18px 16px; }
-    .page-header h1 { font-size: 26px; }
-    .ticket-stub .content { grid-template-columns: 1fr 1fr; }
+  /* Small screens */
+  @media (max-width: 640px) {
+    .ticket-body .content {
+      grid-template-columns: 1fr;
+      padding: 20px 22px 28px;
+    }
+    .event-meta { grid-column: 1; padding-left: 0; border-left: none; border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent); padding-top: 12px;}
+    .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
     .admit { display: none; }
+    .capture { width: 92%; padding: 22px 20px 18px; }
   }
 </style>
 </head>
 <body>
 
 <header class="page-header">
-  <div class="eyebrow">Dança &amp; Consciência · Evento</div>
-  <h1>seu ingresso está esperando</h1>
-  <p>Garanta sua vaga gratuita para <em style="font-family:'Cormorant Garamond',serif;">O Caminho Musical</em>.</p>
+  <div class="eyebrow"></div>
+  <h1>seu lugar está quase pronto</h1>
+  <p>Abra seu ingresso, deixe seu contato, entraremos em contato.</p>
 </header>
 
 <div class="stage">
-  <div class="ticket" id="ticket">
+  <div class="ticket folded" id="ticket">
 
+    <!-- shards that fly off during reveal -->
     <span class="shard" style="--r:-15deg; --dx:-180px; --dy:-40px;"></span>
     <span class="shard" style="--r:22deg;  --dx:140px;  --dy:-50px;"></span>
     <span class="shard" style="--r:-40deg; --dx:-220px; --dy:10px;"></span>
@@ -635,34 +669,34 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     <span class="shard" style="--r:-8deg;  --dx:-90px;  --dy:60px;"></span>
     <span class="shard" style="--r:35deg;  --dx:80px;   --dy:70px;"></span>
 
-    <!-- Corpo principal -->
+    <!-- TOP: main body -->
     <div class="ticket-half ticket-body">
       <div class="content">
         <div class="brand-row">
           <div class="brand-mark">
             <span class="dot"></span>
-            <span>Dança &amp; Consciência · Membros</span>
+            <span>Casa Verde · Membros</span>
           </div>
-          <div class="serial">№ 0001 / 0900</div>
+          <div class="serial">№ 0472 / 0900</div>
         </div>
 
         <div class="event-title">
-          <div class="label">O Evento</div>
-          <div class="name">O Caminho Musical &mdash; <em>Chris Busato</em></div>
+          <div class="label">O Encontro</div>
+          <div class="name" contenteditable="true" spellcheck="false">Corpo Musical &mdash; <em>Chris Busato</em></div>
         </div>
 
         <div class="event-meta">
           <div class="meta-cell">
             <div class="k">Data</div>
-            <div class="v">Sexta 24/abril 2026</div>
+            <div class="v" contenteditable="true" spellcheck="false" id="eventDate">Sexta 24/04</div>
           </div>
           <div class="meta-cell">
             <div class="k">Horário</div>
             <div class="v">12:00</div>
           </div>
           <div class="meta-cell wide">
-            <div class="k">Formato</div>
-            <div class="v">Acesso Online</div>
+            <div class="k">Lugar</div>
+            <div class="v">Online no Zoom</div>
           </div>
         </div>
 
@@ -676,7 +710,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
       <div class="glow"></div>
     </div>
 
-    <!-- Stub -->
+    <!-- BOTTOM: stub -->
     <div class="ticket-half ticket-stub">
       <div class="content">
         <div class="stub-block">
@@ -692,7 +726,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
             <i></i><i class="s"></i><i class="g"></i><i class="t"></i><i></i><i class="w"></i>
             <i class="s"></i><i></i><i class="t"></i>
           </div>
-          <div class="barcode-caption">DC · 00010900 · BR</div>
+          <div class="barcode-caption">CV · 04720900 · LX</div>
         </div>
         <div class="admit">
           <div class="big">A</div>
@@ -711,233 +745,197 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
       <span class="iri"></span>
     </div>
 
-    <!-- Frosted form overlay -->
-    <div class="capture" id="capture">
-      <div class="cap-head">
-        <div class="cap-eyebrow">// Garanta sua vaga</div>
-        <h2>Deixe seu contato</h2>
-        <div class="cap-sub">Preencha os dados para liberar seu ingresso gratuito.</div>
-      </div>
-
-      <div class="field">
-        <label for="ing-name">Nome</label>
-        <input class="input" type="text" id="ing-name" placeholder="Seu nome completo" autocomplete="name" />
-      </div>
-
-      <div class="field">
-        <label for="ing-email">E-mail</label>
-        <input class="input" type="email" id="ing-email" placeholder="voce@email.com" autocomplete="email" />
-      </div>
-
-      <div class="field">
-        <label for="ing-phone">WhatsApp</label>
-        <input class="input" type="tel" id="ing-phone" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
-      </div>
-
-      <p class="cap-error" id="cap-error"></p>
-
-      <button class="cta" id="btn-continue">
-        <span class="cta-label">Quero meu Ingresso <span class="arrow">→</span></span>
-        <span class="spinner"></span>
-      </button>
-    </div>
-
+    <!-- Frosted capture overlay -->
   </div>
 </div>
 
-<!-- Botão externo (visível antes do form abrir) -->
-<div class="pre-cta" id="pre-cta">
-  <button class="btn-main" onclick="openForm()">
-    Quero meu Ingresso <span style="font-size:16px">→</span>
+<!-- Modal de coleta (fica atrás do ticket) -->
+<div class="capture" id="capture">
+  <div class="cap-head">
+    <div class="cap-eyebrow">// Garanta sua vaga</div>
+    <h2>Deixe seu contato</h2>
+    <div class="cap-sub">Preencha os dados para liberar seu ingresso.</div>
+  </div>
+
+  <div class="field">
+    <label for="email">E-mail</label>
+    <input class="input" type="email" id="email" placeholder="voce@dominio.com" autocomplete="email" />
+  </div>
+
+  <div class="field">
+    <label for="phone">WhatsApp</label>
+    <input class="input" type="tel" id="phone" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
+  </div>
+
+  <button class="cta" id="continue">
+    Quero Ingresso <span class="arrow">→</span>
   </button>
-  <span class="pre-cta-hint">Ingresso gratuito · Sexta-feira · 12h</span>
+  <button class="skip" id="skip">Agora não</button>
 </div>
 
-<!-- Botão pós-reveal -->
-<div class="post-reveal" id="post-reveal">
-  <a class="btn-grupo" id="btn-grupo" href="/grupo">
-    Entrar no Grupo <span style="font-size:16px">→</span>
-  </a>
-  <span class="post-reveal-hint">✦ Ingresso garantido</span>
+<!-- Botão para abrir o formulário -->
+<div class="pre-cta" id="pre-cta">
+  <button class="btn-main" id="openFormBtn">
+    Quero meu ingresso <span style="font-size:16px">→</span>
+  </button>
+  <span class="pre-cta-hint">Ingresso · Acesso online</span>
 </div>
 
 <script>
-  // ── Pixel helpers ────────────────────────────────
-  var _enc = new TextEncoder();
-  function sha256hex(str) {
-    return crypto.subtle.digest('SHA-256', _enc.encode(str)).then(function(buf) {
-      return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
-    });
-  }
-  function fbqTrack(eventName, contentName, email, phone) {
-    if (typeof fbq === 'undefined') return;
-    var em = (email||'').toLowerCase().trim();
-    var ph = (phone||'').replace(/\D/g,'');
-    if (ph && !ph.startsWith('55')) ph = '55' + ph;
-    Promise.all([
-      em ? sha256hex(em) : Promise.resolve(''),
-      ph ? sha256hex(ph) : Promise.resolve('')
-    ]).then(function(h) {
-      var ud = {};
-      if (h[0]) ud.em = h[0];
-      if (h[1]) ud.ph = h[1];
-      fbq('init', '1659916645332253', ud);
-      fbq('track', eventName, { content_name: contentName });
-    }).catch(function() {
-      fbq('track', eventName, { content_name: contentName });
-    });
+  const ticket = document.getElementById('ticket');
+  const capture = document.getElementById('capture');
+  const stage = document.querySelector('.stage');
+  const preCta = document.getElementById('pre-cta');
+  const openFormBtn = document.getElementById('openFormBtn');
+
+  // ---------- Open form (from CTA click) ----------
+  function openForm() {
+    if (preCta) preCta.style.display = 'none';
+    setTimeout(() => {
+      capture.classList.add('show');
+      // Modal centered and above the ticket.
+      capture.style.top = '50%';
+    }, 160);
   }
 
-  // ── Elementos ────────────────────────────────────
-  var ticket  = document.getElementById('ticket');
-  var capture = document.getElementById('capture');
-  var preCta  = document.getElementById('pre-cta');
-  var stage   = document.querySelector('.stage');
-
-  // ── Estado inicial: ticket ABERTO, form oculto ───
-  window.addEventListener('load', function() {
-    ticket.classList.remove('folded');
-    capture.classList.remove('show');
-  });
-
-  // ── Abrir form ───────────────────────────────────
-  window.openForm = function() {
-    preCta.classList.add('hidden');
-    setTimeout(function() { capture.classList.add('show'); }, 160);
-  };
-
-  // ── Reveal após captura ──────────────────────────
+  // ---------- Unfold sequence (after form submit) ----------
   function runReveal() {
     capture.classList.remove('show');
+    if (preCta) preCta.style.display = 'none';
     ticket.classList.add('folded');
     void ticket.offsetWidth;
-    setTimeout(function() {
+    setTimeout(() => {
       ticket.classList.remove('folded');
       ticket.classList.add('revealing', 'opened');
     }, 220);
   }
 
-  // ── Phone mask ───────────────────────────────────
-  document.getElementById('ing-phone').addEventListener('input', function(e) {
-    var v = e.target.value.replace(/\D/g,'').slice(0,11);
-    if (v.length > 6) {
-      v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
-    } else if (v.length > 2) {
-      v = '(' + v.slice(0,2) + ') ' + v.slice(2);
-    } else if (v.length > 0) {
-      v = '(' + v;
-    }
-    e.target.value = v;
+  window.addEventListener('load', () => {
+    // Default presentation: upright, front-facing, with stub folded/locked.
+    ticket.classList.remove('revealing', 'opened');
+    ticket.classList.add('folded');
+    capture.classList.remove('show');
+    ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    if (preCta) preCta.style.display = '';
   });
+  if (openFormBtn) openFormBtn.addEventListener('click', openForm);
 
-  // ── Submit ───────────────────────────────────────
-  function titleCase(s) {
-    return s.replace(/\b(\w)(\w*)/g, function(_, a, b){ return a.toUpperCase() + b.toLowerCase(); });
-  }
+  // ---------- Mouse-reactive 3D tilt + shimmer ----------
+  let tiltAmp = 12;
+  let hover = false;
+  let rect = null;
+  let lastX = 0.5;
+  let lastY = 0.5;
 
-  document.getElementById('btn-continue').addEventListener('click', function() {
-    var btn      = this;
-    var nameVal  = document.getElementById('ing-name').value.trim();
-    var emailVal = document.getElementById('ing-email').value.trim().toLowerCase();
-    var phoneVal = document.getElementById('ing-phone').value.replace(/\D/g,'');
-    var errorEl  = document.getElementById('cap-error');
-
-    // limpar erros anteriores
-    errorEl.textContent = '';
-    ['ing-name','ing-email','ing-phone'].forEach(function(id){
-      document.getElementById(id).classList.remove('error');
-    });
-
-    // validação
-    if (!nameVal) {
-      errorEl.textContent = 'Informe seu nome.';
-      document.getElementById('ing-name').classList.add('error');
-      document.getElementById('ing-name').focus();
-      return;
-    }
-    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-      errorEl.textContent = 'Informe um e-mail válido.';
-      document.getElementById('ing-email').classList.add('error');
-      document.getElementById('ing-email').focus();
-      return;
-    }
-    if (!phoneVal || phoneVal.length < 10) {
-      errorEl.textContent = 'Informe seu WhatsApp.';
-      document.getElementById('ing-phone').classList.add('error');
-      document.getElementById('ing-phone').focus();
-      return;
-    }
-
-    btn.disabled = true;
-    btn.classList.add('loading');
-
-    // email no stub do ticket (já coletamos antes)
-    document.getElementById('admitName').textContent = emailVal;
-
-    // salvar lead na API
-    fetch('/api/start-quiz-submission-ingresso', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailVal, phone: phoneVal, full_name: nameVal })
-    }).catch(function(){});
-
-    // disparar pixel
-    fbqTrack('Lead', 'Ingresso O Caminho Musical', emailVal, phoneVal);
-
-    // feedback visual + reveal
-    btn.classList.remove('loading');
-    btn.querySelector('.cta-label').textContent = '✓ Ingresso liberado!';
-    btn.style.background = 'var(--sage)';
-
-    setTimeout(function() {
-      runReveal();
-      // após reveal, mostrar botão "Entrar no Grupo"
-      setTimeout(function() {
-        var em = encodeURIComponent(emailVal);
-        var ph = encodeURIComponent(phoneVal);
-        var btnGrupo = document.getElementById('btn-grupo');
-        btnGrupo.href = '/grupo?email=' + em + '&phone=' + ph;
-        document.getElementById('post-reveal').classList.add('show');
-      }, 1500);
-    }, 600);
-  });
-
-  // ── Shimmer segue o cursor (sem tilt 3D) ─────────
-  var rect = null;
   function updateRect() { rect = stage.getBoundingClientRect(); }
   updateRect();
   window.addEventListener('resize', updateRect);
   window.addEventListener('scroll', updateRect, { passive: true });
 
-  stage.addEventListener('mouseleave', function() {
-    document.querySelectorAll('.shimmer, .glow').forEach(function(el) {
-      el.style.setProperty('--mx', '50%');
-      el.style.setProperty('--my', '50%');
-    });
-  });
-  stage.addEventListener('mousemove', function(e) {
-    if (!rect) updateRect();
-    var x = (e.clientX - rect.left) / rect.width;
-    var y = (e.clientY - rect.top)  / rect.height;
-    var px = (x * 100).toFixed(1) + '%';
-    var py = (y * 100).toFixed(1) + '%';
-    var hue = Math.round(x * 360);
-    document.querySelectorAll('.shimmer').forEach(function(el) {
+  function applyTiltFromNorm(x, y) {
+    const rx = (0.5 - y) * tiltAmp;
+    const ry = (x - 0.5) * tiltAmp;
+    ticket.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  }
+
+  function applyShimmerFromNorm(x, y) {
+    const px = (x * 100).toFixed(1) + '%';
+    const py = (y * 100).toFixed(1) + '%';
+    const hue = Math.round(x * 360);
+    document.querySelectorAll('.shimmer').forEach(el => {
       el.style.setProperty('--mx', px);
       el.style.setProperty('--my', py);
       el.style.setProperty('--hue', hue);
     });
-    document.querySelectorAll('.glow').forEach(function(el) {
+    document.querySelectorAll('.glow').forEach(el => {
       el.style.setProperty('--mx', px);
       el.style.setProperty('--my', py);
     });
-  });
+  }
 
-  // inicializar CSS vars
+  function onEnter() {
+    hover = true;
+    updateRect();
+    applyTiltFromNorm(lastX, lastY);
+    applyShimmerFromNorm(lastX, lastY);
+  }
+
+  function onLeave() {
+    hover = false;
+    ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    document.querySelectorAll('.shimmer, .glow').forEach(el => {
+      el.style.setProperty('--mx', '50%');
+      el.style.setProperty('--my', '50%');
+    });
+  }
+
+  function onMove(clientX, clientY) {
+    if (!rect) updateRect();
+    const x = (clientX - rect.left) / rect.width;
+    const y = (clientY - rect.top) / rect.height;
+    lastX = Math.min(1, Math.max(0, x));
+    lastY = Math.min(1, Math.max(0, y));
+    if (!hover) return;
+    applyTiltFromNorm(lastX, lastY);
+    applyShimmerFromNorm(lastX, lastY);
+  }
+
+  // Prefer Pointer Events (covers mouse + touch + pen) without double-firing.
+  if (window.PointerEvent) {
+    stage.addEventListener('pointerenter', onEnter);
+    stage.addEventListener('pointerleave', onLeave);
+    stage.addEventListener('pointermove', (e) => onMove(e.clientX, e.clientY));
+  } else {
+    stage.addEventListener('mouseenter', onEnter);
+    stage.addEventListener('mouseleave', onLeave);
+    stage.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+  }
+
+  // Default effects
   document.documentElement.style.setProperty('--shimmer', '0.55');
   document.documentElement.style.setProperty('--noise', '0.22');
-  document.querySelectorAll('.glow').forEach(function(el) {
-    el.style.setProperty('--glow-r', '240px');
+  document.querySelectorAll('.glow').forEach(el => el.style.setProperty('--glow-r', '240px'));
+
+  // ---------- Capture actions ----------
+  function titleCase(s) {
+    return s.replace(/\b(\w)(\w*)/g, (_, a, b) => a.toUpperCase() + b.toLowerCase());
+  }
+
+  document.getElementById('continue').addEventListener('click', () => {
+    const btn = document.getElementById('continue');
+    const emailInput = document.getElementById('email').value.trim().toLowerCase();
+    const phoneInput = document.getElementById('phone').value.replace(/\D/g, '');
+    if (!emailInput || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput)) {
+      document.getElementById('email').focus();
+      return;
+    }
+    if (!phoneInput || phoneInput.length < 10) {
+      document.getElementById('phone').focus();
+      return;
+    }
+    // Show collected email in the stub (fallback to derived display)
+    document.getElementById('admitName').textContent = emailInput;
+
+    // Register lead in CRM (Ingresso)
+    fetch('/api/start-quiz-submission-ingresso', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput, phone: phoneInput, full_name: null })
+    }).catch(() => {});
+
+    btn.textContent = '✓ Ingresso liberado';
+    btn.style.background = 'var(--sage)';
+    // Hide the modal after successful collection
+    setTimeout(() => capture.classList.remove('show'), 220);
+    setTimeout(() => {
+      runReveal();
+      btn.innerHTML = 'Quero Ingresso <span class="arrow">→</span>';
+      btn.style.background = '';
+    }, 650);
+  });
+  document.getElementById('skip').addEventListener('click', () => {
+    capture.classList.remove('show');
+    if (preCta) setTimeout(() => { preCta.style.display = ''; }, 260);
   });
 </script>
 </body>

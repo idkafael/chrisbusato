@@ -1677,6 +1677,9 @@
       <button class="tab-btn" id="tab-ads" onclick="switchTab('ads')">
         Anúncios<span class="tab-badge" id="tab-ads-count">—</span>
       </button>
+      <button class="tab-btn" id="tab-ingresso" onclick="switchTab('ingresso')">
+        Ingresso<span class="tab-badge" id="tab-ingresso-count">—</span>
+      </button>
       <button class="tab-btn" id="tab-payments" onclick="switchTab('payments')">
         💳 Cobranças<span class="tab-badge" id="tab-payments-count">—</span>
       </button>
@@ -1697,6 +1700,7 @@
         <div class="kanban-source-toggle">
           <button class="kanban-source-btn active" id="kb-src-organic" onclick="switchKanbanSource('organic')">🌱 Orgânico</button>
           <button class="kanban-source-btn" id="kb-src-ads" onclick="switchKanbanSource('ads')">📢 Anúncios</button>
+          <button class="kanban-source-btn" id="kb-src-ingresso" onclick="switchKanbanSource('ingresso')">🎟 Ingresso</button>
         </div>
         <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
         <button class="kanban-add-guest-btn" onclick="openAddGuestModal()" title="Adicionar pessoa convidada">+</button>
@@ -1993,7 +1997,7 @@
   let sortDir       = "desc";
   let onlyStarred   = false;
   let filterPanelOpen = false;
-  const tabCounts   = { organic: null, ads: null };
+  const tabCounts   = { organic: null, ads: null, ingresso: null };
   const selectedIds = new Set();
 
   // Filter panel state
@@ -2083,6 +2087,7 @@
     currentSource = source;
     $("tab-organic").classList.toggle("active",  source === "organic");
     $("tab-ads").classList.toggle("active",      source === "ads");
+    $("tab-ingresso").classList.toggle("active", source === "ingresso");
     $("tab-payments").classList.toggle("active", source === "payments");
     $("tab-kanban").classList.toggle("active",   source === "kanban");
 
@@ -2107,6 +2112,7 @@
   function updateTabCounts() {
     if (tabCounts.organic !== null) $("tab-organic-count").textContent = tabCounts.organic;
     if (tabCounts.ads     !== null) $("tab-ads-count").textContent     = tabCounts.ads;
+    if (tabCounts.ingresso !== null) $("tab-ingresso-count").textContent = tabCounts.ingresso;
   }
 
   // ── load
@@ -2114,9 +2120,12 @@
     tableBody.innerHTML = `<tr><td colspan="13" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
     statusBar.textContent = "";
 
-    const endpoint = currentSource === "ads"
-      ? `/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
-      : `/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`;
+    const endpoint =
+      currentSource === "ads"
+        ? `/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
+        : currentSource === "ingresso"
+          ? `/api/dashboard-data-ingresso?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
+          : `/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`;
 
     try {
       const res  = await fetch(endpoint);
@@ -3456,7 +3465,7 @@
   let kbFuLog       = {};   // { leadId: { "YYYY-MM-DD": bool, _entered: str } }
   let kbStage            = {};   // { "source_id": stage } — stage do kanban por source
   let currentOfferId     = null;
-  let currentKanbanSource = "organic"; // "organic" | "ads"
+  let currentKanbanSource = "organic"; // "organic" | "ads" | "ingresso"
 
   function todayStr() { return new Date().toISOString().slice(0, 10); }
   // Chave única por lead considerando a fonte (evita colisão de IDs entre tabelas)
@@ -3498,13 +3507,15 @@
   async function loadKanban() {
     $("kanban-board").innerHTML = `<div style="color:#8A7D6B;padding:2rem;display:flex;align-items:center;gap:.5rem"><span class="spin-ring"></span> Carregando leads…</div>`;
     try {
-      const [r1, r2] = await Promise.all([
+      const [r1, r2, r3] = await Promise.all([
         fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
-        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
+        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data-ingresso?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
       ]);
       kanbanAllRows = [];
       if (r1.ok) { const d = await r1.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"organic"}))); }
       if (r2.ok) { const d = await r2.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"ads"}))); }
+      if (r3.ok) { const d = await r3.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"ingresso"}))); }
       kanbanAllRows.forEach(r => { if (!r.stage) r.stage = "novo"; });
     } catch(e) {
       $("kanban-board").innerHTML = `<div style="color:#8A5050;padding:2rem">Erro ao carregar: ${esc(e.message)}</div>`;
@@ -3518,6 +3529,7 @@
     currentKanbanSource = src;
     $("kb-src-organic").classList.toggle("active", src === "organic");
     $("kb-src-ads").classList.toggle("active", src === "ads");
+    $("kb-src-ingresso").classList.toggle("active", src === "ingresso");
     renderKanban();
   };
 
@@ -3585,6 +3597,8 @@
             const offerTag = assignedOffer ? `<span class="kanban-card-badge" style="background:${color}18;color:${color}">${esc(assignedOffer.name)}</span>` : "";
             const srcLabel = r._source === "ads"
               ? `<span class="kanban-card-badge" style="background:#EDE4D4;color:#8A7050">Anúncio</span>`
+              : r._source === "ingresso"
+              ? `<span class="kanban-card-badge" style="background:#EDEBF6;color:#5D4A8A">Ingresso</span>`
               : r._source === "guest"
               ? `<span class="kanban-card-badge" style="background:#E4EDE4;color:#4A6548">Convidada</span>`
               : "";
