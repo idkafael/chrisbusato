@@ -40,7 +40,7 @@ fs.copyFileSync(
 var ingressoDir = path.join(__dirname, "dist", "ingresso");
 fs.mkdirSync(ingressoDir, { recursive: true });
 fs.copyFileSync(
-  path.join(__dirname, "ingresso.html"),
+  path.join(__dirname, "Iridescent card", "Ticket Reveal.html"),
   path.join(ingressoDir, "index.html")
 );
 

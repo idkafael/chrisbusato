@@ -482,25 +482,12 @@
     opacity: 0.7;
   }
 
-  /* ===== Unfold animation ===== */
-  /* Keep folded state upright (no "lying back") */
-  .ticket.folded .ticket-body { transform: rotateX(0deg) translateZ(2px); }
-  /* Fold ONLY the stub away from camera until unlocked */
+  /* ===== Unfold animation — both halves fold like a real ticket ===== */
+  .ticket.folded .ticket-body { transform: rotateX(88deg) translateZ(2px); }
   .ticket.folded .ticket-stub { transform: rotateX(-88deg) translateZ(2px); }
   .ticket.folded .tear .iri { opacity: 0; }
   .ticket.folded .tear .cut { opacity: 0; }
   .ticket.folded .tear .perf { opacity: 0; }
-
-  /* When folded, visually crop the ticket to show only the front/body.
-     This avoids the "empty stub area" while keeping the object upright. */
-  .ticket.folded {
-    /* also shrink layout height so CTA sits right below */
-    aspect-ratio: 760 / 238;
-    clip-path: inset(0 0 30% 0 round 14px);
-  }
-  .ticket.folded .ticket-body {
-    border-radius: 14px;
-  }
 
   .ticket-body, .ticket-stub {
     transition: transform 1100ms cubic-bezier(.22,.9,.25,1.05);
@@ -703,43 +690,11 @@
 
   /* Small screens */
   @media (max-width: 640px) {
-    .stage {
-      width: min(360px, 92vw);
-      perspective: 1200px;
-    }
-    .ticket {
-      aspect-ratio: 360 / 560;
-    }
-    .ticket-body {
-      height: 73%;
-      border-radius: 18px 18px 2px 2px;
-    }
-    .ticket-stub {
-      height: 27%;
-      border-radius: 2px 2px 18px 18px;
-    }
-    .tear { top: 73%; }
-
-    /* folded crop matches portrait stub */
-    .ticket.folded {
-      aspect-ratio: 360 / 410;
-      clip-path: inset(0 0 27% 0 round 18px);
-    }
-    .ticket.folded .ticket-body {
-      border-radius: 18px;
-    }
-
     .ticket-body .content {
-      display: flex;
-      flex-direction: column;
-      grid-template-columns: unset;
-      grid-template-rows: unset;
-      gap: 14px;
-      padding: 18px 22px 22px;
+      grid-template-columns: 1fr;
+      padding: 20px 22px 28px;
     }
-    .brand-row { margin-bottom: 0; }
-    .event-title { align-self: auto; }
-    .event-meta { grid-column: 1; padding-left: 0; border-left: none; border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent); padding-top: 12px;}
+    .event-meta { grid-column: 1; padding-left: 0; border-left: none; border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent); padding-top: 12px; }
     .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
     .admit { display: none; }
     .capture { width: 92%; padding: 22px 20px 18px; }
@@ -946,31 +901,20 @@
     ticket.classList.remove('revealing', 'opened');
     ticket.classList.add('folded');
     capture.classList.remove('show');
-    ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
     if (preCta) preCta.style.display = '';
     if (postMsg) postMsg.classList.remove('show');
   });
   if (openFormBtn) openFormBtn.addEventListener('click', openForm);
 
-  // ---------- Mouse-reactive 3D tilt + shimmer ----------
-  let tiltAmp = 12;
-  let hover = false;
+  // ---------- Shimmer only (no 3D tilt) ----------
   let rect = null;
-  let lastX = 0.5;
-  let lastY = 0.5;
 
   function updateRect() { rect = stage.getBoundingClientRect(); }
   updateRect();
   window.addEventListener('resize', updateRect);
   window.addEventListener('scroll', updateRect, { passive: true });
 
-  function applyTiltFromNorm(x, y) {
-    const rx = (0.5 - y) * tiltAmp;
-    const ry = (x - 0.5) * tiltAmp;
-    ticket.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-  }
-
-  function applyShimmerFromNorm(x, y) {
+  function applyShimmer(x, y) {
     const px = (x * 100).toFixed(1) + '%';
     const py = (y * 100).toFixed(1) + '%';
     const hue = Math.round(x * 360);
@@ -985,42 +929,19 @@
     });
   }
 
-  function onEnter() {
-    hover = true;
-    updateRect();
-    applyTiltFromNorm(lastX, lastY);
-    applyShimmerFromNorm(lastX, lastY);
-  }
-
-  function onLeave() {
-    hover = false;
-    ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
-    document.querySelectorAll('.shimmer, .glow').forEach(el => {
-      el.style.setProperty('--mx', '50%');
-      el.style.setProperty('--my', '50%');
-    });
-  }
-
   function onMove(clientX, clientY) {
     if (!rect) updateRect();
-    const x = (clientX - rect.left) / rect.width;
-    const y = (clientY - rect.top) / rect.height;
-    lastX = Math.min(1, Math.max(0, x));
-    lastY = Math.min(1, Math.max(0, y));
-    if (!hover) return;
-    applyTiltFromNorm(lastX, lastY);
-    applyShimmerFromNorm(lastX, lastY);
+    const x = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const y = Math.min(1, Math.max(0, (clientY - rect.top) / rect.height));
+    applyShimmer(x, y);
   }
 
-  // Prefer Pointer Events (covers mouse + touch + pen) without double-firing.
   if (window.PointerEvent) {
-    stage.addEventListener('pointerenter', onEnter);
-    stage.addEventListener('pointerleave', onLeave);
-    stage.addEventListener('pointermove', (e) => onMove(e.clientX, e.clientY));
+    stage.addEventListener('pointermove',  e => onMove(e.clientX, e.clientY));
+    stage.addEventListener('pointerleave', () => applyShimmer(0.5, 0.5));
   } else {
-    stage.addEventListener('mouseenter', onEnter);
-    stage.addEventListener('mouseleave', onLeave);
-    stage.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+    stage.addEventListener('mousemove',  e => onMove(e.clientX, e.clientY));
+    stage.addEventListener('mouseleave', () => applyShimmer(0.5, 0.5));
   }
 
   // Default effects
