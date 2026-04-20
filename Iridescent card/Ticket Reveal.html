@@ -41,6 +41,15 @@
     gap: 56px;
   }
 
+  .ticket-stack {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+
   /* CTA below ticket (opens capture form) */
   .pre-cta {
     z-index: 2;
@@ -48,7 +57,7 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-top: -10px;
+    margin-top: 0;
   }
   .btn-main {
     padding: 14px 34px;
@@ -76,6 +85,22 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: color-mix(in oklab, var(--olive) 55%, transparent);
+  }
+
+  .post-msg {
+    display: none;
+    text-align: center;
+    max-width: 520px;
+    padding: 10px 12px;
+    color: color-mix(in oklab, var(--ink) 65%, var(--cream));
+    font-size: 13px;
+    line-height: 1.5;
+    z-index: 2;
+  }
+  .post-msg.show { display: block; }
+  .post-msg strong {
+    color: var(--olive-deep);
+    font-weight: 600;
   }
 
   /* ambient grain across whole page */
@@ -726,8 +751,9 @@
   <p>Abra seu ingresso, deixe seu contato, entraremos em contato.</p>
 </header>
 
-<div class="stage">
-  <div class="ticket folded" id="ticket">
+<div class="ticket-stack">
+  <div class="stage">
+    <div class="ticket folded" id="ticket">
 
     <!-- shards that fly off during reveal -->
     <span class="shard" style="--r:-15deg; --dx:-180px; --dy:-40px;"></span>
@@ -814,8 +840,8 @@
     </div>
 
     <!-- Frosted capture overlay -->
+    </div>
   </div>
-</div>
 
 <!-- Modal de coleta (fica atrás do ticket) -->
 <div class="capture" id="capture">
@@ -868,12 +894,17 @@
   <button class="skip" id="skip">Agora não</button>
 </div>
 
-<!-- Botão para abrir o formulário -->
-<div class="pre-cta" id="pre-cta">
-  <button class="btn-main" id="openFormBtn">
-    Quero meu ingresso <span style="font-size:16px">→</span>
-  </button>
-  <span class="pre-cta-hint">Ingresso · Acesso online</span>
+  <!-- Botão para abrir o formulário -->
+  <div class="pre-cta" id="pre-cta">
+    <button class="btn-main" id="openFormBtn">
+      Quero meu ingresso <span style="font-size:16px">→</span>
+    </button>
+    <span class="pre-cta-hint">Ingresso · Acesso online</span>
+  </div>
+
+  <div class="post-msg" id="post-msg">
+    <strong>Obrigado.</strong> Vamos entrar em contato com você no WhatsApp.
+  </div>
 </div>
 
 <script>
@@ -881,6 +912,7 @@
   const capture = document.getElementById('capture');
   const stage = document.querySelector('.stage');
   const preCta = document.getElementById('pre-cta');
+  const postMsg = document.getElementById('post-msg');
   const openFormBtn = document.getElementById('openFormBtn');
 
   // ---------- Open form (from CTA click) ----------
@@ -912,6 +944,7 @@
     capture.classList.remove('show');
     ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
     if (preCta) preCta.style.display = '';
+    if (postMsg) postMsg.classList.remove('show');
   });
   if (openFormBtn) openFormBtn.addEventListener('click', openForm);
 
@@ -1168,6 +1201,7 @@
     setTimeout(() => capture.classList.remove('show'), 220);
     setTimeout(() => {
       runReveal();
+      if (postMsg) postMsg.classList.add('show');
       btn.innerHTML = 'Quero Ingresso <span class="arrow">→</span>';
       btn.style.background = '';
     }, 650);
@@ -1175,6 +1209,7 @@
   document.getElementById('skip').addEventListener('click', () => {
     capture.classList.remove('show');
     if (preCta) setTimeout(() => { preCta.style.display = ''; }, 260);
+    if (postMsg) postMsg.classList.remove('show');
   });
 </script>
 </body>
