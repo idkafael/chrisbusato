@@ -86,6 +86,71 @@ fbq('track','PageView');
     color: color-mix(in oklab, var(--ink) 60%, var(--cream));
   }
 
+  /* ===== Countdown ===== */
+  .countdown {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    line-height: 1;
+    margin-top: -12px; /* tighten the header gap slightly */
+  }
+  .cd-top {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 68%, transparent);
+    margin-bottom: 2px;
+  }
+  .cd-number {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+    font-size: clamp(96px, 26vw, 128px);
+    line-height: 0.88;
+    color: var(--olive-deep);
+    letter-spacing: -0.02em;
+    /* subtle grain matching the ticket */
+    -webkit-text-stroke: 0px;
+  }
+  .cd-bottom {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 68%, transparent);
+    margin-top: 4px;
+  }
+  /* pill badge below the number */
+  .cd-badge {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid color-mix(in oklab, var(--olive) 28%, transparent);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 80%, transparent);
+  }
+  .cd-badge .cd-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+    animation: cdPulse 2s ease-in-out infinite;
+  }
+  @keyframes cdPulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.75); }
+  }
+  /* hide when countdown is irrelevant */
+  .countdown.hidden { display: none; }
+
   /* ===== Ticket stage — portrait ===== */
   .stage {
     position: relative;
@@ -662,6 +727,17 @@ fbq('track','PageView');
   <p>Garanta seu lugar · Sexta-feira, 24 de abril às 12h</p>
 </header>
 
+<!-- Countdown -->
+<div class="countdown" id="countdown">
+  <div class="cd-top">Faltam</div>
+  <div class="cd-number" id="cdNumber">4</div>
+  <div class="cd-bottom" id="cdBottom">Dias</div>
+  <div class="cd-badge">
+    <span class="cd-dot"></span>
+    <span>Evento online · Sexta 24/04 às 12h</span>
+  </div>
+</div>
+
 <div class="stage">
   <div class="ticket" id="ticket">
 
@@ -940,6 +1016,45 @@ fbq('track','PageView');
     capture.classList.remove('show');
     if (preCta) setTimeout(() => { preCta.style.display = ''; }, 260);
   });
+
+  // ===== Countdown =====
+  (function() {
+    const EVENT = new Date('2026-04-24T12:00:00');
+    const cdSection = document.getElementById('countdown');
+    const cdNum     = document.getElementById('cdNumber');
+    const cdBot     = document.getElementById('cdBottom');
+    const cdTop     = cdSection.querySelector('.cd-top');
+
+    function update() {
+      const now  = new Date();
+      const diff = EVENT - now;
+
+      if (diff <= 0) {
+        // Event day or past — show "Hoje!" and hide "Dias"
+        const daysPast = Math.floor(-diff / (1000 * 60 * 60 * 24));
+        if (daysPast > 7) {
+          cdSection.classList.add('hidden'); // hide after a week
+        } else if (daysPast === 0) {
+          cdTop.textContent  = 'É';
+          cdNum.textContent  = 'Hoje';
+          cdNum.style.fontSize = 'clamp(52px, 14vw, 72px)';
+          cdBot.style.display  = 'none';
+        } else {
+          cdSection.classList.add('hidden');
+        }
+        return;
+      }
+
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      cdNum.textContent = days;
+      cdBot.textContent = days === 1 ? 'Dia' : 'Dias';
+      cdTop.textContent = days === 1 ? 'Falta' : 'Faltam';
+    }
+
+    update();
+    // Refresh every minute so it stays live
+    setInterval(update, 60000);
+  })();
 </script>
 </body>
 </html>
