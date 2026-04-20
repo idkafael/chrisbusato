@@ -1,593 +1,938 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ingresso — O Caminho Musical</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ingresso — O Caminho Musical</title>
 
-  <!-- Meta Pixel -->
-  <script>
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init','1659916645332253');
-  fbq('track','PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1659916645332253');
+fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --cream-deep: #EBE3D5;
+    --olive: #3D5140;
+    --olive-deep: #2A3A2D;
+    --sage: #7A9B7E;
+    --offwhite: #FDFAF4;
+    --ink: #22281E;
+    --accent: #B89C6B;
+  }
 
-    body {
-      background: #EDE8DF;
-      font-family: 'Inter', sans-serif;
-      color: #2C2218;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-    }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
 
-    .container {
-      width: 100%;
-      max-width: 380px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-    }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 20% 10%, #EFE7D6 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, #E4DCC8 0%, transparent 60%),
+      #F1EADD;
+    color: var(--ink);
+    font-family: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    overflow-x: hidden;
+    padding: 64px 24px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
 
-    /* ── TAG ── */
-    .page-tag {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #8A7D6B;
-      text-align: center;
-    }
+  /* ambient grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.13  0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/></svg>");
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    z-index: 1;
+  }
 
-    /* ─────────────── TICKET ─────────────── */
-    .ticket-wrap {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease;
-    }
-    .ticket-wrap.leaving {
-      transform: translateY(-40px) scale(0.93);
-      opacity: 0;
-      pointer-events: none;
-    }
+  /* ── Header ── */
+  .page-header {
+    text-align: center;
+    z-index: 2;
+    max-width: 560px;
+  }
+  .page-header .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 75%, transparent);
+    margin: 0 0 10px;
+  }
+  .page-header h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 34px;
+    color: var(--olive-deep);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .page-header p {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: color-mix(in oklab, var(--ink) 60%, var(--cream));
+  }
 
-    .ticket {
-      width: 100%;
-      background: #F2EDE3;
-      border-radius: 20px;
-      border: 0.5px solid #C5BAA8;
-      box-shadow: 0 12px 40px rgba(44,34,24,0.13), 0 2px 8px rgba(44,34,24,0.07);
-      overflow: visible;
-      position: relative;
-    }
+  /* ── Ticket stage ── */
+  .stage {
+    position: relative;
+    width: min(760px, 96vw);
+    perspective: 1600px;
+    z-index: 2;
+  }
 
-    /* ── Corpo principal ── */
-    .ticket-body {
-      padding: 2rem 1.75rem 1.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.35rem;
-      text-align: center;
-    }
+  .ticket {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 760 / 340;
+    transform-style: preserve-3d;
+    transition: transform 220ms cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
+  }
 
-    .ticket-brand {
-      font-size: 9.5px;
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #A8997E;
-      margin-bottom: 0.6rem;
-    }
+  .ticket-half {
+    position: absolute;
+    left: 0; right: 0;
+    background: var(--offwhite);
+    box-shadow:
+      0 30px 60px -30px rgba(42, 58, 45, 0.45),
+      0 10px 24px -12px rgba(42, 58, 45, 0.25),
+      inset 0 0 0 1px color-mix(in oklab, var(--olive) 8%, transparent);
+    overflow: hidden;
+    transform-origin: 50% 50%;
+    backface-visibility: hidden;
+  }
 
-    .ticket-deco {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 0.9rem;
-      opacity: 0.75;
-    }
+  .ticket-body {
+    top: 0; height: 70%;
+    border-radius: 14px 14px 2px 2px;
+    transform-origin: 50% 100%;
+  }
+  .ticket-stub {
+    bottom: 0; height: 30%;
+    border-radius: 2px 2px 14px 14px;
+    transform-origin: 50% 0%;
+  }
 
-    .ticket-event-label {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #8A7D6B;
-      margin-bottom: 0.2rem;
-    }
+  .ticket-half::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(61,81,64,0.06) 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 80%, rgba(61,81,64,0.05) 50%, transparent 51%),
+      linear-gradient(180deg, rgba(61,81,64,0.03), transparent 40%);
+    pointer-events: none;
+  }
+  .ticket-half::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.18  0 0 0 0 0.12  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    mix-blend-mode: multiply;
+    opacity: var(--noise, 0.22);
+    pointer-events: none;
+  }
 
-    .ticket-event-name {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 26px;
-      font-weight: 500;
-      font-style: italic;
-      color: #2C2218;
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-    }
-
-    .ticket-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 0.25rem;
-    }
-    .ticket-meta-item {
-      font-size: 12.5px;
-      color: #5C5043;
-      font-weight: 400;
-    }
-    .ticket-meta-dot {
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: #C5BAA8;
-    }
-
-    .ticket-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 1rem;
-      background: rgba(92,122,90,0.1);
-      border: 0.5px solid rgba(92,122,90,0.3);
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-size: 11px;
-      font-weight: 500;
-      color: #4A6548;
-      letter-spacing: 0.05em;
-    }
-    .ticket-badge::before {
-      content: "✦";
-      font-size: 8px;
-    }
-
-    /* ── Linha de perfuração ── */
-    .ticket-perf {
-      position: relative;
-      height: 1px;
-      margin: 0 0;
-      display: flex;
-      align-items: center;
-    }
-    .perf-notch {
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #EDE8DF;
-      border: 0.5px solid #C5BAA8;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-    }
-    .perf-notch.left  { left: -11px; }
-    .perf-notch.right { right: -11px; }
-    .perf-dashes {
-      width: 100%;
-      height: 1px;
-      background: repeating-linear-gradient(
-        to right,
-        #C5BAA8 0px, #C5BAA8 6px,
-        transparent 6px, transparent 12px
+  /* Iridescent shimmer */
+  .shimmer {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: var(--shimmer, 0.55);
+    background:
+      radial-gradient(
+        circle at var(--mx, 50%) var(--my, 50%),
+        hsla(calc(var(--hue, 180) + 0), 90%, 72%, 0.55) 0%,
+        hsla(calc(var(--hue, 180) + 40), 90%, 68%, 0.35) 18%,
+        hsla(calc(var(--hue, 180) + 80), 90%, 66%, 0.2) 34%,
+        hsla(calc(var(--hue, 180) + 140), 90%, 64%, 0.12) 50%,
+        transparent 70%
       );
-      margin: 0 16px;
-    }
+    filter: saturate(1.1);
+  }
+  .glow {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+    background: radial-gradient(
+      circle var(--glow-r, 240px) at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 250, 230, 0.7),
+      rgba(255, 250, 230, 0.0) 70%
+    );
+  }
 
-    /* ── Stub (parte de baixo) ── */
-    .ticket-stub {
-      padding: 1.1rem 1.75rem 1.35rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .stub-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .stub-label {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #A8997E;
-      font-weight: 500;
-    }
-    .stub-value {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: #5C7A5A;
-      letter-spacing: -0.01em;
-    }
-    .stub-barcode {
-      display: flex;
-      gap: 2px;
-      align-items: flex-end;
-      height: 28px;
-      opacity: 0.3;
-    }
-    .stub-barcode span {
-      background: #2C2218;
-      border-radius: 1px;
-      width: 2px;
-    }
+  /* ── Body content ── */
+  .ticket-body .content {
+    position: relative;
+    height: 100%;
+    padding: 26px 32px 38px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px 28px;
+    z-index: 2;
+  }
+  .brand-row {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed color-mix(in oklab, var(--olive) 35%, transparent);
+    padding-bottom: 12px;
+  }
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--olive);
+  }
+  .brand-mark .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--sage) 25%, transparent);
+  }
+  .serial {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: color-mix(in oklab, var(--olive) 70%, transparent);
+  }
 
-    /* ── Botão ── */
-    .btn-ingresso {
-      width: 100%;
-      background: #5C7A5A;
-      color: #fff;
-      border: none;
-      border-radius: 16px;
-      padding: 1rem 1.5rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      letter-spacing: -0.01em;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 16px rgba(92,122,90,0.25);
-    }
-    .btn-ingresso:hover {
-      background: #4A6548;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(92,122,90,0.3);
-    }
-    .btn-ingresso:active { transform: translateY(0); }
+  .event-title { grid-column: 1 / 2; align-self: end; }
+  .event-title .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 70%, transparent);
+    margin-bottom: 6px;
+  }
+  .event-title .name {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height: 1.02;
+    color: var(--olive-deep);
+    letter-spacing: 0.005em;
+  }
+  .event-title .name em {
+    font-style: italic;
+    color: color-mix(in oklab, var(--olive-deep) 85%, var(--accent));
+  }
 
-    /* ─────────────── FORM ─────────────── */
-    .form-wrap {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
+  .event-meta {
+    grid-column: 2 / 3;
+    align-self: end;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
+    border-left: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
+    padding-left: 22px;
+  }
+  .meta-cell .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 65%, transparent);
+    margin-bottom: 4px;
+  }
+  .meta-cell .v {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 17px;
+    color: var(--olive-deep);
+  }
+  .meta-cell.wide { grid-column: 1 / -1; }
+
+  .bottom-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 65%, transparent);
+  }
+  .bottom-row .ornament {
+    flex: 1; margin: 0 16px; height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--olive) 35%, transparent) 0 6px,
+      transparent 6px 12px
+    );
+  }
+
+  /* ── Stub content ── */
+  .ticket-stub .content {
+    position: relative;
+    height: 100%;
+    padding: 18px 32px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.9fr;
+    align-items: center;
+    gap: 22px;
+    z-index: 2;
+  }
+  .stub-block .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 65%, transparent);
+    margin-bottom: 3px;
+  }
+  .stub-block .v {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 18px;
+    color: var(--olive-deep);
+  }
+  .barcode {
+    display: flex; align-items: flex-end; gap: 2px; height: 40px;
+  }
+  .barcode i { display: block; width: 2px; height: 100%; background: var(--olive-deep); }
+  .barcode i.t { height: 70%; }
+  .barcode i.s { height: 55%; }
+  .barcode i.w { width: 4px; }
+  .barcode i.g { background: transparent; width: 3px; }
+  .barcode-caption {
+    margin-top: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: color-mix(in oklab, var(--olive) 75%, transparent);
+  }
+  .admit { text-align: right; }
+  .admit .big {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--olive-deep);
+    line-height: 1;
+  }
+  .admit .small {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 70%, transparent);
+    margin-top: 4px;
+  }
+
+  /* ── Tear line ── */
+  .tear {
+    position: absolute;
+    left: 0; right: 0; top: 70%;
+    height: 22px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .tear .iri {
+    position: absolute;
+    left: 28px; right: 28px; top: 50%;
+    transform: translateY(-50%);
+    height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, #c3a6e0, #9fd4e6, #b9e4c1, #f1e3a1, #e9b79f, #c3a6e0);
+    background-size: 200% 100%;
+    animation: iriShift 6s linear infinite;
+    opacity: 0.85;
+    mix-blend-mode: screen;
+    filter: blur(0.4px) saturate(1.2);
+    box-shadow: 0 0 12px rgba(200, 220, 210, 0.35);
+  }
+  @keyframes iriShift {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .tear .cut {
+    position: absolute; top: 50%;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #EFE7D6, #DED2BA);
+    transform: translateY(-50%);
+    box-shadow: inset 0 2px 4px rgba(42,58,45,0.28), inset 0 -1px 2px rgba(255,255,255,0.5);
+  }
+  .tear .cut.l { left: -12px; }
+  .tear .cut.r { right: -12px; }
+  .tear .perf {
+    position: absolute;
+    left: 28px; right: 28px; top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    background-image: radial-gradient(circle, color-mix(in oklab, var(--olive) 40%, transparent) 1.2px, transparent 1.6px);
+    background-size: 10px 2px;
+    background-repeat: repeat-x;
+    opacity: 0.7;
+  }
+
+  /* ── Unfold animation ── */
+  .ticket.folded .ticket-body { transform: rotateX(88deg) translateZ(2px); }
+  .ticket.folded .ticket-stub { transform: rotateX(-88deg) translateZ(2px); }
+  .ticket.folded .tear .iri { opacity: 0; }
+  .ticket.folded .tear .cut { opacity: 0; }
+  .ticket.folded .tear .perf { opacity: 0; }
+
+  .ticket-body, .ticket-stub {
+    transition: transform 1100ms cubic-bezier(.22,.9,.25,1.05);
+  }
+  .tear .iri, .tear .cut, .tear .perf {
+    transition: opacity 400ms ease 700ms;
+  }
+
+  /* shards */
+  .shard {
+    position: absolute; left: 50%; top: 70%;
+    width: 14px; height: 10px; border-radius: 2px;
+    background: var(--offwhite);
+    box-shadow: 0 2px 4px rgba(42,58,45,0.2);
+    transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+    opacity: 0; pointer-events: none;
+  }
+  .ticket.revealing .shard {
+    animation: shardFly 900ms cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes shardFly {
+    0%   { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r,0deg)) scale(0.7); }
+    25%  { opacity: 1; }
+    100% {
       opacity: 0;
-      transform: translateY(32px);
-      pointer-events: none;
-      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.4,1);
+      transform:
+        translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)))
+        rotate(calc(var(--r,0deg) + 180deg))
+        scale(0.9);
     }
-    .form-wrap.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
+  }
 
-    .form-card {
-      width: 100%;
-      background: #F2EDE3;
-      border-radius: 24px;
-      border: 0.5px solid #C5BAA8;
-      box-shadow: 0 8px 32px rgba(44,34,24,0.10);
-      padding: 2rem 1.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
+  /* ── Frosted capture overlay ── */
+  .capture {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    width: min(430px, 86%);
+    padding: 28px 28px 22px;
+    border-radius: 18px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--offwhite) 82%, transparent),
+      color-mix(in oklab, var(--cream) 78%, transparent)
+    );
+    backdrop-filter: blur(18px) saturate(1.1);
+    -webkit-backdrop-filter: blur(18px) saturate(1.1);
+    border: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
+    box-shadow:
+      0 30px 60px -25px rgba(42,58,45,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms ease, transform 600ms cubic-bezier(.2,.8,.2,1);
+    z-index: 10;
+  }
+  .capture.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+  .capture .cap-head { text-align: center; margin-bottom: 18px; }
+  .capture .cap-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 75%, transparent);
+  }
+  .capture h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500; font-size: 26px;
+    margin: 6px 0 4px; color: var(--olive-deep);
+  }
+  .capture .cap-sub {
+    font-size: 12px;
+    color: color-mix(in oklab, var(--ink) 65%, var(--cream));
+  }
+  .capture .cap-error {
+    font-size: 12px;
+    color: #8A5050;
+    text-align: center;
+    min-height: 16px;
+    margin-top: 4px;
+  }
 
-    .form-header {
-      text-align: center;
-    }
-    .form-header .form-tag {
-      font-size: 9.5px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #8A7D6B;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-    .form-header h1 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: 22px;
-      font-weight: 500;
-      font-style: italic;
-      color: #2C2218;
-      line-height: 1.3;
-      margin-bottom: 0.35rem;
-    }
-    .form-header p {
-      font-size: 13.5px;
-      color: #8A7D6B;
-      line-height: 1.5;
-    }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 75%, transparent);
+    margin-bottom: 6px;
+  }
+  .input {
+    width: 100%;
+    padding: 11px 13px;
+    border-radius: 10px;
+    border: 1px solid color-mix(in oklab, var(--olive) 20%, transparent);
+    background: color-mix(in oklab, var(--offwhite) 85%, transparent);
+    color: var(--ink);
+    font-family: "Work Sans", sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 160ms, box-shadow 160ms;
+  }
+  .input:focus {
+    border-color: var(--olive);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--sage) 30%, transparent);
+  }
+  .input.error { border-color: #C08080; }
 
-    .form-fields {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
+  .cta {
+    width: 100%; margin-top: 8px;
+    padding: 13px 16px; border: none; border-radius: 10px;
+    background: var(--olive); color: var(--offwhite);
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500; font-size: 14px; letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    transition: background 160ms, transform 120ms;
+  }
+  .cta:hover { background: var(--olive-deep); }
+  .cta:active { transform: translateY(1px); }
+  .cta:disabled { background: color-mix(in oklab, var(--olive) 50%, transparent); cursor: not-allowed; transform: none; }
+  .cta .arrow { transition: transform 180ms; }
+  .cta:hover:not(:disabled) .arrow { transform: translateX(3px); }
+  .cta .spinner {
+    width: 15px; height: 15px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .cta.loading .spinner { display: block; }
+  .cta.loading .cta-label { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    .field-label {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #8A7D6B;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 5px;
-    }
+  /* ── CTA externo (abaixo do ticket) ── */
+  .pre-cta {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 300ms, transform 300ms;
+  }
+  .pre-cta.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
 
-    .field-input {
-      width: 100%;
-      background: #EDE8DF;
-      border: 0.5px solid #C5BAA8;
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: #2C2218;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .field-input::placeholder { color: #B5A99A; }
-    .field-input:focus {
-      border-color: #8A7D6B;
-      box-shadow: 0 0 0 3px rgba(138,125,107,0.12);
-    }
+  .btn-main {
+    padding: 15px 40px;
+    border: none; border-radius: 12px;
+    background: var(--olive); color: var(--offwhite);
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500; font-size: 15px; letter-spacing: 0.03em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: background 160ms, transform 150ms, box-shadow 160ms;
+    box-shadow: 0 6px 20px rgba(42,58,45,0.25);
+  }
+  .btn-main:hover { background: var(--olive-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,58,45,0.3); }
+  .btn-main:active { transform: translateY(0); }
 
-    .btn-submit {
-      width: 100%;
-      background: #5C7A5A;
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 0.95rem 1.5rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      box-shadow: 0 4px 16px rgba(92,122,90,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-submit:hover { background: #4A6548; transform: translateY(-1px); }
-    .btn-submit:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .pre-cta-hint {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 55%, transparent);
+  }
 
-    .btn-submit .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    .btn-submit.loading .spinner { display: block; }
-    .btn-submit.loading .btn-text { display: none; }
+  /* ── Success message (após reveal) ── */
+  .success-msg {
+    z-index: 2;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 500ms ease 800ms, transform 500ms ease 800ms;
+  }
+  .success-msg.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .success-msg p {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--olive) 65%, transparent);
+  }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .form-error {
-      font-size: 12.5px;
-      color: #8A5050;
-      text-align: center;
-      min-height: 18px;
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    body { padding: 40px 16px 80px; gap: 32px; }
+    .ticket-body .content {
+      grid-template-columns: 1fr;
+      padding: 20px 22px 28px;
     }
-  </style>
+    .event-meta {
+      grid-column: 1;
+      padding-left: 0; border-left: none;
+      border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
+      padding-top: 12px;
+    }
+    .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
+    .admit { display: none; }
+    .capture { width: 92%; padding: 22px 20px 18px; }
+    .page-header h1 { font-size: 26px; }
+  }
+</style>
 </head>
 <body>
 
-<div class="container">
+<header class="page-header">
+  <div class="eyebrow">Dança &amp; Consciência · Evento</div>
+  <h1>seu ingresso está esperando</h1>
+  <p>Garanta sua vaga gratuita para <em style="font-family:'Cormorant Garamond',serif;">O Caminho Musical</em>.</p>
+</header>
 
-  <p class="page-tag">Dança &amp; Consciência</p>
+<div class="stage">
+  <div class="ticket folded" id="ticket">
 
-  <!-- TICKET -->
-  <div class="ticket-wrap" id="ticket-wrap">
-    <div class="ticket">
+    <span class="shard" style="--r:-15deg; --dx:-180px; --dy:-40px;"></span>
+    <span class="shard" style="--r:22deg;  --dx:140px;  --dy:-50px;"></span>
+    <span class="shard" style="--r:-40deg; --dx:-220px; --dy:10px;"></span>
+    <span class="shard" style="--r:10deg;  --dx:210px;  --dy:20px;"></span>
+    <span class="shard" style="--r:-8deg;  --dx:-90px;  --dy:60px;"></span>
+    <span class="shard" style="--r:35deg;  --dx:80px;   --dy:70px;"></span>
 
-      <div class="ticket-body">
-        <p class="ticket-brand">Dança &amp; Consciência · Evento</p>
-
-        <!-- ícone decorativo -->
-        <svg class="ticket-deco" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="23" stroke="#C5BAA8" stroke-width="1"/>
-          <path d="M24 12C24 12 18 17 18 24C18 27.3 19.6 30 22 31.5V36H26V31.5C28.4 30 30 27.3 30 24C30 17 24 12 24 12Z" fill="#8A7D6B" opacity="0.5"/>
-          <circle cx="24" cy="22" r="3" fill="#5C7A5A" opacity="0.8"/>
-          <path d="M20 38H28" stroke="#C5BAA8" stroke-width="1" stroke-linecap="round"/>
-        </svg>
-
-        <p class="ticket-event-label">Evento</p>
-        <h2 class="ticket-event-name">O Caminho Musical</h2>
-
-        <div class="ticket-meta">
-          <span class="ticket-meta-item">Sexta-feira</span>
-          <span class="ticket-meta-dot"></span>
-          <span class="ticket-meta-item">Dia 24</span>
-          <span class="ticket-meta-dot"></span>
-          <span class="ticket-meta-item">12h00</span>
+    <!-- Corpo principal -->
+    <div class="ticket-half ticket-body">
+      <div class="content">
+        <div class="brand-row">
+          <div class="brand-mark">
+            <span class="dot"></span>
+            <span>Dança &amp; Consciência · Membros</span>
+          </div>
+          <div class="serial">№ 0001 / 0900</div>
         </div>
 
-        <span class="ticket-badge">Ingresso Gratuito</span>
-      </div>
-
-      <!-- Perfuração -->
-      <div class="ticket-perf">
-        <div class="perf-notch left"></div>
-        <div class="perf-dashes"></div>
-        <div class="perf-notch right"></div>
-      </div>
-
-      <!-- Stub -->
-      <div class="ticket-stub">
-        <div class="stub-left">
-          <span class="stub-label">Valor</span>
-          <span class="stub-value">Gratuito</span>
+        <div class="event-title">
+          <div class="label">O Evento</div>
+          <div class="name">O Caminho Musical &mdash; <em>Chris Busato</em></div>
         </div>
-        <!-- Barcode decorativo -->
-        <div class="stub-barcode" aria-hidden="true">
-          <span style="height:100%"></span><span style="height:70%"></span><span style="height:85%"></span>
-          <span style="height:60%"></span><span style="height:100%"></span><span style="height:75%"></span>
-          <span style="height:90%"></span><span style="height:65%"></span><span style="height:100%"></span>
-          <span style="height:80%"></span><span style="height:55%"></span><span style="height:95%"></span>
-          <span style="height:70%"></span><span style="height:100%"></span><span style="height:60%"></span>
+
+        <div class="event-meta">
+          <div class="meta-cell">
+            <div class="k">Data</div>
+            <div class="v">Sex · 24 Abr</div>
+          </div>
+          <div class="meta-cell">
+            <div class="k">Horário</div>
+            <div class="v">12:00</div>
+          </div>
+          <div class="meta-cell wide">
+            <div class="k">Formato</div>
+            <div class="v">Acesso Online</div>
+          </div>
+        </div>
+
+        <div class="bottom-row">
+          <span>Acesso confirmado</span>
+          <span class="ornament"></span>
+          <span>Link enviado por e-mail</span>
         </div>
       </div>
-
+      <div class="shimmer"></div>
+      <div class="glow"></div>
     </div>
 
-    <button class="btn-ingresso" id="btn-ingresso" onclick="openTicket()">
-      Quero meu Ingresso
-    </button>
-  </div>
+    <!-- Stub -->
+    <div class="ticket-half ticket-stub">
+      <div class="content">
+        <div class="stub-block">
+          <div class="k">Admite</div>
+          <div class="v" id="admitName">Um participante</div>
+        </div>
+        <div class="stub-block">
+          <div class="k">Código</div>
+          <div class="barcode" aria-hidden="true">
+            <i></i><i class="t"></i><i class="w"></i><i class="s"></i><i></i><i class="g"></i>
+            <i class="t"></i><i></i><i class="w"></i><i class="s"></i><i></i><i class="t"></i>
+            <i class="g"></i><i></i><i class="s"></i><i class="w"></i><i></i><i class="t"></i>
+            <i></i><i class="s"></i><i class="g"></i><i class="t"></i><i></i><i class="w"></i>
+            <i class="s"></i><i></i><i class="t"></i>
+          </div>
+          <div class="barcode-caption">DC · 00010900 · BR</div>
+        </div>
+        <div class="admit">
+          <div class="big">A</div>
+          <div class="small">Setor</div>
+        </div>
+      </div>
+      <div class="shimmer"></div>
+      <div class="glow"></div>
+    </div>
 
-  <!-- FORM (oculto inicialmente) -->
-  <div class="form-wrap" id="form-wrap">
-    <div class="form-card">
-      <div class="form-header">
-        <p class="form-tag">Quase lá</p>
-        <h1>Garanta sua vaga</h1>
-        <p>Informe seus dados para reservar seu ingresso gratuito para <strong>O Caminho Musical</strong>.</p>
+    <!-- Tear line -->
+    <div class="tear">
+      <span class="cut l"></span>
+      <span class="cut r"></span>
+      <span class="perf"></span>
+      <span class="iri"></span>
+    </div>
+
+    <!-- Frosted form overlay -->
+    <div class="capture" id="capture">
+      <div class="cap-head">
+        <div class="cap-eyebrow">// Garanta sua vaga</div>
+        <h2>Deixe seu contato</h2>
+        <div class="cap-sub">Preencha os dados para liberar seu ingresso gratuito.</div>
       </div>
 
-      <div class="form-fields">
-        <div>
-          <label class="field-label" for="ing-email">E-mail</label>
-          <input class="field-input" id="ing-email" type="email" placeholder="seu@email.com" autocomplete="email" />
-        </div>
-        <div>
-          <label class="field-label" for="ing-phone">WhatsApp</label>
-          <input class="field-input" id="ing-phone" type="tel" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
-        </div>
+      <div class="field">
+        <label for="ing-name">Nome</label>
+        <input class="input" type="text" id="ing-name" placeholder="Seu nome completo" autocomplete="name" />
       </div>
 
-      <p class="form-error" id="form-error"></p>
+      <div class="field">
+        <label for="ing-email">E-mail</label>
+        <input class="input" type="email" id="ing-email" placeholder="voce@email.com" autocomplete="email" />
+      </div>
 
-      <button class="btn-submit" id="btn-submit" onclick="submitIngresso()">
-        <span class="btn-text">Confirmar presença →</span>
+      <div class="field">
+        <label for="ing-phone">WhatsApp</label>
+        <input class="input" type="tel" id="ing-phone" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
+      </div>
+
+      <p class="cap-error" id="cap-error"></p>
+
+      <button class="cta" id="btn-continue">
+        <span class="cta-label">Quero meu Ingresso <span class="arrow">→</span></span>
         <span class="spinner"></span>
       </button>
     </div>
-  </div>
 
+  </div>
+</div>
+
+<!-- Botão externo (visível antes do form abrir) -->
+<div class="pre-cta" id="pre-cta">
+  <button class="btn-main" onclick="openForm()">
+    Quero meu Ingresso <span style="font-size:16px">→</span>
+  </button>
+  <span class="pre-cta-hint">Ingresso gratuito · Sexta-feira · 12h</span>
+</div>
+
+<!-- Mensagem pós-reveal -->
+<div class="success-msg" id="success-msg">
+  <p>✦ Ingresso garantido · Redirecionando…</p>
 </div>
 
 <script>
-// ── Pixel helpers ──────────────────────────────────
-var enc = new TextEncoder();
-function sha256hex(str) {
-  return crypto.subtle.digest('SHA-256', enc.encode(str)).then(function(buf) {
-    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
-  });
-}
-function fbqTrack(eventName, contentName, email, phone) {
-  if (typeof fbq === 'undefined') return;
-  var emNorm = (email || '').toLowerCase().trim();
-  var phNorm = (phone || '').replace(/\D/g,'');
-  if (phNorm && !phNorm.startsWith('55')) phNorm = '55' + phNorm;
-  Promise.all([
-    emNorm ? sha256hex(emNorm) : Promise.resolve(''),
-    phNorm ? sha256hex(phNorm) : Promise.resolve('')
-  ]).then(function(h) {
-    var ud = {};
-    if (h[0]) ud.em = h[0];
-    if (h[1]) ud.ph = h[1];
-    fbq('init', '1659916645332253', ud);
-    fbq('track', eventName, { content_name: contentName });
-  }).catch(function() {
-    fbq('track', eventName, { content_name: contentName });
-  });
-}
-
-// ── Animação: abre o ticket → mostra form ──────────
-function openTicket() {
-  var wrap = document.getElementById('ticket-wrap');
-  var form = document.getElementById('form-wrap');
-
-  wrap.classList.add('leaving');
-
-  setTimeout(function() {
-    wrap.style.display = 'none';
-    form.style.display = 'flex';
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        form.classList.add('visible');
-        document.getElementById('ing-email').focus();
-      });
+  // ── Pixel helpers ────────────────────────────────
+  var _enc = new TextEncoder();
+  function sha256hex(str) {
+    return crypto.subtle.digest('SHA-256', _enc.encode(str)).then(function(buf) {
+      return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
     });
-  }, 420);
-}
-
-// ── Phone mask ─────────────────────────────────────
-document.getElementById('ing-phone').addEventListener('input', function(e) {
-  var v = e.target.value.replace(/\D/g,'').slice(0,11);
-  if (v.length > 6) {
-    v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
-  } else if (v.length > 2) {
-    v = '(' + v.slice(0,2) + ') ' + v.slice(2);
-  } else if (v.length > 0) {
-    v = '(' + v;
   }
-  e.target.value = v;
-});
-
-// ── Submit ─────────────────────────────────────────
-function submitIngresso() {
-  var emailEl = document.getElementById('ing-email');
-  var phoneEl = document.getElementById('ing-phone');
-  var errorEl = document.getElementById('form-error');
-  var btn     = document.getElementById('btn-submit');
-
-  var email = emailEl.value.trim().toLowerCase();
-  var phone = phoneEl.value.replace(/\D/g,'');
-
-  errorEl.textContent = '';
-
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errorEl.textContent = 'Por favor, informe um e-mail válido.';
-    emailEl.focus();
-    return;
-  }
-  if (!phone || phone.length < 10) {
-    errorEl.textContent = 'Por favor, informe seu WhatsApp.';
-    phoneEl.focus();
-    return;
+  function fbqTrack(eventName, contentName, email, phone) {
+    if (typeof fbq === 'undefined') return;
+    var em = (email||'').toLowerCase().trim();
+    var ph = (phone||'').replace(/\D/g,'');
+    if (ph && !ph.startsWith('55')) ph = '55' + ph;
+    Promise.all([
+      em ? sha256hex(em) : Promise.resolve(''),
+      ph ? sha256hex(ph) : Promise.resolve('')
+    ]).then(function(h) {
+      var ud = {};
+      if (h[0]) ud.em = h[0];
+      if (h[1]) ud.ph = h[1];
+      fbq('init', '1659916645332253', ud);
+      fbq('track', eventName, { content_name: contentName });
+    }).catch(function() {
+      fbq('track', eventName, { content_name: contentName });
+    });
   }
 
-  btn.disabled = true;
-  btn.classList.add('loading');
+  // ── Elementos ────────────────────────────────────
+  var ticket  = document.getElementById('ticket');
+  var capture = document.getElementById('capture');
+  var preCta  = document.getElementById('pre-cta');
+  var stage   = document.querySelector('.stage');
 
-  // Salva lead na API
-  fetch('/api/start-quiz-submission', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email, phone: phone, full_name: null })
-  })
-  .then(function(r) { return r.json(); })
-  .catch(function() { return {}; })
-  .finally(function() {
-    // Dispara pixel independente do resultado da API
-    fbqTrack('Lead', 'Ingresso O Caminho Musical', email, phone);
-
-    // Redireciona pro grupo
-    setTimeout(function() {
-      var em = encodeURIComponent(email);
-      var ph = encodeURIComponent(phone);
-      window.location.href = '/grupo?email=' + em + '&phone=' + ph;
-    }, 500);
+  // ── Estado inicial: ticket fechado ───────────────
+  window.addEventListener('load', function() {
+    ticket.classList.add('folded');
+    capture.classList.remove('show');
   });
-}
-</script>
 
+  // ── Abrir form ───────────────────────────────────
+  window.openForm = function() {
+    preCta.classList.add('hidden');
+    setTimeout(function() { capture.classList.add('show'); }, 160);
+  };
+
+  // ── Reveal após captura ──────────────────────────
+  function runReveal() {
+    capture.classList.remove('show');
+    ticket.classList.add('folded');
+    void ticket.offsetWidth;
+    setTimeout(function() {
+      ticket.classList.remove('folded');
+      ticket.classList.add('revealing', 'opened');
+    }, 220);
+  }
+
+  // ── Phone mask ───────────────────────────────────
+  document.getElementById('ing-phone').addEventListener('input', function(e) {
+    var v = e.target.value.replace(/\D/g,'').slice(0,11);
+    if (v.length > 6) {
+      v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    } else if (v.length > 2) {
+      v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    } else if (v.length > 0) {
+      v = '(' + v;
+    }
+    e.target.value = v;
+  });
+
+  // ── Submit ───────────────────────────────────────
+  function titleCase(s) {
+    return s.replace(/\b(\w)(\w*)/g, function(_, a, b){ return a.toUpperCase() + b.toLowerCase(); });
+  }
+
+  document.getElementById('btn-continue').addEventListener('click', function() {
+    var btn      = this;
+    var nameVal  = document.getElementById('ing-name').value.trim();
+    var emailVal = document.getElementById('ing-email').value.trim().toLowerCase();
+    var phoneVal = document.getElementById('ing-phone').value.replace(/\D/g,'');
+    var errorEl  = document.getElementById('cap-error');
+
+    // limpar erros anteriores
+    errorEl.textContent = '';
+    ['ing-name','ing-email','ing-phone'].forEach(function(id){
+      document.getElementById(id).classList.remove('error');
+    });
+
+    // validação
+    if (!nameVal) {
+      errorEl.textContent = 'Informe seu nome.';
+      document.getElementById('ing-name').classList.add('error');
+      document.getElementById('ing-name').focus();
+      return;
+    }
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      errorEl.textContent = 'Informe um e-mail válido.';
+      document.getElementById('ing-email').classList.add('error');
+      document.getElementById('ing-email').focus();
+      return;
+    }
+    if (!phoneVal || phoneVal.length < 10) {
+      errorEl.textContent = 'Informe seu WhatsApp.';
+      document.getElementById('ing-phone').classList.add('error');
+      document.getElementById('ing-phone').focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    // nome no stub do ticket
+    var display = titleCase(nameVal.split(/\s+/)[0]);
+    document.getElementById('admitName').textContent = display;
+
+    // salvar lead na API
+    fetch('/api/start-quiz-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailVal, phone: phoneVal, full_name: nameVal })
+    }).catch(function(){});
+
+    // disparar pixel
+    fbqTrack('Lead', 'Ingresso O Caminho Musical', emailVal, phoneVal);
+
+    // feedback visual + reveal
+    btn.classList.remove('loading');
+    btn.querySelector('.cta-label').textContent = '✓ Ingresso liberado!';
+    btn.style.background = 'var(--sage)';
+
+    setTimeout(function() {
+      runReveal();
+      // mostrar msg de sucesso e redirecionar
+      setTimeout(function() {
+        document.getElementById('success-msg').classList.add('show');
+        setTimeout(function() {
+          var em = encodeURIComponent(emailVal);
+          var ph = encodeURIComponent(phoneVal);
+          window.location.href = '/grupo?email=' + em + '&phone=' + ph;
+        }, 2000);
+      }, 1400);
+    }, 600);
+  });
+
+  // ── Mouse tilt + shimmer ─────────────────────────
+  var tiltAmp = 12;
+  var rect = null;
+  function updateRect() { rect = stage.getBoundingClientRect(); }
+  updateRect();
+  window.addEventListener('resize', updateRect);
+  window.addEventListener('scroll', updateRect, { passive: true });
+
+  stage.addEventListener('mouseenter', function() { updateRect(); });
+  stage.addEventListener('mouseleave', function() {
+    ticket.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    document.querySelectorAll('.shimmer, .glow').forEach(function(el) {
+      el.style.setProperty('--mx', '50%');
+      el.style.setProperty('--my', '50%');
+    });
+  });
+  stage.addEventListener('mousemove', function(e) {
+    if (!rect) updateRect();
+    var x = (e.clientX - rect.left) / rect.width;
+    var y = (e.clientY - rect.top)  / rect.height;
+    ticket.style.transform = 'rotateX(' + ((0.5 - y) * tiltAmp) + 'deg) rotateY(' + ((x - 0.5) * tiltAmp) + 'deg)';
+    var px = (x * 100).toFixed(1) + '%';
+    var py = (y * 100).toFixed(1) + '%';
+    var hue = Math.round(x * 360);
+    document.querySelectorAll('.shimmer').forEach(function(el) {
+      el.style.setProperty('--mx', px);
+      el.style.setProperty('--my', py);
+      el.style.setProperty('--hue', hue);
+    });
+    document.querySelectorAll('.glow').forEach(function(el) {
+      el.style.setProperty('--mx', px);
+      el.style.setProperty('--my', py);
+    });
+  });
+
+  // inicializar CSS vars
+  document.documentElement.style.setProperty('--shimmer', '0.55');
+  document.documentElement.style.setProperty('--noise', '0.22');
+  document.querySelectorAll('.glow').forEach(function(el) {
+    el.style.setProperty('--glow-r', '240px');
+  });
+</script>
 </body>
 </html>
