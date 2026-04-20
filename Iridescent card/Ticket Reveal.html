@@ -688,15 +688,74 @@
   }
   .skip:hover { color: var(--olive-deep); text-decoration: underline; }
 
-  /* Small screens */
+  /* ===== Mobile: portrait ticket layout ===== */
   @media (max-width: 640px) {
-    .ticket-body .content {
-      grid-template-columns: 1fr;
-      padding: 20px 22px 28px;
+    /* Stage fica na largura natural da tela */
+    .stage {
+      width: min(340px, 92vw);
     }
-    .event-meta { grid-column: 1; padding-left: 0; border-left: none; border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent); padding-top: 12px; }
-    .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
+    /* Ticket muda para proporção vertical — dá altura suficiente pro conteúdo */
+    .ticket {
+      aspect-ratio: 340 / 500;
+    }
+    .ticket-body {
+      height: 72%;
+      border-radius: 14px 14px 2px 2px;
+    }
+    .ticket-stub {
+      height: 28%;
+      border-radius: 2px 2px 14px 14px;
+    }
+    .tear { top: 72%; }
+
+    /* Body: coluna única em vez de grid 2 colunas */
+    .ticket-body .content {
+      padding: 16px 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      grid-template-columns: unset;
+      grid-template-rows: unset;
+    }
+    .brand-row {
+      grid-column: unset;
+      margin-bottom: 12px;
+    }
+    .event-title {
+      grid-column: unset;
+      align-self: auto;
+      margin-bottom: 12px;
+    }
+    .event-title .name {
+      font-size: clamp(20px, 6.5vw, 26px);
+    }
+    /* Meta fica abaixo do título, sem borda esquerda */
+    .event-meta {
+      grid-column: unset;
+      align-self: auto;
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
+      padding-top: 12px;
+      gap: 10px 8px;
+    }
+    .meta-cell .v { font-size: 15px; }
+    .bottom-row {
+      grid-column: unset;
+      margin-top: auto;
+      padding-top: 8px;
+      font-size: 7.5px;
+      letter-spacing: 0.18em;
+    }
+
+    /* Stub: 2 colunas, sem "Setor A" */
+    .ticket-stub .content {
+      grid-template-columns: 1fr 1fr;
+      padding: 12px 18px;
+    }
     .admit { display: none; }
+
+    /* Capture modal full-width */
     .capture { width: 92%; padding: 22px 20px 18px; }
   }
 </style>
