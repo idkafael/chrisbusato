@@ -1001,10 +1001,10 @@ function submitQuizToSupabase(ansList) {
       full_name: lead.full_name || null
     };
     for (let j = 1; j <= 10; j++) payload["q" + j] = letterPayload["q" + j];
-    fetch("/api/submit-quiz-ads", {
+    fetch("/api/submit-quiz", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(Object.assign({ source: "ads" }, payload))
     }).catch(function () {});
     fbqTrack('CompleteRegistration', 'Quiz Anúncios', lead.email, lead.phone);
   }
@@ -1017,10 +1017,10 @@ function submitQuizToSupabase(ansList) {
   const patchBody = { id: rowId };
   for (let j = 1; j <= 10; j++) patchBody["q" + j] = letterPayload["q" + j];
 
-  fetch("/api/complete-quiz-submission-ads", {
-    method: "POST",
+  fetch("/api/complete-quiz-submission", {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(patchBody)
+    body: JSON.stringify(Object.assign({ source: "ads" }, patchBody))
   })
     .then(function (r) {
       if (r.ok) {
@@ -1998,13 +1998,14 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
     return;
   }
 
-  fetch("/api/start-quiz-submission-ads", {
+  fetch("/api/start-quiz-submission", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       email: lead.email,
       phone: lead.phone,
-      full_name: lead.full_name || null
+      full_name: lead.full_name || null,
+      source: "ads"
     })
   })
     .then(function (r) {

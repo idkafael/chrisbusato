@@ -1,25 +1,19 @@
-const { createClient } = require("@supabase/supabase-js");
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const { getSupabase, cors, tableFor } = require("./_lib");
 
 // Fallback: submissão completa em uma chamada só
 module.exports = async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
 
-  const { email, phone, full_name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 } = req.body || {};
+  const { email, phone, full_name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, source } = req.body || {};
   if (!email || !phone) {
     return res.status(400).json({ ok: false, error: "email e phone são obrigatórios" });
   }
 
+  const supabase = getSupabase();
   const { error } = await supabase
-    .from("quiz_submissions")
+    .from(tableFor(source))
     .insert({
       email, phone, full_name: full_name || null,
       q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,

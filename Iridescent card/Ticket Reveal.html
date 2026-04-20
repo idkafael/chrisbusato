@@ -917,10 +917,10 @@
     document.getElementById('admitName').textContent = emailInput;
 
     // Register lead in CRM (Ingresso)
-    fetch('/api/start-quiz-submission-ingresso', {
+    fetch('/api/start-quiz-submission', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailInput, phone: phoneInput, full_name: null })
+      body: JSON.stringify({ email: emailInput, phone: phoneInput, full_name: null, source: 'ingresso' })
     }).catch(() => {});
 
     btn.textContent = '✓ Ingresso liberado';

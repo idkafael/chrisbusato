@@ -2120,12 +2120,7 @@
     tableBody.innerHTML = `<tr><td colspan="13" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
     statusBar.textContent = "";
 
-    const endpoint =
-      currentSource === "ads"
-        ? `/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
-        : currentSource === "ingresso"
-          ? `/api/dashboard-data-ingresso?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`
-          : `/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`;
+    const endpoint = `/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=${encodeURIComponent(currentSource)}&page=0&pageSize=500`;
 
     try {
       const res  = await fetch(endpoint);
@@ -2761,11 +2756,10 @@
     const nowDone = !wasDone;
     btn.classList.add("loading");
     try {
-      const fuEndpoint = currentSource === "ads" ? "/api/follow-up-ads" : "/api/follow-up";
-      const res  = await fetch(fuEndpoint, {
+      const res  = await fetch("/api/follow-up", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret, id, done: nowDone })
+        body: JSON.stringify({ secret, id, done: nowDone, source: currentSource })
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -3345,8 +3339,8 @@
     $("cobrancas-content").innerHTML = `<div class="cob-empty"><span class="spin-ring"></span> Carregando cobranças…</div>`;
     try {
       const [r1, r2] = await Promise.all([
-        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
-        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=organic&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=ads&page=0&pageSize=500`)
       ]);
       let rows = [];
       if (r1.ok) { const d = await r1.json(); if (d.ok) rows = rows.concat(d.rows || []); }
@@ -3508,9 +3502,9 @@
     $("kanban-board").innerHTML = `<div style="color:#8A7D6B;padding:2rem;display:flex;align-items:center;gap:.5rem"><span class="spin-ring"></span> Carregando leads…</div>`;
     try {
       const [r1, r2, r3] = await Promise.all([
-        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
-        fetch(`/api/dashboard-data-ads?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`),
-        fetch(`/api/dashboard-data-ingresso?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`)
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=organic&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=ads&page=0&pageSize=500`),
+        fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=ingresso&page=0&pageSize=500`)
       ]);
       kanbanAllRows = [];
       if (r1.ok) { const d = await r1.json(); if (d.ok) kanbanAllRows = kanbanAllRows.concat((d.rows||[]).map(r=>({...r,_source:"organic"}))); }

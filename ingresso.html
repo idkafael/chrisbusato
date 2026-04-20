@@ -875,10 +875,10 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     document.getElementById('admitName').textContent = emailVal;
 
     // salvar lead na API
-    fetch('/api/start-quiz-submission-ingresso', {
+    fetch('/api/start-quiz-submission', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailVal, phone: phoneVal, full_name: nameVal })
+      body: JSON.stringify({ email: emailVal, phone: phoneVal, full_name: nameVal, source: 'ingresso' })
     }).catch(function(){});
 
     // disparar pixel

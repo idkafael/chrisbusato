@@ -1,22 +1,19 @@
-const { createClient } = require("@supabase/supabase-js");
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const { getSupabase, checkSecret, cors, tableFor } = require("./_lib");
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "GET") return res.status(405).json({ ok: false });
 
-  const { secret } = req.query;
-  if (!secret || secret !== process.env.DASHBOARD_SECRET) {
+  if (!checkSecret(req))
     return res.status(401).json({ ok: false, error: "Unauthorized" });
-  }
+
+  const source = req.query?.source || "organic";
+  const table = tableFor(source);
+  const supabase = getSupabase();
 
   const { data, error } = await supabase
-    .from("quiz_submissions")
+    .from(table)
     .select("id, email, phone, full_name, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, quiz_completed, completed_at, follow_up_done, follow_up_at, created_at, stage, notes, starred, archived, dominant_type, payment_day, payment_value, payment_notes")
     .order("created_at", { ascending: false })
     .limit(500);

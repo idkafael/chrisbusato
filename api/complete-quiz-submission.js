@@ -1,22 +1,16 @@
-const { createClient } = require("@supabase/supabase-js");
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const { getSupabase, cors, tableFor } = require("./_lib");
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "PATCH, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "PATCH") return res.status(405).json({ ok: false, error: "Method not allowed" });
 
-  const { id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 } = req.body || {};
+  const { id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, source } = req.body || {};
   if (!id) return res.status(400).json({ ok: false, error: "id é obrigatório" });
 
+  const supabase = getSupabase();
   const { error } = await supabase
-    .from("quiz_submissions")
+    .from(tableFor(source))
     .update({
       q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
       quiz_completed: true,
