@@ -597,6 +597,34 @@
     grid-template-columns: 110px 1fr;
     gap: 8px;
   }
+  /* phone row like /teste (DDI + national) */
+  .phone-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .phone-row .input--cc {
+    flex: 0 0 auto;
+    min-width: 118px;
+    max-width: 46%;
+    padding-left: 10px;
+    padding-right: 8px;
+    cursor: pointer;
+  }
+  .phone-row .input--cc-custom {
+    display: none;
+    flex: 0 0 76px;
+    width: 76px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .phone-row .input--cc-custom.is-visible { display: block; }
+  .phone-row .input--national {
+    flex: 1 1 160px;
+    min-width: 0;
+  }
   select.input {
     appearance: none;
     background-image: linear-gradient(45deg, transparent 50%, var(--olive) 50%),
@@ -648,10 +676,41 @@
 
   /* Small screens */
   @media (max-width: 640px) {
-    .ticket-body .content {
-      grid-template-columns: 1fr;
-      padding: 20px 22px 28px;
+    .stage {
+      width: min(360px, 92vw);
+      perspective: 1200px;
     }
+    .ticket {
+      aspect-ratio: 360 / 560;
+    }
+    .ticket-body {
+      height: 73%;
+      border-radius: 18px 18px 2px 2px;
+    }
+    .ticket-stub {
+      height: 27%;
+      border-radius: 2px 2px 18px 18px;
+    }
+    .tear { top: 73%; }
+
+    /* folded crop matches portrait stub */
+    .ticket.folded {
+      clip-path: inset(0 0 27% 0 round 18px);
+    }
+    .ticket.folded .ticket-body {
+      border-radius: 18px;
+    }
+
+    .ticket-body .content {
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: unset;
+      grid-template-rows: unset;
+      gap: 14px;
+      padding: 18px 22px 22px;
+    }
+    .brand-row { margin-bottom: 0; }
+    .event-title { align-self: auto; }
     .event-meta { grid-column: 1; padding-left: 0; border-left: none; border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent); padding-top: 12px;}
     .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
     .admit { display: none; }
@@ -684,14 +743,14 @@
         <div class="brand-row">
           <div class="brand-mark">
             <span class="dot"></span>
-            <span>Casa Verde · Membros</span>
+            <span>Corpo Musical · Membros</span>
           </div>
           <div class="serial">№ 0472 / 0900</div>
         </div>
 
         <div class="event-title">
           <div class="label">O Encontro</div>
-          <div class="name" contenteditable="true" spellcheck="false">Corpo Musical &mdash; <em>Chris Busato</em></div>
+          <div class="name" contenteditable="true" spellcheck="false">O Caminho Musical</div>
         </div>
 
         <div class="event-meta">
@@ -773,7 +832,34 @@
 
   <div class="field">
     <label for="phone">WhatsApp</label>
-    <input class="input" type="tel" id="phone" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
+    <div class="phone-row">
+      <select class="input input--cc" id="phone-cc" aria-label="País (DDI)" autocomplete="off">
+        <option value="55" selected>🇧🇷 +55</option>
+        <option value="351">🇵🇹 +351</option>
+        <option value="1">🇺🇸 +1</option>
+        <option value="54">🇦🇷 +54</option>
+        <option value="56">🇨🇱 +56</option>
+        <option value="57">🇨🇴 +57</option>
+        <option value="51">🇵🇪 +51</option>
+        <option value="598">🇺🇾 +598</option>
+        <option value="595">🇵🇾 +595</option>
+        <option value="34">🇪🇸 +34</option>
+        <option value="39">🇮🇹 +39</option>
+        <option value="33">🇫🇷 +33</option>
+        <option value="49">🇩🇪 +49</option>
+        <option value="44">🇬🇧 +44</option>
+        <option value="52">🇲🇽 +52</option>
+        <option value="81">🇯🇵 +81</option>
+        <option value="86">🇨🇳 +86</option>
+        <option value="91">🇮🇳 +91</option>
+        <option value="244">🇦🇴 +244</option>
+        <option value="258">🇲🇿 +258</option>
+        <option value="238">🇨🇻 +238</option>
+        <option value="__custom__">🌐 Outro DDI</option>
+      </select>
+      <input class="input input--cc-custom" id="phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="DDI" maxlength="3" aria-label="Código do país (somente dígitos)">
+      <input class="input input--national" type="tel" id="phone" placeholder="(11) 99999-9999" autocomplete="tel-national" inputmode="tel" />
+    </div>
   </div>
 
   <button class="cta" id="continue">
@@ -906,22 +992,166 @@
   document.querySelectorAll('.glow').forEach(el => el.style.setProperty('--glow-r', '240px'));
 
   // ---------- Capture actions ----------
-  function titleCase(s) {
-    return s.replace(/\b(\w)(\w*)/g, (_, a, b) => a.toUpperCase() + b.toLowerCase());
+  function normalizePhone(raw) {
+    let d = String(raw || "").replace(/\D/g, "");
+    if (d.startsWith("0039") && d.length >= 4) d = "39" + d.slice(4);
+    return d;
+  }
+
+  const LEAD_PHONE_CC_PREFIXES = [
+    "598", "595", "351", "244", "258", "238", "86", "81", "91", "57", "56", "54", "52", "51", "49", "44", "39", "34", "33", "55"
+  ];
+  const LEAD_PHONE_NATIONAL_BY_CC = {
+    "55": { min: 11, max: 11 },
+    "39": { min: 10, max: 10, firstDigit: "3" },
+    "351": { min: 9, max: 9 },
+    "1": { min: 10, max: 10 },
+    "54": { min: 10, max: 11 },
+    "56": { min: 9, max: 9 },
+    "57": { min: 10, max: 10 },
+    "51": { min: 9, max: 9 },
+    "598": { min: 8, max: 9 },
+    "595": { min: 9, max: 9 },
+    "34": { min: 9, max: 9 },
+    "33": { min: 9, max: 9 },
+    "49": { min: 10, max: 11 },
+    "44": { min: 10, max: 10 },
+    "52": { min: 10, max: 10 },
+    "81": { min: 10, max: 10 },
+    "86": { min: 11, max: 11 },
+    "91": { min: 10, max: 10 },
+    "244": { min: 9, max: 9 },
+    "258": { min: 9, max: 9 },
+    "238": { min: 7, max: 7 }
+  };
+
+  function phoneNationalBounds(cc) {
+    let t = String(cc || "").replace(/\D/g, "").replace(/^0+/, "");
+    if (t.length > 3) t = t.slice(0, 3);
+    if (!t) return { min: 6, max: 12 };
+    const row = LEAD_PHONE_NATIONAL_BY_CC[t];
+    if (row) return { min: row.min, max: row.max, firstDigit: row.firstDigit };
+    const maxNat = 15 - t.length;
+    const minNat = Math.max(4, 10 - t.length);
+    return { min: Math.min(minNat, maxNat), max: maxNat };
+  }
+
+  function phoneSyncCustomCcVisibility() {
+    const sel = document.getElementById("phone-cc");
+    const custom = document.getElementById("phone-cc-custom");
+    if (!sel || !custom) return;
+    const on = sel.value === "__custom__";
+    custom.classList.toggle("is-visible", on);
+    if (!on) custom.value = "";
+  }
+
+  function phoneGetDialCode() {
+    const sel = document.getElementById("phone-cc");
+    const custom = document.getElementById("phone-cc-custom");
+    if (!sel) return "55";
+    if (sel.value === "__custom__") {
+      const c = normalizePhone(custom && custom.value ? custom.value : "");
+      return c.replace(/^0+/, "").slice(0, 3) || "";
+    }
+    return sel.value;
+  }
+
+  function phoneGetNationalDigits() {
+    const el = document.getElementById("phone");
+    return normalizePhone(el && el.value ? el.value : "");
+  }
+
+  function phoneFullDigitsFromForm() {
+    const cc = phoneGetDialCode();
+    const nat = phoneGetNationalDigits();
+    if (!cc || !nat) return "";
+    return cc + nat;
+  }
+
+  function formatPhoneBR11(digitsRaw) {
+    const d = String(digitsRaw || "").replace(/\D/g, "").slice(0, 11);
+    let out = "";
+    if (d.length > 0) out += d.slice(0, 2);
+    if (d.length >= 3) out += " " + d.slice(2, 3);
+    if (d.length >= 4) out += " " + d.slice(3, 7);
+    if (d.length >= 8) out += "-" + d.slice(7, 11);
+    return out;
+  }
+
+  function phoneRefreshNationalFieldConstraints() {
+    const nat = document.getElementById("phone");
+    if (!nat) return;
+    const cc = phoneGetDialCode() || "55";
+    const b = phoneNationalBounds(cc);
+    if (cc === "55") {
+      nat.maxLength = 14;
+      nat.placeholder = "(11) 99999-9999";
+      nat.title = "Brasil: 11 dígitos (DDD + celular)";
+    } else {
+      nat.maxLength = b.max;
+      nat.placeholder = b.min === b.max ? `${b.max} dígitos (sem DDI)` : `${b.min}–${b.max} dígitos (sem DDI)`;
+      nat.title = `Somente dígitos: ${b.min}${b.min === b.max ? "" : " a " + b.max} após o código do país`;
+    }
+    let d = normalizePhone(nat.value);
+    if (d.length > b.max) d = d.slice(0, b.max);
+    nat.value = cc === "55" ? formatPhoneBR11(d) : d;
+  }
+
+  function isValidPhone() {
+    const cc = phoneGetDialCode();
+    const nat = phoneGetNationalDigits();
+    if (!/^[1-9]\d{0,2}$/.test(cc)) return false;
+    if (!nat) return false;
+    const b = phoneNationalBounds(cc);
+    if (nat.length < b.min || nat.length > b.max) return false;
+    if (b.firstDigit && nat.charAt(0) !== b.firstDigit) return false;
+    const full = cc + nat;
+    if (full.length < 10 || full.length > 15) return false;
+    return true;
+  }
+
+  // bind phone inputs (like /teste)
+  phoneSyncCustomCcVisibility();
+  phoneRefreshNationalFieldConstraints();
+  const phoneEl = document.getElementById("phone");
+  const phoneCcEl = document.getElementById("phone-cc");
+  const phoneCcCustomEl = document.getElementById("phone-cc-custom");
+  if (phoneEl) {
+    phoneEl.addEventListener("input", (e) => {
+      const el = e.target;
+      const digits = normalizePhone(el.value);
+      const cc = phoneGetDialCode();
+      const b = phoneNationalBounds(cc);
+      const slice = digits.slice(0, b.max);
+      el.value = cc === "55" ? formatPhoneBR11(slice) : slice;
+    });
+  }
+  if (phoneCcEl) {
+    phoneCcEl.addEventListener("change", () => {
+      phoneSyncCustomCcVisibility();
+      phoneRefreshNationalFieldConstraints();
+    });
+  }
+  if (phoneCcCustomEl) {
+    phoneCcCustomEl.addEventListener("input", (e) => {
+      const el = e.target;
+      el.value = normalizePhone(el.value).slice(0, 3);
+      phoneRefreshNationalFieldConstraints();
+    });
   }
 
   document.getElementById('continue').addEventListener('click', () => {
     const btn = document.getElementById('continue');
     const emailInput = document.getElementById('email').value.trim().toLowerCase();
-    const phoneInput = document.getElementById('phone').value.replace(/\D/g, '');
     if (!emailInput || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput)) {
       document.getElementById('email').focus();
       return;
     }
-    if (!phoneInput || phoneInput.length < 10) {
+    if (!isValidPhone()) {
       document.getElementById('phone').focus();
       return;
     }
+    const phoneInput = phoneFullDigitsFromForm();
     // Show collected email in the stub (fallback to derived display)
     document.getElementById('admitName').textContent = emailInput;
 
