@@ -466,6 +466,15 @@
   .ticket.folded .tear .cut { opacity: 0; }
   .ticket.folded .tear .perf { opacity: 0; }
 
+  /* When folded, visually crop the ticket to show only the front/body.
+     This avoids the "empty stub area" while keeping the object upright. */
+  .ticket.folded {
+    clip-path: inset(0 0 30% 0 round 14px);
+  }
+  .ticket.folded .ticket-body {
+    border-radius: 14px;
+  }
+
   .ticket-body, .ticket-stub {
     transition: transform 1100ms cubic-bezier(.22,.9,.25,1.05);
   }
