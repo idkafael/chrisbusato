@@ -14,6 +14,8 @@
     { "source": "/valentine/", "destination": "/valentine/index.html" },
     { "source": "/teste", "destination": "/teste/index.html" },
     { "source": "/teste/", "destination": "/teste/index.html" },
+    { "source": "/ingresso", "destination": "/ingresso/index.html" },
+    { "source": "/ingresso/", "destination": "/ingresso/index.html" },
     { "source": "/grupo", "destination": "/grupo/index.html" },
     { "source": "/grupo/", "destination": "/grupo/index.html" }
   ]
