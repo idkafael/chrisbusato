@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingresso — O Caminho Musical</title>
+
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1659916645332253');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #EDE8DF;
+      font-family: 'Inter', sans-serif;
+      color: #2C2218;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* ── TAG ── */
+    .page-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      text-align: center;
+    }
+
+    /* ─────────────── TICKET ─────────────── */
+    .ticket-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease;
+    }
+    .ticket-wrap.leaving {
+      transform: translateY(-40px) scale(0.93);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ticket {
+      width: 100%;
+      background: #F2EDE3;
+      border-radius: 20px;
+      border: 0.5px solid #C5BAA8;
+      box-shadow: 0 12px 40px rgba(44,34,24,0.13), 0 2px 8px rgba(44,34,24,0.07);
+      overflow: visible;
+      position: relative;
+    }
+
+    /* ── Corpo principal ── */
+    .ticket-body {
+      padding: 2rem 1.75rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      text-align: center;
+    }
+
+    .ticket-brand {
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #A8997E;
+      margin-bottom: 0.6rem;
+    }
+
+    .ticket-deco {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.9rem;
+      opacity: 0.75;
+    }
+
+    .ticket-event-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      margin-bottom: 0.2rem;
+    }
+
+    .ticket-event-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 500;
+      font-style: italic;
+      color: #2C2218;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .ticket-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+    .ticket-meta-item {
+      font-size: 12.5px;
+      color: #5C5043;
+      font-weight: 400;
+    }
+    .ticket-meta-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #C5BAA8;
+    }
+
+    .ticket-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 1rem;
+      background: rgba(92,122,90,0.1);
+      border: 0.5px solid rgba(92,122,90,0.3);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #4A6548;
+      letter-spacing: 0.05em;
+    }
+    .ticket-badge::before {
+      content: "✦";
+      font-size: 8px;
+    }
+
+    /* ── Linha de perfuração ── */
+    .ticket-perf {
+      position: relative;
+      height: 1px;
+      margin: 0 0;
+      display: flex;
+      align-items: center;
+    }
+    .perf-notch {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .perf-notch.left  { left: -11px; }
+    .perf-notch.right { right: -11px; }
+    .perf-dashes {
+      width: 100%;
+      height: 1px;
+      background: repeating-linear-gradient(
+        to right,
+        #C5BAA8 0px, #C5BAA8 6px,
+        transparent 6px, transparent 12px
+      );
+      margin: 0 16px;
+    }
+
+    /* ── Stub (parte de baixo) ── */
+    .ticket-stub {
+      padding: 1.1rem 1.75rem 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stub-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stub-label {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #A8997E;
+      font-weight: 500;
+    }
+    .stub-value {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #5C7A5A;
+      letter-spacing: -0.01em;
+    }
+    .stub-barcode {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 28px;
+      opacity: 0.3;
+    }
+    .stub-barcode span {
+      background: #2C2218;
+      border-radius: 1px;
+      width: 2px;
+    }
+
+    /* ── Botão ── */
+    .btn-ingresso {
+      width: 100%;
+      background: #5C7A5A;
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(92,122,90,0.25);
+    }
+    .btn-ingresso:hover {
+      background: #4A6548;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(92,122,90,0.3);
+    }
+    .btn-ingresso:active { transform: translateY(0); }
+
+    /* ─────────────── FORM ─────────────── */
+    .form-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      opacity: 0;
+      transform: translateY(32px);
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.2,0.8,0.4,1);
+    }
+    .form-wrap.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .form-card {
+      width: 100%;
+      background: #F2EDE3;
+      border-radius: 24px;
+      border: 0.5px solid #C5BAA8;
+      box-shadow: 0 8px 32px rgba(44,34,24,0.10);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-header {
+      text-align: center;
+    }
+    .form-header .form-tag {
+      font-size: 9.5px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .form-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 500;
+      font-style: italic;
+      color: #2C2218;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+    .form-header p {
+      font-size: 13.5px;
+      color: #8A7D6B;
+      line-height: 1.5;
+    }
+
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .field-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .field-input {
+      width: 100%;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #2C2218;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-input::placeholder { color: #B5A99A; }
+    .field-input:focus {
+      border-color: #8A7D6B;
+      box-shadow: 0 0 0 3px rgba(138,125,107,0.12);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: #5C7A5A;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 0.95rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 16px rgba(92,122,90,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-submit:hover { background: #4A6548; transform: translateY(-1px); }
+    .btn-submit:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-submit .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .form-error {
+      font-size: 12.5px;
+      color: #8A5050;
+      text-align: center;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <p class="page-tag">Dança &amp; Consciência</p>
+
+  <!-- TICKET -->
+  <div class="ticket-wrap" id="ticket-wrap">
+    <div class="ticket">
+
+      <div class="ticket-body">
+        <p class="ticket-brand">Dança &amp; Consciência · Evento</p>
+
+        <!-- ícone decorativo -->
+        <svg class="ticket-deco" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="23" stroke="#C5BAA8" stroke-width="1"/>
+          <path d="M24 12C24 12 18 17 18 24C18 27.3 19.6 30 22 31.5V36H26V31.5C28.4 30 30 27.3 30 24C30 17 24 12 24 12Z" fill="#8A7D6B" opacity="0.5"/>
+          <circle cx="24" cy="22" r="3" fill="#5C7A5A" opacity="0.8"/>
+          <path d="M20 38H28" stroke="#C5BAA8" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+
+        <p class="ticket-event-label">Evento</p>
+        <h2 class="ticket-event-name">O Caminho Musical</h2>
+
+        <div class="ticket-meta">
+          <span class="ticket-meta-item">Sexta-feira</span>
+          <span class="ticket-meta-dot"></span>
+          <span class="ticket-meta-item">Dia 24</span>
+          <span class="ticket-meta-dot"></span>
+          <span class="ticket-meta-item">12h00</span>
+        </div>
+
+        <span class="ticket-badge">Ingresso Gratuito</span>
+      </div>
+
+      <!-- Perfuração -->
+      <div class="ticket-perf">
+        <div class="perf-notch left"></div>
+        <div class="perf-dashes"></div>
+        <div class="perf-notch right"></div>
+      </div>
+
+      <!-- Stub -->
+      <div class="ticket-stub">
+        <div class="stub-left">
+          <span class="stub-label">Valor</span>
+          <span class="stub-value">Gratuito</span>
+        </div>
+        <!-- Barcode decorativo -->
+        <div class="stub-barcode" aria-hidden="true">
+          <span style="height:100%"></span><span style="height:70%"></span><span style="height:85%"></span>
+          <span style="height:60%"></span><span style="height:100%"></span><span style="height:75%"></span>
+          <span style="height:90%"></span><span style="height:65%"></span><span style="height:100%"></span>
+          <span style="height:80%"></span><span style="height:55%"></span><span style="height:95%"></span>
+          <span style="height:70%"></span><span style="height:100%"></span><span style="height:60%"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-ingresso" id="btn-ingresso" onclick="openTicket()">
+      Quero meu Ingresso
+    </button>
+  </div>
+
+  <!-- FORM (oculto inicialmente) -->
+  <div class="form-wrap" id="form-wrap">
+    <div class="form-card">
+      <div class="form-header">
+        <p class="form-tag">Quase lá</p>
+        <h1>Garanta sua vaga</h1>
+        <p>Informe seus dados para reservar seu ingresso gratuito para <strong>O Caminho Musical</strong>.</p>
+      </div>
+
+      <div class="form-fields">
+        <div>
+          <label class="field-label" for="ing-email">E-mail</label>
+          <input class="field-input" id="ing-email" type="email" placeholder="seu@email.com" autocomplete="email" />
+        </div>
+        <div>
+          <label class="field-label" for="ing-phone">WhatsApp</label>
+          <input class="field-input" id="ing-phone" type="tel" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric" />
+        </div>
+      </div>
+
+      <p class="form-error" id="form-error"></p>
+
+      <button class="btn-submit" id="btn-submit" onclick="submitIngresso()">
+        <span class="btn-text">Confirmar presença →</span>
+        <span class="spinner"></span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Pixel helpers ──────────────────────────────────
+var enc = new TextEncoder();
+function sha256hex(str) {
+  return crypto.subtle.digest('SHA-256', enc.encode(str)).then(function(buf) {
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  });
+}
+function fbqTrack(eventName, contentName, email, phone) {
+  if (typeof fbq === 'undefined') return;
+  var emNorm = (email || '').toLowerCase().trim();
+  var phNorm = (phone || '').replace(/\D/g,'');
+  if (phNorm && !phNorm.startsWith('55')) phNorm = '55' + phNorm;
+  Promise.all([
+    emNorm ? sha256hex(emNorm) : Promise.resolve(''),
+    phNorm ? sha256hex(phNorm) : Promise.resolve('')
+  ]).then(function(h) {
+    var ud = {};
+    if (h[0]) ud.em = h[0];
+    if (h[1]) ud.ph = h[1];
+    fbq('init', '1659916645332253', ud);
+    fbq('track', eventName, { content_name: contentName });
+  }).catch(function() {
+    fbq('track', eventName, { content_name: contentName });
+  });
+}
+
+// ── Animação: abre o ticket → mostra form ──────────
+function openTicket() {
+  var wrap = document.getElementById('ticket-wrap');
+  var form = document.getElementById('form-wrap');
+
+  wrap.classList.add('leaving');
+
+  setTimeout(function() {
+    wrap.style.display = 'none';
+    form.style.display = 'flex';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        form.classList.add('visible');
+        document.getElementById('ing-email').focus();
+      });
+    });
+  }, 420);
+}
+
+// ── Phone mask ─────────────────────────────────────
+document.getElementById('ing-phone').addEventListener('input', function(e) {
+  var v = e.target.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 6) {
+    v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+  } else if (v.length > 2) {
+    v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  } else if (v.length > 0) {
+    v = '(' + v;
+  }
+  e.target.value = v;
+});
+
+// ── Submit ─────────────────────────────────────────
+function submitIngresso() {
+  var emailEl = document.getElementById('ing-email');
+  var phoneEl = document.getElementById('ing-phone');
+  var errorEl = document.getElementById('form-error');
+  var btn     = document.getElementById('btn-submit');
+
+  var email = emailEl.value.trim().toLowerCase();
+  var phone = phoneEl.value.replace(/\D/g,'');
+
+  errorEl.textContent = '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorEl.textContent = 'Por favor, informe um e-mail válido.';
+    emailEl.focus();
+    return;
+  }
+  if (!phone || phone.length < 10) {
+    errorEl.textContent = 'Por favor, informe seu WhatsApp.';
+    phoneEl.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  // Salva lead na API
+  fetch('/api/start-quiz-submission', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, phone: phone, full_name: null })
+  })
+  .then(function(r) { return r.json(); })
+  .catch(function() { return {}; })
+  .finally(function() {
+    // Dispara pixel independente do resultado da API
+    fbqTrack('Lead', 'Ingresso O Caminho Musical', email, phone);
+
+    // Redireciona pro grupo
+    setTimeout(function() {
+      var em = encodeURIComponent(email);
+      var ph = encodeURIComponent(phone);
+      window.location.href = '/grupo?email=' + em + '&phone=' + ph;
+    }, 500);
+  });
+}
+</script>
+
+</body>
+</html>
