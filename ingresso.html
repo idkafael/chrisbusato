@@ -570,22 +570,40 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     color: color-mix(in oklab, var(--olive) 55%, transparent);
   }
 
-  /* ── Success message (após reveal) ── */
-  .success-msg {
+  /* ── Botão pós-reveal ── */
+  .post-reveal {
     z-index: 2;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
     pointer-events: none;
-    transition: opacity 500ms ease 800ms, transform 500ms ease 800ms;
+    transition: opacity 500ms ease, transform 500ms cubic-bezier(.2,.8,.4,1);
   }
-  .success-msg.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .success-msg p {
+  .post-reveal.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  .btn-grupo {
+    padding: 15px 40px;
+    border: none; border-radius: 12px;
+    background: var(--olive); color: var(--offwhite);
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500; font-size: 15px; letter-spacing: 0.03em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: background 160ms, transform 150ms, box-shadow 160ms;
+    box-shadow: 0 6px 20px rgba(42,58,45,0.25);
+    text-decoration: none;
+  }
+  .btn-grupo:hover { background: var(--olive-deep); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,58,45,0.3); }
+
+  .post-reveal-hint {
     font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--olive) 65%, transparent);
+    color: color-mix(in oklab, var(--olive) 55%, transparent);
   }
 
   /* ── Responsive ── */
@@ -744,9 +762,12 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   <span class="pre-cta-hint">Ingresso gratuito · Sexta-feira · 12h</span>
 </div>
 
-<!-- Mensagem pós-reveal -->
-<div class="success-msg" id="success-msg">
-  <p>✦ Ingresso garantido · Redirecionando…</p>
+<!-- Botão pós-reveal -->
+<div class="post-reveal" id="post-reveal">
+  <a class="btn-grupo" id="btn-grupo" href="/grupo">
+    Entrar no Grupo <span style="font-size:16px">→</span>
+  </a>
+  <span class="post-reveal-hint">✦ Ingresso garantido</span>
 </div>
 
 <script>
@@ -880,15 +901,14 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
 
     setTimeout(function() {
       runReveal();
-      // mostrar msg de sucesso e redirecionar
+      // após reveal, mostrar botão "Entrar no Grupo"
       setTimeout(function() {
-        document.getElementById('success-msg').classList.add('show');
-        setTimeout(function() {
-          var em = encodeURIComponent(emailVal);
-          var ph = encodeURIComponent(phoneVal);
-          window.location.href = '/grupo?email=' + em + '&phone=' + ph;
-        }, 2000);
-      }, 1400);
+        var em = encodeURIComponent(emailVal);
+        var ph = encodeURIComponent(phoneVal);
+        var btnGrupo = document.getElementById('btn-grupo');
+        btnGrupo.href = '/grupo?email=' + em + '&phone=' + ph;
+        document.getElementById('post-reveal').classList.add('show');
+      }, 1500);
     }, 600);
   });
 

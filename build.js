@@ -36,3 +36,17 @@ fs.copyFileSync(
   path.join(__dirname, "teste.html"),
   path.join(testeDir, "index.html")
 );
+
+var ingressoDir = path.join(__dirname, "dist", "ingresso");
+fs.mkdirSync(ingressoDir, { recursive: true });
+fs.copyFileSync(
+  path.join(__dirname, "ingresso.html"),
+  path.join(ingressoDir, "index.html")
+);
+
+var grupoDir = path.join(__dirname, "dist", "grupo");
+fs.mkdirSync(grupoDir, { recursive: true });
+fs.copyFileSync(
+  path.join(__dirname, "grupo.html"),
+  path.join(grupoDir, "index.html")
+);
