@@ -153,39 +153,31 @@
   .ticket {
     position: relative;
     width: 100%;
-    aspect-ratio: 760 / 340;
-    transform-style: preserve-3d;
-    transition: transform 220ms cubic-bezier(.2,.8,.2,1);
-    will-change: transform;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* fold origin + split */
+  /* Each half is in normal flow */
   .ticket-half {
-    position: absolute;
-    left: 0; right: 0;
+    position: relative;
+    width: 100%;
     background: var(--offwhite);
     box-shadow:
       0 30px 60px -30px rgba(42, 58, 45, 0.45),
       0 10px 24px -12px rgba(42, 58, 45, 0.25),
       inset 0 0 0 1px color-mix(in oklab, var(--olive) 8%, transparent);
     overflow: hidden;
-    transform-origin: 50% 50%;
-    backface-visibility: hidden;
   }
 
-  /* Main body (top 70%) */
+  /* Main body: aspect-ratio keeps the desktop proportions (760×238 = 70% of 760×340) */
   .ticket-body {
-    top: 0;
-    height: 70%;
+    aspect-ratio: 760 / 238;
     border-radius: 14px 14px 2px 2px;
-    transform-origin: 50% 100%;
   }
-  /* Stub (bottom 30%) */
+  /* Stub (bottom 30% of original ticket) */
   .ticket-stub {
-    bottom: 0;
-    height: 30%;
+    aspect-ratio: 760 / 102;
     border-radius: 2px 2px 14px 14px;
-    transform-origin: 50% 0%;
   }
 
   /* subtle paper texture */
@@ -422,11 +414,10 @@
 
   /* ===== Perforation / tear line ===== */
   .tear {
-    position: absolute;
-    left: 0; right: 0;
-    top: 70%;
+    position: relative;
     height: 22px;
-    transform: translateY(-50%);
+    flex-shrink: 0;
+    align-self: stretch;
     pointer-events: none;
     z-index: 3;
   }
@@ -482,46 +473,29 @@
     opacity: 0.7;
   }
 
-  /* ===== Unfold animation — both halves fold like a real ticket ===== */
-  .ticket.folded .ticket-body { transform: rotateX(88deg) translateZ(2px); }
-  .ticket.folded .ticket-stub { transform: rotateX(-88deg) translateZ(2px); }
-  .ticket.folded .tear .iri { opacity: 0; }
-  .ticket.folded .tear .cut { opacity: 0; }
-  .ticket.folded .tear .perf { opacity: 0; }
-
-  .ticket-body, .ticket-stub {
-    transition: transform 1100ms cubic-bezier(.22,.9,.25,1.05);
-  }
-  .tear .iri, .tear .cut, .tear .perf {
-    transition: opacity 400ms ease 700ms;
-  }
-
-  /* tearing shards that fly apart on reveal */
-  .shard {
-    position: absolute;
-    left: 50%;
-    top: 70%;
-    width: 14px; height: 10px;
-    border-radius: 2px;
-    background: var(--offwhite);
-    box-shadow: 0 2px 4px rgba(42,58,45,0.2);
-    transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+  /* ===== Fold reveal — bottom half unfolds downward after form submit ===== */
+  .ticket-bottom-fold {
+    /* starts fully collapsed */
+    max-height: 0;
     opacity: 0;
+    overflow: hidden;
     pointer-events: none;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    transform: translateY(-10px) rotateX(-78deg);
+    filter: drop-shadow(0 20px 28px rgba(42,58,45,0.0));
+    transition:
+      max-height 900ms cubic-bezier(.22,.9,.25,1.05),
+      opacity    450ms ease 180ms,
+      transform  700ms cubic-bezier(.22,.9,.25,1.05),
+      filter     700ms cubic-bezier(.22,.9,.25,1.05);
   }
-  .ticket.revealing .shard {
-    animation: shardFly 900ms cubic-bezier(.2,.8,.2,1) forwards;
-  }
-  @keyframes shardFly {
-    0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r,0deg)) scale(0.7); }
-    25% { opacity: 1; }
-    100% {
-      opacity: 0;
-      transform:
-        translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)))
-        rotate(calc(var(--r,0deg) + 180deg))
-        scale(0.9);
-    }
+  .ticket-bottom-fold.expanded {
+    max-height: 320px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) rotateX(0deg);
+    filter: drop-shadow(0 20px 28px rgba(42,58,45,0.18));
   }
 
   /* ===== Frosted glass capture overlay ===== */
@@ -694,19 +668,16 @@
     .stage {
       width: min(340px, 92vw);
     }
-    /* Ticket muda para proporção vertical — dá altura suficiente pro conteúdo */
-    .ticket {
-      aspect-ratio: 340 / 500;
-    }
+    /* Mantém as duas metades em fluxo normal, sem alturas percentuais (evita "vão" no mobile) */
     .ticket-body {
-      height: 72%;
+      aspect-ratio: 340 / 294;
       border-radius: 14px 14px 2px 2px;
     }
     .ticket-stub {
-      height: 28%;
+      aspect-ratio: 340 / 126;
       border-radius: 2px 2px 14px 14px;
     }
-    .tear { top: 72%; }
+    .tear { top: auto; }
 
     /* Body: coluna única — height: auto para o container não forçar altura fixa */
     .ticket-body .content {
@@ -773,7 +744,7 @@
 
 <div class="ticket-stack">
   <div class="stage">
-    <div class="ticket folded" id="ticket">
+    <div class="ticket" id="ticket">
 
     <!-- shards that fly off during reveal -->
     <span class="shard" style="--r:-15deg; --dx:-180px; --dy:-40px;"></span>
@@ -824,39 +795,42 @@
       <div class="glow"></div>
     </div>
 
-    <!-- BOTTOM: stub -->
-    <div class="ticket-half ticket-stub">
-      <div class="content">
-        <div class="stub-block">
-          <div class="k">Admite</div>
-          <div class="v" id="admitName">Um participante</div>
-        </div>
-        <div class="stub-block">
-          <div class="k">Código</div>
-          <div class="barcode" aria-hidden="true">
-            <i></i><i class="t"></i><i class="w"></i><i class="s"></i><i></i><i class="g"></i>
-            <i class="t"></i><i></i><i class="w"></i><i class="s"></i><i></i><i class="t"></i>
-            <i class="g"></i><i></i><i class="s"></i><i class="w"></i><i></i><i class="t"></i>
-            <i></i><i class="s"></i><i class="g"></i><i class="t"></i><i></i><i class="w"></i>
-            <i class="s"></i><i></i><i class="t"></i>
-          </div>
-          <div class="barcode-caption">CV · 04720900 · LX</div>
-        </div>
-        <div class="admit">
-          <div class="big">A</div>
-          <div class="small">Setor</div>
-        </div>
-      </div>
-      <div class="shimmer"></div>
-      <div class="glow"></div>
-    </div>
-
-    <!-- Tear line -->
+    <!-- Tear line (always visible) -->
     <div class="tear">
       <span class="cut l"></span>
       <span class="cut r"></span>
       <span class="perf"></span>
       <span class="iri"></span>
+    </div>
+
+    <!-- Bottom fold (collapsible) -->
+    <div class="ticket-bottom-fold" id="ticketBottomFold">
+      <!-- BOTTOM: stub -->
+      <div class="ticket-half ticket-stub">
+        <div class="content">
+          <div class="stub-block">
+            <div class="k">Admite</div>
+            <div class="v" id="admitName">Um participante</div>
+          </div>
+          <div class="stub-block">
+            <div class="k">Código</div>
+            <div class="barcode" aria-hidden="true">
+              <i></i><i class="t"></i><i class="w"></i><i class="s"></i><i></i><i class="g"></i>
+              <i class="t"></i><i></i><i class="w"></i><i class="s"></i><i></i><i class="t"></i>
+              <i class="g"></i><i></i><i class="s"></i><i class="w"></i><i></i><i class="t"></i>
+              <i></i><i class="s"></i><i class="g"></i><i class="t"></i><i></i><i class="w"></i>
+              <i class="s"></i><i></i><i class="t"></i>
+            </div>
+            <div class="barcode-caption">CV · 04720900 · LX</div>
+          </div>
+          <div class="admit">
+            <div class="big">A</div>
+            <div class="small">Setor</div>
+          </div>
+        </div>
+        <div class="shimmer"></div>
+        <div class="glow"></div>
+      </div>
     </div>
 
     <!-- Frosted capture overlay -->
@@ -935,6 +909,7 @@
   const preCta = document.getElementById('pre-cta');
   const postMsg = document.getElementById('post-msg');
   const openFormBtn = document.getElementById('openFormBtn');
+  const ticketBottomFold = document.getElementById('ticketBottomFold');
 
   // ---------- Open form (from CTA click) ----------
   function openForm() {
@@ -950,17 +925,19 @@
   function runReveal() {
     capture.classList.remove('show');
     if (preCta) preCta.style.display = 'none';
-    ticket.classList.add('folded');
+    ticket.classList.add('revealing');
     void ticket.offsetWidth;
     setTimeout(() => {
-      ticket.classList.remove('folded');
-      ticket.classList.add('revealing', 'opened');
-    }, 220);
+      ticket.classList.remove('revealing');
+      ticket.classList.add('opened');
+      if (ticketBottomFold) ticketBottomFold.classList.add('expanded');
+    }, 180);
   }
 
   window.addEventListener('load', () => {
     // Start open: ticket fully upright, front face visible.
     ticket.classList.remove('folded', 'revealing', 'opened');
+    if (ticketBottomFold) ticketBottomFold.classList.remove('expanded');
     capture.classList.remove('show');
     if (preCta) preCta.style.display = '';
     if (postMsg) postMsg.classList.remove('show');
