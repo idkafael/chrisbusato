@@ -96,15 +96,15 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   /* ── Ticket stage ── */
   .stage {
     position: relative;
-    width: min(760px, 96vw);
-    perspective: 1600px;
+    width: min(360px, 92vw);
+    perspective: 1000px;
     z-index: 2;
   }
 
   .ticket {
     position: relative;
     width: 100%;
-    aspect-ratio: 760 / 340;
+    aspect-ratio: 360 / 560;
     transform-style: preserve-3d;
     transition: transform 220ms cubic-bezier(.2,.8,.2,1);
     will-change: transform;
@@ -124,13 +124,13 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   }
 
   .ticket-body {
-    top: 0; height: 70%;
-    border-radius: 14px 14px 2px 2px;
+    top: 0; height: 73%;
+    border-radius: 18px 18px 2px 2px;
     transform-origin: 50% 100%;
   }
   .ticket-stub {
-    bottom: 0; height: 30%;
-    border-radius: 2px 2px 14px 14px;
+    bottom: 0; height: 27%;
+    border-radius: 2px 2px 18px 18px;
     transform-origin: 50% 0%;
   }
 
@@ -180,62 +180,61 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
     );
   }
 
-  /* ── Body content ── */
+  /* ── Body content (coluna única, retrato) ── */
   .ticket-body .content {
     position: relative;
     height: 100%;
-    padding: 26px 32px 38px;
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-rows: auto 1fr auto;
-    gap: 14px 28px;
+    padding: 22px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
     z-index: 2;
   }
   .brand-row {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px dashed color-mix(in oklab, var(--olive) 35%, transparent);
     padding-bottom: 12px;
+    margin-bottom: 18px;
   }
   .brand-mark {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.24em;
+    font-size: 9px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--olive);
   }
   .brand-mark .dot {
-    width: 10px; height: 10px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--sage);
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--sage) 25%, transparent);
   }
   .serial {
     font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: color-mix(in oklab, var(--olive) 70%, transparent);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: color-mix(in oklab, var(--olive) 60%, transparent);
   }
 
-  .event-title { grid-column: 1 / 2; align-self: end; }
+  .event-title { margin-bottom: 20px; }
   .event-title .label {
     font-family: "JetBrains Mono", monospace;
     font-size: 9px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: color-mix(in oklab, var(--olive) 70%, transparent);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .event-title .name {
     font-family: "Cormorant Garamond", serif;
     font-weight: 500;
-    font-size: clamp(28px, 4.4vw, 46px);
-    line-height: 1.02;
+    font-size: 32px;
+    line-height: 1.05;
     color: var(--olive-deep);
     letter-spacing: 0.005em;
   }
@@ -245,13 +244,12 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   }
 
   .event-meta {
-    grid-column: 2 / 3;
-    align-self: end;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px 12px;
-    border-left: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
-    padding-left: 22px;
+    border-top: 1px solid color-mix(in oklab, var(--olive) 14%, transparent);
+    padding-top: 16px;
+    margin-top: auto;
   }
   .meta-cell .k {
     font-family: "JetBrains Mono", monospace;
@@ -269,22 +267,22 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   .meta-cell.wide { grid-column: 1 / -1; }
 
   .bottom-row {
-    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-family: "JetBrains Mono", monospace;
-    font-size: 9px;
-    letter-spacing: 0.25em;
+    font-size: 8px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--olive) 65%, transparent);
+    color: color-mix(in oklab, var(--olive) 55%, transparent);
+    margin-top: 14px;
   }
   .bottom-row .ornament {
-    flex: 1; margin: 0 16px; height: 1px;
+    flex: 1; margin: 0 10px; height: 1px;
     background: repeating-linear-gradient(
       90deg,
-      color-mix(in oklab, var(--olive) 35%, transparent) 0 6px,
-      transparent 6px 12px
+      color-mix(in oklab, var(--olive) 25%, transparent) 0 5px,
+      transparent 5px 10px
     );
   }
 
@@ -292,11 +290,11 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   .ticket-stub .content {
     position: relative;
     height: 100%;
-    padding: 18px 32px;
+    padding: 16px 24px;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 0.9fr;
+    grid-template-columns: 1.4fr 1fr 0.7fr;
     align-items: center;
-    gap: 22px;
+    gap: 12px;
     z-index: 2;
   }
   .stub-block .k {
@@ -347,7 +345,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   /* ── Tear line ── */
   .tear {
     position: absolute;
-    left: 0; right: 0; top: 70%;
+    left: 0; right: 0; top: 73%;
     height: 22px;
     transform: translateY(-50%);
     pointer-events: none;
@@ -406,7 +404,7 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
 
   /* shards */
   .shard {
-    position: absolute; left: 50%; top: 70%;
+    position: absolute; left: 50%; top: 73%;
     width: 14px; height: 10px; border-radius: 2px;
     background: var(--offwhite);
     box-shadow: 0 2px 4px rgba(42,58,45,0.2);
@@ -607,22 +605,12 @@ src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></
   }
 
   /* ── Responsive ── */
-  @media (max-width: 640px) {
+  @media (max-width: 480px) {
     body { padding: 40px 16px 80px; gap: 32px; }
-    .ticket-body .content {
-      grid-template-columns: 1fr;
-      padding: 20px 22px 28px;
-    }
-    .event-meta {
-      grid-column: 1;
-      padding-left: 0; border-left: none;
-      border-top: 1px solid color-mix(in oklab, var(--olive) 18%, transparent);
-      padding-top: 12px;
-    }
-    .ticket-stub .content { grid-template-columns: 1fr 1fr; padding: 14px 20px; }
-    .admit { display: none; }
-    .capture { width: 92%; padding: 22px 20px 18px; }
+    .capture { width: 94%; padding: 20px 18px 16px; }
     .page-header h1 { font-size: 26px; }
+    .ticket-stub .content { grid-template-columns: 1fr 1fr; }
+    .admit { display: none; }
   }
 </style>
 </head>
