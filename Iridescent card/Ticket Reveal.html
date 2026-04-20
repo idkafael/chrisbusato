@@ -897,9 +897,8 @@
   }
 
   window.addEventListener('load', () => {
-    // Default presentation: upright, front-facing, with stub folded/locked.
-    ticket.classList.remove('revealing', 'opened');
-    ticket.classList.add('folded');
+    // Start open: ticket fully upright, front face visible.
+    ticket.classList.remove('folded', 'revealing', 'opened');
     capture.classList.remove('show');
     if (preCta) preCta.style.display = '';
     if (postMsg) postMsg.classList.remove('show');
