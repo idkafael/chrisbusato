@@ -1535,7 +1535,10 @@ function getWhatsappInviteUrl() {
 function goWpp() {
   var btn = document.getElementById("btn-wpp");
   if (btn && btn.disabled) return;
-  window.open(getWhatsappInviteUrl(), "_blank", "noopener,noreferrer");
+  var em = (lead && lead.email) ? encodeURIComponent(lead.email) : '';
+  var ph = (lead && lead.phone) ? encodeURIComponent(lead.phone)  : '';
+  var url = '/grupo' + (em || ph ? '?email=' + em + '&phone=' + ph : '');
+  window.location.href = url;
 }
 
 function normalizePhone(raw) {
