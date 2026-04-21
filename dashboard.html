@@ -1381,6 +1381,42 @@
 .pay-method-chip.active { background: #4A6548; color: #fff; border-color: #4A6548; }
 .pay-method-chip:hover:not(.active) { background: #E0D8CC; }
 
+/* Parcelas progress tag */
+.cob-inst-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; color: #8A7D6B;
+  background: #E8E0D0; border-radius: 8px;
+  padding: 2px 8px; margin-top: 4px;
+  font-weight: 500;
+}
+.cob-inst-tag.progress { color: #A08030; background: rgba(197,162,80,0.14); }
+.cob-inst-tag.complete { color: #4A6548; background: rgba(92,122,90,0.14); }
+
+/* Mark as paid button in cobranças card */
+.cob-paid-btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px; padding: 6px 13px; border-radius: 20px;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+  border: 1px solid rgba(92,122,90,0.35);
+  background: rgba(92,122,90,0.1); color: #4A6548;
+  cursor: pointer; transition: background .15s, transform .1s;
+  flex-shrink: 0; white-space: nowrap;
+}
+.cob-paid-btn:hover:not(:disabled) { background: rgba(92,122,90,0.22); transform: scale(1.03); }
+.cob-paid-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+.cob-paid-btn.fully-paid {
+  background: rgba(92,122,90,0.18); color: #4A6548;
+  border-color: rgba(92,122,90,0.45); cursor: default;
+}
+
+/* Detail panel installment progress badge */
+.inst-progress-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 12px;
+  font-size: 12px; font-weight: 600; color: #4A6548;
+  background: rgba(92,122,90,0.12); border: 0.5px solid rgba(92,122,90,0.3);
+}
+
   /* ─── COBRANÇAS VIEW ─── */
   #cobrancas-view { display: none; padding-bottom: 2rem; }
   #cobrancas-view.active { display: block; }
@@ -1622,6 +1658,85 @@
     color: #2C2218; outline: none;
   }
   .offer-modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.25rem; }
+
+  /* ─── EXPORT DROPDOWN ─── */
+  .export-dropdown {
+    position: relative;
+    display: inline-flex;
+  }
+  .export-dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: #5C7A5A;
+    color: #F5F0E8;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .export-dropdown-toggle:hover { background: #4A6548; transform: translateY(-1px); }
+  .export-dropdown-toggle .chevron {
+    font-size: 9px;
+    transition: transform 0.2s;
+    opacity: 0.75;
+  }
+  .export-dropdown.open .chevron { transform: rotate(180deg); }
+
+  .export-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 210px;
+    background: #F2EDE3;
+    border: 0.5px solid #C5BAA8;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(44,34,24,0.14);
+    overflow: hidden;
+    z-index: 200;
+    animation: dropIn 0.15s ease;
+  }
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .export-dropdown.open .export-dropdown-menu { display: block; }
+
+  .export-menu-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #A08C70;
+    padding: 10px 14px 4px;
+  }
+  .export-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 14px;
+    border: none;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #2C2218;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .export-menu-item:hover { background: #EDE8DF; }
+  .export-menu-item .emi-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+  .export-menu-item .emi-label { font-weight: 500; }
+  .export-menu-item .emi-sub { font-size: 11px; color: #8A7D6B; margin-left: auto; }
+  .export-menu-divider { height: 0.5px; background: #D8D0C4; margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -1661,8 +1776,43 @@
     </div>
     <div class="header-actions">
       <button class="btn-sm btn-outline-warm" id="refresh-btn">↻ Atualizar <span id="refresh-countdown"></span></button>
-      <button class="btn-sm btn-sage" id="export-btn">↓ Exportar CSV</button>
-      <button class="btn-sm btn-outline-warm" id="export-meta-btn" title="Exporta no formato do Gerenciador de Eventos da Meta">↓ Meta CSV</button>
+
+      <!-- Export dropdown -->
+      <div class="export-dropdown" id="export-dropdown">
+        <button class="export-dropdown-toggle" id="export-dropdown-btn">
+          ↓ Baixar <span class="chevron">▼</span>
+        </button>
+        <div class="export-dropdown-menu">
+          <div class="export-menu-label">Exportar dados</div>
+          <button class="export-menu-item" onclick="exportData('emails')">
+            <span class="emi-icon">📧</span>
+            <span class="emi-label">Só e-mails</span>
+            <span class="emi-sub">.txt</span>
+          </button>
+          <button class="export-menu-item" onclick="exportData('phones')">
+            <span class="emi-icon">📱</span>
+            <span class="emi-label">Só telefones</span>
+            <span class="emi-sub">.txt</span>
+          </button>
+          <button class="export-menu-item" onclick="exportData('emails_phones')">
+            <span class="emi-icon">📋</span>
+            <span class="emi-label">E-mails + telefones</span>
+            <span class="emi-sub">.csv</span>
+          </button>
+          <div class="export-menu-divider"></div>
+          <button class="export-menu-item" onclick="exportData('full')">
+            <span class="emi-icon">📊</span>
+            <span class="emi-label">Exportação completa</span>
+            <span class="emi-sub">.csv</span>
+          </button>
+          <button class="export-menu-item" onclick="exportData('meta')">
+            <span class="emi-icon">🎯</span>
+            <span class="emi-label">Meta Ads (Pixel)</span>
+            <span class="emi-sub">.csv</span>
+          </button>
+        </div>
+      </div>
+
       <button class="btn-sm btn-ghost-warm" id="logout-btn">Sair</button>
     </div>
   </header>
@@ -2022,8 +2172,7 @@
   const loginBtn      = $("login-btn");
   const loginError    = $("login-error");
   const refreshBtn    = $("refresh-btn");
-  const exportBtn     = $("export-btn");
-  const exportMetaBtn = $("export-meta-btn");
+  // exportBtn / exportMetaBtn removidos — substituídos pelo export dropdown
   const logoutBtn     = $("logout-btn");
   const searchInput   = $("search-input");
   const filterStatus  = $("filter-status");
@@ -3014,6 +3163,19 @@
           <input class="payment-field-input" type="number" min="0" step="0.01" id="pay-val-${row.id}" value="${row.payment_value || ''}" placeholder="Ex: 150.00" />
         </div>
       </div>
+      <div class="payment-fields-row" style="margin-bottom:0.6rem">
+        <div>
+          <div class="payment-field-label">Nº de parcelas (0 = mensal)</div>
+          <input class="payment-field-input" type="number" min="0" id="pay-inst-${row.id}" value="${row.payment_installments || 0}" placeholder="Ex: 10" />
+        </div>
+        <div>
+          <div class="payment-field-label">Parcelas pagas</div>
+          ${(row.payment_installments || 0) > 0
+            ? `<div class="inst-progress-badge" id="inst-badge-${row.id}">${row.payment_paid_count || 0} / ${row.payment_installments} pagas</div>`
+            : `<div style="padding-top:8px;font-size:12px;color:#8A7D6B" id="inst-badge-${row.id}">${row.payment_paid_count > 0 ? `${row.payment_paid_count} marcadas` : '—'}</div>`
+          }
+        </div>
+      </div>
       <div style="margin-bottom:0.6rem">
         <div class="payment-field-label">Observação</div>
         <input class="payment-field-input" type="text" id="pay-notes-${row.id}" value="${esc(row.payment_notes || '')}" placeholder="Ex: mensalidade turma segunda" />
@@ -3098,79 +3260,96 @@
     }
   });
 
-  // ── export CSV
-  exportBtn.addEventListener("click", () => {
-    const rows = filteredRows.length ? filteredRows : allRows;
-    if (!rows.length) { showToast("Sem dados para exportar."); return; }
+  // ── export dropdown toggle
+  const exportDropdown = $("export-dropdown");
+  $("export-dropdown-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    exportDropdown.classList.toggle("open");
+  });
+  document.addEventListener("click", () => exportDropdown.classList.remove("open"));
 
-    const headers = ["id","full_name","email","phone","stage","dominant_type","notes","starred","archived",
-      "quiz_completed","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","follow_up_done","created_at","completed_at"];
-    const lines = [
-      headers.join(","),
-      ...rows.map(r => headers.map(h => `"${String(r[h]??'').replace(/"/g,'""')}"`).join(","))
-    ];
-
-    const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+  // ── unified export function
+  function normalizePhoneExport(p) {
+    if (!p) return "";
+    const d = p.replace(/\D/g, "");
+    return d ? (d.startsWith("55") ? d : "55" + d) : "";
+  }
+  function splitNameExport(full) {
+    if (!full) return { fn: "", ln: "" };
+    const parts = full.trim().split(/\s+/);
+    return { fn: parts[0] || "", ln: parts.slice(1).join(" ") || "" };
+  }
+  function downloadBlob(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement("a");
     a.href     = url;
-    a.download = `leads_${currentSource}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    showToast("CSV exportado");
-  });
+  }
 
-  // ── export Meta Pixel CSV
-  exportMetaBtn.addEventListener("click", () => {
+  window.exportData = function(type) {
+    exportDropdown.classList.remove("open");
     const rows = filteredRows.length ? filteredRows : allRows;
     if (!rows.length) { showToast("Sem dados para exportar."); return; }
+    const date = new Date().toISOString().slice(0, 10);
+    const src  = currentSource;
 
-    // Normaliza telefone pro formato internacional sem formatação
-    function normalizePhone(p) {
-      if (!p) return "";
-      const digits = p.replace(/\D/g, "");
-      if (digits.length === 0) return "";
-      // Adiciona 55 se não tiver código de país
-      return digits.startsWith("55") ? digits : "55" + digits;
+    if (type === "emails") {
+      // Uma linha por email, sem duplicatas
+      const emails = [...new Set(rows.map(r => r.email).filter(Boolean))];
+      downloadBlob(emails.join("\n"), `emails_${src}_${date}.txt`, "text/plain;charset=utf-8;");
+      showToast(`${emails.length} e-mails exportados ✓`);
+
+    } else if (type === "phones") {
+      const phones = [...new Set(rows.map(r => normalizePhoneExport(r.phone)).filter(Boolean))];
+      downloadBlob(phones.join("\n"), `telefones_${src}_${date}.txt`, "text/plain;charset=utf-8;");
+      showToast(`${phones.length} telefones exportados ✓`);
+
+    } else if (type === "emails_phones") {
+      const header = "nome,email,telefone";
+      const lines  = rows
+        .filter(r => r.email || r.phone)
+        .map(r => [
+          `"${(r.full_name || "").replace(/"/g,'""')}"`,
+          `"${(r.email    || "").replace(/"/g,'""')}"`,
+          `"${normalizePhoneExport(r.phone)}"`,
+        ].join(","));
+      downloadBlob("\uFEFF" + [header, ...lines].join("\r\n"), `contatos_${src}_${date}.csv`, "text/csv;charset=utf-8;");
+      showToast(`${lines.length} contatos exportados ✓`);
+
+    } else if (type === "full") {
+      const headers = ["id","full_name","email","phone","stage","dominant_type","notes","starred","archived",
+        "quiz_completed","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10",
+        "follow_up_done","payment_day","payment_value","payment_installments","payment_paid_count","created_at","completed_at"];
+      const lines = [
+        headers.join(","),
+        ...rows.map(r => headers.map(h => `"${String(r[h]??'').replace(/"/g,'""')}"`).join(","))
+      ];
+      downloadBlob("\uFEFF" + lines.join("\r\n"), `leads_completo_${src}_${date}.csv`, "text/csv;charset=utf-8;");
+      showToast("Exportação completa ✓");
+
+    } else if (type === "meta") {
+      const header = "email,email,email,phone,phone,phone,madid,fn,ln,zip,ct,st,country,dob,doby,gen,age,event_name,event_time,value,currency";
+      const lines  = rows.map(r => {
+        const { fn, ln } = splitNameExport(r.full_name);
+        const phone      = normalizePhoneExport(r.phone);
+        const eventTime  = r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString();
+        return [
+          r.email || "", "", "",
+          phone, "", "",
+          "",
+          fn, ln,
+          "", "", "", "BR",
+          "", "", "", "",
+          "Lead", eventTime, "", ""
+        ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(",");
+      });
+      downloadBlob([header, ...lines].join("\r\n"), `meta_leads_${src}_${date}.csv`, "text/csv;charset=utf-8;");
+      showToast("Meta CSV exportado ✓");
     }
-
-    // Divide nome em primeiro e último
-    function splitName(full) {
-      if (!full) return { fn: "", ln: "" };
-      const parts = full.trim().split(/\s+/);
-      return { fn: parts[0] || "", ln: parts.slice(1).join(" ") || "" };
-    }
-
-    const header = "email,email,email,phone,phone,phone,madid,fn,ln,zip,ct,st,country,dob,doby,gen,age,event_name,event_time,value,currency";
-
-    const lines = rows.map(r => {
-      const { fn, ln } = splitName(r.full_name);
-      const phone      = normalizePhone(r.phone);
-      const eventTime  = r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString();
-      // Campos opcionais que não temos: deixar vazio
-      return [
-        r.email || "", "", "",   // 3 colunas email
-        phone, "", "",            // 3 colunas phone
-        "",                       // madid
-        fn, ln,                   // fn, ln
-        "", "", "", "BR",         // zip, ct, st, country
-        "", "", "", "",           // dob, doby, gen, age
-        "Lead",                   // event_name
-        eventTime,                // event_time
-        "", ""                    // value, currency
-      ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(",");
-    });
-
-    const csv  = [header, ...lines].join("\r\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `meta_leads_${currentSource}_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("Meta CSV exportado ✓");
-  });
+  };
 
   // ── toast
   let toastTimer = null;
@@ -3300,12 +3479,14 @@
   window.savePayment = async function(id, btn) {
     const row = allRows.find(r => String(r.id) === String(id));
     if (!row) return;
-    const dayVal  = document.getElementById(`pay-day-${id}`)?.value;
-    const valVal  = document.getElementById(`pay-val-${id}`)?.value;
-    const notesVal= document.getElementById(`pay-notes-${id}`)?.value || "";
-    const payment_day   = dayVal   ? parseInt(dayVal,   10) : null;
-    const payment_value = valVal   ? parseFloat(valVal)     : null;
-    const payment_notes = notesVal || null;
+    const dayVal   = document.getElementById(`pay-day-${id}`)?.value;
+    const valVal   = document.getElementById(`pay-val-${id}`)?.value;
+    const notesVal = document.getElementById(`pay-notes-${id}`)?.value || "";
+    const instVal  = document.getElementById(`pay-inst-${id}`)?.value;
+    const payment_day          = dayVal  ? parseInt(dayVal,  10) : null;
+    const payment_value        = valVal  ? parseFloat(valVal)    : null;
+    const payment_notes        = notesVal || null;
+    const payment_installments = instVal !== undefined ? parseInt(instVal, 10) || 0 : 0;
     if (payment_day !== null && (payment_day < 1 || payment_day > 31)) {
       showToast("Dia inválido (1–31)"); return;
     }
@@ -3315,13 +3496,14 @@
       const res  = await fetch("/api/update-lead", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret, id, source: currentSource, payment_day, payment_value, payment_notes })
+        body: JSON.stringify({ secret, id, source: currentSource, payment_day, payment_value, payment_notes, payment_installments })
       });
       const data = await res.json();
       if (!res.ok || !data.ok) { showToast("Erro ao salvar"); btn.disabled = false; btn.classList.remove("saving"); return; }
-      row.payment_day   = payment_day;
-      row.payment_value = payment_value;
-      row.payment_notes = payment_notes;
+      row.payment_day          = payment_day;
+      row.payment_value        = payment_value;
+      row.payment_notes        = payment_notes;
+      row.payment_installments = payment_installments;
       showToast("Pagamento salvo ✓");
       renderPaymentReminders();
     } catch(e) {
@@ -3331,10 +3513,78 @@
     btn.classList.remove("saving");
   };
 
+  // ── mark installment as paid (cobranças tab)
+  window.markAsPaid = async function(id, source, btn) {
+    // Find row in the cobranças payers array or allRows
+    let row = cobPayers.find(r => String(r.id) === String(id) && (r._source || 'organic') === source);
+    if (!row) row = allRows.find(r => String(r.id) === String(id));
+    if (!row) return;
+
+    const total = row.payment_installments || 0;
+    const paid  = row.payment_paid_count   || 0;
+    if (total > 0 && paid >= total) return; // already fully paid
+
+    const newPaid = paid + 1;
+    btn.disabled = true;
+
+    try {
+      const res  = await fetch("/api/update-lead", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, source, payment_paid_count: newPaid })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) { showToast("Erro ao salvar"); btn.disabled = false; return; }
+
+      // Update in-memory
+      row.payment_paid_count = newPaid;
+      const mirrorRow = allRows.find(r => String(r.id) === String(id));
+      if (mirrorRow) mirrorRow.payment_paid_count = newPaid;
+
+      const fullyPaid = total > 0 && newPaid >= total;
+      showToast(fullyPaid ? `✓ ${total}/${total} — Quitado!` : `✓ Parcela ${newPaid}${total > 0 ? `/${total}` : ''} marcada`);
+
+      // Refresh only the card visuals in cobranças
+      refreshCobCard(id, source, newPaid, total);
+    } catch(e) {
+      showToast("Falha na conexão");
+      btn.disabled = false;
+    }
+  };
+
+  function refreshCobCard(id, source, paidCount, total) {
+    const card = document.querySelector(`.cob-card[data-id="${id}"][data-source="${source}"]`);
+    if (!card) return;
+    // Update progress tag
+    const tag = card.querySelector('.cob-inst-tag');
+    if (tag && total > 0) {
+      const fullyPaid = paidCount >= total;
+      tag.textContent = fullyPaid ? `✓ Quitado (${total}/${total})` : `${paidCount} / ${total} pagas`;
+      tag.className = 'cob-inst-tag ' + (fullyPaid ? 'complete' : 'progress');
+    } else if (tag) {
+      tag.textContent = `${paidCount} marcada${paidCount !== 1 ? 's' : ''}`;
+    }
+    // Update paid button
+    const btn = card.querySelector('.cob-paid-btn');
+    if (btn) {
+      const fullyPaid = total > 0 && paidCount >= total;
+      if (fullyPaid) {
+        btn.classList.add('fully-paid');
+        btn.disabled = true;
+        btn.textContent = '✓ Quitado';
+      } else {
+        btn.disabled = false;
+        btn.textContent = `✓ Pago${total > 0 ? ` (${paidCount}/${total})` : ''}`;
+      }
+    }
+  }
+
 
   // ══════════════════════════════════════════════════════════════
   //  COBRANÇAS — calendário mensal com leads pagadores
   // ══════════════════════════════════════════════════════════════
+  let cobPayers = []; // mantém referência para markAsPaid
+
   async function loadCobrancas() {
     $("cobrancas-content").innerHTML = `<div class="cob-empty"><span class="spin-ring"></span> Carregando cobranças…</div>`;
     try {
@@ -3343,11 +3593,11 @@
         fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=ads&page=0&pageSize=500`)
       ]);
       let rows = [];
-      if (r1.ok) { const d = await r1.json(); if (d.ok) rows = rows.concat(d.rows || []); }
-      if (r2.ok) { const d = await r2.json(); if (d.ok) rows = rows.concat(d.rows || []); }
-      const payers = rows.filter(r => r.payment_day && !r.archived);
-      $("tab-payments-count").textContent = payers.length || "—";
-      renderCobrancas(payers);
+      if (r1.ok) { const d = await r1.json(); if (d.ok) rows = rows.concat((d.rows || []).map(r => ({ ...r, _source: 'organic' }))); }
+      if (r2.ok) { const d = await r2.json(); if (d.ok) rows = rows.concat((d.rows || []).map(r => ({ ...r, _source: 'ads'     }))); }
+      cobPayers = rows.filter(r => r.payment_day && !r.archived);
+      $("tab-payments-count").textContent = cobPayers.length || "—";
+      renderCobrancas(cobPayers);
     } catch(e) {
       $("cobrancas-content").innerHTML = `<div class="cob-empty">Erro: ${esc(e.message)}</div>`;
     }
@@ -3418,12 +3668,37 @@
             const valLabel  = r.payment_value ? `<div class="cob-card-value">R$ ${Number(r.payment_value).toLocaleString("pt-BR",{minimumFractionDigits:2})}</div>` : "";
             const gIdx      = allRows.findIndex(ar => String(ar.id) === String(r.id));
             const openFn    = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
-            return `<div class="cob-card${isToday ? ' is-today' : ''}" onclick="${openFn}">
+            const src       = r._source || 'organic';
+
+            // Installment progress
+            const total     = r.payment_installments || 0;
+            const paid      = r.payment_paid_count   || 0;
+            const fullyPaid = total > 0 && paid >= total;
+            let instTag = '';
+            if (total > 0) {
+              const cls = fullyPaid ? 'complete' : 'progress';
+              const lbl = fullyPaid ? `✓ Quitado (${total}/${total})` : `${paid} / ${total} pagas`;
+              instTag = `<div class="cob-inst-tag ${cls}">${lbl}</div>`;
+            } else if (paid > 0) {
+              instTag = `<div class="cob-inst-tag">${paid} marcada${paid !== 1 ? 's' : ''}</div>`;
+            }
+
+            // Paid button
+            const paidBtnLabel = fullyPaid ? '✓ Quitado' : `✓ Pago${total > 0 ? ` (${paid}/${total})` : ''}`;
+            const paidBtn = `<button class="cob-paid-btn${fullyPaid ? ' fully-paid' : ''}"
+              ${fullyPaid ? 'disabled' : ''}
+              onclick="event.stopPropagation(); markAsPaid('${r.id}','${src}',this)"
+              title="${fullyPaid ? 'Todas as parcelas foram pagas' : 'Marcar parcela como paga'}"
+            >${paidBtnLabel}</button>`;
+
+            return `<div class="cob-card${isToday ? ' is-today' : ''}" onclick="${openFn}"
+              data-id="${r.id}" data-source="${src}">
               <div style="flex:1;min-width:0">
                 <div class="cob-card-name">${esc(name)}</div>
                 ${r.payment_notes ? `<div class="cob-card-notes">${esc(r.payment_notes)}</div>` : ''}
+                ${instTag}
               </div>
-              ${valLabel}${waBtn}
+              ${valLabel}${paidBtn}${waBtn}
             </div>`;
           }).join("")}
         </div>
