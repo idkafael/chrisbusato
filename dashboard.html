@@ -3233,7 +3233,10 @@
     const all = kanbanAllRows.length ? kanbanAllRows : allRows;
     const row = all.find(r => String(r.id) === String(leadId));
     if (!row) return;
+    // Ajusta source para que as funções de salvar usem o endpoint correto
     if (row._source && row._source !== "guest") currentSource = row._source;
+    // Injeta em allRows e filteredRows se ainda não estiver (source diferente do carregado)
+    if (!allRows.find(r => String(r.id) === String(leadId))) allRows.unshift(row);
     const prev = filteredRows;
     filteredRows = [row, ...filteredRows.filter(r => String(r.id) !== String(leadId))];
     openDetail(0);
