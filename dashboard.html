@@ -3228,6 +3228,95 @@
     detailOverlay.classList.add("open");
   };
 
+  // Abre o painel de detalhe a partir de um card kanban (qualquer source)
+  window.openDetailForKanban = function(leadId) {
+    const all = kanbanAllRows.length ? kanbanAllRows : allRows;
+    const row = all.find(r => String(r.id) === String(leadId));
+    if (!row) return;
+    if (row._source && row._source !== "guest") currentSource = row._source;
+    const prev = filteredRows;
+    filteredRows = [row, ...filteredRows.filter(r => String(r.id) !== String(leadId))];
+    openDetail(0);
+    filteredRows = prev;
+  };
+
+  // Abre painel editável para convidadas (sem backend, só localStorage)
+  window.openGuestDetail = function(guestId) {
+    loadKbMeta();
+    const g = kbGuests.find(g => g.id === String(guestId));
+    if (!g) return;
+    $("detail-name").textContent = g.name || "Convidada";
+    $("detail-badges-row").innerHTML = `<span class="kanban-card-badge" style="background:#E4EDE4;color:#4A6548">Convidada</span>`;
+    $("detail-content").innerHTML = `
+      <div class="detail-section-label">Informações</div>
+      <div class="offer-modal-field" style="margin-bottom:.6rem">
+        <div class="payment-field-label">Nome</div>
+        <input class="payment-field-input" id="gd-name" value="${esc(g.name||"")}" placeholder="Nome completo" />
+      </div>
+      <div class="offer-modal-field" style="margin-bottom:.6rem">
+        <div class="payment-field-label">Telefone</div>
+        <input class="payment-field-input" id="gd-phone" value="${esc(g.phone||"")}"
+          placeholder="(11) 99999-9999" oninput="formatGuestPhone(this)" />
+      </div>
+      <div class="offer-modal-field" style="margin-bottom:.6rem">
+        <div class="payment-field-label">E-mail</div>
+        <input class="payment-field-input" id="gd-email" type="email" value="${esc(g.email||"")}" placeholder="email@exemplo.com" />
+      </div>
+      <div class="detail-div"></div>
+      <div class="detail-section-label">💳 Pagamento</div>
+      <div class="pay-method-chips">
+        ${["Cartão","Pix","TMB","Boca a boca"].map(m =>
+          `<button class="pay-method-chip${(g.payment_method||"")===m?" active":""}"
+            onclick="this.closest('.pay-method-chips').querySelectorAll('.pay-method-chip').forEach(b=>b.classList.remove('active'));this.classList.add('active')">${m}</button>`
+        ).join("")}
+      </div>
+      <div class="payment-fields-row" style="margin-top:.5rem">
+        <div>
+          <div class="payment-field-label">Valor (R$)</div>
+          <input class="payment-field-input" type="number" id="gd-val" min="0" step="0.01" value="${g.payment_value||""}" placeholder="Ex: 150.00" />
+        </div>
+        <div>
+          <div class="payment-field-label">Nº de parcelas</div>
+          <input class="payment-field-input" type="number" id="gd-inst" min="0" value="${g.payment_installments||0}" />
+        </div>
+      </div>
+      <div style="margin:.5rem 0 .6rem">
+        <div class="payment-field-label">Observação</div>
+        <input class="payment-field-input" id="gd-notes" value="${esc(g.payment_notes||"")}" placeholder="Ex: mensalidade turma segunda" />
+      </div>
+      <div class="detail-div"></div>
+      <div class="detail-section-label">Notas</div>
+      <div class="detail-notes-wrap">
+        <textarea class="detail-notes-textarea" id="gd-general-notes" placeholder="Observações gerais…">${esc(g.notes||"")}</textarea>
+      </div>
+      <div class="detail-div"></div>
+      <div class="detail-actions-row">
+        <button class="save-notes-btn" onclick="saveGuestDetail('${guestId}',this)">Salvar</button>
+        <button class="detail-archive-btn" style="background:#F2E8E8;color:#8A5050" onclick="if(confirm('Remover esta convidada?')){unassignKanbanCard('${guestId}');$('detail-overlay').classList.remove('open')}">Remover</button>
+      </div>`;
+    $("detail-overlay").classList.add("open");
+  };
+
+  window.saveGuestDetail = function(guestId, btn) {
+    loadKbMeta();
+    const g = kbGuests.find(g => g.id === String(guestId));
+    if (!g) return;
+    const activeMethod = document.querySelector(".pay-method-chips .pay-method-chip.active");
+    g.name              = $("gd-name").value.trim() || g.name;
+    g.phone             = $("gd-phone").value.trim();
+    g.email             = $("gd-email").value.trim();
+    g.payment_method    = activeMethod ? activeMethod.textContent : (g.payment_method || "");
+    g.payment_value     = parseFloat($("gd-val").value) || 0;
+    g.payment_installments = parseInt($("gd-inst").value) || 0;
+    g.payment_notes     = $("gd-notes").value.trim();
+    g.notes             = $("gd-general-notes").value.trim();
+    saveKbMeta();
+    $("detail-name").textContent = g.name;
+    renderKanban();
+    btn.textContent = "Salvo ✓";
+    setTimeout(() => { btn.textContent = "Salvar"; }, 1500);
+  };
+
   window.toggleStarFromDetail = async function(id, btn) {
     const row = allRows.find(r => String(r.id) === String(id));
     if (!row) return;
@@ -3901,8 +3990,9 @@
               : r._source === "guest"
               ? `<span class="kanban-card-badge" style="background:#E4EDE4;color:#4A6548">Convidada</span>`
               : "";
-            const gIdx = r._source === "guest" ? -1 : allRows.findIndex(ar => String(ar.id) === String(r.id));
-            const openFn = gIdx >= 0 ? `openDetail(${gIdx})` : `void(0)`;
+            const openFn = r._source === "guest"
+              ? `openGuestDetail('${r.id}')`
+              : `openDetailForKanban('${r.id}')`;
             // Follow-up button (só na coluna Follow Up)
             const fuBtn = getKbStage(r) === "proposta" ? (() => {
               const log = kbFuLog[kbKey(r)] || {};
