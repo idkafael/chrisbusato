@@ -2302,7 +2302,7 @@
   function showDash() {
     loginScreen.style.display = "none";
     dashboard.style.display   = "block";
-    // Força currentSource para valor neutro evitando early-return no switchTab
+    sessionStorage.setItem(SESSION_KEY, secret); // garante sessão salva
     currentSource = "";
     switchTab("kanban");
   }
@@ -3975,14 +3975,16 @@
       return;
     }
     // Seed números do saiu.txt como guests com source "saiu" (só na primeira vez)
-    loadKbMeta();
-    const hasSaiu = kbGuests.some(g => (g.source || "") === "saiu");
-    if (!hasSaiu) {
-      SAIU_SEED.forEach((phone, i) => {
-        kbGuests.push({ id: `saiu_${Date.now()}_${i}`, name: "", phone, email: "", stage: "novo", source: "saiu" });
-      });
-      saveKbMeta();
-    }
+    try {
+      loadKbMeta();
+      const hasSaiu = kbGuests.some(g => (g.source || "") === "saiu");
+      if (!hasSaiu && typeof SAIU_SEED !== "undefined") {
+        SAIU_SEED.forEach((phone, i) => {
+          kbGuests.push({ id: `saiu_${Date.now()}_${i}`, name: "", phone, email: "", stage: "novo", source: "saiu" });
+        });
+        saveKbMeta();
+      }
+    } catch(e) { console.warn("Saiu seed error:", e); }
     renderKanban();
     backfillFuLog();
   }
