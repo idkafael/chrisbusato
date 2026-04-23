@@ -1902,26 +1902,6 @@
       <button class="tab-btn" id="tab-payments" onclick="switchTab('payments')">
         💳 Cobranças<span class="tab-badge" id="tab-payments-count">—</span>
       </button>
-      <button class="tab-btn" id="tab-saiu" onclick="switchTab('saiu')">
-        📵 Saiu do Grupo<span class="tab-badge" id="tab-saiu-count">—</span>
-      </button>
-    </div>
-
-    <!-- Saiu do Grupo View -->
-    <div id="saiu-view">
-      <div class="saiu-toolbar">
-        <div class="saiu-title">📵 Saiu do Grupo</div>
-        <div class="saiu-toolbar-actions">
-          <input type="text" id="saiu-search" class="saiu-search" placeholder="Buscar número ou nome…" oninput="renderSaiu()">
-          <label class="btn-sm btn-outline-warm saiu-import-btn" title="Importar arquivo .txt com números">
-            ⬆ Importar .txt
-            <input type="file" accept=".txt" style="display:none" onchange="importSaiuTxt(this)">
-          </label>
-          <button class="btn-sm btn-outline-warm" onclick="exportSaiuTxt()">⬇ Exportar</button>
-          <span class="saiu-count-badge" id="saiu-total-badge">0 números</span>
-        </div>
-      </div>
-      <div id="saiu-list" class="saiu-list"></div>
     </div>
 
     <!-- Cobranças View -->
@@ -1937,9 +1917,15 @@
           <button class="kanban-source-btn active" id="kb-src-organic" onclick="switchKanbanSource('organic')">🌱 Orgânico</button>
           <button class="kanban-source-btn" id="kb-src-ads" onclick="switchKanbanSource('ads')">📢 Anúncios</button>
           <button class="kanban-source-btn" id="kb-src-ingresso" onclick="switchKanbanSource('ingresso')">🎟 Ingresso</button>
+          <button class="kanban-source-btn" id="kb-src-saiu" onclick="switchKanbanSource('saiu')">📵 Saiu do Grupo</button>
         </div>
         <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
         <button class="kanban-add-guest-btn" onclick="openAddGuestModal()" title="Adicionar pessoa convidada">+</button>
+        <!-- import .txt — visível só quando fonte = saiu -->
+        <label id="kb-saiu-import-btn" class="kanban-add-offer-btn" style="display:none;cursor:pointer" title="Importar .txt com números">
+          ⬆ Importar .txt
+          <input type="file" accept=".txt" style="display:none" onchange="importSaiuToKanban(this)">
+        </label>
         <div class="kanban-offer-tabs" id="kanban-offer-tabs"></div>
         <button class="kanban-add-offer-btn fu-log-btn" id="fu-log-btn" onclick="openFuLogPanel()" title="Log de Follow-up">📋 Follow-up</button>
         <button class="kanban-add-offer-btn" onclick="openOfferModal()">+ Oferta</button>
@@ -2049,6 +2035,7 @@
       </select>
       <button class="toolbar-star-filter" id="star-filter-btn" title="Mostrar apenas estrelados" onclick="toggleStarFilter()">★ Estrelados</button>
       <button class="toolbar-duplicates-btn" onclick="openDuplicatesPanel()">⊕ Duplicados</button>
+      <button class="toolbar-duplicates-btn" style="background:rgba(138,80,80,0.08)" onclick="autoRemoveDuplicates()" title="Remove automaticamente todos os duplicados, mantendo o mais antigo">🗑 Remover duplicados</button>
       <button class="toolbar-toggle-filters" id="toggle-filters-btn" onclick="toggleFilterPanel()">⊞ Filtros</button>
     </div>
 
@@ -2338,10 +2325,9 @@
     $("tab-kanban").classList.toggle("active",   source === "kanban");
     $("tab-saiu").classList.toggle("active",     source === "saiu");
 
-    const isSpecial = source === "payments" || source === "kanban" || source === "saiu";
+    const isSpecial = source === "payments" || source === "kanban";
     $("cobrancas-view").classList.toggle("active", source === "payments");
     $("kanban-view").classList.toggle("active",    source === "kanban");
-    $("saiu-view").classList.toggle("active",      source === "saiu");
     $("stats-grid").style.display        = isSpecial ? "none" : "";
     $("payment-reminders").style.display = isSpecial ? "none" : "";
     $("filter-panel").style.display      = isSpecial ? "none" : "";
@@ -2354,7 +2340,6 @@
     stopAutoRefresh();
     if (source === "payments") { loadCobrancas(); return; }
     if (source === "kanban")   { loadKanban();    return; }
-    if (source === "saiu")     { loadSaiu();      return; }
     loadData();
   };
 
@@ -3987,15 +3972,53 @@
       $("kanban-board").innerHTML = `<div style="color:#8A5050;padding:2rem">Erro ao carregar: ${esc(e.message)}</div>`;
       return;
     }
+    // Seed números do saiu.txt como guests com source "saiu" (só na primeira vez)
+    loadKbMeta();
+    const hasSaiu = kbGuests.some(g => (g.source || "") === "saiu");
+    if (!hasSaiu) {
+      SAIU_SEED.forEach((phone, i) => {
+        kbGuests.push({ id: `saiu_${Date.now()}_${i}`, name: "", phone, email: "", stage: "novo", source: "saiu" });
+      });
+      saveKbMeta();
+    }
     renderKanban();
     backfillFuLog();
   }
 
+  // Importa .txt direto para o kanban Saiu do Grupo
+  window.importSaiuToKanban = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const lines = e.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 4);
+      loadKbMeta();
+      const existing = new Set(kbGuests.filter(g => g.source === "saiu").map(g => g.phone.replace(/\D/g, "")));
+      let added = 0;
+      lines.forEach((phone, i) => {
+        const key = phone.replace(/\D/g, "");
+        if (!existing.has(key)) {
+          kbGuests.push({ id: `saiu_${Date.now()}_${i}`, name: "", phone, email: "", stage: "novo", source: "saiu" });
+          existing.add(key);
+          added++;
+        }
+      });
+      saveKbMeta();
+      renderKanban();
+      showToast(added > 0 ? `${added} número${added !== 1 ? "s" : ""} importado${added !== 1 ? "s" : ""} ✓` : "Nenhum número novo encontrado");
+      input.value = "";
+    };
+    reader.readAsText(file);
+  };
+
   window.switchKanbanSource = function(src) {
     currentKanbanSource = src;
-    $("kb-src-organic").classList.toggle("active", src === "organic");
-    $("kb-src-ads").classList.toggle("active", src === "ads");
+    $("kb-src-organic").classList.toggle("active",  src === "organic");
+    $("kb-src-ads").classList.toggle("active",      src === "ads");
     $("kb-src-ingresso").classList.toggle("active", src === "ingresso");
+    $("kb-src-saiu").classList.toggle("active",     src === "saiu");
+    // Mostra botão de importar .txt só na fonte saiu
+    $("kb-saiu-import-btn").style.display = src === "saiu" ? "" : "none";
     renderKanban();
   };
 
@@ -4180,9 +4203,7 @@
   };
 
   // ══════════════════════ SAIU DO GRUPO ══════════════════════
-  const SAIU_KEY = "kb_saiu_list";
-
-  // Números pré-carregados do saiu.txt
+  // Números pré-carregados do saiu.txt (seed inicial)
   const SAIU_SEED = [
     "+351 966 479 619","+55 92 8823-0466","+55 32 9950-1283","+55 11 99636-1993",
     "+55 11 99599-2853","+55 11 98520-9904","+55 31 9282-6480","+55 11 97959-4512",
@@ -4198,109 +4219,27 @@
     "+55 19 99381-3883","+55 98 8703-3423","+55 11 98262-6122"
   ];
 
-  function loadSaiuList() {
+  // Auto-remover duplicados da aba ativa (mantém o mais antigo)
+  window.autoRemoveDuplicates = async function() {
+    const groups = findDuplicates();
+    if (!groups.length) { showToast("Nenhum duplicado encontrado ✓"); return; }
+    const toDelete = [];
+    groups.forEach(g => {
+      const sorted = [...g.rows].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      sorted.slice(1).forEach(r => toDelete.push({ id: r.id, source: r._source || currentSource }));
+    });
+    if (!confirm(`Remover permanentemente ${toDelete.length} lead${toDelete.length > 1 ? "s" : ""} duplicado${toDelete.length > 1 ? "s" : ""}?\nO registro mais antigo de cada grupo será mantido.`)) return;
+    const bySource = {};
+    toDelete.forEach(({ id, source }) => {
+      if (!bySource[source]) bySource[source] = [];
+      bySource[source].push(id);
+    });
     try {
-      const stored = JSON.parse(localStorage.getItem(SAIU_KEY) || "null");
-      if (stored) return stored;
-    } catch(e) {}
-    // Primeira vez: pre-load do saiu.txt
-    const initial = SAIU_SEED.map(phone => ({ phone, name: "", note: "", addedAt: "" }));
-    localStorage.setItem(SAIU_KEY, JSON.stringify(initial));
-    return initial;
-  }
-
-  function saveSaiuList(list) {
-    localStorage.setItem(SAIU_KEY, JSON.stringify(list));
-  }
-
-  window.loadSaiu = function() {
-    renderSaiu();
-    const list = loadSaiuList();
-    $("tab-saiu-count").textContent = list.length;
-  };
-
-  window.renderSaiu = function() {
-    const list = loadSaiuList();
-    const q = ($("saiu-search")?.value || "").toLowerCase().trim();
-    const filtered = q
-      ? list.filter(r =>
-          r.phone.toLowerCase().includes(q) ||
-          (r.name||"").toLowerCase().includes(q) ||
-          (r.note||"").toLowerCase().includes(q))
-      : list;
-    $("saiu-total-badge").textContent = `${list.length} número${list.length !== 1 ? "s" : ""}`;
-    $("tab-saiu-count").textContent = list.length;
-
-    if (!filtered.length) {
-      $("saiu-list").innerHTML = `<div class="saiu-empty">${q ? "Nenhum resultado para a busca." : "Nenhum número cadastrado.<br>Importe um arquivo .txt para começar."}</div>`;
-      return;
-    }
-
-    $("saiu-list").innerHTML = filtered.map((r, i) => {
-      const raw = r.phone.replace(/\D/g, "");
-      const wa  = raw ? `https://wa.me/${raw.startsWith("55") ? raw : raw.startsWith("351") ? raw : raw}` : "";
-      const realIdx = list.indexOf(r);
-      return `<div class="saiu-card">
-        <button class="saiu-card-remove" onclick="removeSaiu(${realIdx})" title="Remover">✕</button>
-        <div class="saiu-card-phone">${esc(r.phone)}${r.name ? ` · <span style="font-weight:400;color:#5C7A5A">${esc(r.name)}</span>` : ""}</div>
-        <div class="saiu-card-meta">
-          ${wa ? `<a class="saiu-card-wa" href="${wa}" target="_blank" rel="noopener">📱 WhatsApp</a>` : ""}
-        </div>
-        <input class="saiu-card-note" placeholder="Nome ou observação…"
-          value="${esc(r.name||r.note||"")}"
-          onchange="saveSaiuNote(${realIdx}, this.value)" />
-      </div>`;
-    }).join("");
-  };
-
-  window.saveSaiuNote = function(idx, val) {
-    const list = loadSaiuList();
-    if (!list[idx]) return;
-    list[idx].name = val;
-    list[idx].note = val;
-    saveSaiuList(list);
-  };
-
-  window.removeSaiu = function(idx) {
-    const list = loadSaiuList();
-    list.splice(idx, 1);
-    saveSaiuList(list);
-    renderSaiu();
-  };
-
-  window.importSaiuTxt = function(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const lines = e.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 4);
-      const list = loadSaiuList();
-      const existing = new Set(list.map(r => r.phone.replace(/\s/g, "")));
-      let added = 0;
-      lines.forEach(phone => {
-        const key = phone.replace(/\s/g, "");
-        if (!existing.has(key)) {
-          list.push({ phone, name: "", note: "", addedAt: new Date().toISOString().slice(0,10) });
-          existing.add(key);
-          added++;
-        }
-      });
-      saveSaiuList(list);
-      renderSaiu();
-      showToast(added > 0 ? `${added} número${added !== 1 ? "s" : ""} importado${added !== 1 ? "s" : ""} ✓` : "Nenhum número novo encontrado");
-      input.value = "";
-    };
-    reader.readAsText(file);
-  };
-
-  window.exportSaiuTxt = function() {
-    const list = loadSaiuList();
-    const content = list.map(r => r.phone).join("\n");
-    const blob = new Blob([content], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "saiu-do-grupo.txt";
-    a.click();
+      let total = 0;
+      for (const [src, ids] of Object.entries(bySource)) total += await deleteLeads(ids, src);
+      showToast(`${total} duplicado${total > 1 ? "s" : ""} removido${total > 1 ? "s" : ""} ✓`);
+      renderStats(); applyFilters();
+    } catch(e) { showToast("Erro: " + e.message); }
   };
 
   // ── Follow-up diário
