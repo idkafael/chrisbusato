@@ -1918,6 +1918,7 @@
           <button class="kanban-source-btn" id="kb-src-ads" onclick="switchKanbanSource('ads')">📢 Anúncios</button>
           <button class="kanban-source-btn" id="kb-src-ingresso" onclick="switchKanbanSource('ingresso')">🎟 Ingresso</button>
           <button class="kanban-source-btn" id="kb-src-saiu" onclick="switchKanbanSource('saiu')">📵 Saiu do Grupo</button>
+          <button class="kanban-source-btn" id="kb-src-ligacoes" onclick="switchKanbanSource('ligacoes')">📞 Ligações</button>
         </div>
         <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
         <button class="kanban-add-guest-btn" onclick="openAddGuestModal()" title="Adicionar pessoa convidada">+</button>
@@ -4012,10 +4013,11 @@
 
   window.switchKanbanSource = function(src) {
     currentKanbanSource = src;
-    $("kb-src-organic").classList.toggle("active",  src === "organic");
-    $("kb-src-ads").classList.toggle("active",      src === "ads");
-    $("kb-src-ingresso").classList.toggle("active", src === "ingresso");
-    $("kb-src-saiu").classList.toggle("active",     src === "saiu");
+    $("kb-src-organic").classList.toggle("active",   src === "organic");
+    $("kb-src-ads").classList.toggle("active",       src === "ads");
+    $("kb-src-ingresso").classList.toggle("active",  src === "ingresso");
+    $("kb-src-saiu").classList.toggle("active",      src === "saiu");
+    $("kb-src-ligacoes").classList.toggle("active",  src === "ligacoes");
     // Mostra botão de importar .txt só na fonte saiu
     $("kb-saiu-import-btn").style.display = src === "saiu" ? "" : "none";
     renderKanban();
@@ -4469,14 +4471,44 @@
   window.addToKanban = async function(leadId, stage) {
     loadKbMeta();
     if (currentOfferId) kbAssign[String(leadId)] = currentOfferId;
+
+    const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
+    const aRow = allRows.find(r => String(r.id) === String(leadId));
+    const row  = kRow || aRow;
+    const rowSource = kRow?._source || aRow?._source || "organic";
+
+    // Se a fonte do kanban ativo é "saiu" ou "ligacoes" (sem tabela API),
+    // guarda como kbGuest para aparecer na view correta
+    if (currentKanbanSource === "saiu" || currentKanbanSource === "ligacoes") {
+      const guestId = `${currentKanbanSource}_lead_${leadId}`;
+      const existing = kbGuests.find(g => g.id === guestId);
+      if (!existing && row) {
+        kbGuests.push({
+          id: guestId,
+          name: row.full_name || row.email || row.phone || "Lead",
+          phone: row.phone || "",
+          email: row.email || "",
+          stage,
+          source: currentKanbanSource
+        });
+      } else if (existing) {
+        existing.stage = stage;
+      }
+      saveKbMeta();
+      $("detail-overlay").classList.remove("open");
+      renderKanban();
+      showToast(`${row?.full_name || "Lead"} adicionado ✓`);
+      return;
+    }
+
+    // *** BUG FIX: salva o stage no kbStage para que getKbStage() retorne certo ***
+    const key = row ? kbKey(row) : `${rowSource}_${leadId}`;
+    kbStage[key] = stage;
+
     saveKbMeta();
     $("detail-overlay").classList.remove("open");
 
-    // Se o stage for diferente do atual, atualiza via API usando _source correto
-    const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
-    const aRow = allRows.find(r => String(r.id) === String(leadId));
-    const rowSource = kRow?._source || aRow?._source || "organic";
-    const row = kRow || aRow;
+    // Atualiza via API se o stage mudou
     if (row && (row.stage || "novo") !== stage) {
       if (kRow) kRow.stage = stage;
       if (aRow) aRow.stage = stage;
