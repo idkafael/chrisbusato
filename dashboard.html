@@ -2302,7 +2302,8 @@
   function showDash() {
     loginScreen.style.display = "none";
     dashboard.style.display   = "block";
-    currentSource = "organic"; // reset para switchTab não ignorar a troca
+    // Força currentSource para valor neutro evitando early-return no switchTab
+    currentSource = "";
     switchTab("kanban");
   }
 
