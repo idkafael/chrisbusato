@@ -87,21 +87,35 @@
     color: color-mix(in oklab, var(--olive) 55%, transparent);
   }
 
-  .post-msg {
+  .post-reveal {
     display: none;
-    text-align: center;
-    max-width: 520px;
-    padding: 10px 12px;
-    color: color-mix(in oklab, var(--ink) 65%, var(--cream));
-    font-size: 13px;
-    line-height: 1.5;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     z-index: 2;
   }
-  .post-msg.show { display: block; }
-  .post-msg strong {
-    color: var(--olive-deep);
-    font-weight: 600;
+  .post-reveal.show { display: flex; }
+  .btn-group {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 12px;
+    background: #25D366;
+    color: #fff;
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: background 160ms, transform 150ms, box-shadow 160ms;
+    box-shadow: 0 10px 28px rgba(37,211,102,0.3);
+    text-decoration: none;
   }
+  .btn-group:hover  { background: #1ebe5d; transform: translateY(-1px); }
+  .btn-group:active { transform: translateY(0); }
 
   /* ambient grain across whole page */
   body::before {
@@ -845,8 +859,10 @@
     <span class="pre-cta-hint">Ingresso · Acesso online</span>
   </div>
 
-  <div class="post-msg" id="post-msg">
-    <strong>Obrigado.</strong> Vamos entrar em contato com você no WhatsApp.
+  <div class="post-reveal" id="post-reveal">
+    <a class="btn-group" href="https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC" target="_blank" rel="noopener">
+      Entrar no grupo <span style="font-size:16px">→</span>
+    </a>
   </div>
 
 <!-- Modal de coleta (fica atrás do ticket) -->
@@ -907,7 +923,7 @@
   const capture = document.getElementById('capture');
   const stage = document.querySelector('.stage');
   const preCta = document.getElementById('pre-cta');
-  const postMsg = document.getElementById('post-msg');
+  const postReveal = document.getElementById('post-reveal');
   const openFormBtn = document.getElementById('openFormBtn');
   const ticketBottomFold = document.getElementById('ticketBottomFold');
 
@@ -940,7 +956,7 @@
     if (ticketBottomFold) ticketBottomFold.classList.remove('expanded');
     capture.classList.remove('show');
     if (preCta) preCta.style.display = '';
-    if (postMsg) postMsg.classList.remove('show');
+    if (postReveal) postReveal.classList.remove('show');
   });
   if (openFormBtn) openFormBtn.addEventListener('click', openForm);
 
@@ -1164,7 +1180,7 @@
     setTimeout(() => capture.classList.remove('show'), 220);
     setTimeout(() => {
       runReveal();
-      if (postMsg) postMsg.classList.add('show');
+      if (postReveal) postReveal.classList.add('show');
       btn.innerHTML = 'Quero Ingresso <span class="arrow">→</span>';
       btn.style.background = '';
     }, 650);
@@ -1172,7 +1188,7 @@
   document.getElementById('skip').addEventListener('click', () => {
     capture.classList.remove('show');
     if (preCta) setTimeout(() => { preCta.style.display = ''; }, 260);
-    if (postMsg) postMsg.classList.remove('show');
+    if (postReveal) postReveal.classList.remove('show');
   });
 </script>
 <!-- redeploy: force new build -->
