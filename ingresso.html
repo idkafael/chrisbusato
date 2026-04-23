@@ -911,7 +911,7 @@ fbq('track','PageView');
       ticket.classList.remove('folded');
       ticket.classList.add('revealing', 'opened');
       setTimeout(() => ticket.classList.remove('revealing'), 1300);
-      setTimeout(() => postReveal.classList.add('show'), 1100);
+      postReveal.classList.add('show');
     }, 220);
   }
 
