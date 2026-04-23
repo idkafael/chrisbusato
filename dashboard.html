@@ -4398,7 +4398,8 @@
 
   window.unassignKanbanCard = function(leadId) {
     loadKbMeta();
-    if (String(leadId).startsWith("guest_")) {
+    const isGuest = kbGuests.some(g => g.id === String(leadId));
+    if (isGuest) {
       kbGuests = kbGuests.filter(g => g.id !== String(leadId));
       delete kbStage[String(leadId)];
     } else {
@@ -4418,7 +4419,11 @@
     loadKbMeta();
     const assigned = new Set(Object.keys(kbAssign).filter(k => !currentOfferId || kbAssign[k] === currentOfferId));
     const srcRows = kanbanAllRows.length ? kanbanAllRows : allRows;
-    const candidates = srcRows.filter(r => !r.archived && !assigned.has(String(r.id)));
+    const candidates = srcRows.filter(r =>
+      !r.archived &&
+      !assigned.has(String(r.id)) &&
+      (["saiu","ligacoes"].includes(currentKanbanSource) || r._source === currentKanbanSource)
+    );
     if (!candidates.length) { showToast("Todos os leads já estão no board"); return; }
 
     const renderItems = (list) => list.slice(0, 120).map(r =>
