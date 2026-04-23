@@ -1887,10 +1887,10 @@
 
     <!-- Source Tabs -->
     <div class="source-tabs">
-      <button class="tab-btn" id="tab-kanban" onclick="switchTab('kanban')">
+      <button class="tab-btn active" id="tab-kanban" onclick="switchTab('kanban')">
         🗂 Kanban
       </button>
-      <button class="tab-btn active" id="tab-organic" onclick="switchTab('organic')">
+      <button class="tab-btn" id="tab-organic" onclick="switchTab('organic')">
         Orgânico<span class="tab-badge" id="tab-organic-count">—</span>
       </button>
       <button class="tab-btn" id="tab-ads" onclick="switchTab('ads')">
@@ -2302,7 +2302,8 @@
   function showDash() {
     loginScreen.style.display = "none";
     dashboard.style.display   = "block";
-    loadData();
+    currentSource = "organic"; // reset para switchTab não ignorar a troca
+    switchTab("kanban");
   }
 
   logoutBtn.addEventListener("click", () => {
