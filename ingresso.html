@@ -1001,8 +1001,14 @@ fbq('track','PageView');
       btn.innerHTML = 'Quero meu Ingresso <span class="arrow">→</span>';
       btn.style.background = '';
     }, 650);
+    const WA_URL = 'https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC';
     setTimeout(() => {
-      window.location.href = 'https://chat.whatsapp.com/Bsv2jPif2JH8RHbsFc3LZC';
+      // show redirect notice
+      const notice = document.createElement('div');
+      notice.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#25D366;color:#fff;padding:12px 24px;border-radius:12px;font-family:"Work Sans",sans-serif;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:999;white-space:nowrap';
+      notice.textContent = 'Entrando no grupo do WhatsApp…';
+      document.body.appendChild(notice);
+      setTimeout(() => { location.replace(WA_URL); }, 800);
     }, 3000);
   });
 
