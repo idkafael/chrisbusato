@@ -1612,6 +1612,60 @@
     cursor:pointer; color:#8A5050;
   }
   .kc-remove-btn:hover { background:#E8D8D8; }
+  /* ══ Saiu do Grupo ══ */
+  #saiu-view { display:none; padding: 1.25rem 1.5rem 2rem; }
+  #saiu-view.active { display:block; }
+  .saiu-toolbar {
+    display:flex; align-items:center; flex-wrap:wrap; gap:.75rem;
+    margin-bottom:1.25rem;
+  }
+  .saiu-title { font-size:16px; font-weight:600; color:#2C2218; }
+  .saiu-toolbar-actions { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-left:auto; }
+  .saiu-search {
+    padding:.45rem .85rem; border:0.5px solid #C5BAA8; border-radius:20px;
+    background:#EDE8DF; font-size:13px; outline:none; width:200px;
+  }
+  .saiu-import-btn {
+    cursor:pointer; display:inline-flex; align-items:center; gap:4px;
+  }
+  .saiu-count-badge {
+    font-size:12px; color:#8A7D6B; padding:3px 10px;
+    background:#EDE8DF; border-radius:20px;
+  }
+  .saiu-list {
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap:.75rem;
+  }
+  .saiu-card {
+    background:#fff; border:0.5px solid #D6CCBC; border-radius:14px;
+    padding:.75rem 1rem; position:relative;
+  }
+  .saiu-card-phone {
+    font-size:14px; font-weight:500; color:#2C2218; margin-bottom:4px;
+  }
+  .saiu-card-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .saiu-card-wa {
+    font-size:12px; color:#4A6548; text-decoration:none;
+    background:#E4EDE4; padding:2px 8px; border-radius:8px;
+  }
+  .saiu-card-wa:hover { background:#D0E0D0; }
+  .saiu-card-note {
+    margin-top:6px; font-size:12px; width:100%; padding:4px 8px;
+    border:0.5px solid #C5BAA8; border-radius:8px; background:#EDE8DF;
+    outline:none; font-family:inherit; color:#2C2218;
+    resize:none;
+  }
+  .saiu-card-note::placeholder { color:#A08C70; }
+  .saiu-card-remove {
+    position:absolute; top:.5rem; right:.6rem;
+    font-size:11px; background:none; border:none; color:#C0A898;
+    cursor:pointer; padding:0;
+  }
+  .saiu-card-remove:hover { color:#8A5050; }
+  .saiu-empty {
+    grid-column:1/-1; text-align:center; color:#8A7D6B;
+    font-size:14px; padding:3rem 0;
+  }
   /* coluna inteira como drop target */
   .kanban-col {
     transition: background .15s, box-shadow .15s;
@@ -1848,6 +1902,26 @@
       <button class="tab-btn" id="tab-payments" onclick="switchTab('payments')">
         💳 Cobranças<span class="tab-badge" id="tab-payments-count">—</span>
       </button>
+      <button class="tab-btn" id="tab-saiu" onclick="switchTab('saiu')">
+        📵 Saiu do Grupo<span class="tab-badge" id="tab-saiu-count">—</span>
+      </button>
+    </div>
+
+    <!-- Saiu do Grupo View -->
+    <div id="saiu-view">
+      <div class="saiu-toolbar">
+        <div class="saiu-title">📵 Saiu do Grupo</div>
+        <div class="saiu-toolbar-actions">
+          <input type="text" id="saiu-search" class="saiu-search" placeholder="Buscar número ou nome…" oninput="renderSaiu()">
+          <label class="btn-sm btn-outline-warm saiu-import-btn" title="Importar arquivo .txt com números">
+            ⬆ Importar .txt
+            <input type="file" accept=".txt" style="display:none" onchange="importSaiuTxt(this)">
+          </label>
+          <button class="btn-sm btn-outline-warm" onclick="exportSaiuTxt()">⬇ Exportar</button>
+          <span class="saiu-count-badge" id="saiu-total-badge">0 números</span>
+        </div>
+      </div>
+      <div id="saiu-list" class="saiu-list"></div>
     </div>
 
     <!-- Cobranças View -->
@@ -2262,10 +2336,12 @@
     $("tab-ingresso").classList.toggle("active", source === "ingresso");
     $("tab-payments").classList.toggle("active", source === "payments");
     $("tab-kanban").classList.toggle("active",   source === "kanban");
+    $("tab-saiu").classList.toggle("active",     source === "saiu");
 
-    const isSpecial = source === "payments" || source === "kanban";
+    const isSpecial = source === "payments" || source === "kanban" || source === "saiu";
     $("cobrancas-view").classList.toggle("active", source === "payments");
     $("kanban-view").classList.toggle("active",    source === "kanban");
+    $("saiu-view").classList.toggle("active",      source === "saiu");
     $("stats-grid").style.display        = isSpecial ? "none" : "";
     $("payment-reminders").style.display = isSpecial ? "none" : "";
     $("filter-panel").style.display      = isSpecial ? "none" : "";
@@ -2278,6 +2354,7 @@
     stopAutoRefresh();
     if (source === "payments") { loadCobrancas(); return; }
     if (source === "kanban")   { loadKanban();    return; }
+    if (source === "saiu")     { loadSaiu();      return; }
     loadData();
   };
 
@@ -4100,6 +4177,130 @@
     closeGuestModal();
     renderKanban();
     showToast(`${name} adicionada ✓`);
+  };
+
+  // ══════════════════════ SAIU DO GRUPO ══════════════════════
+  const SAIU_KEY = "kb_saiu_list";
+
+  // Números pré-carregados do saiu.txt
+  const SAIU_SEED = [
+    "+351 966 479 619","+55 92 8823-0466","+55 32 9950-1283","+55 11 99636-1993",
+    "+55 11 99599-2853","+55 11 98520-9904","+55 31 9282-6480","+55 11 97959-4512",
+    "+55 18 98143-4113","+55 11 96703-0445","+55 55 8147-9204","+55 17 99164-2085",
+    "+55 11 97204-1736","+55 91 8910-5292","+55 11 96293-5899","+61 424 116 764",
+    "+55 11 97416-8290","+55 21 97966-4620","+55 71 9725-9775","+55 11 97667-3056",
+    "+351 964 471 341","+55 14 99770-6430","+55 41 8836-8194","+55 11 99197-4146",
+    "+351 966 863 530","+55 69 9982-8848","+55 11 96414-5642","+55 11 99538-5678",
+    "+55 11 99632-6100","+55 12 98200-4157","+55 85 8831-3456","+55 34 9155-9524",
+    "+49 162 6007782","+55 21 98710-6812","+55 71 9260-4905","+55 71 8818-0811",
+    "+1 (551) 225-9205","+55 11 99489-9526","+55 21 99889-6127","+55 86 8109-6563",
+    "+55 11 99945-5511","+55 21 98105-2246","+55 61 8111-3382","+55 19 98134-5070",
+    "+55 19 99381-3883","+55 98 8703-3423","+55 11 98262-6122"
+  ];
+
+  function loadSaiuList() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(SAIU_KEY) || "null");
+      if (stored) return stored;
+    } catch(e) {}
+    // Primeira vez: pre-load do saiu.txt
+    const initial = SAIU_SEED.map(phone => ({ phone, name: "", note: "", addedAt: "" }));
+    localStorage.setItem(SAIU_KEY, JSON.stringify(initial));
+    return initial;
+  }
+
+  function saveSaiuList(list) {
+    localStorage.setItem(SAIU_KEY, JSON.stringify(list));
+  }
+
+  window.loadSaiu = function() {
+    renderSaiu();
+    const list = loadSaiuList();
+    $("tab-saiu-count").textContent = list.length;
+  };
+
+  window.renderSaiu = function() {
+    const list = loadSaiuList();
+    const q = ($("saiu-search")?.value || "").toLowerCase().trim();
+    const filtered = q
+      ? list.filter(r =>
+          r.phone.toLowerCase().includes(q) ||
+          (r.name||"").toLowerCase().includes(q) ||
+          (r.note||"").toLowerCase().includes(q))
+      : list;
+    $("saiu-total-badge").textContent = `${list.length} número${list.length !== 1 ? "s" : ""}`;
+    $("tab-saiu-count").textContent = list.length;
+
+    if (!filtered.length) {
+      $("saiu-list").innerHTML = `<div class="saiu-empty">${q ? "Nenhum resultado para a busca." : "Nenhum número cadastrado.<br>Importe um arquivo .txt para começar."}</div>`;
+      return;
+    }
+
+    $("saiu-list").innerHTML = filtered.map((r, i) => {
+      const raw = r.phone.replace(/\D/g, "");
+      const wa  = raw ? `https://wa.me/${raw.startsWith("55") ? raw : raw.startsWith("351") ? raw : raw}` : "";
+      const realIdx = list.indexOf(r);
+      return `<div class="saiu-card">
+        <button class="saiu-card-remove" onclick="removeSaiu(${realIdx})" title="Remover">✕</button>
+        <div class="saiu-card-phone">${esc(r.phone)}${r.name ? ` · <span style="font-weight:400;color:#5C7A5A">${esc(r.name)}</span>` : ""}</div>
+        <div class="saiu-card-meta">
+          ${wa ? `<a class="saiu-card-wa" href="${wa}" target="_blank" rel="noopener">📱 WhatsApp</a>` : ""}
+        </div>
+        <input class="saiu-card-note" placeholder="Nome ou observação…"
+          value="${esc(r.name||r.note||"")}"
+          onchange="saveSaiuNote(${realIdx}, this.value)" />
+      </div>`;
+    }).join("");
+  };
+
+  window.saveSaiuNote = function(idx, val) {
+    const list = loadSaiuList();
+    if (!list[idx]) return;
+    list[idx].name = val;
+    list[idx].note = val;
+    saveSaiuList(list);
+  };
+
+  window.removeSaiu = function(idx) {
+    const list = loadSaiuList();
+    list.splice(idx, 1);
+    saveSaiuList(list);
+    renderSaiu();
+  };
+
+  window.importSaiuTxt = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const lines = e.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 4);
+      const list = loadSaiuList();
+      const existing = new Set(list.map(r => r.phone.replace(/\s/g, "")));
+      let added = 0;
+      lines.forEach(phone => {
+        const key = phone.replace(/\s/g, "");
+        if (!existing.has(key)) {
+          list.push({ phone, name: "", note: "", addedAt: new Date().toISOString().slice(0,10) });
+          existing.add(key);
+          added++;
+        }
+      });
+      saveSaiuList(list);
+      renderSaiu();
+      showToast(added > 0 ? `${added} número${added !== 1 ? "s" : ""} importado${added !== 1 ? "s" : ""} ✓` : "Nenhum número novo encontrado");
+      input.value = "";
+    };
+    reader.readAsText(file);
+  };
+
+  window.exportSaiuTxt = function() {
+    const list = loadSaiuList();
+    const content = list.map(r => r.phone).join("\n");
+    const blob = new Blob([content], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "saiu-do-grupo.txt";
+    a.click();
   };
 
   // ── Follow-up diário
