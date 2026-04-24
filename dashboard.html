@@ -3944,12 +3944,56 @@
     if (currentOfferId === undefined) currentOfferId = null;
   }
   function saveKbMeta() {
-    localStorage.setItem(KB_OFFERS_KEY, JSON.stringify(kbOffers));
-    localStorage.setItem(KB_ASSIGN_KEY, JSON.stringify(kbAssign));
-    localStorage.setItem(KB_GUESTS_KEY, JSON.stringify(kbGuests));
+    localStorage.setItem(KB_OFFERS_KEY,  JSON.stringify(kbOffers));
+    localStorage.setItem(KB_ASSIGN_KEY,  JSON.stringify(kbAssign));
+    localStorage.setItem(KB_GUESTS_KEY,  JSON.stringify(kbGuests));
     localStorage.setItem(KB_FU_LOG_KEY,  JSON.stringify(kbFuLog));
     localStorage.setItem(KB_STAGE_KEY,   JSON.stringify(kbStage));
     localStorage.setItem(KB_REMOVED_KEY, JSON.stringify(kbRemoved));
+    // Persiste no servidor (todos os usuários)
+    fetch("/api/kanban-state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret,
+        state: {
+          [KB_OFFERS_KEY]:  kbOffers,
+          [KB_ASSIGN_KEY]:  kbAssign,
+          [KB_GUESTS_KEY]:  kbGuests,
+          [KB_FU_LOG_KEY]:  kbFuLog,
+          [KB_STAGE_KEY]:   kbStage,
+          [KB_REMOVED_KEY]: kbRemoved,
+        }
+      })
+    }).catch(() => {});
+  }
+
+  async function syncKbFromServer() {
+    try {
+      const res = await fetch(`/api/kanban-state?secret=${encodeURIComponent(secret)}`);
+      const data = await res.json();
+      if (!data.ok || !data.state) return;
+      const s = data.state;
+      const apply = (key, setter) => {
+        if (s[key] !== undefined) {
+          localStorage.setItem(key, JSON.stringify(s[key]));
+          setter(s[key]);
+        }
+      };
+      apply(KB_OFFERS_KEY,  v => { kbOffers  = v; });
+      apply(KB_ASSIGN_KEY,  v => { kbAssign  = v; });
+      apply(KB_GUESTS_KEY,  v => { kbGuests  = v; });
+      apply(KB_FU_LOG_KEY,  v => { kbFuLog   = v; });
+      apply(KB_STAGE_KEY,   v => { kbStage   = v; });
+      apply(KB_REMOVED_KEY, v => { kbRemoved = v; });
+      if (!kbOffers.length) {
+        kbOffers = [
+          { id:"offer_1", name:"Corpo Musical" },
+          { id:"offer_2", name:"Date fora do comum" },
+          { id:"offer_3", name:"Profissionais Musicais" }
+        ];
+      }
+    } catch(e) { console.warn("syncKbFromServer:", e); }
   }
 
   // Stage do kanban (independente do CRM, com namespace por source)
@@ -3963,6 +4007,8 @@
 
   async function loadKanban() {
     $("kanban-board").innerHTML = `<div style="color:#8A7D6B;padding:2rem;display:flex;align-items:center;gap:.5rem"><span class="spin-ring"></span> Carregando leads…</div>`;
+    // Sincroniza estado do kanban do servidor antes de renderizar
+    await syncKbFromServer();
     try {
       const [r1, r2, r3] = await Promise.all([
         fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&source=organic&page=0&pageSize=500`),
