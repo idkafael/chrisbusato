@@ -4430,13 +4430,13 @@
 
   // Move card = update stage via API + atualiza allRows em memória
   window.moveKanbanCard = async function(leadId, newStage) {
-    // Convidadas: só atualiza localStorage
-    if (String(leadId).startsWith("guest_")) {
-      loadKbMeta();
+    loadKbMeta();
+    // Guests (saiu, ligacoes, guest_xxx): atualiza o objeto no kbGuests
+    const isGuest = kbGuests.some(g => g.id === String(leadId));
+    if (isGuest) {
       const g = kbGuests.find(g => g.id === String(leadId));
       if (g) {
         g.stage = newStage;
-        // Registra entrada no Follow Up
         if (newStage === "proposta") {
           if (!kbFuLog[g.id]) kbFuLog[g.id] = {};
           if (!kbFuLog[g.id]._entered) kbFuLog[g.id]._entered = todayStr();
@@ -4447,24 +4447,21 @@
       showToast(`Movido para ${kanbanLabelForStage(newStage)}`);
       return;
     }
-    // Atualiza kbStage local imediatamente (kanban independente do CRM)
-    loadKbMeta();
+    // Leads de API (organic, ads, ingresso): atualiza kbStage
     const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
     const aRow = allRows.find(r => String(r.id) === String(leadId));
     const key = kRow ? kbKey(kRow) : `${currentKanbanSource}_${leadId}`;
-    const prevKbStage = kbStage[key] || "novo";
     kbStage[key] = newStage;
-    // Registra entrada no Follow Up
     if (newStage === "proposta") {
       if (!kbFuLog[key]) kbFuLog[key] = {};
       if (!kbFuLog[key]._entered) kbFuLog[key]._entered = todayStr();
     }
     saveKbMeta();
-    if (kRow) { kRow.stage = newStage; }
-    if (aRow) { aRow.stage = newStage; }
+    if (kRow) kRow.stage = newStage;
+    if (aRow) aRow.stage = newStage;
     renderKanban();
     showToast(`Movido para ${kanbanLabelForStage(newStage)}`);
-    // Sincroniza com o CRM via API em background
+    // Sincroniza com o CRM em background (falha silenciosa — kanban é independente)
     if (kRow) {
       const rowSource = kRow._source || "organic";
       fetch("/api/update-lead", {
@@ -4473,10 +4470,6 @@
         body: JSON.stringify({ secret, id: leadId, source: rowSource, stage: newStage })
       }).then(r => r.json()).then(d => {
         if (d.ok) { renderTable(); renderStats(); }
-        else {
-          kbStage[key] = prevKbStage;
-          saveKbMeta(); renderKanban(); showToast("Erro ao sincronizar com CRM");
-        }
       }).catch(() => {});
     }
   };
