@@ -1930,6 +1930,7 @@
         <div class="kanban-offer-tabs" id="kanban-offer-tabs"></div>
         <button class="kanban-add-offer-btn fu-log-btn" id="fu-log-btn" onclick="openFuLogPanel()" title="Log de Follow-up">📋 Follow-up</button>
         <button class="kanban-add-offer-btn" onclick="openOfferModal()">+ Oferta</button>
+        <button class="kanban-add-offer-btn" onclick="uploadLocalKanbanToServer(this)" title="Enviar estado local para o servidor (sobrescreve)">↑ Enviar meu kanban</button>
       </div>
       <div class="kanban-novo-search-wrap">
         <input class="kanban-novo-search" id="kanban-novo-search" type="text"
@@ -3972,8 +3973,19 @@
     try {
       const res = await fetch(`/api/kanban-state?secret=${encodeURIComponent(secret)}`);
       const data = await res.json();
-      if (!data.ok || !data.state) return;
-      const s = data.state;
+      if (!data.ok) return;
+      const s = data.state || {};
+      const serverHasData = Object.keys(s).length > 0;
+
+      if (!serverHasData) {
+        // Servidor vazio: faz upload do localStorage local (bootstrap)
+        loadKbMeta();
+        saveKbMeta();
+        showToast("Kanban local enviado para o servidor ✓");
+        return;
+      }
+
+      // Servidor tem dados: aplica no local
       const apply = (key, setter) => {
         if (s[key] !== undefined) {
           localStorage.setItem(key, JSON.stringify(s[key]));
@@ -3995,6 +4007,34 @@
       }
     } catch(e) { console.warn("syncKbFromServer:", e); }
   }
+
+  // Upload manual: envia o localStorage atual para o servidor (sobrescreve)
+  window.uploadLocalKanbanToServer = async function(btn) {
+    if (!confirm("Enviar seu kanban local para o servidor?\nIsso vai sobrescrever o estado atual de todos os outros usuários.")) return;
+    if (btn) { btn.textContent = "Enviando…"; btn.disabled = true; }
+    loadKbMeta();
+    try {
+      const res = await fetch("/api/kanban-state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret,
+          state: {
+            [KB_OFFERS_KEY]:  kbOffers,
+            [KB_ASSIGN_KEY]:  kbAssign,
+            [KB_GUESTS_KEY]:  kbGuests,
+            [KB_FU_LOG_KEY]:  kbFuLog,
+            [KB_STAGE_KEY]:   kbStage,
+            [KB_REMOVED_KEY]: kbRemoved,
+          }
+        })
+      });
+      const d = await res.json();
+      if (d.ok) { showToast("Kanban enviado para o servidor ✓"); renderKanban(); }
+      else showToast("Erro ao enviar: " + (d.error || "?"));
+    } catch(e) { showToast("Erro de rede ao enviar"); }
+    if (btn) { btn.textContent = "↑ Enviar meu kanban"; btn.disabled = false; }
+  };
 
   // Stage do kanban (independente do CRM, com namespace por source)
   function getKbStage(r) {
