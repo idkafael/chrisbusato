@@ -3906,17 +3906,19 @@
   }
 
   // localStorage: ofertas e mapeamento leadId → offerId
-  const KB_OFFERS_KEY = "cb_kb_offers";
-  const KB_ASSIGN_KEY = "cb_kb_assign"; // { leadId: offerId }
-  const KB_GUESTS_KEY = "cb_kb_guests"; // [{id, name, phone, email, stage, offerId}]
-  const KB_FU_LOG_KEY = "cb_kb_fu_log"; // { leadId: { "YYYY-MM-DD": true/false, _entered:"YYYY-MM-DD" } }
-  const KB_STAGE_KEY  = "cb_kb_stage";  // { leadId: "novo"|"contatado"|... } — stage próprio do kanban
+  const KB_OFFERS_KEY  = "cb_kb_offers";
+  const KB_ASSIGN_KEY  = "cb_kb_assign";  // { leadId: offerId }
+  const KB_GUESTS_KEY  = "cb_kb_guests";  // [{id, name, phone, email, stage, offerId}]
+  const KB_FU_LOG_KEY  = "cb_kb_fu_log";  // { leadId: { "YYYY-MM-DD": true/false, _entered:"YYYY-MM-DD" } }
+  const KB_STAGE_KEY   = "cb_kb_stage";   // { leadId: "novo"|"contatado"|... } — stage próprio do kanban
+  const KB_REMOVED_KEY = "cb_kb_removed"; // { "source_id": true } — leads removidos do board
 
   let kbOffers      = [];   // [{id, name}]
   let kbAssign      = {};   // { leadId: offerId }
   let kbGuests      = [];   // [{id, name, phone, email, stage}]
   let kbFuLog       = {};   // { leadId: { "YYYY-MM-DD": bool, _entered: str } }
-  let kbStage            = {};   // { "source_id": stage } — stage do kanban por source
+  let kbStage       = {};   // { "source_id": stage } — stage do kanban por source
+  let kbRemoved     = {};   // { "source_id": true } — leads ocultos do board
   let currentOfferId     = null;
   let currentKanbanSource = "organic"; // "organic" | "ads" | "ingresso"
 
@@ -3929,7 +3931,8 @@
     try { kbAssign = JSON.parse(localStorage.getItem(KB_ASSIGN_KEY) || "{}"); } catch(e) { kbAssign = {}; }
     try { kbGuests = JSON.parse(localStorage.getItem(KB_GUESTS_KEY) || "[]"); } catch(e) { kbGuests = []; }
     try { kbFuLog  = JSON.parse(localStorage.getItem(KB_FU_LOG_KEY)  || "{}"); } catch(e) { kbFuLog = {}; }
-    try { kbStage  = JSON.parse(localStorage.getItem(KB_STAGE_KEY)  || "{}"); } catch(e) { kbStage = {}; }
+    try { kbStage   = JSON.parse(localStorage.getItem(KB_STAGE_KEY)   || "{}"); } catch(e) { kbStage = {}; }
+    try { kbRemoved = JSON.parse(localStorage.getItem(KB_REMOVED_KEY) || "{}"); } catch(e) { kbRemoved = {}; }
     if (!kbOffers.length) {
       kbOffers = [
         { id:"offer_1", name:"Corpo Musical" },
@@ -3946,6 +3949,7 @@
     localStorage.setItem(KB_GUESTS_KEY, JSON.stringify(kbGuests));
     localStorage.setItem(KB_FU_LOG_KEY,  JSON.stringify(kbFuLog));
     localStorage.setItem(KB_STAGE_KEY,   JSON.stringify(kbStage));
+    localStorage.setItem(KB_REMOVED_KEY, JSON.stringify(kbRemoved));
   }
 
   // Stage do kanban (independente do CRM, com namespace por source)
@@ -4052,9 +4056,11 @@
       ).join("") +
       (currentOfferId ? `<button class="kanban-offer-tab" style="background:#F2E8E8;color:#8A5050" onclick="deleteOffer('${currentOfferId}')">✕</button>` : "");
 
-    // Filter rows by offer and global search
+    // Filter rows by offer, removed list, and global search
     const rows = allSrcRows.filter(r => {
       if (r.archived) return false;
+      const rKey = r._source === "guest" ? String(r.id) : `${r._source||"organic"}_${r.id}`;
+      if (kbRemoved[rKey]) return false;
       if (currentOfferId && kbAssign[String(r.id)] !== currentOfferId) return false;
       if (q && !(r.full_name||"").toLowerCase().includes(q) && !(r.email||"").toLowerCase().includes(q)) return false;
       return true;
@@ -4406,6 +4412,7 @@
       const kRow = kanbanAllRows.find(r => String(r.id) === String(leadId));
       const key = kRow ? kbKey(kRow) : `${currentKanbanSource}_${leadId}`;
       delete kbStage[key];
+      kbRemoved[key] = true; // oculta lead do board sem apagar do CRM
     }
     delete kbAssign[String(leadId)];
     saveKbMeta();
@@ -4485,6 +4492,10 @@
     const aRow = allRows.find(r => String(r.id) === String(leadId));
     const row  = kRow || aRow;
     const rowSource = kRow?._source || aRow?._source || "organic";
+
+    // Se estava removido, reintegra ao board
+    const removeKey = `${rowSource}_${leadId}`;
+    delete kbRemoved[removeKey];
 
     // Se a fonte do kanban ativo é "saiu" ou "ligacoes" (sem tabela API),
     // guarda como kbGuest para aparecer na view correta
