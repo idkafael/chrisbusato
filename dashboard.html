@@ -3099,6 +3099,9 @@
       }
       const row = allRows.find(r => String(r.id) === String(id));
       if (row) { row.notes = notes; if (currentDetailRow) currentDetailRow.notes = notes; }
+      // Atualiza kanbanAllRows para refletir no card sem reload
+      const kRow = kanbanAllRows.find(r => String(r.id) === String(id));
+      if (kRow) { kRow.notes = notes; renderKanban(); }
       showToast("Notas salvas");
       btn.classList.remove("saving");
       btn.textContent = "Salvar notas";
@@ -3982,7 +3985,13 @@
 
   async function syncKbFromServer() {
     try {
-      const res = await fetch(`/api/kanban-state?secret=${encodeURIComponent(secret)}`);
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), 5000)
+      );
+      const res = await Promise.race([
+        fetch(`/api/kanban-state?secret=${encodeURIComponent(secret)}`),
+        timeout
+      ]);
       const data = await res.json();
       if (!data.ok) return;
       const s = data.state || {};
