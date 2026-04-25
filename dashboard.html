@@ -1612,6 +1612,18 @@
     cursor:pointer; color:#8A5050;
   }
   .kc-remove-btn:hover { background:#E8D8D8; }
+  .kc-note {
+    margin-top:7px;
+    font-size:11px;
+    color:#5C5043;
+    background:#F5F0E5;
+    border-left:2px solid #B89C6B;
+    border-radius:0 6px 6px 0;
+    padding:4px 8px;
+    line-height:1.4;
+    word-break:break-word;
+    white-space:pre-wrap;
+  }
   /* ══ Saiu do Grupo ══ */
   #saiu-view { display:none; padding: 1.25rem 1.5rem 2rem; }
   #saiu-view.active { display:block; }
@@ -4119,7 +4131,7 @@
       .filter(g => (g.source || "organic") === currentKanbanSource)
       .map(g => ({
         id: g.id, full_name: g.name, email: g.email || "", phone: g.phone || "",
-        stage: g.stage || "novo", _source: "guest", archived: false
+        stage: g.stage || "novo", _source: "guest", archived: false, notes: g.notes || ""
       }));
     const allSrcRows = [...rows_src, ...guestRows];
     const tabsEl  = $("kanban-offer-tabs");
@@ -4212,6 +4224,7 @@
               ${infoChips ? `<div class="kc-chips">${infoChips}</div>` : ""}
               <button onclick="event.stopPropagation();unassignKanbanCard('${r.id}')"
                 class="kc-remove-btn">✕ Remover</button>
+              ${r.notes ? `<div class="kc-note">📝 ${esc(r.notes)}</div>` : ""}
             </div>`;
           }).join("")}
         </div>
