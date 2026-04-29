@@ -1581,6 +1581,8 @@
   }
   .kanban-col-title { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5C5043; }
   .kanban-col-count { font-size: 11px; color: #8A7D6B; background: #D8D0C4; border-radius: 10px; padding: 1px 7px; }
+  .kanban-col-dl-btn { font-size: 11px; background: none; border: none; cursor: pointer; padding: 1px 4px; border-radius: 6px; color: #8A7D6B; line-height: 1; transition: background .15s; }
+  .kanban-col-dl-btn:hover { background: #C8C0B4; }
   .kanban-cards { display: flex; flex-direction: column; gap: 0.45rem; min-height: 80px; }
   .kanban-card {
     background: #F2EDE3; border: 0.5px solid #C5BAA8; border-radius: 12px;
@@ -1709,6 +1711,34 @@
     font-size: 12px; color: #A08C70; cursor: pointer; transition: background .15s;
   }
   .kanban-col-add-btn:hover { background: #E8E0D0; }
+  /* ── Collapsible columns ── */
+  .kanban-col-header { cursor: pointer; user-select: none; }
+  .kanban-col-toggle {
+    font-size: 10px; color: #B0A090; line-height: 1;
+    display: inline-block; transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    margin-right: 3px;
+  }
+  .kanban-col.collapsed .kanban-col-toggle { transform: rotate(-90deg); }
+  .kanban-col-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease;
+    opacity: 1;
+  }
+  .kanban-col.collapsed .kanban-col-body {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .kanban-col-body-inner {
+    min-height: 0; overflow: hidden;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  /* header glow on drop-target para colunas fechadas */
+  .kanban-col.drag-target.collapsed .kanban-col-header {
+    background: #D0C8B8;
+    box-shadow: inset 0 0 0 2px rgba(138,125,107,.5);
+  }
   .kanban-search-input {
     background: #EDE8DF; border: 0.5px solid #C5BAA8; border-radius: 12px;
     padding: 0.5rem 0.85rem; font-size: 13px; color: #2C2218;
@@ -1931,6 +1961,7 @@
           <button class="kanban-source-btn" id="kb-src-ingresso" onclick="switchKanbanSource('ingresso')">🎟 Ingresso</button>
           <button class="kanban-source-btn" id="kb-src-saiu" onclick="switchKanbanSource('saiu')">📵 Saiu do Grupo</button>
           <button class="kanban-source-btn" id="kb-src-ligacoes" onclick="switchKanbanSource('ligacoes')">📞 Ligações</button>
+          <button class="kanban-source-btn" id="kb-src-presencial" onclick="switchKanbanSource('presencial')">📍 Presencial</button>
         </div>
         <input class="kanban-search-input" id="kanban-search" type="text" placeholder="Buscar lead…" oninput="renderKanban()" />
         <button class="kanban-add-guest-btn" onclick="openAddGuestModal()" title="Adicionar pessoa convidada">+</button>
@@ -2134,6 +2165,13 @@
       <div class="offer-modal-label">E-mail <span style="font-weight:400;color:#8A7D6B">(opcional)</span></div>
       <input type="email" class="offer-modal-input" id="guest-modal-email"
         placeholder="fulana@email.com"
+        style="font-family:inherit"
+        onkeydown="if(event.key==='Enter' && document.getElementById('guest-modal-estado-wrap').style.display==='none')saveGuest();else if(event.key==='Enter')$('guest-modal-estado').focus()">
+    </div>
+    <div class="offer-modal-field" style="margin-top:0.75rem;display:none" id="guest-modal-estado-wrap">
+      <div class="offer-modal-label">Estado / Cidade <span style="font-weight:400;color:#8A7D6B">(de onde é?)</span></div>
+      <input type="text" class="offer-modal-input" id="guest-modal-estado"
+        placeholder="Ex: Rio de Janeiro, MG…"
         style="font-family:inherit"
         onkeydown="if(event.key==='Enter')saveGuest()">
     </div>
@@ -3344,6 +3382,11 @@
         <div class="payment-field-label">E-mail</div>
         <input class="payment-field-input" id="gd-email" type="email" value="${esc(g.email||"")}" placeholder="email@exemplo.com" />
       </div>
+      ${g.source === "presencial" ? `
+      <div class="offer-modal-field" style="margin-bottom:.6rem">
+        <div class="payment-field-label">Estado / Cidade</div>
+        <input class="payment-field-input" id="gd-estado" value="${esc(g.estado||"")}" placeholder="Ex: Rio de Janeiro, MG…" />
+      </div>` : ""}
       <div class="detail-div"></div>
       <div class="detail-section-label">💳 Pagamento</div>
       <div class="pay-method-chips">
@@ -3387,6 +3430,7 @@
     g.name              = $("gd-name").value.trim() || g.name;
     g.phone             = $("gd-phone").value.trim();
     g.email             = $("gd-email").value.trim();
+    if (g.source === "presencial") g.estado = ($("gd-estado")?.value || "").trim();
     g.payment_method    = activeMethod ? activeMethod.textContent : (g.payment_method || "");
     g.payment_value     = parseFloat($("gd-val").value) || 0;
     g.payment_installments = parseInt($("gd-inst").value) || 0;
@@ -3912,8 +3956,9 @@
 
   // CRM stage → label e cor no Kanban
   const KANBAN_STAGES = ["novo","contatado","interessado","proposta","fechado","perdido"];
-  const KANBAN_LABEL  = { novo:"Novo", contatado:"Contatado", interessado:"Interessado", proposta:"Follow Up", fechado:"Fechado", perdido:"Perdido" };
-  const KANBAN_COLOR  = { novo:"#8A7D6B", contatado:"#5C7A5A", interessado:"#A08030", proposta:"#B06820", fechado:"#4A6548", perdido:"#8A5050" };
+  const KANBAN_STAGES_PRESENCIAL = ["novo","contatado","interessado","proposta","fechado","perdido","longe"];
+  const KANBAN_LABEL  = { novo:"Novo", contatado:"Contatado", interessado:"Interessado", proposta:"Follow Up", fechado:"Fechado", perdido:"Perdido", longe:"Quero mas moro longe" };
+  const KANBAN_COLOR  = { novo:"#8A7D6B", contatado:"#5C7A5A", interessado:"#A08030", proposta:"#B06820", fechado:"#4A6548", perdido:"#8A5050", longe:"#5A6A8A" };
 
   function kanbanLabelForStage(stage) {
     if (currentKanbanSource === "ingresso" && stage === "fechado") return "Confirmou Presença";
@@ -3934,6 +3979,7 @@
   let kbFuLog       = {};   // { leadId: { "YYYY-MM-DD": bool, _entered: str } }
   let kbStage       = {};   // { "source_id": stage } — stage do kanban por source
   let kbRemoved     = {};   // { "source_id": true } — leads ocultos do board
+  let kbCollapsed   = {};   // { stage: true } — colunas fechadas (só UI, não persiste)
   let currentOfferId     = null;
   let currentKanbanSource = "organic"; // "organic" | "ads" | "ingresso"
 
@@ -4119,16 +4165,56 @@
     reader.readAsText(file);
   };
 
+  window.toggleKanbanCol = function(stage) {
+    const col = document.querySelector(`.kanban-col[data-stage="${stage}"]`);
+    if (!col) return;
+    const closing = !col.classList.contains("collapsed");
+    col.classList.toggle("collapsed", closing);
+    kbCollapsed[stage] = closing;
+  };
+
   window.switchKanbanSource = function(src) {
     currentKanbanSource = src;
-    $("kb-src-organic").classList.toggle("active",   src === "organic");
-    $("kb-src-ads").classList.toggle("active",       src === "ads");
-    $("kb-src-ingresso").classList.toggle("active",  src === "ingresso");
-    $("kb-src-saiu").classList.toggle("active",      src === "saiu");
-    $("kb-src-ligacoes").classList.toggle("active",  src === "ligacoes");
-    // Mostra botão de importar .txt só na fonte saiu
+    kbCollapsed = {};
+    $("kb-src-organic").classList.toggle("active",      src === "organic");
+    $("kb-src-ads").classList.toggle("active",          src === "ads");
+    $("kb-src-ingresso").classList.toggle("active",     src === "ingresso");
+    $("kb-src-saiu").classList.toggle("active",         src === "saiu");
+    $("kb-src-ligacoes").classList.toggle("active",     src === "ligacoes");
+    $("kb-src-presencial").classList.toggle("active",   src === "presencial");
     $("kb-saiu-import-btn").style.display = src === "saiu" ? "" : "none";
     renderKanban();
+  };
+
+  window.downloadKanbanPhones = function(stage, e) {
+    e && e.stopPropagation();
+    const allLeads = kanbanAllRows.length ? kanbanAllRows : allRows.map(r => ({...r, _source: r._source || currentSource}));
+    const rows_src = allLeads.filter(r => r._source === currentKanbanSource);
+    const guestRows = kbGuests
+      .filter(g => (g.source || "organic") === currentKanbanSource)
+      .map(g => ({ id: g.id, full_name: g.name, phone: g.phone || "", stage: g.stage || "novo", _source: "guest", archived: false, estado: g.estado || "" }));
+    const allSrcRows = [...rows_src, ...guestRows];
+    const rows = allSrcRows.filter(r => {
+      if (r.archived) return false;
+      const rKey = r._source === "guest" ? String(r.id) : `${r._source||"organic"}_${r.id}`;
+      if (kbRemoved[rKey]) return false;
+      if (currentOfferId && kbAssign[String(r.id)] !== currentOfferId) return false;
+      return true;
+    });
+    const stageRows = rows.filter(r => getKbStage(r) === stage);
+    const isLonge = stage === "longe" && currentKanbanSource === "presencial";
+    const entries = stageRows
+      .map(r => {
+        const phone = r.phone ? r.phone.replace(/\D/g, "") : "";
+        if (!phone) return null;
+        return isLonge && r.estado ? `${phone} (${r.estado})` : phone;
+      })
+      .filter(Boolean);
+    if (!entries.length) { alert("Nenhum número disponível nesta coluna."); return; }
+    const a = document.createElement("a");
+    a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(entries.join(", "));
+    a.download = `numeros_${stage}.txt`;
+    a.click();
   };
 
   window.renderKanban = function() {
@@ -4140,7 +4226,8 @@
       .filter(g => (g.source || "organic") === currentKanbanSource)
       .map(g => ({
         id: g.id, full_name: g.name, email: g.email || "", phone: g.phone || "",
-        stage: g.stage || "novo", _source: "guest", archived: false, notes: g.notes || ""
+        stage: g.stage || "novo", _source: "guest", archived: false, notes: g.notes || "",
+        estado: g.estado || ""
       }));
     const allSrcRows = [...rows_src, ...guestRows];
     const tabsEl  = $("kanban-offer-tabs");
@@ -4171,21 +4258,30 @@
       || (r.email||"").toLowerCase().includes(novoQ)
       || (r.phone||"").includes(novoQ);
 
-    boardEl.innerHTML = KANBAN_STAGES.map(stage => {
+    const activeStages = currentKanbanSource === "presencial" ? KANBAN_STAGES_PRESENCIAL : KANBAN_STAGES;
+    boardEl.innerHTML = activeStages.map(stage => {
       // NOVO usa kbStage e busca própria; outras colunas usam kbStage normal
       const stageRows = stage === "novo"
         ? rows.filter(r => getKbStage(r) === "novo" && matchNovo(r))
         : rows.filter(r => getKbStage(r) === stage);
       const color = KANBAN_COLOR[stage];
       const label = kanbanLabelForStage(stage);
-      return `<div class="kanban-col" data-stage="${stage}"
+      const isCollapsed = !!kbCollapsed[stage];
+      return `<div class="kanban-col${isCollapsed ? " collapsed" : ""}" data-stage="${stage}"
         ondragover="kanbanColDragOver(event,'${stage}')"
         ondragleave="kanbanColDragLeave(event)"
         ondrop="kanbanColDrop(event,'${stage}')">
-        <div class="kanban-col-header">
-          <span class="kanban-col-title" style="color:${color}">${label}</span>
-          <span class="kanban-col-count">${stageRows.length}</span>
+        <div class="kanban-col-header" onclick="toggleKanbanCol('${stage}')">
+          <div style="display:flex;align-items:center">
+            <span class="kanban-col-toggle">▾</span>
+            <span class="kanban-col-title" style="color:${color}">${label}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="kanban-col-count">${stageRows.length}</span>
+            <button class="kanban-col-dl-btn" title="Baixar números desta coluna" onclick="downloadKanbanPhones('${stage}',event)">⬇</button>
+          </div>
         </div>
+        <div class="kanban-col-body"><div class="kanban-col-body-inner">
         <div class="kanban-cards">
           ${stageRows.map(r => {
             const rawPhone = r.phone ? r.phone.replace(/\D/g,"") : "";
@@ -4201,6 +4297,8 @@
               ? `<span class="kanban-card-badge" style="background:#EDE4D4;color:#8A7050">Anúncio</span>`
               : r._source === "ingresso"
               ? `<span class="kanban-card-badge" style="background:#EDEBF6;color:#5D4A8A">Ingresso</span>`
+              : r._source === "guest" && currentKanbanSource === "presencial"
+              ? `<span class="kanban-card-badge" style="background:#E4EBF5;color:#3A5080">Presencial</span>`
               : r._source === "guest"
               ? `<span class="kanban-card-badge" style="background:#E4EDE4;color:#4A6548">Convidada</span>`
               : "";
@@ -4221,6 +4319,7 @@
               (r.payment_installments > 0) ? `<span class="kc-chip">📋 ${r.payment_paid_count||0}/${r.payment_installments} parcelas</span>` : "",
               r.payment_method ? `<span class="kc-chip">💳 ${esc(r.payment_method)}</span>` : "",
               r.dominant_type ? `<span class="kc-chip kc-chip-type">${TYPE_LABEL[r.dominant_type] || r.dominant_type}</span>` : "",
+              (currentKanbanSource === "presencial" && r.estado) ? `<span class="kc-chip" style="background:#D8E4F0;color:#3A5080">📍 ${esc(r.estado)}</span>` : "",
             ].filter(Boolean).join("");
             return `<div class="kanban-card" draggable="true"
               ondragstart="kanbanDragStart(event,'${r.id}')"
@@ -4239,6 +4338,7 @@
         </div>
         <div class="kanban-col-drop-hint" id="kh-${stage}">Soltar aqui</div>
         <button class="kanban-col-add-btn" onclick="openKanbanAddLead('${stage}')">+ Adicionar lead</button>
+        </div></div>
       </div>`;
     }).join("");
     setTimeout(updateFuLogBtn, 0);
@@ -4287,6 +4387,9 @@
     $("guest-modal-name").value = "";
     $("guest-modal-phone").value = "";
     $("guest-modal-email").value = "";
+    $("guest-modal-estado").value = "";
+    const isPresencial = currentKanbanSource === "presencial";
+    $("guest-modal-estado-wrap").style.display = isPresencial ? "" : "none";
     $("guest-modal-overlay").classList.add("open");
     setTimeout(() => $("guest-modal-name").focus(), 50);
   };
@@ -4300,13 +4403,16 @@
     el.value = v;
   };
   window.saveGuest = function() {
-    const name  = $("guest-modal-name").value.trim();
-    const phone = $("guest-modal-phone").value.trim();
-    const email = $("guest-modal-email").value.trim();
+    const name   = $("guest-modal-name").value.trim();
+    const phone  = $("guest-modal-phone").value.trim();
+    const email  = $("guest-modal-email").value.trim();
+    const estado = currentKanbanSource === "presencial" ? ($("guest-modal-estado").value.trim()) : "";
     if (!name) { showToast("Informe o nome da pessoa"); $("guest-modal-name").focus(); return; }
     loadKbMeta();
     const id = "guest_" + Date.now();
-    kbGuests.push({ id, name, email, phone, stage: "novo", source: currentKanbanSource });
+    const guest = { id, name, email, phone, stage: "novo", source: currentKanbanSource };
+    if (estado) guest.estado = estado;
+    kbGuests.push(guest);
     if (currentOfferId) kbAssign[id] = currentOfferId;
     saveKbMeta();
     closeGuestModal();
