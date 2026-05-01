@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chris Busato — Dança & Consciência</title>
+  <meta name="description" content="Escolha o caminho da dança que faz sentido pra você.">
+
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1659916645332253');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #EDE8DF;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1rem 3rem;
+}
+
+/* ── Card container ── */
+.bio-card {
+  width: 100%;
+  max-width: 420px;
+  background: #F2EDE3;
+  border-radius: 28px;
+  padding: 2.25rem 1.75rem 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 0.5px solid rgba(197,186,168,.6);
+  box-shadow: 0 4px 32px rgba(44,34,24,.07);
+}
+
+/* ── Leaf decorations (same as index) ── */
+.leaf-deco {
+  position: absolute;
+  opacity: 0.13;
+  pointer-events: none;
+}
+.leaf-tr { top: -14px; right: -14px; width: 96px; }
+.leaf-bl { bottom: -14px; left: -14px; width: 72px; transform: rotate(180deg); }
+
+/* ── Profile header ── */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4C9B8 0%, #C0B49E 100%);
+  border: 2.5px solid #E8E0D0;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.profile-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #2C2218;
+  margin-bottom: 0.25rem;
+}
+
+.profile-handle {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #A08C70;
+  margin-bottom: 0.65rem;
+}
+
+.profile-bio {
+  font-size: 13.5px;
+  color: #6B5E4E;
+  line-height: 1.65;
+  max-width: 310px;
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 1.6rem;
+}
+.divider-line { flex: 1; height: 0.5px; background: #C5BAA8; }
+.divider-dot  { width: 4px; height: 4px; border-radius: 50%; background: #C5BAA8; flex-shrink: 0; }
+
+/* ── Section label ── */
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8A7D6B;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* ── Offer cards ── */
+.offers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.offer {
+  background: #EDE8DF;
+  border: 0.5px solid #D0C8BC;
+  border-radius: 18px;
+  padding: 1.1rem 1.15rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.offer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44,34,24,.1);
+}
+.offer:active { transform: translateY(0); }
+
+/* accent bar on the left */
+.offer::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3.5px;
+  border-radius: 18px 0 0 18px;
+  background: var(--accent);
+  transition: width 0.18s ease;
+}
+.offer:hover::before { width: 5px; }
+
+.offer-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.offer-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+.offer:hover .offer-icon { transform: scale(1.08); }
+
+.offer-text { flex: 1; min-width: 0; }
+
+.offer-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #2C2218;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.2rem;
+  line-height: 1.3;
+}
+
+.offer-desc {
+  font-size: 12px;
+  color: #7A6E60;
+  line-height: 1.55;
+}
+
+.offer-arrow {
+  font-size: 16px;
+  color: var(--accent);
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+  opacity: 0.7;
+}
+.offer:hover .offer-arrow { transform: translateX(3px); opacity: 1; }
+
+/* ── Offer themes ── */
+.offer--casais {
+  --accent: #B86B40;
+  --icon-bg: rgba(184,107,64,.12);
+}
+.offer--professores {
+  --accent: #4A7A48;
+  --icon-bg: rgba(74,122,72,.12);
+}
+.offer--paixao {
+  --accent: #7A5CA0;
+  --icon-bg: rgba(122,92,160,.12);
+}
+
+/* ── Footer ── */
+.bio-footer {
+  margin-top: 1.75rem;
+  text-align: center;
+}
+.bio-footer-text {
+  font-size: 11px;
+  color: #B0A090;
+  letter-spacing: 0.05em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 440px) {
+  .bio-card { padding: 2rem 1.25rem 1.75rem; border-radius: 22px; }
+  .profile-name { font-size: 20px; }
+  .offer-title { font-size: 13.5px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+<div class="bio-card">
+
+  <!-- Leaf decorations -->
+  <svg class="leaf-deco leaf-tr" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+  <svg class="leaf-deco leaf-bl" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+
+  <!-- Profile -->
+  <div class="profile">
+    <div class="profile-avatar">🌿</div>
+    <div class="profile-name">Chris Busato</div>
+    <div class="profile-handle">Dança &amp; Consciência</div>
+    <p class="profile-bio">Movimento que parte de dentro.<br>Escolha o caminho que faz sentido pra você.</p>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="section-label">Por onde você quer começar?</div>
+
+  <!-- Offers -->
+  <div class="offers">
+
+    <!-- 1. Casais -->
+    <a class="offer offer--casais" href="#casais" onclick="goOffer('casais', event)">
+      <div class="offer-inner">
+        <div class="offer-icon">💑</div>
+        <div class="offer-text">
+          <div class="offer-title">Dança para Casais</div>
+          <div class="offer-desc">Conexão, toque e cumplicidade através do movimento a dois.</div>
+        </div>
+        <span class="offer-arrow">›</span>
+      </div>
+    </a>
+
+    <!-- 2. Professores -->
+    <a class="offer offer--professores" href="#professores" onclick="goOffer('professores', event)">
+      <div class="offer-inner">
+        <div class="offer-icon">🌱</div>
+        <div class="offer-text">
+          <div class="offer-title">Formação de Professores</div>
+          <div class="offer-desc">Aprofunde sua técnica, pedagogia e presença em sala.</div>
+        </div>
+        <span class="offer-arrow">›</span>
+      </div>
+    </a>
+
+    <!-- 3. Paixão -->
+    <a class="offer offer--paixao" href="#paixao" onclick="goOffer('paixao', event)">
+      <div class="offer-inner">
+        <div class="offer-icon">✨</div>
+        <div class="offer-text">
+          <div class="offer-title">Dança por Paixão</div>
+          <div class="offer-desc">Para quem quer aprender, se reconectar ou dançar pelo prazer de sentir.</div>
+        </div>
+        <span class="offer-arrow">›</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="bio-footer">
+    <div class="bio-footer-text">© Chris Busato · Dança &amp; Consciência</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+  /* ── Destinos — substitua os URLs pelos links reais de cada oferta ── */
+  const OFFER_URLS = {
+    casais:      "https://chrisbusato.com.br/casais",       /* LP / checkout casais      */
+    professores: "https://chrisbusato.com.br/professores",  /* LP / checkout professores */
+    paixao:      "https://chrisbusato.com.br/paixao"        /* LP / checkout paixão      */
+  };
+
+  function goOffer(key, e) {
+    e && e.preventDefault();
+    const url = OFFER_URLS[key];
+    if (!url || url.startsWith('#')) {
+      /* placeholder — remove este bloco quando tiver os URLs reais */
+      alert('URL para "' + key + '" ainda não configurada.\nEdite OFFER_URLS no <script> do linkbio.html.');
+      return;
+    }
+    /* Pixel — ViewContent por oferta */
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'ViewContent', { content_name: key });
+    }
+    window.location.href = url;
+  }
+</script>
+
+</body>
+</html>
