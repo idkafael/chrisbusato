@@ -17,6 +17,8 @@
     { "source": "/ingresso", "destination": "/ingresso/index.html" },
     { "source": "/ingresso/", "destination": "/ingresso/index.html" },
     { "source": "/grupo", "destination": "/grupo/index.html" },
-    { "source": "/grupo/", "destination": "/grupo/index.html" }
+    { "source": "/grupo/", "destination": "/grupo/index.html" },
+    { "source": "/linkbio", "destination": "/linkbio.html" },
+    { "source": "/linkbio/", "destination": "/linkbio.html" }
   ]
 }
