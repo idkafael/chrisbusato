@@ -50,3 +50,22 @@ fs.copyFileSync(
   path.join(__dirname, "grupo.html"),
   path.join(grupoDir, "index.html")
 );
+
+// Linkbio
+fs.copyFileSync(
+  path.join(__dirname, "linkbio.html"),
+  path.join(__dirname, "dist", "linkbio.html")
+);
+
+// Imagens estáticas — copia toda a pasta /images para /dist/images
+var imagesDir = path.join(__dirname, "images");
+if (fs.existsSync(imagesDir)) {
+  var distImagesDir = path.join(__dirname, "dist", "images");
+  fs.mkdirSync(distImagesDir, { recursive: true });
+  fs.readdirSync(imagesDir).forEach(function(file) {
+    fs.copyFileSync(
+      path.join(imagesDir, file),
+      path.join(distImagesDir, file)
+    );
+  });
+}
