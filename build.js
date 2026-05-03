@@ -57,6 +57,14 @@ fs.copyFileSync(
   path.join(__dirname, "dist", "linkbio.html")
 );
 
+// Global (multilingual quiz)
+var globalDir = path.join(__dirname, "dist", "global");
+fs.mkdirSync(globalDir, { recursive: true });
+fs.copyFileSync(
+  path.join(__dirname, "global.html"),
+  path.join(globalDir, "index.html")
+);
+
 // Imagens estáticas — copia toda a pasta /images para /dist/images
 var imagesDir = path.join(__dirname, "images");
 if (fs.existsSync(imagesDir)) {

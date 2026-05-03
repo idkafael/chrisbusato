@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR" id="html-root">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz — Dance & Consciousness</title>
+
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1659916645332253');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #EDE8DF;
+  font-family: 'Inter', sans-serif;
+}
+
+.page-bg {
+  min-height: 100vh;
+  background: #EDE8DF;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.card {
+  background: #F2EDE3;
+  border-radius: 28px;
+  padding: 2.5rem 2rem;
+  max-width: 520px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.leaf-deco { position: absolute; opacity: 0.18; pointer-events: none; }
+.leaf-tr { top: -10px; right: -10px; width: 90px; }
+.leaf-bl { bottom: -10px; left: -10px; width: 70px; transform: rotate(180deg); }
+.leaf-svg { width: 100%; height: auto; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #8A7D6B;
+  text-align: center; margin-bottom: 1.5rem;
+}
+
+.divider {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin: 1rem 0 1.5rem;
+}
+.divider-line { height: 0.5px; width: 60px; background: #C5BAA8; }
+.divider-dot { width: 4px; height: 4px; border-radius: 50%; background: #C5BAA8; }
+
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+.card h1 {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 500; font-style: normal;
+  letter-spacing: -0.03em; color: #2C2218; text-align: center;
+}
+
+.hero-name { font-size: 30px; line-height: 1.25; margin-bottom: 0.35rem; }
+.hero-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #A08C70; text-align: center; margin-bottom: 0;
+}
+
+.body-text { font-size: 14px; color: #5C5043; line-height: 1.7; text-align: center; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(44, 34, 24, 0.35);
+  display: none; align-items: center; justify-content: center;
+  padding: 1.25rem 1rem; z-index: 999;
+}
+.modal-overlay.active { display: flex; }
+
+.modal-card {
+  width: 100%; max-width: 520px; background: #F2EDE3;
+  border-radius: 22px; padding: 1.5rem 1.25rem; position: relative;
+  box-shadow: 0 14px 40px rgba(44, 34, 24, 0.18);
+  border: 0.5px solid rgba(197, 186, 168, 0.9);
+}
+.modal-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600; letter-spacing: -0.03em; color: #2C2218;
+  text-align: center; font-size: 20px; line-height: 1.25; margin-bottom: 0.5rem;
+}
+.modal-subtitle {
+  font-size: 13.5px; color: #5C5043; line-height: 1.6;
+  text-align: center; margin-bottom: 1.25rem;
+}
+.form-grid { display: flex; flex-direction: column; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #8A7D6B; text-align: left; font-weight: 500;
+}
+.field-input {
+  width: 100%; background: #EDE8DF; border: 0.5px solid #C5BAA8;
+  border-radius: 14px; padding: 0.85rem 1rem;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; color: #2C2218; outline: none;
+}
+.field-input:focus { border-color: #5C7A5A; box-shadow: 0 0 0 3px rgba(92, 122, 90, 0.16); }
+.phone-field-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.phone-field-row .field-input--cc { flex: 0 0 auto; min-width: 118px; max-width: 46%; padding-left: 0.65rem; padding-right: 0.45rem; font-size: 13px; cursor: pointer; }
+.phone-field-row .field-input--cc-custom { display: none; flex: 0 0 76px; width: 76px; text-align: center; padding-left: 0.5rem; padding-right: 0.5rem; }
+.phone-field-row .field-input--cc-custom.is-visible { display: block; }
+.phone-field-row .field-input--national { flex: 1 1 160px; min-width: 0; }
+.form-error {
+  display: none; margin-top: 0.75rem; background: rgba(181, 191, 180, 0.25);
+  border: 0.5px solid rgba(197, 186, 168, 0.9); color: #5C5043;
+  border-radius: 14px; padding: 0.75rem 0.9rem; font-size: 12.5px;
+  line-height: 1.5; text-align: center;
+}
+.form-error.active { display: block; }
+.modal-actions { margin-top: 1rem; }
+.btn-muted {
+  display: block; width: 100%; padding: 10px; background: transparent;
+  color: #8A7D6B; border: none; font-family: 'Inter', sans-serif;
+  font-size: 13px; cursor: pointer; text-align: center;
+  margin-top: 0.5rem; letter-spacing: 0.01em;
+}
+.btn-muted:hover { color: #5C5043; }
+
+.btn-green {
+  display: block; width: 100%; padding: 15px 20px; background: #5C7A5A;
+  color: #F5F0E8; border: none; border-radius: 50px;
+  font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: background 0.2s, transform 0.15s;
+  margin-top: 1.5rem; letter-spacing: 0.01em;
+}
+.btn-green:hover { background: #4A6548; transform: translateY(-1px); }
+.btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
+
+.intro-stack { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.5rem; }
+.intro-stack .btn-green { margin-top: 0; }
+
+.progress-wrap {
+  height: 3px; background: #D8D0C4; border-radius: 2px;
+  margin-bottom: 1.75rem; overflow: hidden;
+}
+.progress-fill { height: 100%; background: #5C7A5A; border-radius: 2px; transition: width 0.5s ease; }
+
+.q-counter {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: #A08C70; text-align: center; margin-bottom: 0.75rem;
+}
+
+.q-text { font-size: 20px; line-height: 1.45; margin-bottom: 1.75rem; }
+
+.options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+
+.option-btn {
+  background: #EDE8DF; border: 0.5px solid #C5BAA8; border-radius: 16px;
+  padding: 0.9rem 1.1rem; text-align: left; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; color: #4A4035;
+  line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;
+}
+.option-btn:hover { border-color: #5C7A5A; background: #E4EDE3; }
+.option-btn.selected { border: 1px solid #5C7A5A; background: #E4EDE3; }
+
+.opt-letter {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: #D8D0C4; color: #5C5043; font-size: 11px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.option-btn.selected .opt-letter { background: #5C7A5A; color: #F5F0E8; }
+
+.map-diagnosis { margin-bottom: 1.25rem; }
+.card .map-diagnosis-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600; font-size: 22px; line-height: 1.28;
+  letter-spacing: 0.06em; text-transform: uppercase; color: #2C2218;
+  text-align: center; margin-bottom: 0;
+}
+
+.map-bars { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
+.map-row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.map-label { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #5C5043; }
+.map-pct { font-family: 'DM Sans', 'Inter', system-ui, sans-serif; font-size: 15px; font-weight: 600; color: #2C2218; letter-spacing: -0.02em; }
+.map-bar-track { height: 10px; border-radius: 999px; background: #D8D0C4; overflow: hidden; }
+.map-bar-fill { height: 100%; border-radius: 999px; width: 0%; transition: width 0.85s ease-out; }
+.map-bar-fill--r { background: #6B7A6B; }
+.map-bar-fill--d { background: #5C7A5A; }
+.map-bar-fill--s { background: #8A7A68; }
+.map-bar-fill--m { background: #4A6548; }
+
+.cta-section { margin-top: 1.5rem; text-align: center; }
+.cta-section .btn-green { margin-top: 0; }
+.cta-small { font-size: 12px; color: #A08C70; margin-top: 0.75rem; font-style: italic; font-family: 'Playfair Display', Georgia, serif; }
+
+.loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 0 0.25rem; }
+.loading-spinner { width: 54px; height: 54px; border-radius: 50%; border: 3px solid rgba(197, 186, 168, 0.7); border-top-color: #5C7A5A; animation: spin 0.9s linear infinite; margin-bottom: 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 22px; line-height: 1.25; margin-bottom: 0.5rem; }
+.loading-subtitle { font-size: 13.5px; color: #5C5043; line-height: 1.65; text-align: center; max-width: 420px; }
+.loading-dots { display: inline-flex; gap: 6px; margin-top: 0.9rem; }
+.loading-dot { width: 6px; height: 6px; border-radius: 999px; background: #5C7A5A; opacity: 0.25; animation: pulse 1.1s infinite ease-in-out; }
+.loading-dot:nth-child(2) { animation-delay: 0.12s; }
+.loading-dot:nth-child(3) { animation-delay: 0.24s; }
+@keyframes pulse { 0%, 100% { transform: translateY(0); opacity: 0.25; } 50% { transform: translateY(-3px); opacity: 0.9; } }
+
+/* ── Language selector ── */
+.lang-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+}
+.lang-globe {
+  font-size: 36px;
+  margin-bottom: 1.25rem;
+  line-height: 1;
+}
+.lang-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #2C2218;
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+}
+.lang-subtitle {
+  font-size: 13px;
+  color: #8A7D6B;
+  margin-bottom: 2rem;
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.lang-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 340px;
+}
+.lang-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #EDE8DF;
+  border: 0.5px solid #C5BAA8;
+  border-radius: 18px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  text-align: left;
+}
+.lang-btn:hover {
+  border-color: #5C7A5A;
+  background: #E4EDE3;
+  transform: translateY(-1px);
+}
+.lang-btn:active { transform: translateY(0); }
+.lang-flag { font-size: 26px; line-height: 1; flex-shrink: 0; }
+.lang-info { display: flex; flex-direction: column; gap: 2px; }
+.lang-name { font-size: 15px; font-weight: 600; color: #2C2218; letter-spacing: -0.01em; }
+.lang-native { font-size: 11px; color: #8A7D6B; letter-spacing: 0.04em; }
+
+@media (max-width: 480px) {
+  .card { padding: 2rem 1.25rem; border-radius: 20px; }
+  .hero-name { font-size: 26px; }
+  .q-text { font-size: 18px; }
+  .card .map-diagnosis-title { font-size: 17px; letter-spacing: 0.05em; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-bg">
+<div class="card">
+
+  <svg class="leaf-deco leaf-tr" viewBox="0 0 120 160" fill="none">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+  <svg class="leaf-deco leaf-bl" viewBox="0 0 120 160" fill="none">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+
+  <!-- LANGUAGE SELECTION -->
+  <div class="screen active" id="s-lang">
+    <div class="lang-screen">
+      <div class="lang-globe">🌍</div>
+      <div class="lang-title">Choose your language</div>
+      <p class="lang-subtitle">Elige tu idioma · Escolha seu idioma</p>
+      <div class="lang-options">
+        <button class="lang-btn" onclick="selectLang('pt')">
+          <span class="lang-flag">🇧🇷</span>
+          <div class="lang-info">
+            <span class="lang-name">Português</span>
+            <span class="lang-native">Brasil</span>
+          </div>
+        </button>
+        <button class="lang-btn" onclick="selectLang('es')">
+          <span class="lang-flag">🇪🇸</span>
+          <div class="lang-info">
+            <span class="lang-name">Español</span>
+            <span class="lang-native">Latinoamérica · España</span>
+          </div>
+        </button>
+        <button class="lang-btn" onclick="selectLang('en')">
+          <span class="lang-flag">🇺🇸</span>
+          <div class="lang-info">
+            <span class="lang-name">English</span>
+            <span class="lang-native">United States · International</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="screen" id="s-intro">
+    <div class="tag" id="t-tag"></div>
+    <h1 class="hero-name" id="t-heroTitle"></h1>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <p class="body-text" id="t-bodyText"></p>
+    <div class="intro-stack">
+      <button type="button" class="btn-green" id="btn-start-quiz" onclick="startQuizFromIntro()"></button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="q-counter" id="q-counter"></div>
+    <h1 class="q-text" id="q-text"></h1>
+    <div class="options-list" id="q-options"></div>
+    <button class="btn-green" id="btn-next" disabled onclick="nextQ()"></button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="s-loading">
+    <div class="tag" id="t-loadTag"></div>
+    <div class="loading-wrap">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h1 class="loading-title" id="t-loadTitle"></h1>
+      <div class="loading-subtitle" id="t-loadSubtitle"></div>
+      <div class="loading-dots" aria-hidden="true">
+        <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result">
+    <div class="tag" id="t-resultTag"></div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <div class="map-diagnosis">
+      <h1 class="map-diagnosis-title" id="map-diagnosis-title"></h1>
+    </div>
+    <div class="map-bars" id="map-bars"></div>
+    <div class="cta-section">
+      <button type="button" class="btn-green" id="btn-wpp" onclick="goWpp()"></button>
+      <p class="cta-small" id="result-cta-small"></p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- Lead Modal -->
+<div class="modal-overlay" id="lead-modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-title" id="t-modalTitle"></div>
+    <div class="modal-subtitle" id="t-modalSubtitle"></div>
+    <form id="lead-form" class="form-grid">
+      <div class="field">
+        <label class="field-label" id="t-emailLabel" for="lead-email"></label>
+        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="email@example.com" pattern=".+@.+" required>
+      </div>
+      <div class="field">
+        <label class="field-label" id="t-phoneLabel" for="lead-phone-cc"></label>
+        <div class="phone-field-row">
+          <select class="field-input field-input--cc" id="lead-phone-cc" name="phone_cc" aria-label="Country code" autocomplete="off">
+            <option value="55" selected>🇧🇷 +55</option>
+            <option value="351">🇵🇹 +351</option>
+            <option value="1">🇺🇸 +1</option>
+            <option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option>
+            <option value="57">🇨🇴 +57</option>
+            <option value="51">🇵🇪 +51</option>
+            <option value="598">🇺🇾 +598</option>
+            <option value="595">🇵🇾 +595</option>
+            <option value="34">🇪🇸 +34</option>
+            <option value="39">🇮🇹 +39</option>
+            <option value="33">🇫🇷 +33</option>
+            <option value="49">🇩🇪 +49</option>
+            <option value="44">🇬🇧 +44</option>
+            <option value="52">🇲🇽 +52</option>
+            <option value="81">🇯🇵 +81</option>
+            <option value="86">🇨🇳 +86</option>
+            <option value="91">🇮🇳 +91</option>
+            <option value="244">🇦🇴 +244</option>
+            <option value="258">🇲🇿 +258</option>
+            <option value="238">🇨🇻 +238</option>
+            <option value="__custom__">🌐 Other</option>
+          </select>
+          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="Code" maxlength="3">
+          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required>
+        </div>
+      </div>
+      <div class="form-error" id="lead-error"></div>
+      <div class="modal-actions">
+        <button class="btn-green" type="submit" id="t-btnContinue"></button>
+        <button class="btn-muted" type="button" id="t-btnSkip" onclick="closeLeadModal()"></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/site-destinations.js"></script>
+<script>
+/* ════════════════════════════════════════════════
+   TRANSLATIONS
+════════════════════════════════════════════════ */
+const T = {
+  pt: {
+    htmlLang: "pt-BR",
+    tag: "Dança & Consciência",
+    heroTitle: "Descubra se hoje você dança a partir do corpo racional, dependente, sensível desorganizado ou musical",
+    bodyText: "Descubra como seu corpo se relaciona com o movimento e qual estado está guiando sua dança neste momento.",
+    btnStart: "Fazer o quiz →",
+    loadTag: "Análise",
+    loadTitle: "Analisando suas respostas",
+    loadSubtitle: "Só um instante. Estou identificando o estado que está guiando sua dança agora.",
+    resultTag: "Seu mapa",
+    btnCta: "Entrar no Grupo",
+    ctaSmall: "Não precisa saber dançar",
+    modalTitle: "Antes de começar",
+    modalSubtitle: "Deixa seu email e WhatsApp pra eu te enviar seu resultado e novidades do conteúdo.",
+    emailLabel: "Email",
+    phoneLabel: "WhatsApp",
+    btnContinue: "Continuar →",
+    btnSkip: "Agora não",
+    questionOf: (c, t) => `Pergunta ${c} de ${t}`,
+    btnNext: "Próxima →",
+    diagnosisTitles: { R: "Corpo racional", D: "Corpo dependente", S: "Corpo sensível desorganizado", M: "Corpo musical" },
+    barLabels: { R: "Corpo racional", D: "Corpo dependente", S: "Corpo sensível desorganizado", M: "Corpo musical" },
+    emailError: "Coloque um email válido para continuar.",
+    phoneError: (min, max) => `WhatsApp inválido: use ${min}${min !== max ? " a " + max : ""} dígitos (sem o código do país).`,
+    questions: [
+      { text: "Quando você começa a dançar, o que normalmente vem primeiro para você?", options: [
+        { l:"A", t:"Tento lembrar quais passos fazer", type:"R" },
+        { l:"B", t:"Espero sentir o outro me guiando para entrar", type:"D" },
+        { l:"C", t:"Primeiro percebo a música e deixo o corpo responder", type:"M" },
+        { l:"D", t:"Sinto a música, mas acabo me perdendo nos movimentos ou na conexão com o par", type:"S" }
+      ]},
+      { text: "Se tirassem os passos que você já conhece, como você se sentiria?", options: [
+        { l:"A", t:"Perdido(a), sem saber o que fazer", type:"R" },
+        { l:"B", t:"Inseguro(a), precisando que alguém me conduzisse", type:"D" },
+        { l:"C", t:"Livre para explorar o que a música pede", type:"M" },
+        { l:"D", t:"Eu sinto a música, mas me desorganizo para sustentar isso no movimento", type:"S" }
+      ]},
+      { text: "Enquanto dança, você sente que pensa mais ou sente mais?", options: [
+        { l:"A", t:"Penso muito no que estou fazendo", type:"R" },
+        { l:"B", t:"Fico pensando se o outro está confortável ou se estou acompanhando direito", type:"D" },
+        { l:"C", t:"Consigo sentir o corpo e a música com naturalidade", type:"M" },
+        { l:"D", t:"Eu sinto, mas não consigo manter isso estável: o fluxo quebra fácil", type:"S" }
+      ]},
+      { text: "Em relação ao tempo da música, o que mais acontece com você?", options: [
+        { l:"A", t:"Me travo tentando acertar e o fluir some", type:"R" },
+        { l:"B", t:"Fico mais seguro(a) quando o outro ajuda a marcar o tempo", type:"D" },
+        { l:"C", t:"Consigo me sentir dentro do ritmo com consistência", type:"M" },
+        { l:"D", t:"Sinto o tempo, mas me adianto, atraso ou saio da condução sem querer", type:"S" }
+      ]},
+      { text: "Quando você erra ou se perde na dança, o que acontece com você?", options: [
+        { l:"A", t:"Fico tenso(a) e tento corrigir na hora", type:"R" },
+        { l:"B", t:"Me desorganizo e dependo do outro para voltar", type:"D" },
+        { l:"C", t:"Respiro, continuo presente e sigo no movimento", type:"M" },
+        { l:"D", t:"Eu continuo, mas demoro a me achar de novo na estrutura do movimento e da conexão.", type:"S" }
+      ]},
+      { text: "Em relação à música, qual frase mais combina com você?", options: [
+        { l:"A", t:"Eu só percebo melhor a música depois que já comecei a dançar", type:"R" },
+        { l:"B", t:"Eu percebo a música, mas dependo muito do outro para conseguir entrar nela", type:"D" },
+        { l:"C", t:"A música me guia e meu corpo responde a ela", type:"M" },
+        { l:"D", t:"Eu percebo a música, mas não organizo isso no movimento como eu queria", type:"S" }
+      ]},
+      { text: "Quando dança na frente de outras pessoas, como você costuma se sentir?", options: [
+        { l:"A", t:"Com medo de errar ou parecer travado(a)", type:"R" },
+        { l:"B", t:"Inseguro(a), com vergonha e preocupado(a) com a reação do outro", type:"D" },
+        { l:"C", t:"Mais presente no corpo e focado(a) no que estou sentindo.", type:"M" },
+        { l:"D", t:"Percebo a reação das pessoas, tento não me afetar, mas isso às vezes bagunça meu corpo por dentro.", type:"S" }
+      ]},
+      { text: "O que mais te frustra quando você dança?", options: [
+        { l:"A", t:"Sentir que penso demais e não consigo fluir", type:"R" },
+        { l:"B", t:"Sentir que só consigo dançar bem com determinadas pessoas", type:"D" },
+        { l:"C", t:"Quando já fluo, quero sustentar isso com mais profundidade", type:"M" },
+        { l:"D", t:"Fico preocupado(a) se estou fazendo certo: eu sinto, mas parece gerar conflito com o par ou meu corpo não \"obedece\".", type:"S" }
+      ]},
+      { text: "Quando seu corpo não responde como você gostaria, qual é sua reação?", options: [
+        { l:"A", t:"Me cobro querendo aprender mais para fazer melhor", type:"R" },
+        { l:"B", t:"Fico inseguro(a) e frustrado(a) achando que sou incapaz", type:"D" },
+        { l:"C", t:"Escuto o corpo, ajusto e continuo a partir do que é possível", type:"M" },
+        { l:"D", t:"Eu tento ajustar, mas sinto que algo fica desencaixado", type:"S" }
+      ]},
+      { text: "O que você mais deseja hoje na dança?", options: [
+        { l:"A", t:"Parar de travar e me sentir mais seguro(a)", type:"R" },
+        { l:"B", t:"Conseguir me soltar, brincar e me expressar na música", type:"D" },
+        { l:"C", t:"Ter mais danças prazerosas", type:"M" },
+        { l:"D", t:"Sustentar o que eu sinto e manter a conexão.", type:"S" }
+      ]}
+    ]
+  },
+
+  es: {
+    htmlLang: "es",
+    tag: "Danza & Consciencia",
+    heroTitle: "Descubre si hoy bailas desde el cuerpo racional, dependiente, sensible desorganizado o musical",
+    bodyText: "Descubre cómo tu cuerpo se relaciona con el movimiento y qué estado está guiando tu danza en este momento.",
+    btnStart: "Hacer el quiz →",
+    loadTag: "Análisis",
+    loadTitle: "Analizando tus respuestas",
+    loadSubtitle: "Solo un momento. Estoy identificando el estado que guía tu danza ahora.",
+    resultTag: "Tu mapa",
+    btnCta: "Entrar al Grupo",
+    ctaSmall: "No necesitas saber bailar",
+    modalTitle: "Antes de comenzar",
+    modalSubtitle: "Deja tu email y WhatsApp para que te envíe tu resultado y novedades del contenido.",
+    emailLabel: "Email",
+    phoneLabel: "WhatsApp",
+    btnContinue: "Continuar →",
+    btnSkip: "Ahora no",
+    questionOf: (c, t) => `Pregunta ${c} de ${t}`,
+    btnNext: "Siguiente →",
+    diagnosisTitles: { R: "Cuerpo racional", D: "Cuerpo dependiente", S: "Cuerpo sensible desorganizado", M: "Cuerpo musical" },
+    barLabels: { R: "Cuerpo racional", D: "Cuerpo dependiente", S: "Cuerpo sensible desorg.", M: "Cuerpo musical" },
+    emailError: "Ingresa un email válido para continuar.",
+    phoneError: (min, max) => `WhatsApp inválido: usa ${min}${min !== max ? " a " + max : ""} dígitos (sin el código de país).`,
+    questions: [
+      { text: "Cuando empiezas a bailar, ¿qué es lo primero que suele llegarte?", options: [
+        { l:"A", t:"Trato de recordar qué pasos hacer", type:"R" },
+        { l:"B", t:"Espero sentir al otro guiándome para entrar", type:"D" },
+        { l:"C", t:"Primero percibo la música y dejo que el cuerpo responda", type:"M" },
+        { l:"D", t:"Siento la música, pero me pierdo en los movimientos o en la conexión con la pareja", type:"S" }
+      ]},
+      { text: "Si te quitaran los pasos que ya conoces, ¿cómo te sentirías?", options: [
+        { l:"A", t:"Perdido/a, sin saber qué hacer", type:"R" },
+        { l:"B", t:"Inseguro/a, necesitando que alguien me guíe", type:"D" },
+        { l:"C", t:"Libre para explorar lo que la música pide", type:"M" },
+        { l:"D", t:"Siento la música, pero me desorganizo para sostener eso en el movimiento", type:"S" }
+      ]},
+      { text: "Mientras bailas, ¿sientes que piensas más o sientes más?", options: [
+        { l:"A", t:"Pienso mucho en lo que estoy haciendo", type:"R" },
+        { l:"B", t:"Me preocupo pensando si el otro está cómodo o si lo sigo bien", type:"D" },
+        { l:"C", t:"Puedo sentir el cuerpo y la música con naturalidad", type:"M" },
+        { l:"D", t:"Siento, pero no puedo mantenerlo estable: el flujo se rompe fácilmente", type:"S" }
+      ]},
+      { text: "En cuanto al ritmo de la música, ¿qué te suele pasar?", options: [
+        { l:"A", t:"Me bloqueo intentando acertar y el fluir desaparece", type:"R" },
+        { l:"B", t:"Me siento más seguro/a cuando el otro me ayuda a marcar el tiempo", type:"D" },
+        { l:"C", t:"Puedo sentirme dentro del ritmo con consistencia", type:"M" },
+        { l:"D", t:"Siento el tiempo, pero me adelanto, me atraso o me salgo de la conducción sin querer", type:"S" }
+      ]},
+      { text: "Cuando te equivocas o te pierdes en el baile, ¿qué te pasa?", options: [
+        { l:"A", t:"Me pongo tenso/a e intento corregir en el momento", type:"R" },
+        { l:"B", t:"Me desorganizo y necesito al otro para volver", type:"D" },
+        { l:"C", t:"Respiro, me mantengo presente y continúo en el movimiento", type:"M" },
+        { l:"D", t:"Continúo, pero tardo en reencontrarme en la estructura del movimiento y la conexión.", type:"S" }
+      ]},
+      { text: "En cuanto a la música, ¿cuál frase te describe mejor?", options: [
+        { l:"A", t:"Solo percibo mejor la música después de haber empezado a bailar", type:"R" },
+        { l:"B", t:"Percibo la música, pero dependo mucho del otro para poder entrar en ella", type:"D" },
+        { l:"C", t:"La música me guía y mi cuerpo le responde", type:"M" },
+        { l:"D", t:"Percibo la música, pero no la organizo en el movimiento como quisiera", type:"S" }
+      ]},
+      { text: "Cuando bailas frente a otras personas, ¿cómo sueles sentirte?", options: [
+        { l:"A", t:"Con miedo de equivocarme o de parecer rígido/a", type:"R" },
+        { l:"B", t:"Inseguro/a, con vergüenza y preocupado/a por la reacción del otro", type:"D" },
+        { l:"C", t:"Más presente en el cuerpo y enfocado/a en lo que estoy sintiendo.", type:"M" },
+        { l:"D", t:"Percibo la reacción de la gente, intento no dejarme afectar, pero a veces eso me desorganiza por dentro.", type:"S" }
+      ]},
+      { text: "¿Qué es lo que más te frustra cuando bailas?", options: [
+        { l:"A", t:"Sentir que pienso demasiado y no puedo fluir", type:"R" },
+        { l:"B", t:"Sentir que solo puedo bailar bien con ciertas personas", type:"D" },
+        { l:"C", t:"Cuando ya fluyo, quiero sostener eso con más profundidad", type:"M" },
+        { l:"D", t:"Me preocupo por si lo hago bien: lo siento, pero genera conflicto con la pareja o mi cuerpo no \"obedece\".", type:"S" }
+      ]},
+      { text: "Cuando tu cuerpo no responde como quisieras, ¿cuál es tu reacción?", options: [
+        { l:"A", t:"Me exijo aprender más para hacerlo mejor", type:"R" },
+        { l:"B", t:"Me siento inseguro/a y frustrado/a pensando que soy incapaz", type:"D" },
+        { l:"C", t:"Escucho al cuerpo, ajusto y continúo desde lo que es posible", type:"M" },
+        { l:"D", t:"Intento ajustar, pero siento que algo queda desencajado", type:"S" }
+      ]},
+      { text: "¿Qué es lo que más deseas hoy en el baile?", options: [
+        { l:"A", t:"Dejar de bloquearme y sentirme más seguro/a", type:"R" },
+        { l:"B", t:"Poder soltarme, jugar y expresarme en la música", type:"D" },
+        { l:"C", t:"Tener más bailes placenteros", type:"M" },
+        { l:"D", t:"Sostener lo que siento y mantener la conexión.", type:"S" }
+      ]}
+    ]
+  },
+
+  en: {
+    htmlLang: "en",
+    tag: "Dance & Consciousness",
+    heroTitle: "Discover if today you dance from a rational, dependent, disorganized sensitive, or musical body",
+    bodyText: "Find out how your body relates to movement and which state is guiding your dance right now.",
+    btnStart: "Take the quiz →",
+    loadTag: "Analysis",
+    loadTitle: "Analyzing your answers",
+    loadSubtitle: "Just a moment. I'm identifying the state that's guiding your dance right now.",
+    resultTag: "Your map",
+    btnCta: "Join the Group",
+    ctaSmall: "No dancing experience needed",
+    modalTitle: "Before we start",
+    modalSubtitle: "Leave your email and WhatsApp so I can send you your result and updates.",
+    emailLabel: "Email",
+    phoneLabel: "WhatsApp",
+    btnContinue: "Continue →",
+    btnSkip: "Not now",
+    questionOf: (c, t) => `Question ${c} of ${t}`,
+    btnNext: "Next →",
+    diagnosisTitles: { R: "Rational body", D: "Dependent body", S: "Disorganized sensitive body", M: "Musical body" },
+    barLabels: { R: "Rational body", D: "Dependent body", S: "Disorganized sensitive", M: "Musical body" },
+    emailError: "Please enter a valid email to continue.",
+    phoneError: (min, max) => `Invalid WhatsApp: use ${min}${min !== max ? " to " + max : ""} digits (without country code).`,
+    questions: [
+      { text: "When you start dancing, what usually comes first for you?", options: [
+        { l:"A", t:"I try to remember which steps to do", type:"R" },
+        { l:"B", t:"I wait to feel the other person guiding me in", type:"D" },
+        { l:"C", t:"I first notice the music and let my body respond", type:"M" },
+        { l:"D", t:"I feel the music, but end up getting lost in the movements or the connection with my partner", type:"S" }
+      ]},
+      { text: "If they took away the steps you already know, how would you feel?", options: [
+        { l:"A", t:"Lost, not knowing what to do", type:"R" },
+        { l:"B", t:"Insecure, needing someone to guide me", type:"D" },
+        { l:"C", t:"Free to explore what the music asks for", type:"M" },
+        { l:"D", t:"I feel the music, but fall apart trying to sustain it in movement", type:"S" }
+      ]},
+      { text: "While dancing, do you feel you think more or feel more?", options: [
+        { l:"A", t:"I think a lot about what I'm doing", type:"R" },
+        { l:"B", t:"I keep thinking about whether my partner is comfortable or if I'm following correctly", type:"D" },
+        { l:"C", t:"I can feel my body and the music naturally", type:"M" },
+        { l:"D", t:"I feel it, but I can't keep it stable — the flow breaks easily", type:"S" }
+      ]},
+      { text: "Regarding the music's timing, what usually happens to you?", options: [
+        { l:"A", t:"I freeze trying to get it right and the flow disappears", type:"R" },
+        { l:"B", t:"I feel safer when my partner helps me keep the beat", type:"D" },
+        { l:"C", t:"I can feel myself inside the rhythm consistently", type:"M" },
+        { l:"D", t:"I feel the timing, but I rush, fall behind, or step out of the lead without meaning to", type:"S" }
+      ]},
+      { text: "When you make a mistake or get lost in the dance, what happens to you?", options: [
+        { l:"A", t:"I tense up and try to correct it right away", type:"R" },
+        { l:"B", t:"I fall apart and depend on my partner to get back on track", type:"D" },
+        { l:"C", t:"I breathe, stay present, and keep moving", type:"M" },
+        { l:"D", t:"I keep going, but it takes time to find myself again in the structure of movement and connection.", type:"S" }
+      ]},
+      { text: "Regarding music, which phrase describes you best?", options: [
+        { l:"A", t:"I only notice the music better after I've already started dancing", type:"R" },
+        { l:"B", t:"I notice the music, but depend a lot on my partner to get into it", type:"D" },
+        { l:"C", t:"The music guides me and my body responds to it", type:"M" },
+        { l:"D", t:"I notice the music, but I don't organize it into movement the way I'd like", type:"S" }
+      ]},
+      { text: "When you dance in front of other people, how do you usually feel?", options: [
+        { l:"A", t:"Afraid of making mistakes or looking stiff", type:"R" },
+        { l:"B", t:"Insecure, embarrassed, and worried about the other person's reaction", type:"D" },
+        { l:"C", t:"More present in my body and focused on what I'm feeling.", type:"M" },
+        { l:"D", t:"I notice people's reactions, try not to let it affect me, but sometimes it messes me up inside.", type:"S" }
+      ]},
+      { text: "What frustrates you most when you dance?", options: [
+        { l:"A", t:"Feeling like I overthink and can't flow", type:"R" },
+        { l:"B", t:"Feeling like I can only dance well with certain people", type:"D" },
+        { l:"C", t:"When I'm already flowing, I want to sustain it with more depth", type:"M" },
+        { l:"D", t:"I worry about whether I'm doing it right: I feel it, but it creates conflict with my partner or my body won't \"obey\".", type:"S" }
+      ]},
+      { text: "When your body doesn't respond the way you'd like, what's your reaction?", options: [
+        { l:"A", t:"I push myself to learn more to do better", type:"R" },
+        { l:"B", t:"I feel insecure and frustrated, thinking I'm incapable", type:"D" },
+        { l:"C", t:"I listen to my body, adjust, and continue from what's possible", type:"M" },
+        { l:"D", t:"I try to adjust, but something feels out of place", type:"S" }
+      ]},
+      { text: "What do you desire most in dance today?", options: [
+        { l:"A", t:"Stop freezing up and feel more confident", type:"R" },
+        { l:"B", t:"Be able to let go, play, and express myself in the music", type:"D" },
+        { l:"C", t:"Have more enjoyable dances", type:"M" },
+        { l:"D", t:"Sustain what I feel and maintain the connection.", type:"S" }
+      ]}
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════ */
+let currentLang = "pt";
+let cur = 0, answers = [], sel = null;
+let lead = { email: "", phone: "", full_name: "" };
+
+const QUIZ_ROW_STORAGE_KEY = "chrisbusato_global_quiz_row";
+
+/* ════════════════════════════════════════════════
+   LANGUAGE SELECTION
+════════════════════════════════════════════════ */
+function selectLang(lang) {
+  currentLang = lang;
+  const l = T[lang];
+
+  // html lang attribute
+  document.getElementById("html-root").lang = l.htmlLang;
+
+  // Intro
+  document.getElementById("t-tag").textContent        = l.tag;
+  document.getElementById("t-heroTitle").textContent  = l.heroTitle;
+  document.getElementById("t-bodyText").textContent   = l.bodyText;
+  document.getElementById("btn-start-quiz").textContent = l.btnStart;
+
+  // Loading
+  document.getElementById("t-loadTag").textContent      = l.loadTag;
+  document.getElementById("t-loadTitle").textContent    = l.loadTitle;
+  document.getElementById("t-loadSubtitle").textContent = l.loadSubtitle;
+
+  // Result
+  document.getElementById("t-resultTag").textContent     = l.resultTag;
+  document.getElementById("btn-wpp").textContent         = l.btnCta;
+  document.getElementById("result-cta-small").textContent = l.ctaSmall;
+
+  // Modal
+  document.getElementById("t-modalTitle").textContent    = l.modalTitle;
+  document.getElementById("t-modalSubtitle").textContent = l.modalSubtitle;
+  document.getElementById("t-emailLabel").textContent    = l.emailLabel;
+  document.getElementById("t-phoneLabel").textContent    = l.phoneLabel;
+  document.getElementById("t-btnContinue").textContent   = l.btnContinue;
+  document.getElementById("t-btnSkip").textContent       = l.btnSkip;
+
+  // Switch to intro
+  document.getElementById("s-lang").classList.remove("active");
+  document.getElementById("s-intro").classList.add("active");
+}
+
+/* ════════════════════════════════════════════════
+   QUIZ LOGIC
+════════════════════════════════════════════════ */
+function startQuizFromIntro() { startQuiz(); }
+
+function startQuiz() {
+  if (!lead.email || !lead.phone) { openLeadModal(); return; }
+  startQuizAfterLead();
+}
+
+function startQuizAfterLead() {
+  cur = 0; answers = []; sel = null;
+  document.getElementById("s-intro").classList.remove("active");
+  document.getElementById("s-quiz").classList.add("active");
+  render();
+}
+
+function render() {
+  const l = T[currentLang];
+  const q = l.questions[cur];
+  document.getElementById("q-counter").textContent = l.questionOf(cur + 1, l.questions.length);
+  document.getElementById("q-text").textContent    = q.text;
+  document.getElementById("prog").style.width      = `${(cur / l.questions.length) * 100}%`;
+  document.getElementById("btn-next").disabled     = true;
+  document.getElementById("btn-next").textContent  = l.btnNext;
+  sel = null;
+
+  const opts = document.getElementById("q-options");
+  opts.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerHTML = `<span class="opt-letter">${opt.l}</span><span>${opt.t}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      sel = opt.type;
+      document.getElementById("btn-next").disabled = false;
+    };
+    opts.appendChild(btn);
+  });
+}
+
+function nextQ() {
+  if (!sel) return;
+  answers.push(sel);
+  cur++;
+  const total = T[currentLang].questions.length;
+  if (cur < total) { render(); }
+  else { showLoadingThenResult(); }
+}
+
+function showLoadingThenResult() {
+  document.getElementById("s-quiz").classList.remove("active");
+  document.getElementById("s-loading").classList.add("active");
+  document.getElementById("prog").style.width = "100%";
+  setTimeout(() => {
+    document.getElementById("s-loading").classList.remove("active");
+    showResult();
+  }, 3000);
+}
+
+/* ════════════════════════════════════════════════
+   RESULT
+════════════════════════════════════════════════ */
+function dominantBodyAmongRDS(pct) {
+  const r = pct.R, d = pct.D, s = pct.S;
+  if (r >= d && r >= s) return "R";
+  if (d >= s) return "D";
+  return "S";
+}
+
+function countAnswerTypes(ansList) {
+  const cnt = { R: 0, D: 0, M: 0, S: 0 };
+  ansList.forEach(a => { if (cnt[a] !== undefined) cnt[a] += 1; });
+  return cnt;
+}
+
+function computeBodyPercentages(cnt) {
+  const M = 3 + Math.floor(Math.random() * 3);
+  const minEach = 15;
+  let r = minEach, d = minEach, s = minEach;
+  const pool = 100 - M - r - d - s;
+  const wR = cnt.R + 0.25, wD = cnt.D + 0.25, wS = cnt.S + 0.25;
+  const t = wR + wD + wS;
+  const er = Math.floor((pool * wR) / t);
+  const ed = Math.floor((pool * wD) / t);
+  const es = pool - er - ed;
+  r += er; d += ed; s += es;
+  const sum = r + d + s + M;
+  if (sum !== 100) {
+    const fix = 100 - sum;
+    if (cnt.R >= cnt.D && cnt.R >= cnt.S) r += fix;
+    else if (cnt.D >= cnt.S) d += fix;
+    else s += fix;
+  }
+  return { R: r, D: d, S: s, M };
+}
+
+function renderPercentageMap(pct) {
+  const l = T[currentLang];
+  const rows = [
+    { key: "R", cls: "r" }, { key: "D", cls: "d" },
+    { key: "S", cls: "s" }, { key: "M", cls: "m" }
+  ];
+  const el = document.getElementById("map-bars");
+  el.innerHTML = "";
+  rows.forEach(({ key, cls }) => {
+    const v = pct[key];
+    const wrap = document.createElement("div");
+    wrap.className = "map-row";
+    wrap.innerHTML =
+      `<div class="map-row-head"><span class="map-label">${l.barLabels[key]}</span><span class="map-pct">${v}%</span></div>` +
+      `<div class="map-bar-track"><div class="map-bar-fill map-bar-fill--${cls}" data-w="${v}"></div></div>`;
+    el.appendChild(wrap);
+  });
+  requestAnimationFrame(() => {
+    el.querySelectorAll(".map-bar-fill").forEach(bar => {
+      bar.style.width = bar.getAttribute("data-w") + "%";
+    });
+  });
+}
+
+function showResult() {
+  const l = T[currentLang];
+  const cnt = countAnswerTypes(answers);
+  const pct = computeBodyPercentages(cnt);
+  const domKey = dominantBodyAmongRDS(pct);
+
+  document.getElementById("map-diagnosis-title").textContent = l.diagnosisTitles[domKey];
+  document.getElementById("s-intro").classList.remove("active");
+  document.getElementById("s-quiz").classList.remove("active");
+  document.getElementById("s-loading").classList.remove("active");
+  document.getElementById("s-result").classList.add("active");
+  document.getElementById("prog").style.width = "100%";
+  renderPercentageMap(pct);
+  submitQuizToSupabase(answers);
+  fbqTrack("CompleteRegistration", "Quiz Global " + currentLang.toUpperCase(), lead.email, lead.phone);
+}
+
+function goWpp() {
+  var em = (lead && lead.email) ? encodeURIComponent(lead.email) : "";
+  var ph = (lead && lead.phone) ? encodeURIComponent(lead.phone) : "";
+  var url = "/grupo" + (em || ph ? "?email=" + em + "&phone=" + ph : "");
+  window.location.href = url;
+}
+
+/* ════════════════════════════════════════════════
+   SUPABASE SUBMIT
+════════════════════════════════════════════════ */
+const TYPE_TO_LETTER = { R: "A", D: "B", M: "C", S: "D" };
+
+function readQuizRowRef() {
+  try { const r = localStorage.getItem(QUIZ_ROW_STORAGE_KEY); return r ? JSON.parse(r) : null; } catch(e) { return null; }
+}
+function saveQuizRowRef(o) {
+  try { localStorage.setItem(QUIZ_ROW_STORAGE_KEY, JSON.stringify(o)); } catch(e) {}
+}
+
+function submitQuizToSupabase(ansList) {
+  if (!lead || !lead.email || !lead.phone) return;
+  if (!ansList || ansList.length !== 10) return;
+  const letterPayload = {};
+  for (let i = 0; i < 10; i++) {
+    const L = TYPE_TO_LETTER[ansList[i]];
+    if (!L) return;
+    letterPayload["q" + (i + 1)] = L;
+  }
+  const payload = { email: lead.email, phone: lead.phone, full_name: lead.full_name || null, source: "global_" + currentLang };
+  for (let j = 1; j <= 10; j++) payload["q" + j] = letterPayload["q" + j];
+  fetch("/api/submit-quiz", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+/* ════════════════════════════════════════════════
+   LEAD MODAL
+════════════════════════════════════════════════ */
+function openLeadModal() {
+  const err = document.getElementById("lead-error");
+  err.textContent = ""; err.classList.remove("active");
+  document.getElementById("lead-email").value = "";
+  leadPhoneSetDialInUi("55");
+  document.getElementById("lead-phone").value = "";
+  const ccCustomEl = document.getElementById("lead-phone-cc-custom");
+  if (ccCustomEl) ccCustomEl.value = "";
+  const saved = localStorage.getItem("lead");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === "object") {
+        if (parsed.email) document.getElementById("lead-email").value = parsed.email;
+        if (parsed.phone) {
+          const full = normalizePhone(parsed.phone);
+          const parts = splitStoredDigitsToCcAndNational(full, parsed.phone_dial || "");
+          leadPhoneSetDialInUi(parts.cc);
+          const natEl = document.getElementById("lead-phone");
+          natEl.value = parts.cc === "55" ? formatPhoneBR11(parts.national) : parts.national;
+        }
+      }
+    } catch {}
+  }
+  leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
+  document.getElementById("lead-modal").classList.add("active");
+  setTimeout(() => document.getElementById("lead-email").focus(), 0);
+}
+
+function closeLeadModal() {
+  document.getElementById("lead-modal").classList.remove("active");
+}
+
+document.getElementById("lead-modal").addEventListener("click", e => {
+  if (e.target && e.target.id === "lead-modal") closeLeadModal();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLeadModal(); });
+
+document.getElementById("lead-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const l = T[currentLang];
+  const email = document.getElementById("lead-email").value.trim();
+  const err = document.getElementById("lead-error");
+  err.textContent = ""; err.classList.remove("active");
+
+  if (!isValidEmail(email)) {
+    err.textContent = l.emailError; err.classList.add("active"); return;
+  }
+  if (!isValidPhoneLeadForm()) {
+    const b = leadPhoneNationalBounds(leadPhoneGetDialCode());
+    err.textContent = l.phoneError(b.min, b.max); err.classList.add("active"); return;
+  }
+
+  const phoneFull = leadPhoneFullDigitsFromForm();
+  const dialUsed  = leadPhoneGetDialCode();
+  lead = { email, phone: phoneFull, phone_dial: dialUsed, full_name: "" };
+  localStorage.setItem("lead", JSON.stringify(lead));
+
+  fetch("/api/start-quiz-submission", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: lead.email, phone: lead.phone, source: "global_" + currentLang })
+  }).then(r => r.json()).then(j => {
+    if (j && j.id) saveQuizRowRef({ id: String(j.id), email, phone: lead.phone, completed: false });
+    fbqTrack("Lead", "Quiz Global " + currentLang.toUpperCase(), email, lead.phone);
+  }).catch(() => {}).finally(() => {
+    closeLeadModal();
+    startQuizAfterLead();
+  });
+});
+
+/* ════════════════════════════════════════════════
+   META PIXEL HELPER
+════════════════════════════════════════════════ */
+function fbqTrack(eventName, contentName, email, phone) {
+  if (typeof fbq === "undefined") return;
+  var enc = new TextEncoder();
+  function sha256hex(str) {
+    return crypto.subtle.digest("SHA-256", enc.encode(str)).then(buf =>
+      Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("")
+    );
+  }
+  var emNorm = (email || "").toLowerCase().trim();
+  var phNorm = (phone || "").replace(/\D/g,"");
+  if (!phNorm.startsWith("55")) phNorm = "55" + phNorm;
+  Promise.all([
+    emNorm ? sha256hex(emNorm) : Promise.resolve(""),
+    phNorm ? sha256hex(phNorm) : Promise.resolve("")
+  ]).then(h => {
+    var ud = {};
+    if (h[0]) ud.em = h[0];
+    if (h[1]) ud.ph = h[1];
+    fbq("init","1659916645332253", ud);
+    fbq("track", eventName, { content_name: contentName });
+  }).catch(() => { fbq("track", eventName, { content_name: contentName }); });
+}
+
+/* ════════════════════════════════════════════════
+   PHONE UTILITIES (same as index.html)
+════════════════════════════════════════════════ */
+function normalizePhone(raw) {
+  let d = String(raw || "").replace(/\D/g, "");
+  if (d.startsWith("0039") && d.length >= 4) d = "39" + d.slice(4);
+  return d;
+}
+
+const LEAD_PHONE_CC_PREFIXES = ["598","595","351","244","258","238","86","81","91","57","56","54","52","51","49","44","39","34","33","55"];
+const LEAD_PHONE_NATIONAL_BY_CC = {
+  "55":{min:11,max:11},"39":{min:10,max:10,firstDigit:"3"},"351":{min:9,max:9},
+  "1":{min:10,max:10},"54":{min:10,max:11},"56":{min:9,max:9},"57":{min:10,max:10},
+  "51":{min:9,max:9},"598":{min:8,max:9},"595":{min:9,max:9},"34":{min:9,max:9},
+  "33":{min:9,max:9},"49":{min:10,max:11},"44":{min:10,max:10},"52":{min:10,max:10},
+  "81":{min:10,max:10},"86":{min:11,max:11},"91":{min:10,max:10},"244":{min:9,max:9},
+  "258":{min:9,max:9},"238":{min:7,max:7}
+};
+
+function leadPhoneNationalBounds(cc) {
+  let t = String(cc||"").replace(/\D/g,"").replace(/^0+/,"");
+  if (t.length > 3) t = t.slice(0,3);
+  if (!t) return {min:6,max:12};
+  const row = LEAD_PHONE_NATIONAL_BY_CC[t];
+  if (row) return {min:row.min,max:row.max,firstDigit:row.firstDigit};
+  const maxNat = 15 - t.length;
+  const minNat = Math.max(4, 10 - t.length);
+  return {min:Math.min(minNat,maxNat),max:maxNat};
+}
+
+function leadPhoneSyncCustomCcVisibility() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel || !custom) return;
+  const on = sel.value === "__custom__";
+  custom.classList.toggle("is-visible", on);
+  if (!on) custom.value = "";
+}
+
+function leadPhoneGetDialCode() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return "55";
+  if (sel.value === "__custom__") {
+    const c = normalizePhone(custom && custom.value ? custom.value : "");
+    return c.replace(/^0+/,"").slice(0,3) || "";
+  }
+  return sel.value;
+}
+
+function leadPhoneGetNationalDigits() {
+  const el = document.getElementById("lead-phone");
+  return normalizePhone(el && el.value ? el.value : "");
+}
+
+function leadPhoneFullDigitsFromForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!cc || !nat) return "";
+  return cc + nat;
+}
+
+function leadPhoneRefreshNationalFieldConstraints() {
+  const nat = document.getElementById("lead-phone");
+  if (!nat) return;
+  const cc = leadPhoneGetDialCode() || "55";
+  const b = leadPhoneNationalBounds(cc);
+  if (cc === "55") { nat.maxLength = 14; nat.placeholder = "(11) 99999-9999"; }
+  else { nat.maxLength = b.max; nat.placeholder = b.min === b.max ? b.max + " digits" : b.min + "–" + b.max + " digits"; }
+  let d = normalizePhone(nat.value);
+  if (d.length > b.max) { d = d.slice(0,b.max); nat.value = cc === "55" ? formatPhoneBR11(d) : d; }
+}
+
+function leadPhoneSetDialInUi(ccDigits) {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return;
+  const cc = String(ccDigits||"").replace(/\D/g,"").replace(/^0+/,"") || "55";
+  let found = false;
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === cc) { sel.selectedIndex = i; found = true; break; }
+  }
+  if (!found) {
+    for (let j = 0; j < sel.options.length; j++) {
+      if (sel.options[j].value === "__custom__") { sel.selectedIndex = j; break; }
+    }
+    if (custom) custom.value = cc;
+  } else if (custom) custom.value = "";
+  leadPhoneSyncCustomCcVisibility();
+}
+
+function formatPhoneBR11(digitsRaw) {
+  const d = String(digitsRaw||"").replace(/\D/g,"").slice(0,11);
+  let out = "";
+  if (d.length > 0) out += d.slice(0,2);
+  if (d.length >= 3) out += " " + d.slice(2,3);
+  if (d.length >= 4) out += " " + d.slice(3,7);
+  if (d.length >= 8) out += "-" + d.slice(7,11);
+  return out;
+}
+
+function splitStoredDigitsToCcAndNational(fullDigits, savedDial) {
+  const d = normalizePhone(fullDigits);
+  if (!d) return {cc:"55",national:""};
+  const saved = savedDial ? normalizePhone(savedDial).replace(/^0+/,"") : "";
+  if (saved && d.startsWith(saved) && d.length > saved.length) return {cc:saved,national:d.slice(saved.length)};
+  if (d.startsWith("55") && d.length >= 13 && d.length <= 15) return {cc:"55",national:d.slice(2)};
+  if (d.length === 12 && d.startsWith("39") && d.charAt(2) === "3") return {cc:"39",national:d.slice(2)};
+  if (d.length === 11) return {cc:"55",national:d};
+  const merged = LEAD_PHONE_CC_PREFIXES.slice().sort((a,b) => b.length - a.length);
+  for (let i = 0; i < merged.length; i++) {
+    const p = merged[i];
+    if (d.startsWith(p) && d.length > p.length) return {cc:p,national:d.slice(p.length)};
+  }
+  return {cc:"55",national:d};
+}
+
+function isValidEmail(raw) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(raw||"").trim()); }
+
+function isValidPhoneLeadForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!/^[1-9]\d{0,2}$/.test(cc)) return false;
+  if (!nat) return false;
+  const b = leadPhoneNationalBounds(cc);
+  if (nat.length < b.min || nat.length > b.max) return false;
+  if (b.firstDigit && nat.charAt(0) !== b.firstDigit) return false;
+  const full = cc + nat;
+  return full.length >= 10 && full.length <= 15;
+}
+
+document.getElementById("lead-phone").addEventListener("input", e => {
+  const el = e.target;
+  const digits = normalizePhone(el.value);
+  const cc = leadPhoneGetDialCode();
+  const b = leadPhoneNationalBounds(cc);
+  const slice = digits.slice(0, b.max);
+  el.value = (cc === "55" && !slice.startsWith("39")) ? formatPhoneBR11(slice) : slice;
+});
+
+document.getElementById("lead-phone-cc").addEventListener("change", () => {
+  leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
+  const nat = document.getElementById("lead-phone");
+  const d = normalizePhone(nat.value);
+  const cc = leadPhoneGetDialCode();
+  if (cc === "55" && !d.startsWith("39")) nat.value = formatPhoneBR11(d);
+});
+
+document.getElementById("lead-phone-cc-custom").addEventListener("input", e => {
+  e.target.value = normalizePhone(e.target.value).slice(0,3);
+  leadPhoneRefreshNationalFieldConstraints();
+});
+
+document.addEventListener("DOMContentLoaded", () => { leadPhoneRefreshNationalFieldConstraints(); });
+</script>
+</body>
+</html>
