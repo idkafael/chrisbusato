@@ -21,6 +21,8 @@
     { "source": "/linkbio", "destination": "/linkbio.html" },
     { "source": "/linkbio/", "destination": "/linkbio.html" },
     { "source": "/global", "destination": "/global/index.html" },
-    { "source": "/global/", "destination": "/global/index.html" }
+    { "source": "/global/", "destination": "/global/index.html" },
+    { "source": "/funil", "destination": "/funil.html" },
+    { "source": "/funil/", "destination": "/funil.html" }
   ]
 }

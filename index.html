@@ -711,50 +711,19 @@ body {
 <div class="modal-overlay" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-title">
   <div class="modal-card">
     <div class="modal-title" id="lead-title">Antes de começar</div>
-    <div class="modal-subtitle">Deixa seu email e WhatsApp pra eu te enviar seu resultado e novidades do conteúdo.</div>
+    <div class="modal-subtitle">Deixa seu email pra eu te enviar seu resultado (opcional).</div>
 
     <form id="lead-form" class="form-grid">
       <div class="field">
         <label class="field-label" for="lead-email">Email</label>
-        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" pattern=".+@.+" title="O email precisa ter @ (ex: seu@email.com)" required>
-      </div>
-      <div class="field">
-        <label class="field-label" for="lead-phone-cc">WhatsApp</label>
-        <div class="phone-field-row">
-          <select class="field-input field-input--cc" id="lead-phone-cc" name="phone_cc" aria-label="País (DDI)" autocomplete="off" data-lpignore="true" data-form-type="other">
-            <option value="55" selected>🇧🇷 +55</option>
-            <option value="351">🇵🇹 +351</option>
-            <option value="1">🇺🇸 +1</option>
-            <option value="54">🇦🇷 +54</option>
-            <option value="56">🇨🇱 +56</option>
-            <option value="57">🇨🇴 +57</option>
-            <option value="51">🇵🇪 +51</option>
-            <option value="598">🇺🇾 +598</option>
-            <option value="595">🇵🇾 +595</option>
-            <option value="34">🇪🇸 +34</option>
-            <option value="39">🇮🇹 +39</option>
-            <option value="33">🇫🇷 +33</option>
-            <option value="49">🇩🇪 +49</option>
-            <option value="44">🇬🇧 +44</option>
-            <option value="52">🇲🇽 +52</option>
-            <option value="81">🇯🇵 +81</option>
-            <option value="86">🇨🇳 +86</option>
-            <option value="91">🇮🇳 +91</option>
-            <option value="244">🇦🇴 +244</option>
-            <option value="258">🇲🇿 +258</option>
-            <option value="238">🇨🇻 +238</option>
-            <option value="__custom__">🌐 Outro DDI</option>
-          </select>
-          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="DDI" maxlength="3" aria-label="Código do país (somente dígitos)">
-          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required>
-        </div>
+        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seu@email.com" pattern=".+@.+" title="O email precisa ter @ (ex: seu@email.com)">
       </div>
 
       <div class="form-error" id="lead-error"></div>
 
       <div class="modal-actions">
         <button class="btn-green" type="submit">Continuar →</button>
-        <button class="btn-muted" type="button" onclick="closeLeadModal()">Agora não</button>
+        <button class="btn-muted" type="button" onclick="skipLeadAndStart()">Agora não</button>
       </div>
     </form>
   </div>
@@ -885,7 +854,7 @@ function saveQuizRowRef(o) {
 }
 
 function submitQuizToSupabase(ansList) {
-  if (!lead || !lead.email || !lead.phone) return;
+  if (!lead || !lead.email) return;
   if (!ansList || ansList.length !== 10) return;
   const letterPayload = {};
   for (let i = 0; i < 10; i++) {
@@ -898,25 +867,20 @@ function submitQuizToSupabase(ansList) {
   const rowId =
     ref &&
     ref.email === lead.email &&
-    canonicalLeadPhoneDigits(ref.phone) === canonicalLeadPhoneDigits(lead.phone) &&
     ref.completed === false &&
     ref.id
       ? ref.id
       : null;
 
   function fallbackFullSubmit() {
-    const payload = {
-      email: lead.email,
-      phone: lead.phone,
-      full_name: lead.full_name || null
-    };
+    const payload = { email: lead.email };
     for (let j = 1; j <= 10; j++) payload["q" + j] = letterPayload["q" + j];
     fetch("/api/submit-quiz", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }).catch(function () {});
-    fbqTrack('CompleteRegistration', 'Quiz Orgânico', lead.email, lead.phone);
+    fbqTrack('CompleteRegistration', 'Quiz Orgânico', lead.email, "");
   }
 
   if (!rowId) {
@@ -934,13 +898,8 @@ function submitQuizToSupabase(ansList) {
   })
     .then(function (r) {
       if (r.ok) {
-        saveQuizRowRef({
-          id: rowId,
-          email: lead.email,
-          phone: lead.phone,
-          completed: true
-        });
-        fbqTrack('CompleteRegistration', 'Quiz Orgânico', lead.email, lead.phone);
+        saveQuizRowRef({ id: rowId, email: lead.email, completed: true });
+        fbqTrack('CompleteRegistration', 'Quiz Orgânico', lead.email, "");
       } else {
         fallbackFullSubmit();
       }
@@ -1426,7 +1385,7 @@ function startQuizFromIntro() {
 }
 
 function startQuiz() {
-  if (!lead.email || !lead.phone) {
+  if (!lead.email) {
     openLeadModal();
     return;
   }
@@ -1792,6 +1751,11 @@ function closeLeadModal() {
   document.getElementById("lead-modal").classList.remove("active");
 }
 
+function skipLeadAndStart() {
+  closeLeadModal();
+  startQuizAfterLead();
+}
+
 document.getElementById("lead-modal").addEventListener("click", (e) => {
   if (e.target && e.target.id === "lead-modal") closeLeadModal();
 });
@@ -1808,31 +1772,20 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   err.textContent = "";
   err.classList.remove("active");
 
-  if (!isValidEmail(email)) {
+  if (email && !isValidEmail(email)) {
     err.textContent = "Coloque um email válido para continuar.";
     err.classList.add("active");
     return;
   }
 
-  if (!isValidPhoneLeadForm()) {
-    const b = leadPhoneNationalBounds(leadPhoneGetDialCode());
-    err.textContent =
-      "WhatsApp inválido para o país escolhido: use " +
-      b.min +
-      (b.min === b.max ? "" : " a " + b.max) +
-      " dígitos no número (sem o DDI), depois do código do país.";
-    err.classList.add("active");
+  if (!email) {
+    skipLeadAndStart();
     return;
   }
 
-  var nameEl = document.getElementById("lead-name");
-  var fullName = nameEl ? String(nameEl.value || "").trim() : "";
-  const phoneFull = leadPhoneFullDigitsFromForm();
-  const dialUsed = leadPhoneGetDialCode();
-  lead = { email, phone: phoneFull, phone_dial: dialUsed, full_name: fullName };
+  lead = { email, phone: "", full_name: "" };
   localStorage.setItem("lead", JSON.stringify(lead));
 
-  const emailNorm = email;
   const existingRef = readQuizRowRef();
 
   function openQuizAfterLeadRow() {
@@ -1842,8 +1795,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
 
   if (
     existingRef &&
-    existingRef.email === emailNorm &&
-    canonicalLeadPhoneDigits(existingRef.phone) === canonicalLeadPhoneDigits(lead.phone) &&
+    existingRef.email === email &&
     existingRef.completed === false &&
     existingRef.id
   ) {
@@ -1854,11 +1806,7 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
   fetch("/api/start-quiz-submission", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: lead.email,
-      phone: lead.phone,
-      full_name: lead.full_name || null
-    })
+    body: JSON.stringify({ email: lead.email })
   })
     .then(function (r) {
       return r.json().then(function (j) {
@@ -1867,13 +1815,8 @@ document.getElementById("lead-form").addEventListener("submit", (e) => {
     })
     .then(function (x) {
       if (x.ok && x.j && x.j.id) {
-        saveQuizRowRef({
-          id: String(x.j.id),
-          email: emailNorm,
-          phone: lead.phone,
-          completed: false
-        });
-        fbqTrack('Lead', 'Quiz Orgânico', emailNorm, lead.phone);
+        saveQuizRowRef({ id: String(x.j.id), email, completed: false });
+        fbqTrack('Lead', 'Quiz Orgânico', email, "");
       }
       openQuizAfterLeadRow();
     })

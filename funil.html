@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR" id="html-root">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz — Chris Busato</title>
+
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','1659916645332253');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1659916645332253&ev=PageView&noscript=1"/></noscript>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #EDE8DF;
+  font-family: 'Inter', sans-serif;
+}
+
+.page-bg {
+  min-height: 100vh;
+  background: #EDE8DF;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.card {
+  background: #F2EDE3;
+  border-radius: 28px;
+  padding: 2.5rem 2rem;
+  max-width: 520px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.leaf-deco { position: absolute; opacity: 0.18; pointer-events: none; }
+.leaf-tr { top: -10px; right: -10px; width: 90px; }
+.leaf-bl { bottom: -10px; left: -10px; width: 70px; transform: rotate(180deg); }
+.leaf-svg { width: 100%; height: auto; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #8A7D6B;
+  text-align: center; margin-bottom: 1.5rem;
+}
+
+.divider {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin: 1rem 0 1.5rem;
+}
+.divider-line { height: 0.5px; width: 60px; background: #C5BAA8; }
+.divider-dot { width: 4px; height: 4px; border-radius: 50%; background: #C5BAA8; }
+
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+.card h1 {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 500; font-style: normal;
+  letter-spacing: -0.03em; color: #2C2218; text-align: center;
+}
+
+.hero-name { font-size: 30px; line-height: 1.25; margin-bottom: 0.35rem; }
+.hero-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #A08C70; text-align: center; margin-bottom: 0;
+}
+
+.body-text { font-size: 14px; color: #5C5043; line-height: 1.7; text-align: center; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(44, 34, 24, 0.35);
+  display: none; align-items: center; justify-content: center;
+  padding: 1.25rem 1rem; z-index: 999;
+}
+.modal-overlay.active { display: flex; }
+
+.modal-card {
+  width: 100%; max-width: 520px; background: #F2EDE3;
+  border-radius: 22px; padding: 1.5rem 1.25rem; position: relative;
+  box-shadow: 0 14px 40px rgba(44, 34, 24, 0.18);
+  border: 0.5px solid rgba(197, 186, 168, 0.9);
+}
+.modal-title {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600; letter-spacing: -0.03em; color: #2C2218;
+  text-align: center; font-size: 20px; line-height: 1.25; margin-bottom: 0.5rem;
+}
+.modal-subtitle {
+  font-size: 13.5px; color: #5C5043; line-height: 1.6;
+  text-align: center; margin-bottom: 1.25rem;
+}
+.form-grid { display: flex; flex-direction: column; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #8A7D6B; text-align: left; font-weight: 500;
+}
+.field-input {
+  width: 100%; background: #EDE8DF; border: 0.5px solid #C5BAA8;
+  border-radius: 14px; padding: 0.85rem 1rem;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; color: #2C2218; outline: none;
+}
+.field-input:focus { border-color: #5C7A5A; box-shadow: 0 0 0 3px rgba(92, 122, 90, 0.16); }
+.phone-field-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.phone-field-row .field-input--cc { flex: 0 0 auto; min-width: 118px; max-width: 46%; padding-left: 0.65rem; padding-right: 0.45rem; font-size: 13px; cursor: pointer; }
+.phone-field-row .field-input--cc-custom { display: none; flex: 0 0 76px; width: 76px; text-align: center; padding-left: 0.5rem; padding-right: 0.5rem; }
+.phone-field-row .field-input--cc-custom.is-visible { display: block; }
+.phone-field-row .field-input--national { flex: 1 1 160px; min-width: 0; }
+.form-error {
+  display: none; margin-top: 0.75rem; background: rgba(181, 191, 180, 0.25);
+  border: 0.5px solid rgba(197, 186, 168, 0.9); color: #5C5043;
+  border-radius: 14px; padding: 0.75rem 0.9rem; font-size: 12.5px;
+  line-height: 1.5; text-align: center;
+}
+.form-error.active { display: block; }
+.modal-actions { margin-top: 1rem; }
+.btn-muted {
+  display: block; width: 100%; padding: 10px; background: transparent;
+  color: #8A7D6B; border: none; font-family: 'Inter', sans-serif;
+  font-size: 13px; cursor: pointer; text-align: center;
+  margin-top: 0.5rem; letter-spacing: 0.01em;
+}
+.btn-muted:hover { color: #5C5043; }
+
+.btn-green {
+  display: block; width: 100%; padding: 15px 20px; background: #5C7A5A;
+  color: #F5F0E8; border: none; border-radius: 50px;
+  font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: background 0.2s, transform 0.15s;
+  margin-top: 1.5rem; letter-spacing: 0.01em;
+}
+.btn-green:hover { background: #4A6548; transform: translateY(-1px); }
+.btn-green:disabled { background: #B5BFB4; cursor: not-allowed; transform: none; }
+
+.intro-stack { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.5rem; }
+.intro-stack .btn-green { margin-top: 0; }
+
+.progress-wrap {
+  height: 3px; background: #D8D0C4; border-radius: 2px;
+  margin-bottom: 1.75rem; overflow: hidden;
+}
+.progress-fill { height: 100%; background: #5C7A5A; border-radius: 2px; transition: width 0.5s ease; }
+
+.q-counter {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: #A08C70; text-align: center; margin-bottom: 0.75rem;
+}
+
+.q-text { font-size: 20px; line-height: 1.45; margin-bottom: 1.75rem; }
+
+.options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+
+.option-btn {
+  background: #EDE8DF; border: 0.5px solid #C5BAA8; border-radius: 16px;
+  padding: 0.9rem 1.1rem; text-align: left; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; color: #4A4035;
+  line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;
+}
+.option-btn:hover { border-color: #5C7A5A; background: #E4EDE3; }
+.option-btn.selected { border: 1px solid #5C7A5A; background: #E4EDE3; }
+
+.opt-letter {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: #D8D0C4; color: #5C5043; font-size: 11px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.option-btn.selected .opt-letter { background: #5C7A5A; color: #F5F0E8; }
+
+/* ── Result screen ── */
+.result-tag { margin-bottom: 1.5rem; }
+.result-product-name {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 600; font-size: 22px; line-height: 1.28;
+  letter-spacing: -0.02em; color: #2C2218;
+  text-align: center; margin-bottom: 0;
+}
+.result-price {
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-size: 28px; font-weight: 600; color: #5C7A5A;
+  text-align: center; letter-spacing: -0.02em;
+  margin: 0.4rem 0 0;
+}
+.result-desc {
+  font-size: 14px; color: #5C5043; line-height: 1.7;
+  text-align: center; margin-top: 1rem;
+}
+.cta-section { margin-top: 1.5rem; text-align: center; }
+.cta-section .btn-green { margin-top: 0; }
+.cta-small { font-size: 12px; color: #A08C70; margin-top: 0.75rem; font-style: italic; font-family: 'Playfair Display', Georgia, serif; }
+
+/* ── Loading ── */
+.loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 0 0.25rem; }
+.loading-spinner { width: 54px; height: 54px; border-radius: 50%; border: 3px solid rgba(197, 186, 168, 0.7); border-top-color: #5C7A5A; animation: spin 0.9s linear infinite; margin-bottom: 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 22px; line-height: 1.25; margin-bottom: 0.5rem; }
+.loading-subtitle { font-size: 13.5px; color: #5C5043; line-height: 1.65; text-align: center; max-width: 420px; }
+.loading-dots { display: inline-flex; gap: 6px; margin-top: 0.9rem; }
+.loading-dot { width: 6px; height: 6px; border-radius: 999px; background: #5C7A5A; opacity: 0.25; animation: pulse 1.1s infinite ease-in-out; }
+.loading-dot:nth-child(2) { animation-delay: 0.12s; }
+.loading-dot:nth-child(3) { animation-delay: 0.24s; }
+@keyframes pulse { 0%, 100% { transform: translateY(0); opacity: 0.25; } 50% { transform: translateY(-3px); opacity: 0.9; } }
+
+@media (max-width: 480px) {
+  .card { padding: 2rem 1.25rem; border-radius: 20px; }
+  .hero-name { font-size: 26px; }
+  .q-text { font-size: 18px; }
+  .result-product-name { font-size: 19px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-bg">
+<div class="card">
+
+  <svg class="leaf-deco leaf-tr" viewBox="0 0 120 160" fill="none">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+  <svg class="leaf-deco leaf-bl" viewBox="0 0 120 160" fill="none">
+    <path d="M60 10 C60 10 110 40 110 90 C110 130 80 155 60 155 C40 155 10 130 10 90 C10 40 60 10 60 10Z" fill="#5C7A5A"/>
+    <path d="M60 10 L60 155" stroke="#4A6548" stroke-width="1.5"/>
+  </svg>
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <div class="tag">Dança &amp; Consciência</div>
+    <h1 class="hero-name">Qual é o próximo passo certo para você?</h1>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <p class="body-text">Responda algumas perguntas rápidas e descubra o caminho ideal para o seu momento na dança.</p>
+    <div class="intro-stack">
+      <button type="button" class="btn-green" onclick="startQuizFromIntro()">Começar →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="q-counter" id="q-counter"></div>
+    <h1 class="q-text serif" id="q-text"></h1>
+    <div class="options-list" id="q-options"></div>
+    <button class="btn-green" id="btn-next" disabled onclick="nextQ()">Próxima →</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="s-loading">
+    <div class="tag">Análise</div>
+    <div class="loading-wrap">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h1 class="loading-title card">Analisando suas respostas</h1>
+      <div class="loading-subtitle">Só um instante. Estou identificando o caminho ideal para você.</div>
+      <div class="loading-dots" aria-hidden="true">
+        <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result">
+    <div class="tag result-tag">Sua recomendação</div>
+    <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+    <h1 class="result-product-name" id="r-title"></h1>
+    <p class="result-price" id="r-price"></p>
+    <p class="result-desc" id="r-desc"></p>
+    <div class="cta-section">
+      <button type="button" class="btn-green" id="r-cta-btn" onclick="goResult()">Quero começar →</button>
+      <p class="cta-small" id="r-cta-small"></p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- Lead Modal -->
+<div class="modal-overlay" id="lead-modal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-title">Antes de começar</div>
+    <div class="modal-subtitle">Deixa seu email e WhatsApp para eu enviar seu resultado.</div>
+    <form id="lead-form" class="form-grid">
+      <div class="field">
+        <label class="field-label" for="lead-email">Email</label>
+        <input class="field-input" id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="email@exemplo.com" pattern=".+@.+" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="lead-phone-cc">WhatsApp</label>
+        <div class="phone-field-row">
+          <select class="field-input field-input--cc" id="lead-phone-cc" name="phone_cc" aria-label="Country code" autocomplete="off">
+            <option value="55" selected>🇧🇷 +55</option>
+            <option value="351">🇵🇹 +351</option>
+            <option value="1">🇺🇸 +1</option>
+            <option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option>
+            <option value="57">🇨🇴 +57</option>
+            <option value="51">🇵🇪 +51</option>
+            <option value="598">🇺🇾 +598</option>
+            <option value="595">🇵🇾 +595</option>
+            <option value="34">🇪🇸 +34</option>
+            <option value="39">🇮🇹 +39</option>
+            <option value="33">🇫🇷 +33</option>
+            <option value="49">🇩🇪 +49</option>
+            <option value="44">🇬🇧 +44</option>
+            <option value="52">🇲🇽 +52</option>
+            <option value="81">🇯🇵 +81</option>
+            <option value="86">🇨🇳 +86</option>
+            <option value="91">🇮🇳 +91</option>
+            <option value="244">🇦🇴 +244</option>
+            <option value="258">🇲🇿 +258</option>
+            <option value="238">🇨🇻 +238</option>
+            <option value="__custom__">🌐 Outro</option>
+          </select>
+          <input class="field-input field-input--cc-custom" id="lead-phone-cc-custom" type="tel" inputmode="numeric" autocomplete="off" placeholder="Cod." maxlength="3">
+          <input class="field-input field-input--national" id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" required>
+        </div>
+      </div>
+      <div class="form-error" id="lead-error"></div>
+      <div class="modal-actions">
+        <button class="btn-green" type="submit">Continuar →</button>
+        <button class="btn-muted" type="button" onclick="closeLeadModal()">Agora não</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   QUIZ FLOW DEFINITION
+════════════════════════════════════════════════ */
+const QUESTIONS = {
+  track: {
+    key: "track",
+    text: "O que melhor descreve você?",
+    options: [
+      { l:"A", t:"Sou professor(a) de dança", v:"professor" },
+      { l:"B", t:"Quero restaurar minha relação", v:"casal" },
+      { l:"C", t:"Danço por hobby ou quero aprender a dançar", v:"paixao" }
+    ]
+  },
+  prof_stage: {
+    key: "prof_stage",
+    text: "Como está sua situação como professor(a)?",
+    options: [
+      { l:"A", t:"Quero abrir minha primeira turma", v:"nova" },
+      { l:"B", t:"Já tenho turmas e quero crescer", v:"existente" }
+    ]
+  },
+  prof_nova_size: {
+    key: "prof_nova_size",
+    text: "Quantos alunos você pretende ter na sua primeira turma?",
+    options: [
+      { l:"A", t:"Menos de 50 alunos", v:"lt50" },
+      { l:"B", t:"Entre 50 e 100 alunos", v:"50to100" },
+      { l:"C", t:"Mais de 100 alunos", v:"gt100" }
+    ]
+  },
+  prof_turma_size: {
+    key: "prof_turma_size",
+    text: "Qual o tamanho atual da sua turma?",
+    options: [
+      { l:"A", t:"Menos de 50 alunos", v:"lt50" },
+      { l:"B", t:"Entre 50 e 100 alunos", v:"50to100" },
+      { l:"C", t:"Mais de 100 alunos", v:"gt100" }
+    ]
+  },
+  prof_sp: {
+    key: "prof_sp",
+    text: "Você é de São Paulo?",
+    options: [
+      { l:"A", t:"Sim, sou de SP", v:"sp" },
+      { l:"B", t:"Não", v:"not_sp" }
+    ]
+  },
+  casal_q1: {
+    key: "casal_q1",
+    text: "Como está a relação de vocês hoje?",
+    options: [
+      { l:"A", t:"Queremos nos reconectar e criar mais momentos juntos", v:"reconectar" },
+      { l:"B", t:"Estamos bem, mas queremos algo novo juntos", v:"novo" }
+    ]
+  }
+};
+
+const RESULTS = {
+  paixao: {
+    title: "Grupo de Dança & Consciência",
+    price: "",
+    desc: "Você vai entrar no grupo de lançamento, com acesso a conteúdo exclusivo e lançamentos quinzenais da Área de Membros.",
+    cta: "Entrar no Grupo →",
+    link: "#PLACEHOLDER_WPP_PAIXAO",
+    small: "Não precisa saber dançar"
+  },
+  prof_97: {
+    title: "Área de Membros",
+    price: "R$ 97",
+    desc: "O ponto de partida ideal para quem quer abrir a primeira turma com método e estrutura.",
+    cta: "Quero começar →",
+    link: "#PLACEHOLDER_AM_97",
+    small: ""
+  },
+  prof_197: {
+    title: "Área de Membros",
+    price: "R$ 197",
+    desc: "Método e estrutura para crescer sua turma com consistência.",
+    cta: "Quero avançar →",
+    link: "#PLACEHOLDER_AM_197",
+    small: ""
+  },
+  prof_297: {
+    title: "Área de Membros",
+    price: "R$ 297",
+    desc: "Para professores com base sólida que querem escalar suas turmas.",
+    cta: "Quero crescer →",
+    link: "#PLACEHOLDER_AM_297",
+    small: ""
+  },
+  prof_197_hibrido: {
+    title: "Área de Membros + Híbrido em Grupo",
+    price: "R$ 197",
+    desc: "Método online com encontros presenciais em grupo em São Paulo para acelerar seus resultados.",
+    cta: "Quero avançar →",
+    link: "#PLACEHOLDER_AM_197_HIBRIDO",
+    small: ""
+  },
+  prof_297_hibrido: {
+    title: "Área de Membros + Híbrido Individual ou em Grupo",
+    price: "R$ 297",
+    desc: "Método completo com acompanhamento presencial em São Paulo, individual ou em grupo.",
+    cta: "Quero crescer →",
+    link: "#PLACEHOLDER_AM_297_HIBRIDO",
+    small: ""
+  },
+  prof_plus: {
+    title: "Área de Membros +",
+    price: "",
+    desc: "A solução completa para professores com turmas grandes em São Paulo, com possibilidade de híbrido.",
+    cta: "Quero o melhor →",
+    link: "#PLACEHOLDER_AM_PLUS",
+    small: ""
+  },
+  prof_plus_hibrido: {
+    title: "Área de Membros + Possibilidade de Híbrido",
+    price: "",
+    desc: "Para professores com turmas grandes que querem o método mais completo, com opção de presencial.",
+    cta: "Quero o melhor →",
+    link: "#PLACEHOLDER_AM_PLUS_HIBRIDO",
+    small: ""
+  },
+  casal_premium: {
+    title: "Área de Membros + Date em Comum + Comunidade",
+    price: "",
+    desc: "Um espaço pensado para casais que querem se reconectar e criar memórias juntos através da dança.",
+    cta: "Quero me reconectar →",
+    link: "#PLACEHOLDER_CASAL_PREMIUM",
+    small: ""
+  },
+  casal_197: {
+    title: "Área de Membros",
+    price: "R$ 197",
+    desc: "Conteúdo exclusivo para casais que querem viver novas experiências juntos na dança.",
+    cta: "Quero começar →",
+    link: "#PLACEHOLDER_CASAL_197",
+    small: ""
+  }
+};
+
+/* ════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════ */
+let currentQ = null;
+let currentStep = 1;
+let totalSteps = 4;
+let sel = null;
+let answers = {};
+let pendingResult = null;
+let lead = { email: "", phone: "" };
+
+/* ════════════════════════════════════════════════
+   FLOW TRANSITIONS
+════════════════════════════════════════════════ */
+function onAnswer(qKey, val) {
+  answers[qKey] = val;
+
+  if (qKey === "track") {
+    if (val === "paixao")    { goLoading("paixao"); return; }
+    if (val === "professor") { showQ(QUESTIONS.prof_stage, 2, 4); return; }
+    if (val === "casal")     { showQ(QUESTIONS.casal_q1, 2, 2); return; }
+  }
+  if (qKey === "prof_stage") {
+    if (val === "nova")      { showQ(QUESTIONS.prof_nova_size, 3, 3); return; }
+    if (val === "existente") { showQ(QUESTIONS.prof_turma_size, 3, 4); return; }
+  }
+  if (qKey === "prof_nova_size") {
+    goLoading(val === "lt50" ? "prof_97" : "prof_197"); return;
+  }
+  if (qKey === "prof_turma_size") {
+    showQ(QUESTIONS.prof_sp, 4, 4); return;
+  }
+  if (qKey === "prof_sp") {
+    const size = answers.prof_turma_size;
+    const sp   = val === "sp";
+    let r;
+    if      (sp  && size === "lt50")     r = "prof_297_hibrido";
+    else if (sp  && size === "50to100")  r = "prof_197_hibrido";
+    else if (sp)                         r = "prof_plus";
+    else if (size === "lt50")            r = "prof_197";
+    else if (size === "50to100")         r = "prof_297";
+    else                                 r = "prof_plus_hibrido";
+    goLoading(r); return;
+  }
+  if (qKey === "casal_q1") {
+    goLoading(val === "reconectar" ? "casal_premium" : "casal_197"); return;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   QUIZ RENDER
+════════════════════════════════════════════════ */
+function startQuizFromIntro() {
+  if (!lead.email || !lead.phone) { openLeadModal(); return; }
+  startQuizAfterLead();
+}
+
+function startQuizAfterLead() {
+  answers = {}; sel = null;
+  document.getElementById("s-intro").classList.remove("active");
+  showQ(QUESTIONS.track, 1, 4);
+  document.getElementById("s-quiz").classList.add("active");
+}
+
+function showQ(q, step, total) {
+  currentQ  = q;
+  currentStep = step;
+  totalSteps  = total;
+  sel = null;
+
+  document.getElementById("q-counter").textContent = `Pergunta ${step} de ${total}`;
+  document.getElementById("q-text").textContent    = q.text;
+  document.getElementById("prog").style.width      = `${((step - 1) / total) * 100}%`;
+  document.getElementById("btn-next").disabled     = true;
+
+  const opts = document.getElementById("q-options");
+  opts.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerHTML = `<span class="opt-letter">${opt.l}</span><span>${opt.t}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll("#q-options .option-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      sel = opt.v;
+      document.getElementById("btn-next").disabled = false;
+    };
+    opts.appendChild(btn);
+  });
+
+  document.getElementById("s-loading").classList.remove("active");
+  document.getElementById("s-result").classList.remove("active");
+  document.getElementById("s-quiz").classList.add("active");
+}
+
+function nextQ() {
+  if (!sel || !currentQ) return;
+  onAnswer(currentQ.key, sel);
+}
+
+/* ════════════════════════════════════════════════
+   LOADING → RESULT
+════════════════════════════════════════════════ */
+function goLoading(resultKey) {
+  pendingResult = resultKey;
+  document.getElementById("prog").style.width = "100%";
+  document.getElementById("s-quiz").classList.remove("active");
+  document.getElementById("s-loading").classList.add("active");
+  setTimeout(showResult, 2800);
+}
+
+function showResult() {
+  const r = RESULTS[pendingResult];
+  if (!r) return;
+
+  document.getElementById("r-title").textContent    = r.title;
+  document.getElementById("r-price").textContent    = r.price;
+  document.getElementById("r-price").style.display  = r.price ? "block" : "none";
+  document.getElementById("r-desc").textContent     = r.desc;
+  document.getElementById("r-cta-btn").textContent  = r.cta;
+  document.getElementById("r-cta-small").textContent = r.small;
+  document.getElementById("r-cta-small").style.display = r.small ? "block" : "none";
+
+  document.getElementById("s-loading").classList.remove("active");
+  document.getElementById("s-result").classList.add("active");
+
+  fbqTrack("CompleteRegistration", "Quiz Funil PT — " + pendingResult, lead.email, lead.phone);
+  submitFunilLead(pendingResult);
+}
+
+function goResult() {
+  const r = RESULTS[pendingResult];
+  if (r && r.link && !r.link.startsWith("#PLACEHOLDER")) {
+    window.location.href = r.link;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   SUPABASE LEAD SUBMIT
+════════════════════════════════════════════════ */
+function submitFunilLead(resultKey) {
+  if (!lead.email || !lead.phone) return;
+  fetch("/api/start-quiz-submission", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: lead.email, phone: lead.phone, source: "funil_pt_" + resultKey })
+  }).catch(() => {});
+}
+
+/* ════════════════════════════════════════════════
+   LEAD MODAL
+════════════════════════════════════════════════ */
+function openLeadModal() {
+  const err = document.getElementById("lead-error");
+  err.textContent = ""; err.classList.remove("active");
+  document.getElementById("lead-email").value = "";
+  leadPhoneSetDialInUi("55");
+  document.getElementById("lead-phone").value = "";
+  const ccCustomEl = document.getElementById("lead-phone-cc-custom");
+  if (ccCustomEl) ccCustomEl.value = "";
+  const saved = localStorage.getItem("lead");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === "object") {
+        if (parsed.email) document.getElementById("lead-email").value = parsed.email;
+        if (parsed.phone) {
+          const full = normalizePhone(parsed.phone);
+          const parts = splitStoredDigitsToCcAndNational(full, parsed.phone_dial || "");
+          leadPhoneSetDialInUi(parts.cc);
+          const natEl = document.getElementById("lead-phone");
+          natEl.value = parts.cc === "55" ? formatPhoneBR11(parts.national) : parts.national;
+        }
+      }
+    } catch {}
+  }
+  leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
+  document.getElementById("lead-modal").classList.add("active");
+  setTimeout(() => document.getElementById("lead-email").focus(), 0);
+}
+
+function closeLeadModal() {
+  document.getElementById("lead-modal").classList.remove("active");
+}
+
+document.getElementById("lead-modal").addEventListener("click", e => {
+  if (e.target && e.target.id === "lead-modal") closeLeadModal();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLeadModal(); });
+
+document.getElementById("lead-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const email = document.getElementById("lead-email").value.trim();
+  const err   = document.getElementById("lead-error");
+  err.textContent = ""; err.classList.remove("active");
+
+  if (!isValidEmail(email)) {
+    err.textContent = "Coloque um email válido para continuar.";
+    err.classList.add("active"); return;
+  }
+  if (!isValidPhoneLeadForm()) {
+    const b = leadPhoneNationalBounds(leadPhoneGetDialCode());
+    err.textContent = `WhatsApp inválido: use ${b.min}${b.min !== b.max ? " a " + b.max : ""} dígitos (sem o código do país).`;
+    err.classList.add("active"); return;
+  }
+
+  const phoneFull = leadPhoneFullDigitsFromForm();
+  const dialUsed  = leadPhoneGetDialCode();
+  lead = { email, phone: phoneFull, phone_dial: dialUsed };
+  localStorage.setItem("lead", JSON.stringify(lead));
+
+  fetch("/api/start-quiz-submission", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: lead.email, phone: lead.phone, source: "funil_pt" })
+  }).catch(() => {}).finally(() => {
+    fbqTrack("Lead", "Quiz Funil PT", email, lead.phone);
+    closeLeadModal();
+    startQuizAfterLead();
+  });
+});
+
+/* ════════════════════════════════════════════════
+   META PIXEL HELPER
+════════════════════════════════════════════════ */
+function fbqTrack(eventName, contentName, email, phone) {
+  if (typeof fbq === "undefined") return;
+  var enc = new TextEncoder();
+  function sha256hex(str) {
+    return crypto.subtle.digest("SHA-256", enc.encode(str)).then(buf =>
+      Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("")
+    );
+  }
+  var emNorm = (email || "").toLowerCase().trim();
+  var phNorm = (phone || "").replace(/\D/g,"");
+  if (!phNorm.startsWith("55")) phNorm = "55" + phNorm;
+  Promise.all([
+    emNorm ? sha256hex(emNorm) : Promise.resolve(""),
+    phNorm ? sha256hex(phNorm) : Promise.resolve("")
+  ]).then(h => {
+    var ud = {};
+    if (h[0]) ud.em = h[0];
+    if (h[1]) ud.ph = h[1];
+    fbq("init","1659916645332253", ud);
+    fbq("track", eventName, { content_name: contentName });
+  }).catch(() => { fbq("track", eventName, { content_name: contentName }); });
+}
+
+/* ════════════════════════════════════════════════
+   PHONE UTILITIES
+════════════════════════════════════════════════ */
+function normalizePhone(raw) {
+  let d = String(raw || "").replace(/\D/g, "");
+  if (d.startsWith("0039") && d.length >= 4) d = "39" + d.slice(4);
+  return d;
+}
+
+const LEAD_PHONE_CC_PREFIXES = ["598","595","351","244","258","238","86","81","91","57","56","54","52","51","49","44","39","34","33","55"];
+const LEAD_PHONE_NATIONAL_BY_CC = {
+  "55":{min:11,max:11},"39":{min:10,max:10,firstDigit:"3"},"351":{min:9,max:9},
+  "1":{min:10,max:10},"54":{min:10,max:11},"56":{min:9,max:9},"57":{min:10,max:10},
+  "51":{min:9,max:9},"598":{min:8,max:9},"595":{min:9,max:9},"34":{min:9,max:9},
+  "33":{min:9,max:9},"49":{min:10,max:11},"44":{min:10,max:10},"52":{min:10,max:10},
+  "81":{min:10,max:10},"86":{min:11,max:11},"91":{min:10,max:10},"244":{min:9,max:9},
+  "258":{min:9,max:9},"238":{min:7,max:7}
+};
+
+function leadPhoneNationalBounds(cc) {
+  let t = String(cc||"").replace(/\D/g,"").replace(/^0+/,"");
+  if (t.length > 3) t = t.slice(0,3);
+  if (!t) return {min:6,max:12};
+  const row = LEAD_PHONE_NATIONAL_BY_CC[t];
+  if (row) return {min:row.min,max:row.max,firstDigit:row.firstDigit};
+  const maxNat = 15 - t.length;
+  const minNat = Math.max(4, 10 - t.length);
+  return {min:Math.min(minNat,maxNat),max:maxNat};
+}
+
+function leadPhoneSyncCustomCcVisibility() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel || !custom) return;
+  const on = sel.value === "__custom__";
+  custom.classList.toggle("is-visible", on);
+  if (!on) custom.value = "";
+}
+
+function leadPhoneGetDialCode() {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return "55";
+  if (sel.value === "__custom__") {
+    const c = normalizePhone(custom && custom.value ? custom.value : "");
+    return c.replace(/^0+/,"").slice(0,3) || "";
+  }
+  return sel.value;
+}
+
+function leadPhoneGetNationalDigits() {
+  const el = document.getElementById("lead-phone");
+  return normalizePhone(el && el.value ? el.value : "");
+}
+
+function leadPhoneFullDigitsFromForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!cc || !nat) return "";
+  return cc + nat;
+}
+
+function leadPhoneRefreshNationalFieldConstraints() {
+  const nat = document.getElementById("lead-phone");
+  if (!nat) return;
+  const cc = leadPhoneGetDialCode() || "55";
+  const b = leadPhoneNationalBounds(cc);
+  if (cc === "55") { nat.maxLength = 14; nat.placeholder = "(11) 99999-9999"; }
+  else { nat.maxLength = b.max; nat.placeholder = b.min === b.max ? b.max + " digits" : b.min + "–" + b.max + " digits"; }
+  let d = normalizePhone(nat.value);
+  if (d.length > b.max) { d = d.slice(0,b.max); nat.value = cc === "55" ? formatPhoneBR11(d) : d; }
+}
+
+function leadPhoneSetDialInUi(ccDigits) {
+  const sel = document.getElementById("lead-phone-cc");
+  const custom = document.getElementById("lead-phone-cc-custom");
+  if (!sel) return;
+  const cc = String(ccDigits||"").replace(/\D/g,"").replace(/^0+/,"") || "55";
+  let found = false;
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === cc) { sel.selectedIndex = i; found = true; break; }
+  }
+  if (!found) {
+    for (let j = 0; j < sel.options.length; j++) {
+      if (sel.options[j].value === "__custom__") { sel.selectedIndex = j; break; }
+    }
+    if (custom) custom.value = cc;
+  } else if (custom) custom.value = "";
+  leadPhoneSyncCustomCcVisibility();
+}
+
+function formatPhoneBR11(digitsRaw) {
+  const d = String(digitsRaw||"").replace(/\D/g,"").slice(0,11);
+  let out = "";
+  if (d.length > 0) out += d.slice(0,2);
+  if (d.length >= 3) out += " " + d.slice(2,3);
+  if (d.length >= 4) out += " " + d.slice(3,7);
+  if (d.length >= 8) out += "-" + d.slice(7,11);
+  return out;
+}
+
+function splitStoredDigitsToCcAndNational(fullDigits, savedDial) {
+  const d = normalizePhone(fullDigits);
+  if (!d) return {cc:"55",national:""};
+  const saved = savedDial ? normalizePhone(savedDial).replace(/^0+/,"") : "";
+  if (saved && d.startsWith(saved) && d.length > saved.length) return {cc:saved,national:d.slice(saved.length)};
+  if (d.startsWith("55") && d.length >= 13 && d.length <= 15) return {cc:"55",national:d.slice(2)};
+  if (d.length === 12 && d.startsWith("39") && d.charAt(2) === "3") return {cc:"39",national:d.slice(2)};
+  if (d.length === 11) return {cc:"55",national:d};
+  const merged = LEAD_PHONE_CC_PREFIXES.slice().sort((a,b) => b.length - a.length);
+  for (let i = 0; i < merged.length; i++) {
+    const p = merged[i];
+    if (d.startsWith(p) && d.length > p.length) return {cc:p,national:d.slice(p.length)};
+  }
+  return {cc:"55",national:d};
+}
+
+function isValidEmail(raw) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(raw||"").trim()); }
+
+function isValidPhoneLeadForm() {
+  const cc = leadPhoneGetDialCode();
+  const nat = leadPhoneGetNationalDigits();
+  if (!/^[1-9]\d{0,2}$/.test(cc)) return false;
+  if (!nat) return false;
+  const b = leadPhoneNationalBounds(cc);
+  if (nat.length < b.min || nat.length > b.max) return false;
+  if (b.firstDigit && nat.charAt(0) !== b.firstDigit) return false;
+  const full = cc + nat;
+  return full.length >= 10 && full.length <= 15;
+}
+
+document.getElementById("lead-phone").addEventListener("input", e => {
+  const el = e.target;
+  const digits = normalizePhone(el.value);
+  const cc = leadPhoneGetDialCode();
+  const b = leadPhoneNationalBounds(cc);
+  const slice = digits.slice(0, b.max);
+  el.value = (cc === "55" && !slice.startsWith("39")) ? formatPhoneBR11(slice) : slice;
+});
+
+document.getElementById("lead-phone-cc").addEventListener("change", () => {
+  leadPhoneSyncCustomCcVisibility();
+  leadPhoneRefreshNationalFieldConstraints();
+  const nat = document.getElementById("lead-phone");
+  const d = normalizePhone(nat.value);
+  const cc = leadPhoneGetDialCode();
+  if (cc === "55" && !d.startsWith("39")) nat.value = formatPhoneBR11(d);
+});
+
+document.getElementById("lead-phone-cc-custom").addEventListener("input", e => {
+  e.target.value = normalizePhone(e.target.value).slice(0,3);
+  leadPhoneRefreshNationalFieldConstraints();
+});
+
+document.addEventListener("DOMContentLoaded", () => { leadPhoneRefreshNationalFieldConstraints(); });
+</script>
+</body>
+</html>
