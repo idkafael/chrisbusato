@@ -1381,14 +1381,6 @@ function startResultVturbIdleGuard() {
 
 function startQuizFromIntro() {
   pauseIntroVturb();
-  startQuiz();
-}
-
-function startQuiz() {
-  if (!lead.email) {
-    openLeadModal();
-    return;
-  }
   startQuizAfterLead();
 }
 
