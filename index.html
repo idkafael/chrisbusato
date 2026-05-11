@@ -700,7 +700,7 @@ body {
       </div>
     </div>
     <div class="cta-section">
-      <button type="button" class="btn-green result-wpp-locked" id="btn-wpp" disabled aria-disabled="true" onclick="goWpp()">Entrar no Grupo</button>
+      <button type="button" class="btn-green" id="btn-wpp" onclick="goWpp()">Entrar no Grupo</button>
       <p class="cta-small" id="result-cta-small">Não precisa saber dançar</p>
     </div>
   </div>
@@ -1109,9 +1109,7 @@ function startResultWppButtonUnlock() {
     }
   } catch (e) {}
 
-  btn.disabled = true;
-  btn.setAttribute("aria-disabled", "true");
-  btn.classList.add("result-wpp-locked");
+  /* botão sempre disponível — sem obrigatoriedade de assistir */
 
   function unlockResultWppButton(reason) {
     if (gen !== resultVslBindGen || resultVslUnlockDone) return;
