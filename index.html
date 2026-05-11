@@ -1430,9 +1430,6 @@ function showLoadingThenResult() {
     clearInterval(resultVslEndWatchdogInterval);
     resultVslEndWatchdogInterval = null;
   }
-  var wppBtn = document.getElementById("btn-wpp");
-  if (wppBtn) wppBtn.disabled = true;
-
   document.getElementById('s-quiz').classList.remove('active');
   document.getElementById('s-loading').classList.add('active');
   document.getElementById('prog').style.width = '100%';
