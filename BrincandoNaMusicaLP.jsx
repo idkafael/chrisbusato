@@ -148,7 +148,7 @@ function Hero() {
           color: C.brown, lineHeight: 1.15,
           marginBottom: 28, letterSpacing: '-1px',
         }}>
-          Para variar mais na dança,<br />
+          Para brincar mais na dança,<br />
           você não precisa de{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
         </h1>
@@ -1329,7 +1329,7 @@ function InscricaoSection() {
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13, color: C.sageLight,
-              }}>domingo, 14 de junho · São Paulo · local a confirmar</span>
+              }}>domingo, 14 de junho · Zona Sul de São Paulo · local a confirmar</span>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -1358,7 +1358,7 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
               color: 'rgba(255,255,255,0.4)', textAlign: 'center',
             }}>
-              Somente para participantes em São Paulo
+              Confirmação imediata após pagamento · Pagamento seguro
             </div>
           </div>
 
