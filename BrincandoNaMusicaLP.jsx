@@ -1,0 +1,1573 @@
+import { useState, useEffect, useRef } from 'react'
+import carol1 from './images/carol1.jpeg'
+import carol2 from './images/carol2.jpeg'
+import carol3 from './images/carol3.jpeg'
+import chris1 from './images/chris1.PNG'
+import mark1 from './images/mark1.PNG'
+
+// ─── Hooks ───────────────────────────────────────────────────────────────────
+
+function useInView(options = {}) {
+  const ref = useRef(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setInView(true)
+    }, { threshold: 0.15, ...options })
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+  return [ref, inView]
+}
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  useEffect(() => {
+    const handle = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handle)
+    return () => window.removeEventListener('resize', handle)
+  }, [])
+  return width
+}
+
+// ─── Tokens ──────────────────────────────────────────────────────────────────
+
+const C = {
+  cream: '#EDEAE3',
+  creamDark: '#E4E0D7',
+  creamCard: '#F5F3EF',
+  sage: '#8A9E8C',
+  sageDark: '#6B7F6D',
+  sageLight: '#C4D0C5',
+  sagePale: '#E8EDEA',
+  brown: '#3D3530',
+  brownMid: '#6B5F58',
+  brownLight: '#9C8E87',
+  white: '#FAFAF8',
+}
+
+// ─── Navbar ──────────────────────────────────────────────────────────────────
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  useEffect(() => {
+    const handle = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', handle)
+    return () => window.removeEventListener('scroll', handle)
+  }, [])
+
+  return (
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+      background: 'rgba(237,234,227,0.85)',
+      boxShadow: scrolled ? '0 1px 24px rgba(61,53,48,0.08)' : 'none',
+      transition: 'box-shadow 0.3s ease',
+      borderBottom: scrolled ? `1px solid ${C.sageLight}` : '1px solid transparent',
+    }}>
+      <div style={{
+        maxWidth: 1100, margin: '0 auto',
+        padding: mobile ? '0 24px' : '0 40px',
+        height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <span style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 20, color: C.brown, letterSpacing: '-0.3px',
+        }}>
+          Brincando na Música
+        </span>
+        {!mobile && (
+          <a href="#inscricao" style={{
+            background: C.sage, color: C.white,
+            padding: '10px 22px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+            textDecoration: 'none', letterSpacing: '0.2px',
+            transition: 'background 0.2s',
+            display: 'inline-block',
+          }}
+            onMouseEnter={e => e.target.style.background = C.sageDark}
+            onMouseLeave={e => e.target.style.background = C.sage}
+          >
+            Quero participar
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+
+function Hero() {
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      minHeight: '100vh', background: C.cream,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      position: 'relative', overflow: 'hidden',
+      padding: mobile ? '80px 24px 64px' : '120px 40px 80px',
+    }}>
+      {/* blobs */}
+      <div style={{
+        position: 'absolute', top: '-8%', right: '-6%',
+        width: 480, height: 480, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.25, pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '4%', left: '-5%',
+        width: 280, height: 280, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.2, pointerEvents: 'none',
+      }} />
+
+      <div style={{
+        maxWidth: 760, textAlign: 'center', position: 'relative', zIndex: 1,
+        animation: 'fadeUp 0.9s ease forwards',
+      }}>
+        {/* eyebrow */}
+        <div style={{
+          display: 'inline-block',
+          background: C.sagePale, border: `1px solid ${C.sageLight}`,
+          color: C.sageDark, borderRadius: 100,
+          padding: '6px 18px', marginBottom: 32,
+          fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+          letterSpacing: '0.5px',
+        }}>
+          Vivência de Musicalidade
+        </div>
+
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'clamp(40px, 6vw, 72px)',
+          color: C.brown, lineHeight: 1.15,
+          marginBottom: 28, letterSpacing: '-1px',
+        }}>
+          Para variar mais na dança,<br />
+          você não precisa de{' '}
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
+        </h1>
+
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 'clamp(16px, 2.2vw, 20px)',
+          color: C.brownMid, maxWidth: 560, margin: '0 auto 40px',
+          lineHeight: 1.7,
+        }}>
+          O que falta, na maioria das vezes, não é repertório. É conseguir perceber os caminhos que a música já abre para você.
+        </p>
+
+        <a href="#inscricao" style={{
+          display: 'inline-block',
+          background: C.sage, color: C.white,
+          padding: '16px 36px', borderRadius: 100,
+          fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+          textDecoration: 'none', letterSpacing: '0.2px',
+          transition: 'background 0.2s, transform 0.2s',
+          marginBottom: 16,
+        }}
+          onMouseEnter={e => { e.target.style.background = C.sageDark; e.target.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.target.style.background = C.sage; e.target.style.transform = 'translateY(0)' }}
+        >
+          Quero brincar na música →
+        </a>
+
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+          color: C.brownLight, letterSpacing: '0.3px',
+        }}>
+          Vivência presencial · Vagas limitadas
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Dor ─────────────────────────────────────────────────────────────────────
+
+const dorCards = [
+  {
+    n: '01',
+    title: 'Aprende na aula, trava na pista',
+    text: 'Os passos fazem sentido no treino. No baile, a cabeça grita "e agora?" e o corpo congela.',
+  },
+  {
+    n: '02',
+    title: 'Sente a música mas não consegue usar',
+    text: 'Você percebe que a música mudou. Sabe que deveria fazer algo diferente. Mas não sabe o quê.',
+  },
+  {
+    n: '03',
+    title: 'Parece que nunca é suficiente',
+    text: 'Aprende um passo, quer mais. Aprende mais, ainda sente que falta algo. O repertório cresce, a sensação de limitação não passa.',
+  },
+  {
+    n: '04',
+    title: 'Dança "no piloto automático"',
+    text: 'A mesma sequência toda vez. Não porque quer, mas porque não sabe como sair dela sem perder o ritmo.',
+  },
+  {
+    n: '05',
+    title: 'Insegurança de não "acertar"',
+    text: 'A preocupação de errar o tempo toma mais espaço do que a dança em si. Você monitora mais do que dança.',
+  },
+  {
+    n: '06',
+    title: 'A música passa, você não brinca',
+    text: 'Às vezes você percebe uma frase musical incrível. O momento passa. O corpo não respondeu a tempo.',
+  },
+]
+
+function DorCard({ card, delay }) {
+  const [ref, inView] = useInView()
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div ref={ref} style={{
+      background: hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 16, padding: '32px 28px',
+      position: 'relative', overflow: 'hidden',
+      transition: 'opacity 0.7s ease, transform 0.7s ease, background 0.2s',
+      transitionDelay: `${delay}ms`,
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(28px)',
+      cursor: 'default',
+    }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontStyle: 'italic', fontSize: 64,
+        color: C.sageLight, opacity: 0.3,
+        lineHeight: 1, marginBottom: 8, userSelect: 'none',
+      }}>{card.n}</div>
+      <h3 style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+        fontSize: 16, color: C.cream, marginBottom: 10,
+      }}>{card.title}</h3>
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, color: C.brownLight, lineHeight: 1.65,
+      }}>{card.text}</p>
+    </div>
+  )
+}
+
+function DorSection() {
+  const [titleRef, titleInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.brown,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 72,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sageLight,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>O Que Acontece</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(32px, 4vw, 52px)',
+            color: C.cream, lineHeight: 1.2, letterSpacing: '-0.5px',
+          }}>
+            Você aprende os passos.{' '}
+            <em style={{ color: C.sageLight, fontStyle: 'italic' }}>
+              Mas a música continua passando.
+            </em>
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 17, color: C.brownLight,
+            maxWidth: 520, margin: '20px auto 0', lineHeight: 1.7,
+          }}>
+            Não é falta de talento. É que ninguém te mostrou o mapa. A música tem uma estrutura, e quando você entende isso, o corpo começa a saber onde pode ir.
+          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: 20,
+        }}>
+          {dorCards.map((card, i) => (
+            <DorCard key={i} card={card} delay={i * 100} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Virada ───────────────────────────────────────────────────────────────────
+
+function ViradaSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.creamDark,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
+        <div ref={ref} style={{
+          background: C.creamCard,
+          border: `1px solid ${C.sageLight}`,
+          borderRadius: 20, padding: mobile ? '40px 28px' : '56px',
+          position: 'relative', overflow: 'hidden',
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: inView ? 1 : 0,
+          transform: inView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          {/* blob */}
+          <div style={{
+            position: 'absolute', bottom: '-10%', right: '-6%',
+            width: 220, height: 220, background: C.sageLight,
+            borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+            opacity: 0.2, pointerEvents: 'none',
+          }} />
+
+          <div style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 120, color: C.sageLight, opacity: 0.3,
+            lineHeight: 0.7, marginBottom: 24, userSelect: 'none',
+          }}>"</div>
+
+          <blockquote style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            fontSize: 'clamp(20px, 3vw, 30px)',
+            color: C.brown, lineHeight: 1.5,
+            marginBottom: 32, position: 'relative', zIndex: 1,
+          }}>
+            Não é sobre repertório de passos predeterminados. É sobre repertório musical.
+          </blockquote>
+
+          <div style={{
+            height: 1, background: C.sageLight, marginBottom: 28,
+          }} />
+
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 16, color: C.brownMid, lineHeight: 1.7,
+            position: 'relative', zIndex: 1,
+          }}>
+            A maioria das pessoas aprende movimentos. Poucas aprendem a enxergar possibilidades dentro da música. Quando você entende a base musical do que já faz (ou do que quer fazer), o passo deixa de ser uma obrigação e passa a ser uma escolha.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── O Mapa ───────────────────────────────────────────────────────────────────
+
+const mapaItens = [
+  {
+    n: '01',
+    title: 'Estrutura Musical',
+    text: 'O que sustenta a música quando você quer se mover dentro dela. Pulso, frases, blocos, contrastes. Não como teoria, mas como mapa de possibilidades para o corpo.',
+  },
+  {
+    n: '02',
+    title: 'Musicalização',
+    text: 'O quanto você se permite ser afetado pela música. Sentir antes de mover. Deixar que o que escuta chegue ao corpo, e só então dançar a partir disso.',
+  },
+  {
+    n: '03',
+    title: 'O Sentir',
+    text: 'Reconhecer o que a música pede. Não como resposta automática, mas como escuta ativa. A dança começa antes do movimento.',
+  },
+  {
+    n: '04',
+    title: 'O Sustentar',
+    text: 'Ter estrutura o suficiente para que o sentir vire dança, e não só uma reação vaga. Liberdade que se apoia em algo sólido.',
+  },
+]
+
+function MapaCard({ item, delay }) {
+  const [ref, inView] = useInView()
+  return (
+    <div ref={ref} style={{
+      background: C.creamCard,
+      border: `1px solid ${C.sageLight}`,
+      borderRadius: 16, padding: '36px 32px',
+      position: 'relative', overflow: 'hidden',
+      transition: 'opacity 0.7s ease, transform 0.7s ease',
+      transitionDelay: `${delay}ms`,
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(28px)',
+    }}>
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontStyle: 'italic', fontSize: 72,
+        color: C.sageLight, opacity: 0.35,
+        lineHeight: 0.9, marginBottom: 12,
+        userSelect: 'none',
+      }}>{item.n}</div>
+      <h3 style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+        fontSize: 18, color: C.brown, marginBottom: 12,
+      }}>{item.title}</h3>
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, color: C.brownMid, lineHeight: 1.7,
+      }}>{item.text}</p>
+    </div>
+  )
+}
+
+function MapaSection() {
+  const [titleRef, titleInView] = useInView()
+  const [compRef, compInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.white,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 64,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>A Vivência</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(30px, 4vw, 50px)',
+            color: C.brown, letterSpacing: '-0.5px', marginBottom: 20,
+          }}>
+            Um mapa simples para{' '}
+            <em style={{ color: C.sage, fontStyle: 'italic' }}>brincar dentro da música.</em>
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 17, color: C.brownMid,
+            maxWidth: 560, margin: '0 auto', lineHeight: 1.7,
+          }}>
+            Você vai entender a base musical do que já dança, e como usar essa estrutura para criar mais liberdade, não mais obrigação.
+          </p>
+        </div>
+
+        {/* comparativo */}
+        <div ref={compRef} style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: 24, marginBottom: 72,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: compInView ? 1 : 0,
+          transform: compInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            borderLeft: `3px solid ${C.brownLight}`,
+            paddingLeft: 24, paddingTop: 4,
+          }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
+              color: C.brownLight, marginBottom: 14,
+            }}>Sem o mapa</div>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 16, color: C.brownMid, lineHeight: 1.8,
+            }}>
+              passo{' '}
+              <span style={{ color: C.brownLight }}>→</span>{' '}
+              repetição{' '}
+              <span style={{ color: C.brownLight }}>→</span>{' '}
+              pista{' '}
+              <span style={{ color: C.brownLight }}>→</span>{' '}
+              travamento{' '}
+              <span style={{ color: C.brownLight }}>→</span>{' '}
+              mais passos
+            </p>
+          </div>
+
+          <div style={{
+            borderLeft: `3px solid ${C.sage}`,
+            paddingLeft: 24, paddingTop: 4,
+          }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
+              color: C.sage, marginBottom: 14,
+            }}>Com o mapa</div>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 16, color: C.brownMid, lineHeight: 1.8,
+            }}>
+              escuta{' '}
+              <span style={{ color: C.sage }}>→</span>{' '}
+              estrutura{' '}
+              <span style={{ color: C.sage }}>→</span>{' '}
+              possibilidades{' '}
+              <span style={{ color: C.sage }}>→</span>{' '}
+              escolha{' '}
+              <span style={{ color: C.sage }}>→</span>{' '}
+              expressão
+            </p>
+          </div>
+        </div>
+
+        {/* cards do mapa */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)',
+          gap: 24,
+        }}>
+          {mapaItens.map((item, i) => (
+            <MapaCard key={i} item={item} delay={i * 100} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── O Que Você Vai Viver ─────────────────────────────────────────────────────
+
+const experiencias = [
+  {
+    title: 'Entender a base musical do que já faz',
+    text: 'Você já dança com estrutura, só ainda não sabia identificar. Vamos nomear o que o seu corpo já intui.',
+  },
+  {
+    title: 'Perceber os caminhos que a música abre',
+    text: 'Não "o que fazer", mas "onde posso ir". A música tem momentos de expansão, de pausa, de virada. Você vai aprender a vê-los.',
+  },
+  {
+    title: 'Sentir e sustentar ao mesmo tempo',
+    text: 'O sentir sem estrutura vira agitação. A estrutura sem sentir vira mecanismo. Aqui os dois coexistem.',
+  },
+  {
+    title: 'Criar musicalidade dentro do que já sabe',
+    text: 'Você não vai aprender passos novos. Vai aprender a fazer o que já sabe soar como música.',
+  },
+]
+
+function ExpCard({ exp, delay }) {
+  const [ref, inView] = useInView()
+  return (
+    <div ref={ref} style={{
+      background: C.creamCard,
+      borderLeft: `3px solid ${C.sage}`,
+      borderRadius: '0 12px 12px 0',
+      padding: '28px 28px',
+      transition: 'opacity 0.7s ease, transform 0.7s ease',
+      transitionDelay: `${delay}ms`,
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(28px)',
+    }}>
+      <h3 style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+        fontSize: 16, color: C.brown, marginBottom: 10, lineHeight: 1.4,
+      }}>{exp.title}</h3>
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, color: C.brownMid, lineHeight: 1.7,
+      }}>{exp.text}</p>
+    </div>
+  )
+}
+
+function VivenciaSection() {
+  const [titleRef, titleInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.sagePale,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 64,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>O Que Acontece na Vivência</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(30px, 4vw, 50px)',
+            color: C.brown, letterSpacing: '-0.5px',
+          }}>
+            Você vai sair dançando diferente.{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Não porque aprendeu mais.</em>
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 17, color: C.brownMid,
+            maxWidth: 520, margin: '20px auto 0', lineHeight: 1.7,
+          }}>
+            Mas porque entendeu o que já tinha, e como a música estava te convidando o tempo inteiro.
+          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)',
+          gap: 20,
+        }}>
+          {experiencias.map((exp, i) => (
+            <ExpCard key={i} exp={exp} delay={i * 100} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Transformação ───────────────────────────────────────────────────────────
+
+const antes = [
+  'Aprende passo, trava na pista',
+  'A cabeça monitora o tempo todo',
+  'Repertório cresce, liberdade não',
+  'A música passa sem você participar',
+  'Dança no piloto automático',
+  'Insegurança de "estar errado"',
+]
+
+const depois = [
+  'Entende onde pode ir na música',
+  'O corpo escuta e responde',
+  'Menos passos, mais possibilidades',
+  'Percebe os convites da música',
+  'Faz escolhas enquanto dança',
+  'Confiança que vem de estrutura',
+]
+
+function TransformacaoSection() {
+  const [titleRef, titleInView] = useInView()
+  const [antesRef, antesInView] = useInView()
+  const [depoisRef, depoisInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.creamDark,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 64,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>O Que Muda</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(30px, 4vw, 50px)',
+            color: C.brown, letterSpacing: '-0.5px',
+          }}>
+            Para de decorar.{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Começa a brincar.</em>
+          </h2>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: 24,
+        }}>
+          <div ref={antesRef} style={{
+            background: C.creamCard,
+            borderLeft: `3px solid ${C.brownLight}`,
+            borderRadius: '0 16px 16px 0',
+            padding: mobile ? '32px 24px' : '40px 36px',
+            transition: 'opacity 0.7s ease, transform 0.7s ease',
+            opacity: antesInView ? 1 : 0,
+            transform: antesInView ? 'translateY(0)' : 'translateY(28px)',
+          }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
+              color: C.brownLight, marginBottom: 24,
+            }}>Antes</div>
+            {antes.map((item, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                marginBottom: 14,
+              }}>
+                <span style={{
+                  color: C.brownLight, fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 500, fontSize: 16, flexShrink: 0, marginTop: 1,
+                }}>×</span>
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                  fontSize: 15, color: C.brownMid, lineHeight: 1.5,
+                }}>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div ref={depoisRef} style={{
+            background: C.creamCard,
+            borderLeft: `3px solid ${C.sage}`,
+            borderRadius: '0 16px 16px 0',
+            padding: mobile ? '32px 24px' : '40px 36px',
+            transition: 'opacity 0.7s ease, transform 0.7s ease',
+            transitionDelay: '100ms',
+            opacity: depoisInView ? 1 : 0,
+            transform: depoisInView ? 'translateY(0)' : 'translateY(28px)',
+          }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
+              color: C.sage, marginBottom: 24,
+            }}>Depois</div>
+            {depois.map((item, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                marginBottom: 14,
+              }}>
+                <span style={{
+                  color: C.sage, fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 500, fontSize: 16, flexShrink: 0, marginTop: 1,
+                }}>→</span>
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                  fontSize: 15, color: C.brownMid, lineHeight: 1.5,
+                }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Statement Strip ─────────────────────────────────────────────────────────
+
+function StatementStrip() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.brown,
+      padding: mobile ? '64px 24px' : '80px 40px',
+      textAlign: 'center',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 820, margin: '0 auto',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      }}>
+        <p style={{
+          fontFamily: "'Playfair Display', serif",
+          fontStyle: 'italic',
+          fontSize: 'clamp(26px, 4vw, 48px)',
+          color: C.cream, lineHeight: 1.35,
+          letterSpacing: '-0.5px',
+        }}>
+          "O corpo que escuta{' '}
+          <span style={{ color: C.sageLight }}>dança diferente.</span>"
+        </p>
+      </div>
+    </section>
+  )
+}
+
+// ─── Marquee Strip ────────────────────────────────────────────────────────────
+
+const marqueeWords = [
+  'estrutura', '·', 'musicalização', '·', 'sentir', '·', 'sustentar',
+  '·', 'pulso', '·', 'escuta', '·', 'ritmo', '·', 'brincando',
+  '·', 'movimento', '·', 'música', '·', 'liberdade', '·', 'expressão',
+]
+
+function MarqueeStrip() {
+  const words = [...marqueeWords, ...marqueeWords]
+  return (
+    <div style={{
+      background: C.sagePale,
+      borderTop: `1px solid ${C.sageLight}`,
+      borderBottom: `1px solid ${C.sageLight}`,
+      padding: '18px 0',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+    }}>
+      <div style={{
+        display: 'inline-block',
+        animation: 'marquee 28s linear infinite',
+      }}>
+        {words.map((w, i) => (
+          <span key={i} style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: w === '·' ? 400 : 500,
+            fontSize: 13,
+            letterSpacing: w === '·' ? '0' : '1.5px',
+            textTransform: w === '·' ? 'none' : 'uppercase',
+            color: w === '·' ? C.sageLight : C.sageDark,
+            marginRight: 24,
+          }}>{w}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Pull Quote ───────────────────────────────────────────────────────────────
+
+function PullQuote() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.white,
+      padding: mobile ? '72px 24px' : '96px 40px',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 640, margin: '0 auto', textAlign: 'center',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      }}>
+        <div style={{
+          width: 40, height: 2, background: C.sage,
+          margin: '0 auto 32px',
+        }} />
+        <p style={{
+          fontFamily: "'Playfair Display', serif",
+          fontStyle: 'italic',
+          fontSize: 'clamp(20px, 3vw, 30px)',
+          color: C.brown, lineHeight: 1.55,
+          marginBottom: 24,
+        }}>
+          Você não precisa aprender mais. Precisa entender o que já tem, e o que a música está te oferecendo o tempo inteiro.
+        </p>
+        <div style={{
+          width: 40, height: 2, background: C.sage,
+          margin: '0 auto',
+        }} />
+      </div>
+    </section>
+  )
+}
+
+// ─── Stats Strip ──────────────────────────────────────────────────────────────
+
+const stats = [
+  { n: '1', label: 'mapa musical' },
+  { n: '4', label: 'camadas de escuta' },
+  { n: '∞', label: 'possibilidades na música' },
+]
+
+function StatsStrip() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.sage,
+      padding: mobile ? '56px 24px' : '72px 40px',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 800, margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)',
+        gap: mobile ? 40 : 0,
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{
+            textAlign: 'center',
+            borderRight: (!mobile && i < stats.length - 1) ? `1px solid rgba(255,255,255,0.2)` : 'none',
+            padding: mobile ? '0' : '0 32px',
+          }}>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 'clamp(48px, 6vw, 72px)',
+              color: C.white, lineHeight: 1,
+              marginBottom: 8,
+            }}>{s.n}</div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: 14, letterSpacing: '1px',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.7)',
+            }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ─── Para Quem ────────────────────────────────────────────────────────────────
+
+const paraQuemItens = [
+  {
+    frase: 'Você vai pro baile e repete as mesmas duas ou três coisas. Não porque quer, mas porque é o que aparece.',
+    detalhe: 'O corpo vai no automático.',
+  },
+  {
+    frase: 'A música muda. Você percebe. O corpo não vai junto.',
+    detalhe: 'Você vê o momento, só não sabe o que fazer nele.',
+  },
+  {
+    frase: 'Já aprendeu bastante. A sensação de limitação não foi embora com os passos.',
+    detalhe: 'Mais repertório não parece ser a resposta.',
+  },
+  {
+    frase: 'Às vezes você dança bem. Outras vezes trava. E você não entende por quê.',
+    detalhe: 'Não é inconsistência, é falta de mapa.',
+  },
+]
+
+function ParaQuemSection() {
+  const [titleRef, titleInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.cream,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 680, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          marginBottom: 56,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(28px, 4vw, 48px)',
+            color: C.brown, letterSpacing: '-0.5px', marginBottom: 16,
+          }}>
+            Isso soa familiar?
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 17, color: C.brownMid, lineHeight: 1.7,
+          }}>
+            Se algum desses cenários parece com o que você vive, essa vivência foi feita para você.
+          </p>
+        </div>
+
+        <div>
+          {paraQuemItens.map((item, i) => (
+            <ParaQuemItem key={i} item={item} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ParaQuemItem({ item, index }) {
+  const [ref, inView] = useInView()
+  return (
+    <div ref={ref} style={{
+      borderTop: `1px solid ${C.creamDark}`,
+      padding: '28px 0',
+      transition: 'opacity 0.6s ease, transform 0.6s ease',
+      transitionDelay: `${index * 80}ms`,
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(20px)',
+    }}>
+      <p style={{
+        fontFamily: "'Playfair Display', serif",
+        fontStyle: 'italic',
+        fontSize: 'clamp(18px, 2.2vw, 22px)',
+        color: C.brown, lineHeight: 1.55, marginBottom: 10,
+      }}>{item.frase}</p>
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, color: C.brownMid, lineHeight: 1.5,
+      }}>{item.detalhe}</p>
+    </div>
+  )
+}
+
+// ─── Testemunhos (Carrossel) ──────────────────────────────────────────────────
+
+const feedbackItems = [
+  { src: carol1, name: 'Carol' },
+  { src: carol2, name: 'Carol' },
+  { src: carol3, name: 'Carol' },
+  { src: chris1, name: 'Chris' },
+  { src: mark1,  name: 'Mark'  },
+]
+
+function TestemunhosSection() {
+  const [titleRef, titleInView] = useInView()
+  const [paused, setPaused] = useState(false)
+  const w = useWindowWidth()
+  const mobile = w < 768
+  const CARD_W = mobile ? 260 : 320
+  const GAP = 20
+  const looped = [...feedbackItems, ...feedbackItems, ...feedbackItems]
+
+  return (
+    <section style={{
+      background: C.brown,
+      padding: mobile ? '72px 0 80px' : '96px 0 112px',
+      overflow: 'hidden',
+    }}>
+      {/* título */}
+      <div ref={titleRef} style={{
+        textAlign: 'center',
+        marginBottom: 56,
+        padding: '0 24px',
+        transition: 'opacity 0.7s ease, transform 0.7s ease',
+        opacity: titleInView ? 1 : 0,
+        transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+      }}>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 12, letterSpacing: '2.5px', color: C.sageLight,
+          textTransform: 'uppercase', marginBottom: 20,
+        }}>Quem Já Viveu</div>
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'clamp(30px, 4vw, 50px)',
+          color: C.cream, letterSpacing: '-0.5px',
+        }}>
+          O que muda quando o{' '}
+          <em style={{ color: C.sageLight, fontStyle: 'italic' }}>corpo entende a música.</em>
+        </h2>
+      </div>
+
+      {/* trilha animada */}
+      <div
+        style={{ overflow: 'hidden', userSelect: 'none' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div style={{
+          display: 'flex',
+          gap: GAP,
+          width: 'max-content',
+          animation: `carouselScroll ${feedbackItems.length * 10}s linear infinite`,
+          animationPlayState: paused ? 'paused' : 'running',
+          paddingLeft: GAP,
+        }}>
+          {looped.map((item, i) => (
+            <div key={i} style={{
+              flexShrink: 0,
+              width: CARD_W,
+              background: C.white,
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 6px 28px rgba(0,0,0,0.22)',
+            }}>
+              <img
+                src={item.src}
+                alt={`Feedback de ${item.name}`}
+                style={{ width: '100%', display: 'block' }}
+              />
+              <div style={{
+                padding: '10px 16px',
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 13,
+                color: C.brownMid,
+                letterSpacing: '0.3px',
+                background: C.creamCard,
+              }}>
+                {item.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p style={{
+        textAlign: 'center',
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 400,
+        fontSize: 12,
+        color: 'rgba(255,255,255,0.25)',
+        marginTop: 28,
+        letterSpacing: '0.3px',
+      }}>
+        Passe o mouse para pausar
+      </p>
+    </section>
+  )
+}
+
+// ─── Inscrição ────────────────────────────────────────────────────────────────
+
+const inclusosOnline = [
+  'Mapa musical aplicado ao movimento',
+  'Estrutura musical para dançarinos: prática, não teoria',
+  'Musicalização: o sentir como ponto de partida',
+  'Como perceber os caminhos dentro da música',
+  'Exercícios para criar musicalidade com o que já sabe',
+]
+
+const inclusosPresencial = [
+  'Tudo do acesso online',
+  'Vivência presencial com Chris Busato + professor convidado',
+  'Prática ao vivo com música',
+  'Exercícios em dupla e em grupo',
+  'Interação direta e feedback em tempo real',
+  'Você sai sabendo brincar dentro da música, não só seguir ela',
+]
+
+function CheckItem({ text, light }) {
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12,
+    }}>
+      <div style={{
+        width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 2,
+        background: light ? 'rgba(255,255,255,0.15)' : C.sagePale,
+        border: `1.5px solid ${light ? 'rgba(255,255,255,0.4)' : C.sage}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+          <path d="M1 4L3.5 6.5L9 1"
+            stroke={light ? 'rgba(255,255,255,0.9)' : C.sage}
+            strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <span style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, lineHeight: 1.5,
+        color: light ? 'rgba(255,255,255,0.85)' : C.brownMid,
+      }}>{text}</span>
+    </div>
+  )
+}
+
+function InscricaoSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section id="inscricao" style={{
+      background: C.white,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+        {/* título */}
+        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>A Vivência</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(30px, 4vw, 50px)',
+            color: C.brown, letterSpacing: '-0.5px',
+          }}>
+            Brincando na Música{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>com Chris Busato</em>
+          </h2>
+        </div>
+
+        {/* dois cards */}
+        <div ref={ref} style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: 24,
+          maxWidth: 900, margin: '0 auto',
+          alignItems: 'start',
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: inView ? 1 : 0,
+          transform: inView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+
+          {/* card online */}
+          <div style={{
+            background: C.creamCard,
+            border: `1.5px solid ${C.sageLight}`,
+            borderRadius: 20,
+            padding: mobile ? '36px 24px' : '44px 40px',
+          }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 12, letterSpacing: '2px', color: C.brownLight,
+              textTransform: 'uppercase', marginBottom: 20,
+            }}>Online</div>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 'clamp(40px, 5vw, 56px)',
+              color: C.brown, lineHeight: 1, marginBottom: 6,
+              letterSpacing: '-1px',
+            }}>R$ 127</div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 13, color: C.brownLight, marginBottom: 28,
+            }}>sábado, 13 de junho · online</div>
+
+            <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
+
+            <div style={{ marginBottom: 32 }}>
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
+            </div>
+
+            <a href="https://pay.cakto.com.br/38gpmqv_891283" target="_blank" rel="noopener noreferrer" style={{
+              display: 'block', width: '100%',
+              background: 'transparent',
+              border: `1.5px solid ${C.sage}`,
+              color: C.sageDark,
+              padding: '15px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+              textDecoration: 'none', textAlign: 'center',
+              transition: 'background 0.2s, color 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sagePale }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+            >
+              Quero o acesso online →
+            </a>
+          </div>
+
+          {/* card presencial — destaque */}
+          <div style={{
+            background: C.brown,
+            border: `1.5px solid ${C.brown}`,
+            borderRadius: 20,
+            padding: mobile ? '36px 24px' : '44px 40px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            {/* blob decorativo */}
+            <div style={{
+              position: 'absolute', top: '-15%', right: '-10%',
+              width: 200, height: 200, background: C.sageDark,
+              borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+              opacity: 0.2, pointerEvents: 'none',
+            }} />
+
+            {/* badge */}
+            <div style={{
+              display: 'inline-block',
+              background: C.sage, color: C.white,
+              borderRadius: 100, padding: '4px 14px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
+              marginBottom: 16,
+            }}>Recomendado</div>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 12, letterSpacing: '2px', color: C.sageLight,
+              textTransform: 'uppercase', marginBottom: 20,
+            }}>Presencial · São Paulo</div>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 'clamp(40px, 5vw, 56px)',
+              color: C.cream, lineHeight: 1, marginBottom: 6,
+              letterSpacing: '-1px',
+            }}>R$ 147</div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 13, color: C.sageLight, marginBottom: 8,
+            }}>pagamento único · vagas limitadas</div>
+
+            {/* data e local */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'rgba(255,255,255,0.07)',
+              borderRadius: 8, padding: '8px 14px',
+              marginBottom: 28,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <rect x="1" y="2" width="12" height="11" rx="2" stroke={C.sageLight} strokeWidth="1.3"/>
+                <path d="M1 6h12" stroke={C.sageLight} strokeWidth="1.3"/>
+                <path d="M4 1v2M10 1v2" stroke={C.sageLight} strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 13, color: C.sageLight,
+              }}>domingo, 14 de junho · São Paulo · local a confirmar</span>
+            </div>
+
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
+
+            <div style={{ marginBottom: 32 }}>
+              {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+            </div>
+
+            <a href="https://pay.cakto.com.br/mveu4ge_892575" target="_blank" rel="noopener noreferrer" style={{
+              display: 'block', width: '100%',
+              background: C.sage, color: C.white,
+              padding: '17px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+              textDecoration: 'none', textAlign: 'center',
+              transition: 'background 0.2s, transform 0.2s',
+              marginBottom: 14,
+              position: 'relative', zIndex: 1,
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              Quero participar presencialmente →
+            </a>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12,
+              color: 'rgba(255,255,255,0.4)', textAlign: 'center',
+            }}>
+              Somente para participantes em São Paulo
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── FAQ ─────────────────────────────────────────────────────────────────────
+
+const faqs = [
+  {
+    q: 'Preciso ter experiência em dança?',
+    a: 'Sim, alguma experiência ajuda: você vai entender melhor o mapa quando já tem um pouco de vivência no corpo. Não precisa ser avançado, mas é ideal ter pelo menos algumas aulas.',
+  },
+  {
+    q: 'Funciona para qualquer estilo de dança?',
+    a: 'Sim. Os princípios de estrutura musical e musicalização são transversais a qualquer dança social. Forró, zouk, salsa, samba de gafieira, bachata. A base é a mesma.',
+  },
+  {
+    q: 'Vou aprender passos novos?',
+    a: 'Não. O objetivo não é ampliar seu repertório de passos, mas te ajudar a entender o que fazer com o que já sabe. A vivência é sobre percepção e musicalidade, não sobre sequências.',
+  },
+  {
+    q: 'E se eu nunca tiver pensado sobre música antes?',
+    a: 'Melhor ainda. Você vai construir o mapa sem precisar desfazer nada. A vivência foi feita para quem dança de forma intuitiva e quer entender o que já sente.',
+  },
+  {
+    q: 'Como funciona a inscrição?',
+    a: 'Após confirmar o pagamento, você recebe as informações completas sobre data, horário e local da vivência. Vagas são limitadas para garantir a qualidade da experiência.',
+  },
+]
+
+function FaqItem({ faq, index, open, onToggle }) {
+  const [ref, inView] = useInView()
+
+  return (
+    <div ref={ref} style={{
+      borderBottom: `1px solid ${C.creamDark}`,
+      transition: 'opacity 0.7s ease, transform 0.7s ease',
+      transitionDelay: `${index * 80}ms`,
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(20px)',
+    }}>
+      <button onClick={onToggle} style={{
+        width: '100%', display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', gap: 16,
+        padding: '24px 0', background: 'none', border: 'none',
+        cursor: 'pointer', textAlign: 'left',
+      }}>
+        <span style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 16, color: C.brown, lineHeight: 1.4,
+        }}>{faq.q}</span>
+        <span style={{
+          color: C.sage, fontSize: 22, fontWeight: 400,
+          flexShrink: 0, lineHeight: 1,
+          transition: 'transform 0.25s',
+          display: 'inline-block',
+          transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
+        }}>+</span>
+      </button>
+      <div style={{
+        maxHeight: open ? 300 : 0,
+        overflow: 'hidden',
+        transition: 'max-height 0.35s ease',
+      }}>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 15, color: C.brownMid, lineHeight: 1.7,
+          paddingBottom: 24,
+        }}>{faq.a}</p>
+      </div>
+    </div>
+  )
+}
+
+function FaqSection() {
+  const [open, setOpen] = useState(null)
+  const [titleRef, titleInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.cream,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 56,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>Dúvidas</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(28px, 4vw, 46px)',
+            color: C.brown, letterSpacing: '-0.5px',
+          }}>
+            Perguntas{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>frequentes</em>
+          </h2>
+        </div>
+
+        {faqs.map((faq, i) => (
+          <FaqItem key={i} faq={faq} index={i} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+
+function Footer() {
+  return (
+    <footer style={{
+      background: C.brown,
+      padding: '64px 40px 48px',
+      textAlign: 'center',
+    }}>
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: 24, color: C.cream, marginBottom: 12,
+      }}>
+        Brincando na Música
+      </div>
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 15, color: C.brownMid, marginBottom: 24,
+      }}>
+        O sentir e o sustentar, com Chris Busato.
+      </p>
+      <a
+        href="https://chrisbusato.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 14, color: C.sageLight, textDecoration: 'none',
+          display: 'inline-block', marginBottom: 32,
+          borderBottom: `1px solid transparent`,
+          transition: 'border-color 0.2s',
+        }}
+        onMouseEnter={e => e.target.style.borderBottomColor = C.sageLight}
+        onMouseLeave={e => e.target.style.borderBottomColor = 'transparent'}
+      >
+        chrisbusato.com
+      </a>
+      <div style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 13, color: C.brownLight,
+      }}>
+        © {new Date().getFullYear()} Chris Busato. Todos os direitos reservados.
+      </div>
+    </footer>
+  )
+}
+
+// ─── Root ────────────────────────────────────────────────────────────────────
+
+export default function BrincandoNaMusicaLP() {
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
+    link.rel = 'stylesheet'
+    document.head.appendChild(link)
+    return () => document.head.removeChild(link)
+  }, [])
+
+  return (
+    <>
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(32px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        @keyframes carouselScroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(calc(-1 * (320px + 20px) * 5)); }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { overflow-x: hidden; }
+      `}</style>
+      <Navbar />
+      <Hero />
+      <DorSection />
+      <StatementStrip />
+      <VivenciaSection />
+      <MarqueeStrip />
+      <TransformacaoSection />
+      <ParaQuemSection />
+      <StatsStrip />
+      <TestemunhosSection />
+      <InscricaoSection />
+      <FaqSection />
+      <Footer />
+    </>
+  )
+}
