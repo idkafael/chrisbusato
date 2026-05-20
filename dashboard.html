@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Dança & Consciência</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #EDE8DF;
+      font-family: 'Inter', sans-serif;
+      color: #2C2218;
+      min-height: 100vh;
+    }
+
+    /* ─── LOGIN ─── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .login-card {
+      background: #F2EDE3;
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      border: 0.5px solid #C5BAA8;
+      box-shadow: 0 8px 32px rgba(44,34,24,0.10);
+    }
+
+    .tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0.5rem 0 1.75rem;
+    }
+    .divider-line { height: 0.5px; width: 60px; background: #C5BAA8; }
+    .divider-dot  { width: 4px; height: 4px; border-radius: 50%; background: #C5BAA8; }
+
+    .login-card h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+      color: #2C2218;
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .login-sub {
+      font-size: 13.5px;
+      color: #5C5043;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+
+    .field-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      font-weight: 500;
+    }
+
+    .field-input {
+      width: 100%;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      color: #2C2218;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-input:focus {
+      border-color: #5C7A5A;
+      box-shadow: 0 0 0 3px rgba(92,122,90,0.16);
+    }
+
+    .btn-green {
+      display: block;
+      width: 100%;
+      padding: 15px 20px;
+      background: #5C7A5A;
+      color: #F5F0E8;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 1.5rem;
+      letter-spacing: 0.01em;
+    }
+    .btn-green:hover { background: #4A6548; transform: translateY(-1px); }
+
+    .login-error {
+      display: none;
+      margin-top: 0.85rem;
+      background: rgba(181,191,180,0.25);
+      border: 0.5px solid #C5BAA8;
+      color: #5C5043;
+      border-radius: 14px;
+      padding: 0.75rem 0.9rem;
+      font-size: 12.5px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .login-error.active { display: block; }
+
+    /* ─── DASHBOARD ─── */
+    #dashboard { display: none; }
+
+    /* Header */
+    .dash-header {
+      background: #F2EDE3;
+      border-bottom: 0.5px solid #C5BAA8;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 1px 8px rgba(44,34,24,0.06);
+    }
+
+    .dash-header-left { display: flex; align-items: center; gap: 14px; }
+
+    .dash-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      color: #2C2218;
+      line-height: 1.2;
+    }
+
+    .dash-logo span {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      margin-top: 1px;
+    }
+
+    .header-sep {
+      width: 0.5px;
+      height: 28px;
+      background: #C5BAA8;
+    }
+
+    .dash-page-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #5C5043;
+      letter-spacing: -0.01em;
+    }
+
+    .header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .btn-sm {
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s, color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-sm:hover { transform: translateY(-1px); }
+
+    .btn-outline-warm {
+      background: transparent;
+      border: 0.5px solid #C5BAA8;
+      color: #5C5043;
+    }
+    .btn-outline-warm:hover { background: #EDE8DF; }
+
+    .btn-sage {
+      background: #5C7A5A;
+      color: #F5F0E8;
+    }
+    .btn-sage:hover { background: #4A6548; }
+
+    .btn-ghost-warm {
+      background: transparent;
+      border: 0.5px solid rgba(139,100,80,0.4);
+      color: #8A7D6B;
+    }
+    .btn-ghost-warm:hover { background: rgba(197,186,168,0.2); }
+
+    /* Main */
+    .dash-main { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 22px;
+      padding: 1.4rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(44,34,24,0.05);
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      margin-bottom: 0.65rem;
+    }
+
+    .stat-value {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #2C2218;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: #A08C70;
+      margin-top: 6px;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #A08C70;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 14px 9px 38px;
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #2C2218;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: #A08C70; }
+    .search-input:focus {
+      border-color: #5C7A5A;
+      box-shadow: 0 0 0 3px rgba(92,122,90,0.12);
+    }
+
+    .filter-select {
+      padding: 9px 14px;
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #5C5043;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .filter-select:focus { border-color: #5C7A5A; }
+
+    /* Table */
+    .table-wrap {
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 22px;
+      overflow: auto;
+      box-shadow: 0 2px 10px rgba(44,34,24,0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 860px;
+    }
+
+    thead th {
+      background: #EDE8DF;
+      padding: 11px 14px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      border-bottom: 0.5px solid #C5BAA8;
+    }
+
+    tbody tr {
+      border-bottom: 0.5px solid #D8D0C4;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #EDE8DF; }
+
+    tbody td {
+      padding: 11px 14px;
+      vertical-align: middle;
+      white-space: nowrap;
+      color: #2C2218;
+    }
+
+    .td-muted { color: #8A7D6B; font-size: 12px; }
+    .td-email { color: #5C7A5A; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 11px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .badge-done { background: rgba(92,122,90,0.15); color: #5C7A5A; border: 0.5px solid rgba(92,122,90,0.3); }
+    .badge-no   { background: rgba(197,186,168,0.3); color: #8A7D6B; border: 0.5px solid #C5BAA8; }
+
+    /* ─── FOLLOW-UP TOGGLE ─── */
+    .fu-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid #C5BAA8;
+      background: #EDE8DF;
+      color: #8A7D6B;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .fu-btn:hover { border-color: #5C7A5A; color: #5C7A5A; }
+    .fu-btn.done {
+      background: rgba(92,122,90,0.12);
+      border-color: rgba(92,122,90,0.4);
+      color: #5C7A5A;
+    }
+    .fu-btn .fu-box {
+      width: 14px; height: 14px;
+      border-radius: 4px;
+      border: 1.5px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .fu-btn.done .fu-box {
+      background: #5C7A5A;
+      border-color: #5C7A5A;
+    }
+    .fu-btn.done .fu-box::after {
+      content: "";
+      display: block;
+      width: 5px; height: 3px;
+      border-left: 1.5px solid #F5F0E8;
+      border-bottom: 1.5px solid #F5F0E8;
+      transform: rotate(-45deg) translate(0.5px, -0.5px);
+    }
+    .fu-btn.loading { opacity: 0.5; pointer-events: none; }
+
+    .answers-cell { display: flex; gap: 3px; }
+
+    .ans-chip {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0;
+      background: #D8D0C4;
+      color: #8A7D6B;
+      border: 0.5px solid transparent;
+    }
+    .ans-chip[data-t="R"] { background: rgba(107,122,107,0.18); color: #6B7A6B; border-color: rgba(107,122,107,0.3); }
+    .ans-chip[data-t="D"] { background: rgba(92,122,90,0.18);  color: #5C7A5A; border-color: rgba(92,122,90,0.3); }
+    .ans-chip[data-t="M"] { background: rgba(74,101,72,0.18);  color: #4A6548; border-color: rgba(74,101,72,0.3); }
+    .ans-chip[data-t="S"] { background: rgba(138,122,104,0.18);color: #8A7A68; border-color: rgba(138,122,104,0.3); }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: #8A7D6B;
+      font-size: 14px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.25rem;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .page-info {
+      font-size: 12px;
+      color: #8A7D6B;
+    }
+
+    .page-btns { display: flex; gap: 8px; }
+
+    .status-bar {
+      font-size: 11.5px;
+      color: #A08C70;
+      padding: 10px 0 0;
+      font-style: italic;
+    }
+
+    /* Loading spinner */
+    .spin-ring {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #D8D0C4;
+      border-top-color: #5C7A5A;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── DETAIL OVERLAY ─── */
+    #detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(44,34,24,0.35);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+    #detail-overlay.open { display: flex; }
+
+    .detail-panel {
+      background: #F2EDE3;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 28px;
+      padding: 2rem 1.75rem;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 14px 40px rgba(44,34,24,0.18);
+      position: relative;
+    }
+
+    .detail-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #8A7D6B;
+      font-size: 15px;
+      line-height: 1;
+      transition: background 0.2s;
+    }
+    .detail-close:hover { background: #D8D0C4; }
+
+    .detail-tag {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #2C2218;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-div {
+      height: 0.5px;
+      background: #D8D0C4;
+      margin: 1rem 0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 8px 0;
+      gap: 16px;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8A7D6B;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      color: #2C2218;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .detail-answers {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 0.5rem;
+    }
+
+    .detail-ans-item {
+      background: #EDE8DF;
+      border: 0.5px solid #C5BAA8;
+      border-radius: 10px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+
+    .detail-ans-q {
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #A08C70;
+      margin-bottom: 4px;
+    }
+
+    .detail-ans-letter {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2C2218;
+    }
+
+    .detail-ans-type {
+      font-size: 8px;
+      color: #8A7D6B;
+      margin-top: 2px;
+    }
+
+    .detail-ans-item[data-t="R"] { background: rgba(107,122,107,0.12); border-color: rgba(107,122,107,0.3); }
+    .detail-ans-item[data-t="D"] { background: rgba(92,122,90,0.12); border-color: rgba(92,122,90,0.3); }
+    .detail-ans-item[data-t="M"] { background: rgba(74,101,72,0.12); border-color: rgba(74,101,72,0.3); }
+    .detail-ans-item[data-t="S"] { background: rgba(138,122,104,0.12); border-color: rgba(138,122,104,0.3); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN ══════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="tag">Painel Administrativo</div>
+    <h1>Dança &amp; Consciência</h1>
+    <p class="login-sub" style="margin-bottom:0.5rem">Quiz — Dashboard de Leads</p>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot"></div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="field">
+      <label class="field-label" for="secret-input">Senha de acesso</label>
+      <input class="field-input" type="password" id="secret-input" placeholder="••••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn-green" id="login-btn">Entrar no painel</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div id="dashboard">
+
+  <header class="dash-header">
+    <div class="dash-header-left">
+      <div class="dash-logo">
+        Dança &amp; Consciência
+        <span>Chris Busato</span>
+      </div>
+      <div class="header-sep"></div>
+      <div class="dash-page-title">Dashboard de Leads</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm btn-outline-warm" id="refresh-btn">↻ Atualizar <span id="refresh-countdown"></span></button>
+      <button class="btn-sm btn-sage" id="export-btn">↓ Exportar CSV</button>
+      <button class="btn-sm btn-ghost-warm" id="logout-btn">Sair</button>
+    </div>
+  </header>
+
+  <div class="dash-main">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total de Leads</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">cadastros únicos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completaram</div>
+        <div class="stat-value" id="stat-completed" style="color:#5C7A5A">—</div>
+        <div class="stat-sub" id="stat-completed-pct"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Não completaram</div>
+        <div class="stat-value" id="stat-incomplete" style="color:#A08C70">—</div>
+        <div class="stat-sub" id="stat-incomplete-pct"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Taxa de conclusão</div>
+        <div class="stat-value" id="stat-rate" style="color:#4A6548">—</div>
+        <div class="stat-sub">% finalizaram o quiz</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" type="text" id="search-input" placeholder="Buscar por nome, email ou telefone…" />
+      </div>
+      <select class="filter-select" id="filter-status">
+        <option value="all">Todos os leads</option>
+        <option value="completed">Completaram</option>
+        <option value="incomplete">Não completaram</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Status</th>
+            <th>Respostas Q1–Q10</th>
+            <th>Follow-up</th>
+            <th>Cadastro</th>
+            <th>Concluiu em</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr>
+            <td colspan="8" class="empty-state">
+              <span class="spin-ring"></span> Carregando leads…
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="status-bar" id="status-bar"></div>
+
+    <div class="pagination">
+      <div class="page-info" id="page-info"></div>
+      <div class="page-btns">
+        <button class="btn-sm btn-outline-warm" id="prev-btn" disabled>← Anterior</button>
+        <button class="btn-sm btn-outline-warm" id="next-btn" disabled>Próxima →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Overlay -->
+<div id="detail-overlay">
+  <div class="detail-panel">
+    <button class="detail-close" id="close-detail">&times;</button>
+    <div class="detail-tag">Detalhes do Lead</div>
+    <div class="detail-name" id="detail-name">—</div>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const SESSION_KEY = "cb_dash_secret";
+  const PAGE_SIZE   = 100;
+
+  const LETTER_TO_TYPE = { A: "R", B: "D", C: "M", D: "S" };
+  const TYPE_LABEL     = { R: "Racional", D: "Dependente", M: "Musical", S: "Sensível" };
+
+  let secret       = "";
+  let allRows      = [];
+  let filteredRows = [];
+  let currentPage  = 0;
+
+  // ── elements
+  const $  = id => document.getElementById(id);
+  const loginScreen   = $("login-screen");
+  const dashboard     = $("dashboard");
+  const secretInput   = $("secret-input");
+  const loginBtn      = $("login-btn");
+  const loginError    = $("login-error");
+  const refreshBtn    = $("refresh-btn");
+  const exportBtn     = $("export-btn");
+  const logoutBtn     = $("logout-btn");
+  const searchInput   = $("search-input");
+  const filterStatus  = $("filter-status");
+  const tableBody     = $("table-body");
+  const statusBar     = $("status-bar");
+  const pageInfo      = $("page-info");
+  const prevBtn       = $("prev-btn");
+  const nextBtn       = $("next-btn");
+  const detailOverlay = $("detail-overlay");
+  const detailName    = $("detail-name");
+  const detailContent = $("detail-content");
+  const closeDetail   = $("close-detail");
+
+  // ── auto-login from session
+  const saved = sessionStorage.getItem(SESSION_KEY);
+  if (saved) { secret = saved; showDash(); }
+
+  // ── login
+  loginBtn.addEventListener("click", doLogin);
+  secretInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+
+  function doLogin() {
+    const v = secretInput.value.trim();
+    if (!v) { showError("Digite a senha de acesso."); return; }
+    secret = v;
+    clearError();
+    loadData();
+  }
+
+  function showError(msg) {
+    loginError.textContent = msg;
+    loginError.classList.add("active");
+  }
+  function clearError() { loginError.classList.remove("active"); }
+
+  function showDash() {
+    loginScreen.style.display = "none";
+    dashboard.style.display   = "block";
+    loadData();
+  }
+
+  logoutBtn.addEventListener("click", () => {
+    stopAutoRefresh();
+    sessionStorage.removeItem(SESSION_KEY);
+    secret = "";
+    allRows = [];
+    loginScreen.style.display = "flex";
+    dashboard.style.display   = "none";
+    secretInput.value = "";
+  });
+
+  // ── load
+  async function loadData() {
+    tableBody.innerHTML = `<tr><td colspan="8" class="empty-state"><span class="spin-ring"></span> Carregando leads…</td></tr>`;
+    statusBar.textContent = "";
+
+    try {
+      const res  = await fetch(`/api/dashboard-data?secret=${encodeURIComponent(secret)}&page=0&pageSize=500`);
+      const data = await res.json();
+
+      if (res.status === 401) {
+        showError("Senha incorreta. Tente novamente.");
+        loginScreen.style.display = "flex";
+        dashboard.style.display   = "none";
+        return;
+      }
+
+      if (!res.ok || !data.ok) {
+        tableBody.innerHTML = `<tr><td colspan="8" class="empty-state">Erro ao carregar: ${esc(data.error || "desconhecido")}</td></tr>`;
+        return;
+      }
+
+      sessionStorage.setItem(SESSION_KEY, secret);
+      loginScreen.style.display = "none";
+      dashboard.style.display   = "block";
+
+      allRows = data.rows || [];
+      currentPage = 0;
+      applyFilters();
+      renderStats();
+      startAutoRefresh();
+
+    } catch (e) {
+      tableBody.innerHTML = `<tr><td colspan="8" class="empty-state">Falha na conexão: ${esc(e.message)}</td></tr>`;
+    }
+  }
+
+  // ── stats
+  function renderStats() {
+    const total      = allRows.length;
+    const completed  = allRows.filter(r => r.quiz_completed).length;
+    const incomplete = total - completed;
+    const rate       = total > 0 ? Math.round(completed / total * 100) : 0;
+
+    $("stat-total").textContent         = total;
+    $("stat-completed").textContent     = completed;
+    $("stat-completed-pct").textContent = total > 0 ? `${Math.round(completed/total*100)}% do total` : "";
+    $("stat-incomplete").textContent    = incomplete;
+    $("stat-incomplete-pct").textContent= total > 0 ? `${Math.round(incomplete/total*100)}% do total` : "";
+    $("stat-rate").textContent          = `${rate}%`;
+  }
+
+  // ── filters
+  function applyFilters() {
+    const q      = searchInput.value.toLowerCase().trim();
+    const status = filterStatus.value;
+
+    filteredRows = allRows.filter(row => {
+      const matchQ = !q || [row.full_name||"", row.email||"", row.phone||""]
+        .some(v => v.toLowerCase().includes(q));
+      const matchS =
+        status === "all" ||
+        (status === "completed"  &&  row.quiz_completed) ||
+        (status === "incomplete" && !row.quiz_completed);
+      return matchQ && matchS;
+    });
+
+    currentPage = 0;
+    renderTable();
+  }
+
+  searchInput.addEventListener("input", applyFilters);
+  filterStatus.addEventListener("change", applyFilters);
+
+  // ── table render
+  function renderTable() {
+    const start    = currentPage * PAGE_SIZE;
+    const end      = start + PAGE_SIZE;
+    const pageRows = filteredRows.slice(start, end);
+
+    if (!pageRows.length) {
+      tableBody.innerHTML = `<tr><td colspan="8" class="empty-state" style="font-family:'Playfair Display',serif;font-style:italic">Nenhum registro encontrado.</td></tr>`;
+      pageInfo.textContent = "";
+      prevBtn.disabled = nextBtn.disabled = true;
+      statusBar.textContent = "";
+      return;
+    }
+
+    tableBody.innerHTML = pageRows.map((row, i) => {
+      const idx  = start + i + 1;
+      const name = esc(row.full_name || "—");
+      const email= esc(row.email     || "—");
+      const phone= esc(fmtPhone(row.phone || ""));
+
+      const badge = row.quiz_completed
+        ? `<span class="badge badge-done">✓ Completou</span>`
+        : `<span class="badge badge-no">✗ Incompleto</span>`;
+
+      const chips = ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].map(q => {
+        const letter = row[q];
+        const tipo   = letter ? (LETTER_TO_TYPE[letter] || "") : "";
+        return `<span class="ans-chip" data-t="${tipo}" title="${letter||"—"}: ${TYPE_LABEL[tipo]||"—"}">${letter||"·"}</span>`;
+      }).join("");
+
+      const fuDone = !!row.follow_up_done;
+      const fuBtn = `<button
+        class="fu-btn${fuDone ? ' done' : ''}"
+        onclick="event.stopPropagation(); toggleFollowUp('${row.id}', this)"
+        title="${fuDone ? 'Clique para desmarcar' : 'Marcar como contatado'}"
+      ><span class="fu-box"></span>${fuDone ? 'Contatado' : 'Contatar'}</button>`;
+
+      return `<tr onclick="openDetail(${start + i})">
+        <td class="td-muted">${idx}</td>
+        <td>${name}</td>
+        <td class="td-email">${email}</td>
+        <td class="td-muted">${phone}</td>
+        <td>${badge}</td>
+        <td>${fuBtn}</td>
+        <td><div class="answers-cell">${chips}</div></td>
+        <td class="td-muted">${fmtDate(row.created_at)}</td>
+        <td class="td-muted">${row.completed_at ? fmtDate(row.completed_at) : "—"}</td>
+      </tr>`;
+    }).join("");
+
+    const total = filteredRows.length;
+    pageInfo.textContent = `${start + 1}–${Math.min(end, total)} de ${total} leads`;
+    statusBar.textContent = allRows.length !== filteredRows.length
+      ? `Filtro ativo — exibindo ${filteredRows.length} de ${allRows.length} leads`
+      : `${allRows.length} leads no total`;
+
+    prevBtn.disabled = currentPage === 0;
+    nextBtn.disabled = end >= filteredRows.length;
+  }
+
+  prevBtn.addEventListener("click", () => { if (currentPage > 0) { currentPage--; renderTable(); } });
+  nextBtn.addEventListener("click", () => {
+    if ((currentPage + 1) * PAGE_SIZE < filteredRows.length) { currentPage++; renderTable(); }
+  });
+
+  // ── auto-refresh a cada 60 segundos
+  const REFRESH_INTERVAL = 60;
+  let countdown = REFRESH_INTERVAL;
+  let autoTimer = null;
+  let countdownTimer = null;
+
+  function startAutoRefresh() {
+    stopAutoRefresh();
+    countdown = REFRESH_INTERVAL;
+    updateCountdown();
+
+    countdownTimer = setInterval(() => {
+      countdown--;
+      updateCountdown();
+      if (countdown <= 0) {
+        countdown = REFRESH_INTERVAL;
+        loadData();
+      }
+    }, 1000);
+  }
+
+  function stopAutoRefresh() {
+    clearInterval(autoTimer);
+    clearInterval(countdownTimer);
+  }
+
+  function updateCountdown() {
+    const el = $("refresh-countdown");
+    if (el) el.textContent = countdown > 0 ? `(${countdown}s)` : "";
+  }
+
+  // ── follow-up toggle
+  window.toggleFollowUp = async function (id, btn) {
+    const wasDone = btn.classList.contains("done");
+    const nowDone = !wasDone;
+
+    btn.classList.add("loading");
+
+    try {
+      const res = await fetch("/api/follow-up", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret, id, done: nowDone })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        alert("Erro ao salvar: " + (data.error || "desconhecido"));
+        btn.classList.remove("loading");
+        return;
+      }
+
+      // Atualiza o dado local para manter estado sem recarregar tudo
+      const row = allRows.find(r => String(r.id) === String(id));
+      if (row) {
+        row.follow_up_done = nowDone;
+        row.follow_up_at   = nowDone ? new Date().toISOString() : null;
+      }
+
+      btn.classList.remove("loading");
+      btn.classList.toggle("done", nowDone);
+      btn.title = nowDone ? "Clique para desmarcar" : "Marcar como contatado";
+      btn.innerHTML = `<span class="fu-box"></span>${nowDone ? "Contatado" : "Contatar"}`;
+
+    } catch (e) {
+      alert("Falha na conexão: " + e.message);
+      btn.classList.remove("loading");
+    }
+  };
+
+  refreshBtn.addEventListener("click", () => {
+    countdown = REFRESH_INTERVAL;
+    loadData();
+  });
+
+  // ── detail
+  window.openDetail = function (idx) {
+    const row = filteredRows[idx];
+    if (!row) return;
+
+    detailName.textContent = row.full_name || row.email || "—";
+
+    const badge = row.quiz_completed
+      ? `<span class="badge badge-done">✓ Completou o quiz</span>`
+      : `<span class="badge badge-no">✗ Não completou</span>`;
+
+    const answerGrid = ["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"].map((q, i) => {
+      const letter = row[q];
+      const tipo   = letter ? (LETTER_TO_TYPE[letter] || "") : "";
+      const tlabel = tipo ? TYPE_LABEL[tipo] : "—";
+      return `<div class="detail-ans-item" data-t="${tipo}">
+        <div class="detail-ans-q">Q${i+1}</div>
+        <div class="detail-ans-letter">${letter || "—"}</div>
+        <div class="detail-ans-type">${tlabel}</div>
+      </div>`;
+    }).join("");
+
+    detailContent.innerHTML = `
+      <div class="detail-row">
+        <span class="detail-label">Email</span>
+        <span class="detail-value" style="color:#5C7A5A">${esc(row.email||"—")}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Telefone</span>
+        <span class="detail-value">${esc(fmtPhone(row.phone||""))}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value">${badge}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Cadastro</span>
+        <span class="detail-value">${fmtDate(row.created_at)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Concluiu em</span>
+        <span class="detail-value">${row.completed_at ? fmtDate(row.completed_at) : "—"}</span>
+      </div>
+      <div class="detail-div"></div>
+      <div class="detail-label" style="margin-bottom:8px">Respostas do Quiz</div>
+      <div class="detail-answers">${answerGrid}</div>
+    `;
+
+    detailOverlay.classList.add("open");
+  };
+
+  closeDetail.addEventListener("click", () => detailOverlay.classList.remove("open"));
+  detailOverlay.addEventListener("click", e => { if (e.target === detailOverlay) detailOverlay.classList.remove("open"); });
+
+  // ── export CSV
+  exportBtn.addEventListener("click", () => {
+    const rows = filteredRows.length ? filteredRows : allRows;
+    if (!rows.length) { alert("Sem dados para exportar."); return; }
+
+    const headers = ["id","full_name","email","phone","quiz_completed","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","created_at","completed_at"];
+    const lines = [
+      headers.join(","),
+      ...rows.map(r => headers.map(h => `"${String(r[h]??'').replace(/"/g,'""')}"`).join(","))
+    ];
+
+    const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `leads_quiz_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // ── helpers
+  function fmtDate(iso) {
+    if (!iso) return "—";
+    try {
+      return new Intl.DateTimeFormat("pt-BR", {
+        day:"2-digit", month:"2-digit", year:"numeric",
+        hour:"2-digit", minute:"2-digit"
+      }).format(new Date(iso));
+    } catch { return iso; }
+  }
+
+  function fmtPhone(phone) {
+    const d = phone.replace(/\D/g, "");
+    if (d.startsWith("39") && d.length === 12) return `+${d.slice(0,2)} ${d.slice(2,5)} ${d.slice(5,8)} ${d.slice(8)}`;
+    if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+    if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+    return phone;
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+})();
+</script>
+</body>
+</html>
