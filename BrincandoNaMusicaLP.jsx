@@ -71,22 +71,28 @@ function Navbar() {
       <div style={{
         maxWidth: 1100, margin: '0 auto',
         padding: mobile ? '0 24px' : '0 40px',
-        height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        height: 64, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', position: 'relative',
       }}>
+        {/* título centralizado absolutamente */}
         <span style={{
+          position: 'absolute', left: '50%', transform: 'translateX(-50%)',
           fontFamily: "'Playfair Display', serif",
           fontSize: 20, color: C.brown, letterSpacing: '-0.3px',
+          whiteSpace: 'nowrap',
         }}>
-          Brincando na Música
+          Imersão Brincando na Música
         </span>
         {!mobile && (
           <a href="#inscricao" style={{
+            marginLeft: 'auto',
             background: C.sage, color: C.white,
             padding: '10px 22px', borderRadius: 100,
             fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
             textDecoration: 'none', letterSpacing: '0.2px',
             transition: 'background 0.2s',
             display: 'inline-block',
+            position: 'relative', zIndex: 1,
           }}
             onMouseEnter={e => e.target.style.background = C.sageDark}
             onMouseLeave={e => e.target.style.background = C.sage}
@@ -974,7 +980,7 @@ function ParaQuemSection() {
     }}>
       <div style={{ maxWidth: 680, margin: '0 auto' }}>
         <div ref={titleRef} style={{
-          marginBottom: 56,
+          marginBottom: 56, textAlign: 'center',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: titleInView ? 1 : 0,
           transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
