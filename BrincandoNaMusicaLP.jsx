@@ -1253,7 +1253,7 @@ function InscricaoSection() {
               fontSize: 'clamp(48px, 6vw, 68px)',
               color: C.cream, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
-            }}>R$ 127</div>
+            }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: C.sageLight, marginBottom: 12,
