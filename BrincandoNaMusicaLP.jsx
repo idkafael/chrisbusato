@@ -302,7 +302,7 @@ function DorSection() {
             fontSize: 17, color: C.brownLight,
             maxWidth: 520, margin: '20px auto 0', lineHeight: 1.7,
           }}>
-            Não é falta de talento. É que ninguém te mostrou o mapa. A música tem uma estrutura, e quando você entende isso, o corpo começa a saber onde pode ir.
+            Não é falta de capacidade. É que ninguém te mostrou o mapa. A música tem uma estrutura, e quando você entende isso, o corpo começa a saber onde pode ir.
           </p>
         </div>
 
@@ -1217,78 +1217,23 @@ function InscricaoSection() {
           </h2>
         </div>
 
-        {/* dois cards */}
+        {/* card único online */}
         <div ref={ref} style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-          gap: 24,
-          maxWidth: 900, margin: '0 auto',
-          alignItems: 'start',
+          maxWidth: 560, margin: '0 auto',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: inView ? 1 : 0,
           transform: inView ? 'translateY(0)' : 'translateY(28px)',
         }}>
-
-          {/* card online */}
-          <div style={{
-            background: C.creamCard,
-            border: `1.5px solid ${C.sageLight}`,
-            borderRadius: 20,
-            padding: mobile ? '36px 24px' : '44px 40px',
-          }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 12, letterSpacing: '2px', color: C.brownLight,
-              textTransform: 'uppercase', marginBottom: 20,
-            }}>Online</div>
-
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 'clamp(40px, 5vw, 56px)',
-              color: C.brown, lineHeight: 1, marginBottom: 6,
-              letterSpacing: '-1px',
-            }}>R$ 127</div>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: C.brownLight, marginBottom: 28,
-            }}>sábado, 13 de junho · online</div>
-
-            <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
-
-            <div style={{ marginBottom: 32 }}>
-              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
-            </div>
-
-            <a href="https://pay.cakto.com.br/38gpmqv_891283" target="_blank" rel="noopener noreferrer" style={{
-              display: 'block', width: '100%',
-              background: 'transparent',
-              border: `1.5px solid ${C.sage}`,
-              color: C.sageDark,
-              padding: '15px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
-              textDecoration: 'none', textAlign: 'center',
-              transition: 'background 0.2s, color 0.2s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sagePale }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-            >
-              Quero o acesso online →
-            </a>
-          </div>
-
-          {/* card presencial — destaque */}
           <div style={{
             background: C.brown,
-            border: `1.5px solid ${C.brown}`,
             borderRadius: 20,
-            padding: mobile ? '36px 24px' : '44px 40px',
-            position: 'relative',
-            overflow: 'hidden',
+            padding: mobile ? '40px 28px' : '52px 48px',
+            position: 'relative', overflow: 'hidden',
           }}>
             {/* blob decorativo */}
             <div style={{
               position: 'absolute', top: '-15%', right: '-10%',
-              width: 200, height: 200, background: C.sageDark,
+              width: 220, height: 220, background: C.sageDark,
               borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
               opacity: 0.2, pointerEvents: 'none',
             }} />
@@ -1300,27 +1245,21 @@ function InscricaoSection() {
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 16,
-            }}>Recomendado</div>
-
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 12, letterSpacing: '2px', color: C.sageLight,
-              textTransform: 'uppercase', marginBottom: 20,
-            }}>Presencial · São Paulo</div>
+              marginBottom: 20,
+            }}>Online · Ao vivo</div>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 'clamp(40px, 5vw, 56px)',
+              fontSize: 'clamp(48px, 6vw, 68px)',
               color: C.cream, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
-            }}>R$ 147</div>
+            }}>R$ 127</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: C.sageLight, marginBottom: 8,
+              fontSize: 13, color: C.sageLight, marginBottom: 12,
             }}>pagamento único · vagas limitadas</div>
 
-            {/* data e local */}
+            {/* data */}
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               background: 'rgba(255,255,255,0.07)',
@@ -1335,20 +1274,20 @@ function InscricaoSection() {
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13, color: C.sageLight,
-              }}>domingo, 14 de junho · Zona Sul de São Paulo · local a confirmar</span>
+              }}>segunda, 30 de junho · online</span>
             </div>
 
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 28 }} />
 
-            <div style={{ marginBottom: 32 }}>
-              {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+            <div style={{ marginBottom: 36 }}>
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
             </div>
 
-            <a href="https://pay.cakto.com.br/mveu4ge_892575" target="_blank" rel="noopener noreferrer" style={{
+            <a href="https://pay.cakto.com.br/38gpmqv_891283" target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: C.sage, color: C.white,
-              padding: '17px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+              padding: '18px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 500,
               textDecoration: 'none', textAlign: 'center',
               transition: 'background 0.2s, transform 0.2s',
               marginBottom: 14,
@@ -1357,7 +1296,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              Quero participar presencialmente →
+              Quero participar →
             </a>
 
             <div style={{
@@ -1367,7 +1306,6 @@ function InscricaoSection() {
               Confirmação imediata após pagamento · Pagamento seguro
             </div>
           </div>
-
         </div>
       </div>
     </section>
