@@ -1289,7 +1289,7 @@ function InscricaoSection() {
               {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
             </div>
 
-            <a href="https://pay.cakto.com.br/38gpmqv_891283" target="_blank" rel="noopener noreferrer" style={{
+            <a href="https://pay.cakto.com.br/dss9p3t_891291" target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: C.sage, color: C.white,
               padding: '18px 24px', borderRadius: 100,
