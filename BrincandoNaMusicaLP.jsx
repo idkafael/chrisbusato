@@ -1249,6 +1249,12 @@ function InscricaoSection() {
             }}>Online · Ao vivo</div>
 
             <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 18, color: 'rgba(255,255,255,0.35)',
+              textDecoration: 'line-through', marginBottom: 4,
+              letterSpacing: '-0.3px',
+            }}>R$ 197</div>
+            <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 'clamp(48px, 6vw, 68px)',
               color: C.cream, lineHeight: 1, marginBottom: 6,
