@@ -81,7 +81,7 @@ function Navbar() {
           fontSize: 20, color: C.brown, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap',
         }}>
-          Imersão Brincando na Música
+          Vivência Brincando na Música
         </span>
         {!mobile && (
           <a href="#inscricao" style={{
@@ -183,12 +183,6 @@ function Hero() {
           Quero brincar na música →
         </a>
 
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-          color: C.brownLight, letterSpacing: '0.3px',
-        }}>
-          Vivência presencial · Vagas limitadas
-        </div>
       </div>
     </section>
   )
@@ -559,20 +553,20 @@ function MapaSection() {
 
 const experiencias = [
   {
-    title: 'Entender a base musical do que já faz',
-    text: 'Você já dança com estrutura, só ainda não sabia identificar. Vamos nomear o que o seu corpo já intui.',
+    title: 'Entender melhor a música que você dança',
+    text: 'Reconhecer tempos, frases e mudanças musicais para saber onde está e como se movimentar com mais liberdade.',
   },
   {
-    title: 'Perceber os caminhos que a música abre',
-    text: 'Não "o que fazer", mas "onde posso ir". A música tem momentos de expansão, de pausa, de virada. Você vai aprender a vê-los.',
+    title: 'Brincar mais dentro da música',
+    text: 'Perceber pausas, acentos e caminhos que a música oferece, sem precisar depender de decorar mil passos.',
   },
   {
-    title: 'Sentir e sustentar ao mesmo tempo',
-    text: 'O sentir sem estrutura vira agitação. A estrutura sem sentir vira mecanismo. Aqui os dois coexistem.',
+    title: 'Dançar com mais sentido',
+    text: 'Dançar não é só executar movimentos, mas também não é só sentir. Unir escuta, corpo e estrutura para que sua dança fique mais viva, expressiva e mais sentida.',
   },
   {
-    title: 'Criar musicalidade dentro do que já sabe',
-    text: 'Você não vai aprender passos novos. Vai aprender a fazer o que já sabe soar como música.',
+    title: 'Ganhar autonomia e segurança',
+    text: 'Aprender a usar a música como guia para criar movimentos, brincar com possibilidades e dançar com mais fluidez.',
   },
 ]
 
@@ -629,14 +623,14 @@ function VivenciaSection() {
             color: C.brown, letterSpacing: '-0.5px',
           }}>
             Você vai sair dançando diferente.{' '}
-            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Não porque aprendeu mais.</em>
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Não porque aprendeu mais passos.</em>
           </h2>
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
             fontSize: 17, color: C.brownMid,
             maxWidth: 520, margin: '20px auto 0', lineHeight: 1.7,
           }}>
-            Mas porque entendeu o que já tinha, e como a música estava te convidando o tempo inteiro.
+            Mas porque percebeu o que está por trás deles, e as inúmeras possibilidades musicais que existem em uma dança.
           </p>
         </div>
 
