@@ -111,10 +111,17 @@ function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
 
+  useEffect(() => {
+    if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
+    const s = document.createElement('script')
+    s.src = 'https://scripts.converteai.net/1c6e6f27-d6f0-4013-b98a-0067464a2b63/players/6a120f7fc9941c35508e9807/v4/player.js'
+    s.async = true
+    document.head.appendChild(s)
+  }, [])
+
   return (
     <section style={{
-      minHeight: '100vh', background: C.cream,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: C.cream,
       position: 'relative', overflow: 'hidden',
       padding: mobile ? '80px 24px 64px' : '120px 40px 80px',
     }}>
@@ -134,6 +141,7 @@ function Hero() {
 
       <div style={{
         maxWidth: 760, textAlign: 'center', position: 'relative', zIndex: 1,
+        margin: '0 auto',
         animation: 'fadeUp 0.9s ease forwards',
       }}>
         {/* eyebrow */}
@@ -152,12 +160,20 @@ function Hero() {
           fontFamily: "'Playfair Display', serif",
           fontSize: 'clamp(40px, 6vw, 72px)',
           color: C.brown, lineHeight: 1.15,
-          marginBottom: 28, letterSpacing: '-1px',
+          marginBottom: 40, letterSpacing: '-1px',
         }}>
           Para brincar mais na dança,<br />
           você não precisa de{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
         </h1>
+
+        {/* VSL */}
+        <div style={{ marginBottom: 40 }}>
+          <vturb-smartplayer
+            id="vid-6a120f7fc9941c35508e9807"
+            style={{ display: 'block', margin: '0 auto', width: '100%' }}
+          />
+        </div>
 
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
