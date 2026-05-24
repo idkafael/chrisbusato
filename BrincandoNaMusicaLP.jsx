@@ -1227,31 +1227,28 @@ function InscricaoSection() {
           </h2>
         </div>
 
-        {/* card único online */}
+        {/* dois cards */}
         <div ref={ref} style={{
-          maxWidth: 560, margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: 24,
+          maxWidth: 900, margin: '0 auto',
+          alignItems: 'start',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: inView ? 1 : 0,
           transform: inView ? 'translateY(0)' : 'translateY(28px)',
         }}>
-          <div style={{
-            background: C.brown,
-            borderRadius: 20,
-            padding: mobile ? '40px 28px' : '52px 48px',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            {/* blob decorativo */}
-            <div style={{
-              position: 'absolute', top: '-15%', right: '-10%',
-              width: 220, height: 220, background: C.sageDark,
-              borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-              opacity: 0.2, pointerEvents: 'none',
-            }} />
 
-            {/* badge */}
+          {/* ── CARD ONLINE ── */}
+          <div style={{
+            background: C.creamCard,
+            border: `1.5px solid ${C.sageLight}`,
+            borderRadius: 20,
+            padding: mobile ? '36px 24px' : '44px 40px',
+          }}>
             <div style={{
               display: 'inline-block',
-              background: C.sage, color: C.white,
+              background: C.sagePale, color: C.sageDark,
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
@@ -1260,50 +1257,124 @@ function InscricaoSection() {
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 18, color: 'rgba(255,255,255,0.35)',
+              fontSize: 17, color: C.brownLight,
               textDecoration: 'line-through', marginBottom: 4,
               letterSpacing: '-0.3px',
             }}>R$ 197</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 'clamp(48px, 6vw, 68px)',
-              color: C.cream, lineHeight: 1, marginBottom: 6,
+              fontSize: 'clamp(44px, 5vw, 60px)',
+              color: C.brown, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: C.sageLight, marginBottom: 12,
+              fontSize: 13, color: C.brownLight, marginBottom: 16,
             }}>pagamento único · vagas limitadas</div>
 
-            {/* data */}
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(255,255,255,0.07)',
-              borderRadius: 8, padding: '8px 14px',
-              marginBottom: 28,
+              background: C.sagePale, borderRadius: 8, padding: '8px 14px',
+              marginBottom: 24,
             }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="1" y="2" width="12" height="11" rx="2" stroke={C.sageLight} strokeWidth="1.3"/>
-                <path d="M1 6h12" stroke={C.sageLight} strokeWidth="1.3"/>
-                <path d="M4 1v2M10 1v2" stroke={C.sageLight} strokeWidth="1.3" strokeLinecap="round"/>
+                <rect x="1" y="2" width="12" height="11" rx="2" stroke={C.sage} strokeWidth="1.3"/>
+                <path d="M1 6h12" stroke={C.sage} strokeWidth="1.3"/>
+                <path d="M4 1v2M10 1v2" stroke={C.sage} strokeWidth="1.3" strokeLinecap="round"/>
               </svg>
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13, color: C.sageLight,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: C.sageDark,
               }}>sábado, 30 de maio · online</span>
             </div>
 
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 28 }} />
+            <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
 
-            <div style={{ marginBottom: 36 }}>
-              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+            <div style={{ marginBottom: 32 }}>
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
             </div>
 
             <a href="https://pay.cakto.com.br/cwcwot3" target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
+              background: 'transparent', border: `1.5px solid ${C.sage}`,
+              color: C.sageDark,
+              padding: '15px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+              textDecoration: 'none', textAlign: 'center',
+              transition: 'background 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sagePale }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+            >
+              Quero o acesso online →
+            </a>
+          </div>
+
+          {/* ── CARD PRESENCIAL ── */}
+          <div style={{
+            background: C.brown,
+            borderRadius: 20,
+            padding: mobile ? '36px 24px' : '44px 40px',
+            position: 'relative', overflow: 'hidden',
+          }}>
+            {/* blob */}
+            <div style={{
+              position: 'absolute', top: '-15%', right: '-10%',
+              width: 200, height: 200, background: C.sageDark,
+              borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+              opacity: 0.2, pointerEvents: 'none',
+            }} />
+
+            <div style={{
+              display: 'inline-block',
               background: C.sage, color: C.white,
-              padding: '18px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 500,
+              borderRadius: 100, padding: '4px 14px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
+              marginBottom: 20,
+            }}>Presencial · Recomendado</div>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 'clamp(44px, 5vw, 60px)',
+              color: C.cream, lineHeight: 1, marginBottom: 6,
+              letterSpacing: '-1px',
+            }}>R$ 97</div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 13, color: C.sageLight, marginBottom: 20,
+            }}>pagamento único · vagas limitadas</div>
+
+            {/* bloco de data destacado */}
+            <div style={{
+              background: C.sage,
+              borderRadius: 12,
+              padding: '16px 20px',
+              marginBottom: 24,
+              position: 'relative', zIndex: 1,
+            }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 15, color: C.white,
+                letterSpacing: '0.3px', marginBottom: 4,
+              }}>📅 13 de junho de 2025 — Presencial</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.85)',
+              }}>📍 Zona Sul de São Paulo · local a confirmar</div>
+            </div>
+
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
+
+            <div style={{ marginBottom: 32 }}>
+              {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+            </div>
+
+            <a href="https://pay.cakto.com.br/mveu4ge_892575" target="_blank" rel="noopener noreferrer" style={{
+              display: 'block', width: '100%',
+              background: C.sage, color: C.white,
+              padding: '17px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
               textDecoration: 'none', textAlign: 'center',
               transition: 'background 0.2s, transform 0.2s',
               marginBottom: 14,
@@ -1312,7 +1383,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              Quero participar →
+              Quero participar presencialmente →
             </a>
 
             <div style={{
@@ -1322,6 +1393,7 @@ function InscricaoSection() {
               Confirmação imediata após pagamento · Pagamento seguro
             </div>
           </div>
+
         </div>
       </div>
     </section>
