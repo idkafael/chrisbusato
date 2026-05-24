@@ -1361,7 +1361,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Zona Sul de São Paulo · local a confirmar</div>
+              }}>📍 Zona Sul de São Paulo</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
