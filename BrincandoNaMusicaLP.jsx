@@ -1288,6 +1288,51 @@ function InscricaoSection() {
               }}>sábado, 30 de maio · online</span>
             </div>
 
+            {/* bloco gravação */}
+            <div style={{
+              background: '#f0f7f4',
+              border: `1.5px solid ${C.sage}`,
+              borderRadius: 12,
+              padding: '16px 18px',
+              marginBottom: 24,
+            }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6,
+              }}>
+                <span style={{ fontSize: 16 }}>🎥</span>
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, color: C.sageDark, letterSpacing: '0.5px',
+                  textTransform: 'uppercase',
+                }}>Gravação incluída</span>
+              </div>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 13, color: C.brown, lineHeight: 1.55, margin: 0,
+                marginBottom: 12,
+              }}>
+                Não pode no dia 30? Sem problema. A gravação completa fica disponível para você assistir quando quiser.
+              </p>
+              <label style={{
+                display: 'flex', alignItems: 'center', gap: 8, cursor: 'default',
+              }}>
+                <span style={{
+                  width: 18, height: 18, borderRadius: 4,
+                  background: C.sage, border: `1.5px solid ${C.sage}`,
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                    <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                  fontSize: 13, color: C.sageDark,
+                }}>Quero acesso à gravação</span>
+              </label>
+            </div>
+
             <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
 
             <div style={{ marginBottom: 32 }}>
