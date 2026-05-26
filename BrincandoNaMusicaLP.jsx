@@ -1373,7 +1373,7 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 15, color: C.white,
                 letterSpacing: '0.3px', marginBottom: 4,
-              }}>📅 <strong style={{textTransform:'uppercase'}}>13 DE JUNHO DE 2025 — PRESENCIAL</strong></div>
+              }}>📅 <strong style={{textTransform:'uppercase'}}>13 DE JUNHO DE 2026 — PRESENCIAL</strong></div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
