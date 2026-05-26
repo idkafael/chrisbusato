@@ -1426,7 +1426,7 @@ function InscricaoSection() {
           }}>
             <iframe
               title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=0x94ce515267e157c7:0x892b8a46f82e9e72&output=embed&hl=pt-BR"
+              src="https://maps.google.com/maps?q=Território+da+Dança+-+Lounge+%26+Café+SP,+São+Paulo&output=embed&hl=pt-BR"
               width="100%"
               height="340"
               style={{ border: 0, display: 'block' }}
