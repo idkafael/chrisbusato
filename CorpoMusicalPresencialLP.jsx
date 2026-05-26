@@ -324,8 +324,7 @@ function ComoFuncionaSection() {
           color: C.brown, lineHeight: 1.2,
           letterSpacing: '-0.5px', marginBottom: 32,
         }}>
-          Três sábados por mês.{' '}
-          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Se puder um ou dois, já é ótimo.</em>
+          Três sábados por mês.
         </h2>
 
         <p style={{
@@ -344,7 +343,6 @@ function ComoFuncionaSection() {
           {[
             { icon: '📅', titulo: '3 sábados por mês', texto: 'Aulas regulares com continuidade de processo. Cada encontro aprofunda o que foi trabalhado.' },
             { icon: '📍', titulo: 'Zona Sul de São Paulo', texto: 'Espaço dedicado para a prática, com música ao vivo e ambiente pensado para o movimento.' },
-            { icon: '🤝', titulo: 'Turma pequena', texto: 'Para garantir atenção individualizada, feedback real e evolução consistente para cada um.' },
           ].map((card, i) => (
             <div key={i} style={{
               background: C.white, borderRadius: 16,
@@ -478,7 +476,6 @@ function PrecosSection() {
             'Prática ao vivo com música',
             'Trabalho de escuta, musicalidade e presença',
             'Consciência corporal e qualidade de movimento',
-            'Turma pequena com atenção individualizada',
             'Acesso ao conteúdo digital complementar',
             isPresencial ? null : 'Preço especial por já ser aluno online',
           ].filter(Boolean).map((item, i) => (
