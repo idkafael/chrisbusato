@@ -1411,6 +1411,32 @@ function InscricaoSection() {
           </div>
 
         </div>
+
+        {/* mapa presencial */}
+        <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2px', color: C.sage,
+            textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
+          }}>📍 Local — Zona Sul de São Paulo</div>
+          <div style={{
+            borderRadius: 16, overflow: 'hidden',
+            border: `1px solid ${C.sageLight}`,
+            boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+          }}>
+            <iframe
+              title="Local da vivência presencial"
+              src="https://maps.google.com/maps?q=0x94ce515267e157c7:0x892b8a46f82e9e72&output=embed&hl=pt-BR"
+              width="100%"
+              height="340"
+              style={{ border: 0, display: 'block' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+
       </div>
     </section>
   )
