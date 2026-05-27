@@ -1376,6 +1376,10 @@ function InscricaoSection() {
               }}>📅 <strong style={{textTransform:'uppercase'}}>13 DE JUNHO DE 2026 — PRESENCIAL</strong></div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4,
+              }}>🕙 <strong style={{ fontWeight: 700, color: C.white }}>10h às 13h</strong></div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
               }}>📍 Zona Sul de São Paulo</div>
             </div>
