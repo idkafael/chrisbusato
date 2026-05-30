@@ -1285,7 +1285,7 @@ function InscricaoSection() {
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: C.sageDark,
-              }}>sábado, 30 de maio · <strong style={{ fontWeight: 700, color: C.brown }}>10h às 13h</strong> · online</span>
+              }}>sábado, 14 de junho · <strong style={{ fontWeight: 700, color: C.brown }}>10h às 13h</strong> · online</span>
             </div>
 
             {/* nota gravação */}
