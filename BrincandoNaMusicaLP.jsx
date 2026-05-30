@@ -1256,6 +1256,12 @@ function InscricaoSection() {
             }}>Online · Ao vivo</div>
 
             <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 22, color: C.brown,
+              letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
+            }}>Criatividade na Dança</div>
+
+            <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 17, color: C.brownLight,
               textDecoration: 'line-through', marginBottom: 4,
