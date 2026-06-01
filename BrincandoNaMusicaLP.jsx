@@ -1099,7 +1099,7 @@ function VideoPlayer({ src }) {
     >
       <video
         ref={videoRef}
-        src={src}
+        src={`${src}#t=0.001`}
         playsInline
         preload="metadata"
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
