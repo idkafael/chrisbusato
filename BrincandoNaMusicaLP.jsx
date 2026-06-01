@@ -1240,8 +1240,10 @@ function VivenciasSection() {
 
         {/* grid 2×2 — 3 vídeos + 1 imagem */}
         <div ref={ref} style={{
+          maxWidth: mobile ? '100%' : 680,
+          margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: mobile ? '1fr 1fr' : '1fr 1fr',
+          gridTemplateColumns: '1fr 1fr',
           gap: mobile ? 10 : 16,
           transition: 'opacity 0.8s ease, transform 0.8s ease',
           opacity: inView ? 1 : 0,
