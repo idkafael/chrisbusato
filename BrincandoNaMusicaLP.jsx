@@ -4,6 +4,11 @@ import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
 import chris1 from './images/chris1.PNG'
 import mark1 from './images/mark1.PNG'
+import online1 from './images/online (1).mp4'
+import online2 from './images/online (2).mp4'
+import online3 from './images/online (3).mp4'
+import online4 from './images/online (4).mp4'
+import onlineImg1 from './images/online (1).jpeg'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
@@ -1055,6 +1060,282 @@ const feedbackItems = [
   { src: mark1,  name: 'Mark'  },
 ]
 
+// ─── VIVÊNCIAS ───────────────────────────────────────────────────────────────
+function VideoPlayer({ src }) {
+  const videoRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting && videoRef.current) {
+        videoRef.current.pause()
+        setPlaying(false)
+      }
+    }, { threshold: 0.3 })
+    if (videoRef.current) obs.observe(videoRef.current)
+    return () => obs.disconnect()
+  }, [])
+
+  const toggle = () => {
+    if (!videoRef.current) return
+    if (playing) {
+      videoRef.current.pause()
+      setPlaying(false)
+    } else {
+      videoRef.current.play()
+      setPlaying(true)
+    }
+  }
+
+  const showOverlay = !playing || hovered
+
+  return (
+    <div
+      style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }}
+      onClick={toggle}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <video
+        ref={videoRef}
+        src={src}
+        playsInline
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        onEnded={() => setPlaying(false)}
+      />
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: playing ? (hovered ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0)') : 'rgba(0,0,0,0.32)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'background 0.25s ease',
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          width: 52, height: 52, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.15)',
+          border: '1.5px solid rgba(255,255,255,0.45)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          opacity: showOverlay ? 1 : 0,
+          transform: showOverlay ? 'scale(1)' : 'scale(0.8)',
+          transition: 'opacity 0.2s ease, transform 0.2s ease',
+        }}>
+          {playing ? (
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+              <rect x="1" y="1" width="4" height="14" rx="1.5" fill="white"/>
+              <rect x="9" y="1" width="4" height="14" rx="1.5" fill="white"/>
+            </svg>
+          ) : (
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+              <path d="M2 1.5l13 7.5-13 7.5V1.5z" fill="white"/>
+            </svg>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function VideoSlot({ label, aspectRatio = '16/9' }) {
+  return (
+    <div style={{ position: 'relative' }}>
+      {/* label tag */}
+      <div style={{
+        position: 'absolute', top: 14, left: 14, zIndex: 2,
+        background: 'rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(255,255,255,0.18)',
+        borderRadius: 100, padding: '4px 12px',
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+        fontSize: 10, letterSpacing: '2px', color: 'rgba(255,255,255,0.9)',
+        textTransform: 'uppercase',
+      }}>{label}</div>
+
+      {/* frame do vídeo */}
+      <div style={{
+        aspectRatio,
+        background: 'linear-gradient(135deg, #1a1008 0%, #2e1f14 60%, #1a1008 100%)',
+        borderRadius: 16, overflow: 'hidden',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
+        position: 'relative',
+      }}>
+        {/* grain overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.04\'/%3E%3C/svg%3E")',
+          opacity: 0.4, pointerEvents: 'none',
+        }} />
+        {/* play button */}
+        <div style={{
+          width: 56, height: 56, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.12)',
+          border: '1.5px solid rgba(255,255,255,0.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backdropFilter: 'blur(4px)',
+        }}>
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+            <path d="M1 1.5l16 8.5-16 8.5V1.5z" fill="white" stroke="white" strokeWidth="1" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        {/* texto placeholder */}
+        <div style={{
+          position: 'absolute', bottom: 16, left: 0, right: 0, textAlign: 'center',
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '1px',
+        }}>vídeo em breve</div>
+      </div>
+    </div>
+  )
+}
+
+function OnlinePlaceholder() {
+  return (
+    <div style={{
+      aspectRatio: '4/3',
+      background: C.creamCard,
+      borderRadius: 12,
+      border: `1.5px dashed ${C.sageLight}`,
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', gap: 8,
+    }}>
+      <div style={{ fontSize: 22, opacity: 0.4 }}>🖼</div>
+      <div style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+        fontSize: 10, letterSpacing: '1.5px', color: C.brownLight,
+        textTransform: 'uppercase', opacity: 0.5,
+      }}>imagem online</div>
+    </div>
+  )
+}
+
+function VivenciasSection() {
+  const [ref, inView] = useInView()
+  const mobile = useWindowWidth() < 768
+
+  return (
+    <section style={{
+      background: C.cream,
+      padding: mobile ? '64px 24px 40px' : '96px 40px 48px',
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+        {/* header */}
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 16,
+          }}>Já aconteceu</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 'clamp(28px, 7vw, 36px)' : 'clamp(30px, 3vw, 44px)',
+            color: C.brown, letterSpacing: '-0.5px', lineHeight: 1.2,
+          }}>
+            Veja como é{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>na prática.</em>
+          </h2>
+        </div>
+
+        <div ref={ref} style={{
+          transition: 'opacity 0.8s ease, transform 0.8s ease',
+          opacity: inView ? 1 : 0,
+          transform: inView ? 'translateY(0)' : 'translateY(32px)',
+        }}>
+
+          {/* ── PRESENCIAL ── */}
+          <div style={{ marginBottom: 56 }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
+            }}>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
+                textTransform: 'uppercase',
+              }}>📍 Presencial · Território da Dança</span>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+              gap: 16,
+            }}>
+              {[
+                'https://i.imgur.com/k1A44n2.mp4',
+                'https://i.imgur.com/KVxXjuR.mp4',
+              ].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 16, overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                  transform: i === 0 ? 'rotate(-0.6deg)' : 'rotate(0.6deg)',
+                  transition: 'transform 0.3s ease',
+                  aspectRatio: '16/9',
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── AO VIVO ── */}
+          <div>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
+            }}>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
+                textTransform: 'uppercase',
+              }}>📡 Online · Ao vivo</span>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+            </div>
+
+            {/* vídeos online 1 e 2 — lado a lado */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+              gap: 16, marginBottom: 16,
+            }}>
+              {[online1, online2].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 16, overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  transform: i === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
+                  aspectRatio: '16/9', background: C.black,
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
+
+            {/* vídeos online 3 e 4 + imagem — grid 3 cols */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(3, 1fr)',
+              gap: 12,
+            }}>
+              {[online3, online4].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 12, overflow: 'hidden',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+                  aspectRatio: '16/9', background: C.black,
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function TestemunhosSection() {
   const [titleRef, titleInView] = useInView()
   const [paused, setPaused] = useState(false)
@@ -1120,7 +1401,13 @@ function TestemunhosSection() {
               <img
                 src={item.src}
                 alt={`Feedback de ${item.name}`}
-                style={{ width: '100%', display: 'block' }}
+                style={{
+                  width: '100%',
+                  height: 480,
+                  objectFit: 'cover',
+                  objectPosition: 'top',
+                  display: 'block',
+                }}
               />
               <div style={{
                 padding: '10px 16px',
@@ -1648,9 +1935,10 @@ export default function BrincandoNaMusicaLP() {
       <TransformacaoSection />
       <ParaQuemSection />
       <StatsStrip />
-      <TestemunhosSection />
+      <VivenciasSection />
       <InscricaoSection />
       <FaqSection />
+      <TestemunhosSection />
       <Footer />
     </>
   )
