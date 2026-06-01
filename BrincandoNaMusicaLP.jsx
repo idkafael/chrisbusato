@@ -7,6 +7,7 @@ import mark1 from './images/mark1.PNG'
 import online1 from './images/online (1).mp4'
 import online2 from './images/online (2).mp4'
 import online3 from './images/online (3).mp4'
+import online4 from './images/online (4).mp4'
 import onlineImg1 from './images/online (1).jpeg'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
@@ -1238,60 +1239,97 @@ function VivenciasSection() {
           </h2>
         </div>
 
-        {/* grid 2×2 — 3 vídeos + 1 imagem */}
         <div ref={ref} style={{
-          maxWidth: mobile ? '100%' : 680,
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: mobile ? 10 : 16,
           transition: 'opacity 0.8s ease, transform 0.8s ease',
           opacity: inView ? 1 : 0,
           transform: inView ? 'translateY(0)' : 'translateY(32px)',
         }}>
-          {/* vídeo 1 */}
-          <div style={{
-            borderRadius: mobile ? 12 : 16, overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-            transform: 'rotate(-0.5deg)',
-            aspectRatio: '9/16',
-          }}>
-            <VideoPlayer src={online1} />
+
+          {/* ── PRESENCIAL ── */}
+          <div style={{ marginBottom: 56 }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
+            }}>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
+                textTransform: 'uppercase',
+              }}>📍 Presencial · Território da Dança</span>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+              gap: 16,
+            }}>
+              {[
+                'https://i.imgur.com/k1A44n2.mp4',
+                'https://i.imgur.com/KVxXjuR.mp4',
+              ].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 16, overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                  transform: i === 0 ? 'rotate(-0.6deg)' : 'rotate(0.6deg)',
+                  aspectRatio: '16/9',
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* vídeo 2 */}
-          <div style={{
-            borderRadius: mobile ? 12 : 16, overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-            transform: 'rotate(0.5deg)',
-            aspectRatio: '9/16',
-          }}>
-            <VideoPlayer src={online2} />
+          {/* ── AO VIVO ── */}
+          <div>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
+            }}>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
+                textTransform: 'uppercase',
+              }}>📡 Online · Ao vivo</span>
+              <div style={{ height: 1, flex: 1, background: C.sageLight }} />
+            </div>
+
+            {/* vídeos online 1 e 2 — lado a lado */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+              gap: 16, marginBottom: 16,
+            }}>
+              {[online1, online2].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 16, overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  transform: i === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
+                  aspectRatio: '16/9',
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
+
+            {/* vídeos online 3 e 4 — grid 2 cols */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 12,
+            }}>
+              {[online3, online4].map((src, i) => (
+                <div key={i} style={{
+                  borderRadius: 12, overflow: 'hidden',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+                  aspectRatio: '16/9',
+                }}>
+                  <VideoPlayer src={src} />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* vídeo 3 */}
-          <div style={{
-            borderRadius: mobile ? 12 : 16, overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-            transform: 'rotate(0.4deg)',
-            aspectRatio: '9/16',
-          }}>
-            <VideoPlayer src={online3} />
-          </div>
-
-          {/* imagem */}
-          <div style={{
-            borderRadius: mobile ? 12 : 16, overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-            transform: 'rotate(-0.4deg)',
-            aspectRatio: '9/16',
-          }}>
-            <img
-              src={onlineImg1}
-              alt="Vivência online"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
-          </div>
         </div>
       </div>
     </section>
