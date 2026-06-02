@@ -121,139 +121,118 @@ function HeroSection() {
     <section style={{
       minHeight: '100vh',
       background: `linear-gradient(160deg, ${C.ink} 0%, ${C.inkMid} 60%, #1a1208 100%)`,
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
+      display: 'flex', alignItems: 'center',
       padding: mobile ? '120px 24px 80px' : '140px 40px 100px',
       position: 'relative', overflow: 'hidden',
-      textAlign: 'center',
     }}>
       {/* Glow de fundo */}
       <div style={{
         position: 'absolute',
-        top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
-        width: mobile ? 300 : 600, height: mobile ? 300 : 600,
+        top: '40%', left: mobile ? '50%' : '30%', transform: 'translate(-50%, -50%)',
+        width: mobile ? 300 : 500, height: mobile ? 300 : 500,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(196,169,107,0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(196,169,107,0.07) 0%, transparent 70%)',
         animation: 'glowPulse 4s ease-in-out infinite',
         pointerEvents: 'none',
       }} />
 
-      {/* Título */}
-      <h1 style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: mobile ? 'clamp(36px, 10vw, 52px)' : 'clamp(44px, 5vw, 70px)',
-        lineHeight: 1.1,
-        letterSpacing: '-1px',
-        color: C.cream,
-        maxWidth: 820,
-        marginBottom: 20,
-        animation: 'fadeUp 0.7s 0.1s ease both',
-      }}>
-        Do Erro{' '}
-        <em style={{
-          color: C.gold,
-          fontStyle: 'italic',
-          display: 'block',
-        }}>à Possibilidade.</em>
-      </h1>
-
-      {/* Subtítulo */}
-      <p style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-        fontSize: mobile ? 16 : 19,
-        color: 'rgba(237,234,227,0.6)',
-        lineHeight: 1.65,
-        maxWidth: 520,
-        marginBottom: 40,
-        animation: 'fadeUp 0.7s 0.2s ease both',
-      }}>
-        Aprenda a lidar com o erro sem perder a dança, a conexão e a liberdade.
-      </p>
-
-      {/* VSL */}
       <div style={{
-        width: '100%',
-        maxWidth: mobile ? '100%' : 780,
-        marginBottom: 40,
-        animation: 'fadeUp 0.7s 0.3s ease both',
-        borderRadius: mobile ? 14 : 20,
-        overflow: 'hidden',
-        boxShadow: '0 24px 80px rgba(0,0,0,0.55)',
-        border: '1px solid rgba(196,169,107,0.12)',
-        aspectRatio: '16/9',
-        background: '#0e0b08',
-        position: 'relative',
+        maxWidth: 1100, width: '100%', margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+        gap: mobile ? 48 : 72,
+        alignItems: 'center',
       }}>
-        {/* placeholder — substituir pelo embed do vturb/converteai quando disponível */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', gap: 16,
-        }}>
-          <div style={{
-            width: mobile ? 60 : 72, height: mobile ? 60 : 72,
-            borderRadius: '50%',
-            background: 'rgba(196,169,107,0.12)',
-            border: `1.5px solid rgba(196,169,107,0.35)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+        {/* Coluna texto */}
+        <div style={{ textAlign: mobile ? 'center' : 'left' }}>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 'clamp(36px, 10vw, 52px)' : 'clamp(44px, 4.5vw, 68px)',
+            lineHeight: 1.1, letterSpacing: '-1px',
+            color: C.cream, marginBottom: 20,
+            animation: 'fadeUp 0.7s 0.1s ease both',
           }}>
-            <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
-              <path d="M2 1.5l19 11L2 23.5V1.5z" fill={C.gold} stroke={C.gold} strokeWidth="1" strokeLinejoin="round"/>
-            </svg>
-          </div>
+            Do Erro{' '}
+            <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>
+              à Possibilidade.
+            </em>
+          </h1>
+
           <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-            fontSize: 12, letterSpacing: '1.5px',
-            color: 'rgba(196,169,107,0.35)', textTransform: 'uppercase',
-          }}>vídeo em breve</p>
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 16 : 18,
+            color: 'rgba(237,234,227,0.6)',
+            lineHeight: 1.7, maxWidth: 440,
+            margin: mobile ? '0 auto 36px' : '0 0 36px',
+            animation: 'fadeUp 0.7s 0.2s ease both',
+          }}>
+            Aprenda a lidar com o erro sem perder a dança, a conexão e a liberdade.
+          </p>
+
+          <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: mobile ? 'flex' : 'block', justifyContent: 'center' }}>
+            <a
+              href="#inscricao"
+              style={{
+                display: 'inline-block',
+                background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
+                color: C.ink,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
+                padding: mobile ? '16px 36px' : '18px 48px',
+                borderRadius: 100, textDecoration: 'none',
+                boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
+              }}
+            >
+              Quero participar
+            </a>
+          </div>
         </div>
-      </div>
 
-      {/* CTA */}
-      <a
-        href="#inscricao"
-        style={{
-          display: 'inline-block',
-          background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-          color: C.ink,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-          fontSize: mobile ? 15 : 16,
-          letterSpacing: '0.3px',
-          padding: mobile ? '16px 36px' : '18px 48px',
-          borderRadius: 100,
-          textDecoration: 'none',
-          boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
-          animation: 'fadeUp 0.7s 0.4s ease both',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = 'translateY(-2px)'
-          e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
-        }}
-      >
-        Quero participar
-      </a>
-
-      {/* Scroll hint */}
-      <div style={{
-        position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-        opacity: 0.35,
-        animation: 'fadeUp 1s 0.8s ease both',
-      }}>
+        {/* Coluna foto */}
         <div style={{
-          width: 1, height: 40,
-          background: `linear-gradient(to bottom, transparent, ${C.gold})`,
-        }} />
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 10, letterSpacing: '2px', color: C.goldLight,
-          textTransform: 'uppercase',
-        }}>Descer</div>
+          animation: 'fadeUp 0.8s 0.25s ease both',
+          position: 'relative',
+        }}>
+          {/* Foto principal — substituir src quando disponível */}
+          <div style={{
+            aspectRatio: '3/4',
+            borderRadius: 20,
+            background: 'linear-gradient(160deg, rgba(196,169,107,0.08) 0%, rgba(28,25,22,0.9) 100%)',
+            border: '1px solid rgba(196,169,107,0.15)',
+            overflow: 'hidden',
+            boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column', gap: 12,
+          }}>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity="0.25">
+              <rect x="3" y="3" width="22" height="22" rx="2" stroke={C.gold} strokeWidth="1.5"/>
+              <circle cx="10" cy="10" r="3" stroke={C.gold} strokeWidth="1.5"/>
+              <path d="M3 19l7-6 5 5 4-4 6 6" stroke={C.gold} strokeWidth="1.5" strokeLinejoin="round"/>
+            </svg>
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 10, letterSpacing: '2px',
+              color: 'rgba(196,169,107,0.3)', textTransform: 'uppercase',
+            }}>foto · Chris Busato</span>
+          </div>
+          {/* Detalhe decorativo */}
+          <div style={{
+            position: 'absolute', bottom: -16, right: -16,
+            width: 80, height: 80, borderRadius: 16,
+            border: '1px solid rgba(196,169,107,0.15)',
+            background: 'rgba(196,169,107,0.04)',
+            zIndex: -1,
+          }} />
+        </div>
       </div>
     </section>
   )
@@ -592,44 +571,77 @@ function ChrisSection() {
         transform: inView ? 'translateY(0)' : 'translateY(32px)',
       }}>
         <div style={{
-          display: 'flex', flexDirection: mobile ? 'column' : 'row',
-          gap: mobile ? 28 : 48, alignItems: mobile ? 'flex-start' : 'center',
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '340px 1fr',
+          gap: mobile ? 36 : 64,
+          alignItems: 'center',
         }}>
-          {/* Avatar placeholder */}
+          {/* Foto grande — substituir src quando disponível */}
           <div style={{
-            flexShrink: 0,
-            width: mobile ? 72 : 96, height: mobile ? 72 : 96,
-            borderRadius: '50%',
-            background: 'rgba(196,169,107,0.15)',
-            border: '1.5px solid rgba(196,169,107,0.3)',
+            aspectRatio: '4/5',
+            borderRadius: 20,
+            background: 'linear-gradient(160deg, rgba(196,169,107,0.08) 0%, rgba(28,25,22,0.95) 100%)',
+            border: '1px solid rgba(196,169,107,0.15)',
+            overflow: 'hidden',
+            boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column', gap: 12,
           }}>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity="0.25">
+              <rect x="3" y="3" width="22" height="22" rx="2" stroke={C.gold} strokeWidth="1.5"/>
+              <circle cx="10" cy="10" r="3" stroke={C.gold} strokeWidth="1.5"/>
+              <path d="M3 19l7-6 5 5 4-4 6 6" stroke={C.gold} strokeWidth="1.5" strokeLinejoin="round"/>
+            </svg>
             <span style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: mobile ? 22 : 28,
-              color: C.gold,
-            }}>C</span>
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 10, letterSpacing: '2px',
+              color: 'rgba(196,169,107,0.3)', textTransform: 'uppercase',
+            }}>foto · Chris Busato</span>
           </div>
 
+          {/* Bio */}
           <div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '2.5px', color: C.gold,
-              textTransform: 'uppercase', marginBottom: 10,
+              textTransform: 'uppercase', marginBottom: 16,
             }}>Quem ensina</div>
             <h3 style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: mobile ? 22 : 26,
-              color: C.cream, marginBottom: 14,
+              fontSize: mobile ? 28 : 36,
+              color: C.cream, marginBottom: 20, lineHeight: 1.2,
             }}>Chris Busato</h3>
             <p style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-              fontSize: mobile ? 15 : 16,
-              color: 'rgba(237,234,227,0.6)', lineHeight: 1.7,
+              fontSize: mobile ? 15 : 17,
+              color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
+              marginBottom: 24,
             }}>
               Educadora de dança, criadora do método Corpo Musical e da vivência Brincando na Música. Há mais de dez anos, Chris acompanha corpos que querem se expressar com mais liberdade — e errar com mais leveza.
             </p>
+            <div style={{
+              display: 'flex', flexDirection: 'column', gap: 10,
+            }}>
+              {[
+                '+10 anos como educadora de dança',
+                'Criadora do Corpo Musical',
+                'Referência em musicalidade corporal',
+              ].map((item, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                }}>
+                  <div style={{
+                    width: 5, height: 5, borderRadius: '50%',
+                    background: C.gold, flexShrink: 0,
+                    boxShadow: `0 0 6px rgba(196,169,107,0.4)`,
+                  }} />
+                  <span style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                    fontSize: 14, color: 'rgba(237,234,227,0.5)',
+                  }}>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
