@@ -880,20 +880,16 @@ function UrgenciaSection() {
 
 const faqItems = [
   {
-    q: 'Quando acontece a aula ao vivo?',
-    a: 'A data será divulgada em breve para quem se inscrever. Você recebe o aviso por e-mail.',
+    q: 'Isso é para mim mesmo se eu me considero travado?',
+    a: 'Sim. Na verdade, essa vivência foi criada justamente para pessoas que sentem medo de errar, excesso de autocobrança, insegurança ou dificuldade de se expressar. Você não precisa chegar confiante. Você precisa apenas estar disposto a olhar para sua relação com o erro de uma forma diferente.',
   },
   {
-    q: 'E se eu não puder ao vivo?',
-    a: 'Sem problema. A gravação fica disponível permanentemente. Você assiste quando e quantas vezes quiser.',
+    q: 'O que torna essa experiência diferente?',
+    a: 'A maioria das pessoas tenta eliminar o erro. Aqui você aprende algo diferente: como continuar mesmo quando ele aparece. Porque confiança não nasce da ausência de erros. Nasce da capacidade de atravessá-los.',
   },
   {
-    q: 'Precisa ter experiência em dança?',
-    a: 'Não. A aula é sobre uma relação interna com o aprendizado. Vale para qualquer nível, seja iniciante ou professor experiente.',
-  },
-  {
-    q: 'É diferente das outras vivências da Chris?',
-    a: 'Sim. Esta é uma aula focada especificamente no tema do erro. Mais conceitual, mais densa e mais transformadora.',
+    q: 'E se eu não me sentir pronto?',
+    a: 'Essa talvez seja exatamente a razão para estar aqui. A vida raramente muda quando nos sentimos prontos. Ela muda quando decidimos avançar apesar da incerteza.',
   },
 ]
 
