@@ -718,7 +718,7 @@ function InscricaoSection() {
           {/* O que inclui */}
           <div style={{ textAlign: 'left', marginBottom: 36 }}>
             {[
-              'Aula ao vivo com Chris Busato',
+              'Aula ao vivo com Chris Busato — sábado, 13 de junho',
               'Gravação disponível para sempre',
               'Material de apoio exclusivo',
               'Grupo secreto de prática pós-aula',
