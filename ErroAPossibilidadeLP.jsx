@@ -259,9 +259,9 @@ function StatementSection() {
 
   return (
     <section style={{
-      background: C.inkMid,
+      background: 'linear-gradient(160deg, #2e2820 0%, #3a2f24 50%, #2e2820 100%)',
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.1)',
+      borderTop: '1px solid rgba(196,169,107,0.12)',
     }}>
       <div ref={ref} style={{
         maxWidth: 820, margin: '0 auto', textAlign: 'center',
@@ -273,37 +273,28 @@ function StatementSection() {
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(36px, 4vw, 56px)',
           color: C.cream, lineHeight: 1.2,
-          letterSpacing: '-0.5px', marginBottom: 20,
+          letterSpacing: '-0.5px', marginBottom: 28,
         }}>
           O erro existe.{' '}
           <em style={{ color: C.gold, fontStyle: 'italic' }}>
-            Mas ele não precisa ser um problema.
+            Mas ele não precisa controlar você.
           </em>
         </h2>
 
         <div style={{
           width: 40, height: 1,
           background: `rgba(196,169,107,0.4)`,
-          margin: '28px auto',
+          margin: '0 auto 32px',
         }} />
 
         <p style={{
           fontFamily: "'Playfair Display', serif",
           fontStyle: 'italic',
-          fontSize: mobile ? 18 : 22,
-          color: 'rgba(237,234,227,0.55)',
-          lineHeight: 1.6, maxWidth: 660, margin: '0 auto 24px',
+          fontSize: mobile ? 19 : 24,
+          color: 'rgba(237,234,227,0.8)',
+          lineHeight: 1.6, maxWidth: 660, margin: '0 auto',
         }}>
-          "De nada adianta falar que ele não existe se chega na hora e ele está lá. Ele olha para você, você olha para ele. E ficam sem saber o que fazer."
-        </p>
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: mobile ? 15 : 17,
-          color: 'rgba(237,234,227,0.5)',
-          lineHeight: 1.7, maxWidth: 560, margin: '0 auto',
-        }}>
-          Para lidar com o erro, existe técnica, método e desenvolvimento. É exatamente isso que Chris vai te mostrar.
+          "O problema não é quando você erra. O problema é o que acontece dentro de você depois do erro."
         </p>
       </div>
     </section>
