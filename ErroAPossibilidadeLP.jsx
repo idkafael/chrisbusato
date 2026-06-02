@@ -282,7 +282,7 @@ function StatementSection() {
           color: 'rgba(237,234,227,0.55)',
           lineHeight: 1.6, maxWidth: 660, margin: '0 auto 24px',
         }}>
-          "De nada adianta falar que ele não existe se chega na hora e ele está lá. Ele olha para você, você olha para ele — e ficam sem saber o que fazer."
+          "De nada adianta falar que ele não existe se chega na hora e ele está lá. Ele olha para você, você olha para ele. E ficam sem saber o que fazer."
         </p>
 
         <p style={{
@@ -345,7 +345,7 @@ function OQueESection() {
             color: 'rgba(237,234,227,0.55)',
             lineHeight: 1.75,
           }}>
-            Só temos duas pernas. Quando você entende como elas se combinam — e aprende a se reorganizar quando a expectativa é quebrada — o que era erro vira possibilidade.
+            Só temos duas pernas. Quando você entende como elas se combinam e aprende a se reorganizar quando a expectativa é quebrada, o que era erro vira possibilidade.
           </p>
         </div>
 
@@ -381,12 +381,12 @@ const aprendizados = [
   {
     num: '01',
     titulo: 'Por que o erro trava o corpo',
-    descricao: 'Entender o que acontece internamente quando a expectativa é quebrada — e como parar de congelar na hora errada.',
+    descricao: 'Entender o que acontece internamente quando a expectativa é quebrada, e como parar de congelar na hora errada.',
   },
   {
     num: '02',
     titulo: 'Técnica, método e desenvolvimento',
-    descricao: 'Lidar com o erro não é questão de talento ou sorte. Existe um caminho concreto — e você vai aprender ele aqui.',
+    descricao: 'Lidar com o erro não é questão de talento ou sorte. Existe um caminho concreto e você vai aprender ele aqui.',
   },
   {
     num: '03',
@@ -396,7 +396,7 @@ const aprendizados = [
   {
     num: '04',
     titulo: 'Segurança e confiança de verdade',
-    descricao: 'Não a confiança de quem nunca erra — mas a de quem sabe o que fazer quando erra. Essa é a liberdade que fica.',
+    descricao: 'Não a confiança de quem nunca erra. A confiança de quem sabe o que fazer quando erra. Essa é a liberdade que fica.',
   },
 ]
 
@@ -482,9 +482,9 @@ function AprendizadoItem({ item, index, mobile }) {
 // ─── Para quem é ─────────────────────────────────────────────────────────────
 
 const paraQuem = [
-  'Quando erra na frente do seu par, você trava — e ficam os dois sem saber o que fazer',
+  'Quando erra na frente do seu par, você trava. Ficam os dois sem saber o que fazer',
   'Você sabe que o erro estava lá, mas prefere fingir que não aconteceu',
-  'Seu par errou a perna e a dança parou — você não sabe como continuar',
+  'Seu par errou a perna, a dança parou e você não sabe como continuar',
   'Você quer dançar com mais liberdade, mas o medo de errar te prende',
   'Você é professor e quer ensinar seus alunos a lidar com o erro, não a fugir dele',
 ]
@@ -617,7 +617,7 @@ function ChrisSection() {
               color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
               marginBottom: 24,
             }}>
-              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem dançar com mais liberdade. Ela não finge que o erro não existe — ela ensina você a lidar com ele, para que o que era bloqueio vire possibilidade.
+              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem dançar com mais liberdade. Ela não finge que o erro não existe. Ela ensina você a lidar com ele, para que o que era bloqueio vire possibilidade.
             </p>
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 10,
@@ -791,7 +791,7 @@ const faqItems = [
   },
   {
     q: 'E se eu não puder ao vivo?',
-    a: 'Sem problema — a gravação fica disponível permanentemente. Você assiste quando e quantas vezes quiser.',
+    a: 'Sem problema. A gravação fica disponível permanentemente. Você assiste quando e quantas vezes quiser.',
   },
   {
     q: 'Precisa ter experiência em dança?',
@@ -799,7 +799,7 @@ const faqItems = [
   },
   {
     q: 'É diferente das outras vivências da Chris?',
-    a: 'Sim. Esta é uma aula focada especificamente no tema do erro — mais conceitual, mais densa, mais transformadora.',
+    a: 'Sim. Esta é uma aula focada especificamente no tema do erro. Mais conceitual, mais densa e mais transformadora.',
   },
 ]
 
