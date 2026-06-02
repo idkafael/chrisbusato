@@ -546,7 +546,7 @@ function ParaQuemSection() {
             <div key={i} style={{
               display: 'flex', alignItems: 'flex-start', gap: 16,
               padding: '20px 0',
-              borderBottom: i < paraQuem.length - 1 ? '1px solid rgba(196,169,107,0.1)' : 'none',
+              borderBottom: i < paraQuem.length - 1 ? '1px solid rgba(196,169,107,0.2)' : 'none',
               transition: 'opacity 0.5s ease, transform 0.5s ease',
               transitionDelay: `${i * 70}ms`,
             }}>
@@ -558,9 +558,9 @@ function ParaQuemSection() {
                 boxShadow: `0 0 8px rgba(196,169,107,0.5)`,
               }} />
               <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: mobile ? 16 : 18,
-                color: 'rgba(237,234,227,0.75)', lineHeight: 1.55,
+                color: 'rgba(237,234,227,0.92)', lineHeight: 1.55,
               }}>{item}</p>
             </div>
           ))}
