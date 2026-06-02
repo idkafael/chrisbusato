@@ -290,7 +290,7 @@ function StatementSection() {
           fontFamily: "'Playfair Display', serif",
           fontStyle: 'italic',
           fontSize: mobile ? 19 : 24,
-          color: 'rgba(237,234,227,0.8)',
+          color: C.cream,
           lineHeight: 1.6, maxWidth: 660, margin: '0 auto',
         }}>
           "O problema não é quando você erra. O problema é o que acontece dentro de você depois do erro."
@@ -310,8 +310,7 @@ function OQueESection() {
   return (
     <section style={{
       background: 'linear-gradient(160deg, #2e2820 0%, #3a2f24 50%, #2e2820 100%)',
-      padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.1)',
+      padding: mobile ? '0 24px 80px' : '0 40px 112px',
     }}>
       <div ref={ref} style={{
         maxWidth: 720, margin: '0 auto',
