@@ -801,6 +801,100 @@ function InscricaoSection() {
   )
 }
 
+// ─── Urgência / Custo da Não Decisão ─────────────────────────────────────────
+
+function UrgenciaSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  const lines = [
+    'Porque o custo de não decidir raramente aparece hoje.',
+    'Ele aparece nas experiências adiadas.',
+    'Nas oportunidades não vividas.',
+    'Nas versões de você que nunca chegaram a existir.',
+  ]
+
+  return (
+    <section style={{
+      background: `linear-gradient(160deg, #1a1510 0%, #231c14 50%, #1a1510 100%)`,
+      padding: mobile ? '80px 24px 88px' : '112px 40px 120px',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 680,
+        margin: '0 auto',
+        textAlign: 'center',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(28px)',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+      }}>
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontWeight: 700,
+          fontSize: mobile ? 26 : 34,
+          color: C.cream,
+          lineHeight: 1.25,
+          marginBottom: 40,
+          letterSpacing: '-0.01em',
+        }}>
+          Por que você não pode sair daqui{' '}
+          <em style={{ color: C.gold, fontStyle: 'italic' }}>sem tomar essa decisão?</em>
+        </h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 48 }}>
+          {lines.map((line, i) => (
+            <p key={i} style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              fontSize: mobile ? 17 : 20,
+              color: i === 0 ? 'rgba(237,234,227,0.92)' : 'rgba(237,234,227,0.7)',
+              lineHeight: 1.6,
+              fontStyle: i > 0 ? 'italic' : 'normal',
+              transition: `opacity 0.6s ease ${i * 80}ms, transform 0.6s ease ${i * 80}ms`,
+              opacity: inView ? 1 : 0,
+              transform: inView ? 'translateY(0)' : 'translateY(12px)',
+            }}>{line}</p>
+          ))}
+        </div>
+
+        <div style={{
+          width: 48,
+          height: 1,
+          background: `rgba(196,169,107,0.4)`,
+          margin: '0 auto 48px',
+        }} />
+
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 400,
+          fontSize: mobile ? 17 : 20,
+          color: 'rgba(237,234,227,0.92)',
+          lineHeight: 1.7,
+          marginBottom: 40,
+        }}>
+          Você pode continuar esperando se sentir pronto.<br />
+          Ou pode descobrir o que existe do outro lado da decisão que vem adiando há tanto tempo.
+        </p>
+
+        <a href="#inscricao" style={{
+          display: 'inline-block',
+          background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
+          color: C.ink,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 700,
+          fontSize: mobile ? 16 : 17,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          padding: mobile ? '16px 36px' : '18px 48px',
+          borderRadius: 50,
+          textDecoration: 'none',
+          boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
+        }}>Quero participar</a>
+      </div>
+    </section>
+  )
+}
+
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 const faqItems = [
@@ -957,6 +1051,7 @@ export default function ErroAPossibilidadeLP() {
       <ParaQuemSection />
       <ChrisSection />
       <InscricaoSection />
+      <UrgenciaSection />
       <FaqSection />
       <Footer />
     </>
