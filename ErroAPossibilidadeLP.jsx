@@ -891,6 +891,14 @@ const faqItems = [
     q: 'E se eu não me sentir pronto?',
     a: 'Essa talvez seja exatamente a razão para estar aqui. A vida raramente muda quando nos sentimos prontos. Ela muda quando decidimos avançar apesar da incerteza.',
   },
+  {
+    q: 'Precisa ter experiência em dança?',
+    a: 'Não. A aula é sobre uma relação interna com o aprendizado. Vale para qualquer nível, seja iniciante ou professor experiente.',
+  },
+  {
+    q: 'É diferente das outras vivências da Chris?',
+    a: 'Sim. Esta é uma aula focada especificamente no tema do erro. Mais conceitual, mais densa e mais transformadora.',
+  },
 ]
 
 function FaqItem({ item, index }) {
