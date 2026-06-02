@@ -159,12 +159,11 @@ function HeroSection() {
           </h1>
 
           <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            fontSize: mobile ? 18 : 22,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17,
             color: 'rgba(237,234,227,0.75)',
-            lineHeight: 1.5, maxWidth: 440,
-            margin: mobile ? '0 auto 20px' : '0 0 20px',
+            lineHeight: 1.7, maxWidth: 440,
+            margin: mobile ? '0 auto 8px' : '0 0 8px',
             animation: 'fadeUp 0.7s 0.15s ease both',
           }}>
             Quantas experiências você já perdeu por medo de errar?
