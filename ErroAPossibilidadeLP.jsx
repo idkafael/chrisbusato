@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import chrisSorrindo from './images/Chris Sorrindo (1).jpg'
 
 // ─── Tokens (mesmo padrão das outras páginas) ─────────────────────────────────
 
@@ -583,27 +584,18 @@ function ChrisSection() {
           gap: mobile ? 36 : 64,
           alignItems: 'center',
         }}>
-          {/* Foto grande — substituir src quando disponível */}
+          {/* Foto Chris Sorrindo */}
           <div style={{
             aspectRatio: '4/5',
             borderRadius: 20,
-            background: 'linear-gradient(160deg, rgba(196,169,107,0.08) 0%, rgba(28,25,22,0.95) 100%)',
-            border: '1px solid rgba(196,169,107,0.15)',
             overflow: 'hidden',
             boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column', gap: 12,
           }}>
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity="0.25">
-              <rect x="3" y="3" width="22" height="22" rx="2" stroke={C.gold} strokeWidth="1.5"/>
-              <circle cx="10" cy="10" r="3" stroke={C.gold} strokeWidth="1.5"/>
-              <path d="M3 19l7-6 5 5 4-4 6 6" stroke={C.gold} strokeWidth="1.5" strokeLinejoin="round"/>
-            </svg>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 10, letterSpacing: '2px',
-              color: 'rgba(196,169,107,0.3)', textTransform: 'uppercase',
-            }}>foto · Chris Busato</span>
+            <img
+              src={chrisSorrindo}
+              alt="Chris Busato"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
           </div>
 
           {/* Bio */}
@@ -706,7 +698,7 @@ function InscricaoSection() {
             fontSize: 14, color: 'rgba(237,234,227,0.4)',
             letterSpacing: '0.3px', marginBottom: 8,
             textDecoration: 'line-through',
-          }}>de R$ 197</div>
+          }}>de R$ 297</div>
 
           <div style={{
             fontFamily: "'Playfair Display', serif",
@@ -714,7 +706,7 @@ function InscricaoSection() {
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-2px',
           }}>
-            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>97</span>
+            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>197</span>
           </div>
 
           <div style={{
@@ -750,7 +742,8 @@ function InscricaoSection() {
 
           {/* CTA */}
           <a
-            href="#"
+            href="https://pay.cakto.com.br/wsj6i4i_911335"
+            target="_blank" rel="noopener noreferrer"
             style={{
               display: 'block',
               background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
@@ -864,7 +857,7 @@ function UrgenciaSection() {
           Ou pode descobrir o que existe do outro lado da decisão que vem adiando há tanto tempo.
         </p>
 
-        <a href="#inscricao" style={{
+        <a href="https://pay.cakto.com.br/wsj6i4i_911335" target="_blank" rel="noopener noreferrer" style={{
           display: 'inline-block',
           background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
           color: C.ink,
