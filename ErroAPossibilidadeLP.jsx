@@ -310,68 +310,60 @@ function OQueESection() {
 
   return (
     <section style={{
-      background: C.ink,
+      background: 'linear-gradient(160deg, #2e2820 0%, #3a2f24 50%, #2e2820 100%)',
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.08)',
+      borderTop: '1px solid rgba(196,169,107,0.1)',
     }}>
       <div ref={ref} style={{
-        maxWidth: 900, margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-        gap: mobile ? 40 : 80,
-        alignItems: 'center',
+        maxWidth: 720, margin: '0 auto',
         transition: 'opacity 0.8s ease, transform 0.8s ease',
         opacity: inView ? 1 : 0,
         transform: inView ? 'translateY(0)' : 'translateY(32px)',
       }}>
-        {/* coluna esquerda */}
-        <div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 11, letterSpacing: '2.5px', color: C.gold,
-            textTransform: 'uppercase', marginBottom: 20,
-          }}>O que você vai aprender</div>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 'clamp(26px, 7vw, 34px)' : 'clamp(28px, 2.8vw, 40px)',
-            color: C.cream, lineHeight: 1.25,
-            letterSpacing: '-0.5px', marginBottom: 24,
-          }}>
-            O problema não é errar a perna.{' '}
-            <em style={{ color: C.gold, fontStyle: 'italic' }}>
-              É não saber lidar com elas.
-            </em>
-          </h2>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+          textTransform: 'uppercase', marginBottom: 20,
+        }}>O que você vai aprender</div>
+
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(30px, 3vw, 44px)',
+          color: C.cream, lineHeight: 1.2,
+          letterSpacing: '-0.5px', marginBottom: 36,
+        }}>
+          O problema não é errar a perna.{' '}
+          <em style={{ color: C.gold, fontStyle: 'italic' }}>
+            É não perceber o que acontece depois.
+          </em>
+        </h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 15 : 16,
-            color: 'rgba(237,234,227,0.55)',
+            fontSize: mobile ? 16 : 18,
+            color: 'rgba(237,234,227,0.75)',
             lineHeight: 1.75,
           }}>
-            Só temos duas pernas. Quando você entende como elas se combinam e aprende a se reorganizar quando a expectativa é quebrada, o que era erro vira possibilidade.
+            Só temos duas pernas. Então, mais cedo ou mais tarde, uma delas vai errar.
           </p>
-        </div>
-
-        {/* coluna direita — pull quote */}
-        <div style={{
-          borderLeft: `2px solid rgba(196,169,107,0.2)`,
-          paddingLeft: mobile ? 24 : 36,
-        }}>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 16 : 18,
+            color: 'rgba(237,234,227,0.75)',
+            lineHeight: 1.75,
+          }}>
+            Mas existe algo que acontece nos segundos seguintes que faz algumas pessoas travarem… enquanto outras transformam o mesmo erro em algo completamente diferente.
+          </p>
           <p style={{
             fontFamily: "'Playfair Display', serif",
             fontStyle: 'italic',
-            fontSize: mobile ? 20 : 24,
-            color: 'rgba(237,234,227,0.7)',
-            lineHeight: 1.55, marginBottom: 20,
+            fontSize: mobile ? 17 : 20,
+            color: 'rgba(237,234,227,0.65)',
+            lineHeight: 1.65,
           }}>
-            "Eu não gosto de fingir que o erro não existe. Eu prefiro ensinar pessoas a saberem lidar com ele, para que elas se sintam cada vez mais seguras e confiantes."
+            Quando você entender o que é isso, sua forma de enxergar o erro nunca mais será a mesma.
           </p>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 12, letterSpacing: '1.5px',
-            color: 'rgba(196,169,107,0.5)',
-            textTransform: 'uppercase',
-          }}>Chris Busato</div>
         </div>
       </div>
     </section>
