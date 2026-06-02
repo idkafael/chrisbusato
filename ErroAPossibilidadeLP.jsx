@@ -265,7 +265,7 @@ function StatementSection() {
         }}>
           O erro existe.{' '}
           <em style={{ color: C.gold, fontStyle: 'italic' }}>
-            E isso é uma ótima notícia.
+            Mas ele não precisa ser um problema.
           </em>
         </h2>
 
@@ -280,9 +280,9 @@ function StatementSection() {
           fontStyle: 'italic',
           fontSize: mobile ? 18 : 22,
           color: 'rgba(237,234,227,0.55)',
-          lineHeight: 1.6, maxWidth: 620, margin: '0 auto 24px',
+          lineHeight: 1.6, maxWidth: 660, margin: '0 auto 24px',
         }}>
-          "O problema não é o erro. É não saber o que fazer com ele."
+          "De nada adianta falar que ele não existe se chega na hora e ele está lá. Ele olha para você, você olha para ele — e ficam sem saber o que fazer."
         </p>
 
         <p style={{
@@ -291,7 +291,7 @@ function StatementSection() {
           color: 'rgba(237,234,227,0.5)',
           lineHeight: 1.7, maxWidth: 560, margin: '0 auto',
         }}>
-          Nessa aula, Chris Busato vai mostrar como transformar o erro em informação, em movimento, em criatividade — em vez de bloqueio.
+          Para lidar com o erro, existe técnica, método e desenvolvimento. É exatamente isso que Chris vai te mostrar.
         </p>
       </div>
     </section>
@@ -334,9 +334,9 @@ function OQueESection() {
             color: C.cream, lineHeight: 1.25,
             letterSpacing: '-0.5px', marginBottom: 24,
           }}>
-            Quem tem medo de errar{' '}
+            O problema não é errar a perna.{' '}
             <em style={{ color: C.gold, fontStyle: 'italic' }}>
-              não consegue brincar.
+              É não saber lidar com elas.
             </em>
           </h2>
           <p style={{
@@ -345,7 +345,7 @@ function OQueESection() {
             color: 'rgba(237,234,227,0.55)',
             lineHeight: 1.75,
           }}>
-            É uma única aula ao vivo, gravada, com acesso permanente. Densa, direta e transformadora — feita para quem quer dançar com mais liberdade, mesmo sem ser perfeito.
+            Só temos duas pernas. Quando você entende como elas se combinam — e aprende a se reorganizar quando a expectativa é quebrada — o que era erro vira possibilidade.
           </p>
         </div>
 
@@ -361,7 +361,7 @@ function OQueESection() {
             color: 'rgba(237,234,227,0.7)',
             lineHeight: 1.55, marginBottom: 20,
           }}>
-            "E se o erro não fosse o fim da dança? Talvez seja onde a possibilidade começa."
+            "Eu não gosto de fingir que o erro não existe. Eu prefiro ensinar pessoas a saberem lidar com ele, para que elas se sintam cada vez mais seguras e confiantes."
           </p>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
@@ -380,23 +380,23 @@ function OQueESection() {
 const aprendizados = [
   {
     num: '01',
-    titulo: 'A anatomia do erro',
-    descricao: 'Por que o corpo trava quando erra e como destravar esse padrão de forma consciente.',
+    titulo: 'Por que o erro trava o corpo',
+    descricao: 'Entender o que acontece internamente quando a expectativa é quebrada — e como parar de congelar na hora errada.',
   },
   {
     num: '02',
-    titulo: 'Erro como linguagem',
-    descricao: 'Como usar o que "deu errado" como material criativo — não apesar do erro, mas através dele.',
+    titulo: 'Técnica, método e desenvolvimento',
+    descricao: 'Lidar com o erro não é questão de talento ou sorte. Existe um caminho concreto — e você vai aprender ele aqui.',
   },
   {
     num: '03',
-    titulo: 'Presença sob pressão',
-    descricao: 'Técnicas para manter qualidade e consciência corporal mesmo quando a mente entra em pânico.',
+    titulo: 'A outra perna também dança',
+    descricao: 'Quando você aprende a se reorganizar com qualquer perna, o "erro" vira variação. As combinações se multiplicam.',
   },
   {
     num: '04',
-    titulo: 'O professor que não julga',
-    descricao: 'Como criar uma relação interna de aprendizagem que acelera a evolução ao invés de freá-la.',
+    titulo: 'Segurança e confiança de verdade',
+    descricao: 'Não a confiança de quem nunca erra — mas a de quem sabe o que fazer quando erra. Essa é a liberdade que fica.',
   },
 ]
 
@@ -482,11 +482,11 @@ function AprendizadoItem({ item, index, mobile }) {
 // ─── Para quem é ─────────────────────────────────────────────────────────────
 
 const paraQuem = [
-  'Você trava na frente dos outros quando erra',
-  'Você se critica muito durante a prática',
-  'Você sente que seus erros falam mais alto que seus acertos',
-  'Você é professor e quer lidar melhor com os erros dos seus alunos',
-  'Você quer dançar com mais liberdade, mesmo sem ser perfeito',
+  'Quando erra na frente do seu par, você trava — e ficam os dois sem saber o que fazer',
+  'Você sabe que o erro estava lá, mas prefere fingir que não aconteceu',
+  'Seu par errou a perna e a dança parou — você não sabe como continuar',
+  'Você quer dançar com mais liberdade, mas o medo de errar te prende',
+  'Você é professor e quer ensinar seus alunos a lidar com o erro, não a fugir dele',
 ]
 
 function ParaQuemSection() {
@@ -617,7 +617,7 @@ function ChrisSection() {
               color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
               marginBottom: 24,
             }}>
-              Educadora de dança, criadora do método Corpo Musical e da vivência Brincando na Música. Há mais de dez anos, Chris acompanha corpos que querem se expressar com mais liberdade — e errar com mais leveza.
+              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem dançar com mais liberdade. Ela não finge que o erro não existe — ela ensina você a lidar com ele, para que o que era bloqueio vire possibilidade.
             </p>
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 10,
