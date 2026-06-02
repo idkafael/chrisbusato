@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import chrisSorrindo from './images/Chris Sorrindo (1).jpg'
+import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Tokens (mesmo padrão das outras páginas) ─────────────────────────────────
 
