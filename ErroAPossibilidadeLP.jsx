@@ -163,20 +163,10 @@ function HeroSection() {
             fontSize: mobile ? 15 : 17,
             color: 'rgba(237,234,227,0.75)',
             lineHeight: 1.7, maxWidth: 440,
-            margin: mobile ? '0 auto 8px' : '0 0 8px',
+            margin: mobile ? '0 auto 36px' : '0 0 36px',
             animation: 'fadeUp 0.7s 0.15s ease both',
           }}>
-            Quantas experiências você já perdeu por medo de errar?
-          </p>
-
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 15 : 17,
-            color: 'rgba(237,234,227,0.55)',
-            lineHeight: 1.7, maxWidth: 440,
-            margin: mobile ? '0 auto 36px' : '0 0 36px',
-            animation: 'fadeUp 0.7s 0.2s ease both',
-          }}>
+            Quantas experiências você já perdeu por medo de errar?{' '}
             Aprenda a transformar o erro de inimigo em caminho para mais liberdade, presença e expressão.
           </p>
 
