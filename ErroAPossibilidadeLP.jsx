@@ -154,19 +154,31 @@ function HeroSection() {
           }}>
             Do Erro{' '}
             <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>
-              à Possibilidade.
+              à Possibilidade
             </em>
           </h1>
 
           <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            fontSize: mobile ? 18 : 22,
+            color: 'rgba(237,234,227,0.75)',
+            lineHeight: 1.5, maxWidth: 440,
+            margin: mobile ? '0 auto 20px' : '0 0 20px',
+            animation: 'fadeUp 0.7s 0.15s ease both',
+          }}>
+            Quantas experiências você já perdeu por medo de errar?
+          </p>
+
+          <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 16 : 18,
-            color: 'rgba(237,234,227,0.6)',
+            fontSize: mobile ? 15 : 17,
+            color: 'rgba(237,234,227,0.55)',
             lineHeight: 1.7, maxWidth: 440,
             margin: mobile ? '0 auto 36px' : '0 0 36px',
             animation: 'fadeUp 0.7s 0.2s ease both',
           }}>
-            Aprenda a lidar com o erro sem perder a dança, a conexão e a liberdade.
+            Aprenda a transformar o erro de inimigo em caminho para mais liberdade, presença e expressão.
           </p>
 
           <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: mobile ? 'flex' : 'block', justifyContent: 'center' }}>
@@ -192,7 +204,7 @@ function HeroSection() {
                 e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
               }}
             >
-              Quero participar
+              Quero Participar
             </a>
           </div>
         </div>
