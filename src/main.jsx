@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<BrincandoNaMusicaLP />} />
         <Route path="/presencial" element={<CorpoMusicalPresencialLP />} />
-        <Route path="/erro-possibilidade" element={<ErroAPossibilidadeLP />} />
+        <Route path="/possibilidades" element={<ErroAPossibilidadeLP />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
