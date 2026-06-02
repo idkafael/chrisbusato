@@ -365,6 +365,30 @@ function OQueESection() {
             Quando você entender o que é isso, sua forma de enxergar o erro nunca mais será a mesma.
           </p>
         </div>
+
+        {/* Pull quote Chris */}
+        <div style={{
+          marginTop: 48,
+          borderTop: '1px solid rgba(196,169,107,0.15)',
+          paddingTop: 40,
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            fontSize: mobile ? 18 : 22,
+            color: 'rgba(237,234,227,0.8)',
+            lineHeight: 1.65,
+            marginBottom: 20,
+          }}>
+            "Eu não gosto de fingir que o erro não existe. O que me fascina é perceber que quase ninguém foi ensinado a enxergar o que realmente acontece quando ele aparece. E é justamente aí que mora a possibilidade."
+          </p>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+            fontSize: 11, letterSpacing: '2.5px',
+            color: 'rgba(196,169,107,0.6)',
+            textTransform: 'uppercase',
+          }}>Chris Busato</div>
+        </div>
       </div>
     </section>
   )
