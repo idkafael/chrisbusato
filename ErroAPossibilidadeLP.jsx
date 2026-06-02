@@ -489,9 +489,9 @@ function AprendizadoItem({ item, index, mobile }) {
           color: C.cream, marginBottom: 10, lineHeight: 1.3,
         }}>{item.titulo}</h3>
         <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
           fontSize: mobile ? 15 : 16,
-          color: 'rgba(237,234,227,0.55)', lineHeight: 1.65,
+          color: 'rgba(237,234,227,0.8)', lineHeight: 1.65,
         }}>{item.descricao}</p>
       </div>
     </div>
