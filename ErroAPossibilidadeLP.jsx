@@ -266,7 +266,7 @@ function StatementSection() {
         }}>
           O erro existe.{' '}
           <em style={{ color: C.gold, fontStyle: 'italic' }}>
-            Mas ele não precisa controlar você.
+            Mas ele não precisa.
           </em>
         </h2>
 
