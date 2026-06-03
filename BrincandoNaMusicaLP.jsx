@@ -1546,7 +1546,7 @@ function InscricaoSection() {
               fontFamily: "'Playfair Display', serif",
               fontSize: 22, color: C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
-            }}>Criatividade na Dança</div>
+            }}>Brincando na Música</div>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
