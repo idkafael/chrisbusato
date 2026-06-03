@@ -138,14 +138,11 @@ function HeroSection() {
       }} />
 
       <div style={{
-        maxWidth: 1100, width: '100%', margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-        gap: mobile ? 48 : 72,
-        alignItems: 'center',
+        maxWidth: 720, width: '100%', margin: '0 auto',
+        textAlign: 'center',
       }}>
         {/* Coluna texto */}
-        <div style={{ textAlign: mobile ? 'center' : 'left' }}>
+        <div>
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(36px, 10vw, 52px)' : 'clamp(44px, 4.5vw, 68px)',
@@ -164,13 +161,13 @@ function HeroSection() {
             fontSize: mobile ? 15 : 17,
             color: 'rgba(237,234,227,0.75)',
             lineHeight: 1.7, maxWidth: 440,
-            margin: mobile ? '0 auto 36px' : '0 0 36px',
+            margin: '0 auto 36px',
             animation: 'fadeUp 0.7s 0.15s ease both',
           }}>
             Aprenda a transformar o erro em um caminho para mais liberdade, presença e expressão.
           </p>
 
-          <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: mobile ? 'flex' : 'block', justifyContent: 'center' }}>
+          <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: 'flex', justifyContent: 'center' }}>
             <a
               href="#inscricao"
               style={{
@@ -198,42 +195,6 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* Coluna foto */}
-        <div style={{
-          animation: 'fadeUp 0.8s 0.25s ease both',
-          position: 'relative',
-        }}>
-          {/* Foto principal — substituir src quando disponível */}
-          <div style={{
-            aspectRatio: '3/4',
-            borderRadius: 20,
-            background: 'linear-gradient(160deg, rgba(196,169,107,0.08) 0%, rgba(28,25,22,0.9) 100%)',
-            border: '1px solid rgba(196,169,107,0.15)',
-            overflow: 'hidden',
-            boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column', gap: 12,
-          }}>
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" opacity="0.25">
-              <rect x="3" y="3" width="22" height="22" rx="2" stroke={C.gold} strokeWidth="1.5"/>
-              <circle cx="10" cy="10" r="3" stroke={C.gold} strokeWidth="1.5"/>
-              <path d="M3 19l7-6 5 5 4-4 6 6" stroke={C.gold} strokeWidth="1.5" strokeLinejoin="round"/>
-            </svg>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 10, letterSpacing: '2px',
-              color: 'rgba(196,169,107,0.3)', textTransform: 'uppercase',
-            }}>foto · Chris Busato</span>
-          </div>
-          {/* Detalhe decorativo */}
-          <div style={{
-            position: 'absolute', bottom: -16, right: -16,
-            width: 80, height: 80, borderRadius: 16,
-            border: '1px solid rgba(196,169,107,0.15)',
-            background: 'rgba(196,169,107,0.04)',
-            zIndex: -1,
-          }} />
-        </div>
       </div>
     </section>
   )
@@ -697,7 +658,7 @@ function InscricaoSection() {
             fontSize: 14, color: 'rgba(237,234,227,0.4)',
             letterSpacing: '0.3px', marginBottom: 8,
             textDecoration: 'line-through',
-          }}>de R$ 297</div>
+          }}>de R$ 197</div>
 
           <div style={{
             fontFamily: "'Playfair Display', serif",
@@ -705,7 +666,7 @@ function InscricaoSection() {
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-2px',
           }}>
-            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>197</span>
+            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>97</span>
           </div>
 
           <div style={{
