@@ -167,8 +167,7 @@ function HeroSection() {
             margin: mobile ? '0 auto 36px' : '0 0 36px',
             animation: 'fadeUp 0.7s 0.15s ease both',
           }}>
-            Quantas experiências você já perdeu por medo de errar?{' '}
-            Aprenda a transformar o erro de inimigo em caminho para mais liberdade, presença e expressão.
+            Aprenda a transformar o erro em um caminho para mais liberdade, presença e expressão.
           </p>
 
           <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: mobile ? 'flex' : 'block', justifyContent: 'center' }}>
