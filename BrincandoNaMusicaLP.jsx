@@ -1923,8 +1923,8 @@ export default function BrincandoNaMusicaLP() {
       <StatsStrip />
       <VivenciasSection />
       <InscricaoSection />
-      <FaqSection />
       <TestemunhosSection />
+      <FaqSection />
       <Footer />
     </>
   )
