@@ -89,21 +89,35 @@ function Navbar() {
           Vivência Brincando na Música
         </span>
         {!mobile && (
-          <a href="#inscricao" style={{
-            marginLeft: 'auto',
-            background: C.sage, color: C.white,
-            padding: '10px 22px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-            textDecoration: 'none', letterSpacing: '0.2px',
-            transition: 'background 0.2s',
-            display: 'inline-block',
-            position: 'relative', zIndex: 1,
-          }}
-            onMouseEnter={e => e.target.style.background = C.sageDark}
-            onMouseLeave={e => e.target.style.background = C.sage}
-          >
-            Quero participar
-          </a>
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, position: 'relative', zIndex: 1 }}>
+            <a href="#ingresso-online" style={{
+              background: 'transparent', color: C.sageDark,
+              border: `1.5px solid ${C.sage}`,
+              padding: '9px 18px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+              textDecoration: 'none', letterSpacing: '0.2px',
+              transition: 'background 0.2s, color 0.2s',
+              display: 'inline-block', whiteSpace: 'nowrap',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark }}
+            >
+              Quero o ingresso online
+            </a>
+            <a href="#ingresso-presencial" style={{
+              background: C.sage, color: C.white,
+              padding: '9px 18px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+              textDecoration: 'none', letterSpacing: '0.2px',
+              transition: 'background 0.2s',
+              display: 'inline-block', whiteSpace: 'nowrap',
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = C.sageDark}
+              onMouseLeave={e => e.currentTarget.style.background = C.sage}
+            >
+              Quero o ingresso presencial
+            </a>
+          </div>
         )}
       </div>
     </nav>
@@ -1527,7 +1541,7 @@ function InscricaoSection() {
         }}>
 
           {/* ── CARD ONLINE ── */}
-          <div style={{
+          <div id="ingresso-online" style={{
             background: C.creamCard,
             border: `1.5px solid ${C.sageLight}`,
             borderRadius: 20,
@@ -1620,7 +1634,7 @@ function InscricaoSection() {
           </div>
 
           {/* ── CARD PRESENCIAL ── */}
-          <div style={{
+          <div id="ingresso-presencial" style={{
             background: C.brown,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
