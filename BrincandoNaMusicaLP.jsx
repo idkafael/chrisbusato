@@ -132,18 +132,6 @@ function Hero() {
         margin: '0 auto',
         animation: 'fadeUp 0.9s ease forwards',
       }}>
-        {/* eyebrow */}
-        <div style={{
-          display: 'inline-block',
-          background: C.sagePale, border: `1px solid ${C.sageLight}`,
-          color: C.sageDark, borderRadius: 100,
-          padding: '6px 18px', marginBottom: 32,
-          fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-          letterSpacing: '0.5px',
-        }}>
-          Vivência de Musicalidade
-        </div>
-
         <h1 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: 'clamp(40px, 6vw, 72px)',
