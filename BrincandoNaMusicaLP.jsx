@@ -88,37 +88,6 @@ function Navbar() {
         }}>
           Vivência Brincando na Música
         </span>
-        {!mobile && (
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, position: 'relative', zIndex: 1 }}>
-            <a href="#ingresso-online" style={{
-              background: 'transparent', color: C.sageDark,
-              border: `1.5px solid ${C.sage}`,
-              padding: '9px 18px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-              textDecoration: 'none', letterSpacing: '0.2px',
-              transition: 'background 0.2s, color 0.2s',
-              display: 'inline-block', whiteSpace: 'nowrap',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark }}
-            >
-              Quero o ingresso online
-            </a>
-            <a href="#ingresso-presencial" style={{
-              background: C.sage, color: C.white,
-              padding: '9px 18px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-              textDecoration: 'none', letterSpacing: '0.2px',
-              transition: 'background 0.2s',
-              display: 'inline-block', whiteSpace: 'nowrap',
-            }}
-              onMouseEnter={e => e.currentTarget.style.background = C.sageDark}
-              onMouseLeave={e => e.currentTarget.style.background = C.sage}
-            >
-              Quero o ingresso presencial
-            </a>
-          </div>
-        )}
       </div>
     </nav>
   )
