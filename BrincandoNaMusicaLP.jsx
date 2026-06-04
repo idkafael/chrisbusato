@@ -203,20 +203,35 @@ function Hero() {
           O que falta, na maioria das vezes, não é repertório. É conseguir perceber os caminhos que a música já abre para você.
         </p>
 
-        <a href="#inscricao" style={{
-          display: 'inline-block',
-          background: C.sage, color: C.white,
-          padding: '16px 36px', borderRadius: 100,
-          fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
-          textDecoration: 'none', letterSpacing: '0.2px',
-          transition: 'background 0.2s, transform 0.2s',
-          marginBottom: 16,
-        }}
-          onMouseEnter={e => { e.target.style.background = C.sageDark; e.target.style.transform = 'translateY(-1px)' }}
-          onMouseLeave={e => { e.target.style.background = C.sage; e.target.style.transform = 'translateY(0)' }}
-        >
-          Quero brincar na música →
-        </a>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
+          <a href="#ingresso-online" style={{
+            display: 'inline-block',
+            background: 'transparent', color: C.sageDark,
+            border: `1.5px solid ${C.sage}`,
+            padding: '15px 32px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+            textDecoration: 'none', letterSpacing: '0.2px',
+            transition: 'background 0.2s, color 0.2s, transform 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Quero o ingresso online →
+          </a>
+          <a href="#ingresso-presencial" style={{
+            display: 'inline-block',
+            background: C.sage, color: C.white,
+            padding: '15px 32px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+            textDecoration: 'none', letterSpacing: '0.2px',
+            transition: 'background 0.2s, transform 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Quero o ingresso presencial →
+          </a>
+        </div>
 
       </div>
     </section>
