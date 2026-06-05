@@ -1579,7 +1579,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13, color: C.brownLight, lineHeight: 1.55,
-              }}>Não pode no dia 30? Você recebe a gravação e assiste quando quiser.</div>
+              }}>Não pode no dia 14? Você recebe a gravação e assiste quando quiser.</div>
             </div>
 
             <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
