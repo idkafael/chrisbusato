@@ -157,7 +157,6 @@ function Hero() {
           color: C.brownMid, maxWidth: 560, margin: '0 auto 40px',
           lineHeight: 1.7,
         }}>
-          E é por isso que fiz essa vivência "Brincando na Música" — no dia 13 presencialmente em São Paulo e dia 14 online.
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
@@ -172,7 +171,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero o ingresso presencial →
+            Quero ir Presencialmente dia 13 de Junho
           </a>
           <a href="#ingresso-online" style={{
             display: 'inline-block',
@@ -186,7 +185,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero o ingresso online →
+            Quero ir Online dia 14 de Junho
           </a>
         </div>
 
