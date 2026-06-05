@@ -157,10 +157,23 @@ function Hero() {
           color: C.brownMid, maxWidth: 560, margin: '0 auto 40px',
           lineHeight: 1.7,
         }}>
-          O que falta, na maioria das vezes, não é repertório. É conseguir perceber os caminhos que a música já abre para você.
+          E é por isso que fiz essa vivência "Brincando na Música" — no dia 13 presencialmente em São Paulo e dia 14 online.
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
+          <a href="#ingresso-presencial" style={{
+            display: 'inline-block',
+            background: C.sage, color: C.white,
+            padding: '15px 32px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+            textDecoration: 'none', letterSpacing: '0.2px',
+            transition: 'background 0.2s, transform 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Quero o ingresso presencial →
+          </a>
           <a href="#ingresso-online" style={{
             display: 'inline-block',
             background: 'transparent', color: C.sageDark,
@@ -174,19 +187,6 @@ function Hero() {
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Quero o ingresso online →
-          </a>
-          <a href="#ingresso-presencial" style={{
-            display: 'inline-block',
-            background: C.sage, color: C.white,
-            padding: '15px 32px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
-            textDecoration: 'none', letterSpacing: '0.2px',
-            transition: 'background 0.2s, transform 0.2s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Quero o ingresso presencial →
           </a>
         </div>
 
@@ -1660,7 +1660,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Zona Sul de São Paulo</div>
+              }}>📍 Território da Dança - Lounge & Café SP — Zona Sul de São Paulo</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -1701,7 +1701,7 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Zona Sul de São Paulo</div>
+          }}>📍 Local — Território da Dança - Lounge & Café SP · Zona Sul de São Paulo</div>
           <div style={{
             borderRadius: 16, overflow: 'hidden',
             border: `1px solid ${C.sageLight}`,
