@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
+
+const GlobalModeCtx = createContext(false)
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -160,7 +162,7 @@ function Hero() {
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-          <a href="#ingresso-presencial" style={{
+          {!useContext(GlobalModeCtx) && <a href="#ingresso-presencial" style={{
             display: 'inline-block',
             background: C.sage, color: C.white,
             padding: '17px 36px', borderRadius: 100,
@@ -173,7 +175,7 @@ function Hero() {
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
             Quero ir Presencialmente dia 13 de Junho
-          </a>
+          </a>}
           <a href="#ingresso-online" style={{
             display: 'inline-block',
             background: C.sagePale, color: C.sageDark,
@@ -1475,6 +1477,7 @@ function InscricaoSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
+  const globalMode = useContext(GlobalModeCtx)
 
   return (
     <section id="inscricao" style={{
@@ -1607,7 +1610,7 @@ function InscricaoSection() {
           </div>
 
           {/* ── CARD PRESENCIAL ── */}
-          <div id="ingresso-presencial" style={{
+          {!globalMode && <div id="ingresso-presencial" style={{
             background: C.brown,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
@@ -1693,12 +1696,12 @@ function InscricaoSection() {
             }}>
               Confirmação imediata após pagamento · Pagamento seguro
             </div>
-          </div>
+          </div>}
 
         </div>
 
         {/* mapa presencial */}
-        <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
+        {!globalMode && <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
@@ -1720,7 +1723,7 @@ function InscricaoSection() {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-        </div>
+        </div>}
 
       </div>
     </section>
@@ -1886,7 +1889,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP() {
+export default function BrincandoNaMusicaLP({ globalMode = false }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
@@ -1896,6 +1899,7 @@ export default function BrincandoNaMusicaLP() {
   }, [])
 
   return (
+    <GlobalModeCtx.Provider value={globalMode}>
     <>
       <style>{`
         @keyframes fadeUp {
@@ -1929,5 +1933,6 @@ export default function BrincandoNaMusicaLP() {
       <FaqSection />
       <Footer />
     </>
+    </GlobalModeCtx.Provider>
   )
 }
