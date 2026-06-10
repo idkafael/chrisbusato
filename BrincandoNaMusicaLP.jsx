@@ -163,27 +163,28 @@ function Hero() {
           <a href="#ingresso-presencial" style={{
             display: 'inline-block',
             background: C.sage, color: C.white,
-            padding: '15px 32px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+            padding: '17px 36px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
             textDecoration: 'none', letterSpacing: '0.2px',
-            transition: 'background 0.2s, transform 0.2s',
+            boxShadow: `0 6px 24px rgba(107,127,109,0.35)`,
+            transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
             Quero ir Presencialmente dia 13 de Junho
           </a>
           <a href="#ingresso-online" style={{
             display: 'inline-block',
-            background: 'transparent', color: C.sageDark,
-            border: `1.5px solid ${C.sage}`,
-            padding: '15px 32px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+            background: C.sagePale, color: C.sageDark,
+            border: `2px solid ${C.sage}`,
+            padding: '17px 36px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
             textDecoration: 'none', letterSpacing: '0.2px',
             transition: 'background 0.2s, color 0.2s, transform 0.2s',
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Quero ir Online dia 14 de Junho
           </a>
@@ -1590,15 +1591,16 @@ function InscricaoSection() {
 
             <a href="https://pay.cakto.com.br/cwcwot3" target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: 'transparent', border: `1.5px solid ${C.sage}`,
-              color: C.sageDark,
-              padding: '15px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500,
+              background: C.sage, color: C.white,
+              border: `2px solid ${C.sage}`,
+              padding: '17px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
               textDecoration: 'none', textAlign: 'center',
-              transition: 'background 0.2s',
+              boxShadow: `0 6px 20px rgba(107,127,109,0.3)`,
+              transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sagePale }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(107,127,109,0.3)' }}
             >
               Quero o acesso online →
             </a>
@@ -1670,16 +1672,17 @@ function InscricaoSection() {
 
             <a href="https://pay.cakto.com.br/mveu4ge_892575" target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: C.sage, color: C.white,
+              background: C.white, color: C.brown,
               padding: '17px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
-              transition: 'background 0.2s, transform 0.2s',
+              boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
+              transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
               marginBottom: 14,
               position: 'relative', zIndex: 1,
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
             >
               Quero participar presencialmente →
             </a>
