@@ -100,6 +100,7 @@ function Navbar() {
 function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
+  const globalMode = useContext(GlobalModeCtx)
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
@@ -162,7 +163,7 @@ function Hero() {
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-          {!useContext(GlobalModeCtx) && <a href="#ingresso-presencial" style={{
+          {!globalMode && <a href="#ingresso-presencial" style={{
             display: 'inline-block',
             background: C.sage, color: C.white,
             padding: '17px 36px', borderRadius: 100,
