@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BrincandoNaMusicaLP from '../BrincandoNaMusicaLP.jsx'
 import CorpoMusicalPresencialLP from '../CorpoMusicalPresencialLP.jsx'
 import ErroAPossibilidadeLP from '../ErroAPossibilidadeLP.jsx'
+import AgradecimentoPresencialLP from '../AgradecimentoPresencialLP.jsx'
+import AgradecimentoOnlineLP from '../AgradecimentoOnlineLP.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -12,6 +14,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<BrincandoNaMusicaLP />} />
         <Route path="/presencial" element={<CorpoMusicalPresencialLP />} />
         <Route path="/possibilidades" element={<ErroAPossibilidadeLP />} />
+        <Route path="/ad1" element={<AgradecimentoPresencialLP />} />
+        <Route path="/ad2" element={<AgradecimentoOnlineLP />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
