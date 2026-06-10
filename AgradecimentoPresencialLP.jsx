@@ -8,8 +8,8 @@ const C = {
 }
 
 // ─── Substitua pelo número real com DDI: ex. 5511999999999 ─────────────────
-const WA_NUMBER = '5511999999999'
-const WA_MSG = encodeURIComponent('Oi Chris! Acabei de garantir minha vaga presencial na vivência Brincando na Música do dia 13 de junho. Estou muito animado(a)! 🎶')
+const WA_NUMBER = '5511967068271'
+const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso presencial')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
 
 function useWindowWidth() {
