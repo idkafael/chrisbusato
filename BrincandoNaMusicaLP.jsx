@@ -1597,7 +1597,7 @@ function InscricaoSection() {
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: highlightOnline ? C.white : C.sageDark,
-              }}>domingo, 14 de junho · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>10h às 13h (Brasília)</strong> · online</span>
+              }}>domingo, 14 de junho · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>10h às 13h</strong> · online</span>
             </div>
 
             {/* nota gravação */}
@@ -1697,7 +1697,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4,
-              }}>🕙 <strong style={{ fontWeight: 700, color: C.white }}>10h às 13h (Brasília)</strong></div>
+              }}>🕙 <strong style={{ fontWeight: 700, color: C.white }}>10h às 13h</strong></div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
