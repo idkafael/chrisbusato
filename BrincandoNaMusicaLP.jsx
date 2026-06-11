@@ -1688,7 +1688,7 @@ function InscricaoSection() {
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
             <div style={{ marginBottom: 32 }}>
-              {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+              {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
             <a href="https://pay.cakto.com.br/mveu4ge_892575" target="_blank" rel="noopener noreferrer" style={{
