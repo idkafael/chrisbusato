@@ -100,7 +100,7 @@ function Navbar() {
 function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
-  const { globalMode } = useContext(GlobalModeCtx)
+  const { globalMode, highlightOnline } = useContext(GlobalModeCtx)
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
@@ -163,7 +163,8 @@ function Hero() {
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
-          {!globalMode && <a href="#ingresso-presencial" style={{
+          {/* Botão online — primeiro quando highlightOnline */}
+          {highlightOnline && <a href="#ingresso-online" style={{
             display: 'inline-block',
             background: C.sage, color: C.white,
             padding: '17px 36px', borderRadius: 100,
@@ -175,9 +176,27 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
+            Quero ir Online dia 14 de Junho
+          </a>}
+          {/* Botão presencial */}
+          {!globalMode && <a href="#ingresso-presencial" style={{
+            display: 'inline-block',
+            background: highlightOnline ? C.sagePale : C.sage,
+            color: highlightOnline ? C.sageDark : C.white,
+            border: highlightOnline ? `2px solid ${C.sage}` : 'none',
+            padding: '17px 36px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
+            textDecoration: 'none', letterSpacing: '0.2px',
+            boxShadow: highlightOnline ? 'none' : `0 6px 24px rgba(107,127,109,0.35)`,
+            transition: 'background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
             Quero ir Presencialmente dia 13 de Junho
           </a>}
-          <a href="#ingresso-online" style={{
+          {/* Botão online — segundo quando NÃO é highlightOnline */}
+          {!highlightOnline && <a href="#ingresso-online" style={{
             display: 'inline-block',
             background: C.sagePale, color: C.sageDark,
             border: `2px solid ${C.sage}`,
@@ -190,7 +209,7 @@ function Hero() {
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Quero ir Online dia 14 de Junho
-          </a>
+          </a>}
         </div>
 
       </div>
