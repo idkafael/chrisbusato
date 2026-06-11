@@ -1518,106 +1518,108 @@ function InscricaoSection() {
 
           {/* ── CARD ONLINE ── */}
           <div id="ingresso-online" style={{
-            background: highlightOnline ? 'linear-gradient(160deg, #3a2f1a 0%, #2e2310 100%)' : C.creamCard,
-            border: highlightOnline ? '2px solid #c4903a' : `1.5px solid ${C.sageLight}`,
+            background: highlightOnline ? C.brown : C.creamCard,
+            border: highlightOnline ? 'none' : `1.5px solid ${C.sageLight}`,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
-            boxShadow: highlightOnline ? '0 20px 60px rgba(196,144,58,0.25)' : 'none',
-            position: 'relative',
-            overflow: 'hidden',
+            position: 'relative', overflow: 'hidden',
           }}>
             {highlightOnline && <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0,
-              height: 3, background: 'linear-gradient(90deg, #c4903a, #e8ba6a, #c4903a)',
+              position: 'absolute', top: '-15%', right: '-10%',
+              width: 200, height: 200, background: C.sageDark,
+              borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+              opacity: 0.2, pointerEvents: 'none',
             }} />}
             <div style={{
               display: 'inline-block',
-              background: highlightOnline ? 'rgba(196,144,58,0.2)' : C.sagePale,
-              color: highlightOnline ? '#e8ba6a' : C.sageDark,
-              border: highlightOnline ? '1px solid rgba(196,144,58,0.4)' : 'none',
+              background: highlightOnline ? C.sage : C.sagePale,
+              color: C.white,
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>{highlightOnline ? '⭐ Mais popular · Online ao vivo' : 'Online · Ao vivo'}</div>
+            }}>{highlightOnline ? 'Online · Recomendado' : 'Online · Ao vivo'}</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 22, color: highlightOnline ? '#f0dba8' : C.brown,
+              fontSize: 22, color: highlightOnline ? C.cream : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 17, color: highlightOnline ? 'rgba(240,219,168,0.45)' : C.brownLight,
+              fontSize: 17, color: highlightOnline ? 'rgba(196,180,160,0.5)' : C.brownLight,
               textDecoration: 'line-through', marginBottom: 4,
               letterSpacing: '-0.3px',
             }}>R$ 197</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 'clamp(44px, 5vw, 60px)',
-              color: highlightOnline ? '#e8ba6a' : C.brown, lineHeight: 1, marginBottom: 6,
+              color: highlightOnline ? C.cream : C.brown, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: highlightOnline ? 'rgba(240,219,168,0.6)' : C.brownLight, marginBottom: 16,
+              fontSize: 13, color: highlightOnline ? C.sageLight : C.brownLight, marginBottom: 16,
             }}>pagamento único · vagas limitadas</div>
 
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: C.sagePale, borderRadius: 8, padding: '8px 14px',
+              background: highlightOnline ? C.sage : C.sagePale,
+              borderRadius: 8, padding: '8px 14px',
               marginBottom: 24,
+              position: 'relative', zIndex: 1,
             }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="1" y="2" width="12" height="11" rx="2" stroke={C.sage} strokeWidth="1.3"/>
-                <path d="M1 6h12" stroke={C.sage} strokeWidth="1.3"/>
-                <path d="M4 1v2M10 1v2" stroke={C.sage} strokeWidth="1.3" strokeLinecap="round"/>
+                <rect x="1" y="2" width="12" height="11" rx="2" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3"/>
+                <path d="M1 6h12" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3"/>
+                <path d="M4 1v2M10 1v2" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3" strokeLinecap="round"/>
               </svg>
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: C.sageDark,
-              }}>domingo, 14 de junho · <strong style={{ fontWeight: 700, color: C.brown }}>10h às 13h (Brasília)</strong> · online</span>
+                fontSize: 13, color: highlightOnline ? C.white : C.sageDark,
+              }}>domingo, 14 de junho · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>10h às 13h (Brasília)</strong> · online</span>
             </div>
 
             {/* nota gravação */}
             <div style={{
-              borderLeft: `2.5px solid ${C.sage}`,
+              borderLeft: `2.5px solid ${highlightOnline ? C.sageLight : C.sage}`,
               paddingLeft: 14,
               marginBottom: 24,
+              position: 'relative', zIndex: 1,
             }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-                fontSize: 13, color: C.sageDark, marginBottom: 4,
+                fontSize: 13, color: highlightOnline ? C.sageLight : C.sageDark, marginBottom: 4,
               }}>🎥 Gravação completa inclusa</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13, color: C.brownLight, lineHeight: 1.55,
+                fontSize: 13, color: highlightOnline ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
               }}>Não pode no dia 14? Você recebe a gravação e assiste quando quiser.</div>
             </div>
 
-            <div style={{ height: 1, background: C.sageLight, marginBottom: 24 }} />
+            <div style={{ height: 1, background: highlightOnline ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
 
-            <div style={{ marginBottom: 32 }}>
-              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
+            <div style={{ marginBottom: 32, position: 'relative', zIndex: 1 }}>
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={highlightOnline} />)}
             </div>
 
             <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: highlightOnline ? 'linear-gradient(135deg, #c4903a 0%, #a8732a 100%)' : C.sage,
+              background: highlightOnline ? C.sage : C.sage,
               color: C.white,
-              border: highlightOnline ? '2px solid #c4903a' : `2px solid ${C.sage}`,
+              border: `2px solid ${C.sage}`,
               padding: '19px 24px', borderRadius: 100,
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: highlightOnline ? 17 : 16,
-              fontWeight: 700,
+              fontSize: 16, fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
-              boxShadow: highlightOnline ? '0 8px 28px rgba(196,144,58,0.45)' : '0 6px 20px rgba(107,127,109,0.3)',
+              boxShadow: highlightOnline ? '0 8px 28px rgba(107,127,109,0.5)' : '0 6px 20px rgba(107,127,109,0.3)',
               transition: 'transform 0.2s, box-shadow 0.2s',
-              letterSpacing: highlightOnline ? '0.3px' : '0',
+              position: 'relative', zIndex: 1,
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = highlightOnline ? '0 12px 36px rgba(196,144,58,0.55)' : '0 10px 28px rgba(107,127,109,0.4)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = highlightOnline ? '0 8px 28px rgba(196,144,58,0.45)' : '0 6px 20px rgba(107,127,109,0.3)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {highlightOnline ? 'Garantir minha vaga online →' : 'Quero o acesso online →'}
             </a>
@@ -1625,7 +1627,8 @@ function InscricaoSection() {
 
           {/* ── CARD PRESENCIAL ── */}
           {!globalMode && <div id="ingresso-presencial" style={{
-            background: C.brown,
+            background: highlightOnline ? C.creamCard : C.brown,
+            border: highlightOnline ? `1.5px solid ${C.sageLight}` : 'none',
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
             position: 'relative', overflow: 'hidden',
@@ -1640,7 +1643,8 @@ function InscricaoSection() {
 
             <div style={{
               display: 'inline-block',
-              background: C.sage, color: C.white,
+              background: highlightOnline ? C.sagePale : C.sage,
+              color: highlightOnline ? C.sageDark : C.white,
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
@@ -1650,12 +1654,12 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 'clamp(44px, 5vw, 60px)',
-              color: C.cream, lineHeight: 1, marginBottom: 6,
+              color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
             }}>R$ 97</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: C.sageLight, marginBottom: 20,
+              fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>pagamento único · vagas limitadas</div>
 
             {/* bloco de data destacado */}
