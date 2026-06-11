@@ -1263,7 +1263,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · Território da Dança</span>
+              }}>📍 Presencial · Yandê Dança e Movimento</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -1701,7 +1701,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Território da Dança - Lounge & Café SP — Zona Sul de São Paulo</div>
+              }}>📍 Yandê Dança e Movimento — R. Domingos Lopes, 61 - Campo Belo, São Paulo</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -1743,7 +1743,7 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Território da Dança - Lounge & Café SP · Zona Sul de São Paulo</div>
+          }}>📍 Local — Yandê Dança e Movimento · R. Domingos Lopes, 61 - Campo Belo, São Paulo</div>
           <div style={{
             borderRadius: 16, overflow: 'hidden',
             border: `1px solid ${C.sageLight}`,
