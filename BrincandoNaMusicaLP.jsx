@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext(false)
+const GlobalModeCtx = createContext({ globalMode: false, onlineUrl: 'https://pay.cakto.com.br/cwcwot3' })
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -100,7 +100,7 @@ function Navbar() {
 function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
-  const globalMode = useContext(GlobalModeCtx)
+  const { globalMode } = useContext(GlobalModeCtx)
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
@@ -1478,7 +1478,7 @@ function InscricaoSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
-  const globalMode = useContext(GlobalModeCtx)
+  const { globalMode, onlineUrl } = useContext(GlobalModeCtx)
 
   return (
     <section id="inscricao" style={{
@@ -1593,7 +1593,7 @@ function InscricaoSection() {
               {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
             </div>
 
-            <a href="https://pay.cakto.com.br/cwcwot3" target="_blank" rel="noopener noreferrer" style={{
+            <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: C.sage, color: C.white,
               border: `2px solid ${C.sage}`,
@@ -1890,7 +1890,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, onlineUrl = 'https://pay.cakto.com.br/cwcwot3' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
@@ -1900,7 +1900,7 @@ export default function BrincandoNaMusicaLP({ globalMode = false }) {
   }, [])
 
   return (
-    <GlobalModeCtx.Provider value={globalMode}>
+    <GlobalModeCtx.Provider value={{ globalMode, onlineUrl }}>
     <>
       <style>{`
         @keyframes fadeUp {
