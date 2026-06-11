@@ -92,7 +92,7 @@ export default function AgradecimentoOnlineLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 14 de junho</strong>, ao vivo com Chris Busato das 10h às 13h.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 14 de junho</strong>, ao vivo com Chris Busato das 10h às 13h (horário de Brasília).
           </p>
 
           <p style={{
@@ -133,7 +133,7 @@ export default function AgradecimentoOnlineLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            💻 14 de junho · 10h às 13h · Online ao vivo
+            💻 14 de junho · 10h às 13h (Brasília) · Online ao vivo
           </p>
         </div>
       </section>

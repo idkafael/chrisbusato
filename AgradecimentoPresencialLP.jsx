@@ -138,7 +138,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 13 de junho · 10h às 13h · Território da Dança, Zona Sul SP
+            📍 13 de junho · 10h às 13h (Brasília) · Território da Dança, Zona Sul SP
           </p>
         </div>
       </section>
