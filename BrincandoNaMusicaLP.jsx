@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext({ globalMode: false, onlineUrl: 'https://pay.cakto.com.br/cwcwot3' })
+const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/cwcwot3' })
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -1478,7 +1478,7 @@ function InscricaoSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
-  const { globalMode, onlineUrl } = useContext(GlobalModeCtx)
+  const { globalMode, highlightOnline, onlineUrl } = useContext(GlobalModeCtx)
 
   return (
     <section id="inscricao" style={{
@@ -1518,41 +1518,50 @@ function InscricaoSection() {
 
           {/* ── CARD ONLINE ── */}
           <div id="ingresso-online" style={{
-            background: C.creamCard,
-            border: `1.5px solid ${C.sageLight}`,
+            background: highlightOnline ? 'linear-gradient(160deg, #3a2f1a 0%, #2e2310 100%)' : C.creamCard,
+            border: highlightOnline ? '2px solid #c4903a' : `1.5px solid ${C.sageLight}`,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
+            boxShadow: highlightOnline ? '0 20px 60px rgba(196,144,58,0.25)' : 'none',
+            position: 'relative',
+            overflow: 'hidden',
           }}>
+            {highlightOnline && <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0,
+              height: 3, background: 'linear-gradient(90deg, #c4903a, #e8ba6a, #c4903a)',
+            }} />}
             <div style={{
               display: 'inline-block',
-              background: C.sagePale, color: C.sageDark,
+              background: highlightOnline ? 'rgba(196,144,58,0.2)' : C.sagePale,
+              color: highlightOnline ? '#e8ba6a' : C.sageDark,
+              border: highlightOnline ? '1px solid rgba(196,144,58,0.4)' : 'none',
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Online · Ao vivo</div>
+            }}>{highlightOnline ? '⭐ Mais popular · Online ao vivo' : 'Online · Ao vivo'}</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 22, color: C.brown,
+              fontSize: 22, color: highlightOnline ? '#f0dba8' : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 17, color: C.brownLight,
+              fontSize: 17, color: highlightOnline ? 'rgba(240,219,168,0.45)' : C.brownLight,
               textDecoration: 'line-through', marginBottom: 4,
               letterSpacing: '-0.3px',
             }}>R$ 197</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 'clamp(44px, 5vw, 60px)',
-              color: C.brown, lineHeight: 1, marginBottom: 6,
+              color: highlightOnline ? '#e8ba6a' : C.brown, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-1px',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: C.brownLight, marginBottom: 16,
+              fontSize: 13, color: highlightOnline ? 'rgba(240,219,168,0.6)' : C.brownLight, marginBottom: 16,
             }}>pagamento único · vagas limitadas</div>
 
             <div style={{
@@ -1595,18 +1604,22 @@ function InscricaoSection() {
 
             <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: C.sage, color: C.white,
-              border: `2px solid ${C.sage}`,
-              padding: '17px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
+              background: highlightOnline ? 'linear-gradient(135deg, #c4903a 0%, #a8732a 100%)' : C.sage,
+              color: C.white,
+              border: highlightOnline ? '2px solid #c4903a' : `2px solid ${C.sage}`,
+              padding: '19px 24px', borderRadius: 100,
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: highlightOnline ? 17 : 16,
+              fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
-              boxShadow: `0 6px 20px rgba(107,127,109,0.3)`,
-              transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
+              boxShadow: highlightOnline ? '0 8px 28px rgba(196,144,58,0.45)' : '0 6px 20px rgba(107,127,109,0.3)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              letterSpacing: highlightOnline ? '0.3px' : '0',
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(107,127,109,0.3)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = highlightOnline ? '0 12px 36px rgba(196,144,58,0.55)' : '0 10px 28px rgba(107,127,109,0.4)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = highlightOnline ? '0 8px 28px rgba(196,144,58,0.45)' : '0 6px 20px rgba(107,127,109,0.3)' }}
             >
-              Quero o acesso online →
+              {highlightOnline ? 'Garantir minha vaga online →' : 'Quero o acesso online →'}
             </a>
           </div>
 
@@ -1890,7 +1903,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false, onlineUrl = 'https://pay.cakto.com.br/cwcwot3' }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/cwcwot3' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
@@ -1900,7 +1913,7 @@ export default function BrincandoNaMusicaLP({ globalMode = false, onlineUrl = 'h
   }, [])
 
   return (
-    <GlobalModeCtx.Provider value={{ globalMode, onlineUrl }}>
+    <GlobalModeCtx.Provider value={{ globalMode, highlightOnline, onlineUrl }}>
     <>
       <style>{`
         @keyframes fadeUp {
