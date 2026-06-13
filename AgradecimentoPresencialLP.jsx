@@ -97,7 +97,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 13 de junho</strong> na Yandê Dança e Movimento — R. Domingos Lopes, 61 - Campo Belo, São Paulo.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 11 de julho</strong> na Yandê Dança e Movimento — R. Domingos Lopes, 61 - Campo Belo, São Paulo.
           </p>
 
           <p style={{
@@ -138,7 +138,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 13 de junho · 10h às 13h (Brasília) · Yandê Dança e Movimento, Campo Belo SP
+            📍 11 de julho · 10h às 13h (Brasília) · Yandê Dança e Movimento, Campo Belo SP
           </p>
         </div>
       </section>
