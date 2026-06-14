@@ -1460,7 +1460,7 @@ const inclusosOnline = [
 
 const inclusosPresencial = [
   'Tudo do acesso online',
-  'Vivência presencial com Chris Busato + professor convidado',
+  'Vivência presencial com Chris Busato',
   'Prática ao vivo com música',
   'Exercícios em dupla e em grupo',
   'Interação direta e feedback em tempo real',
