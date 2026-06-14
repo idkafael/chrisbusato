@@ -168,28 +168,6 @@ export default function AgradecimentoOnlineLP() {
             Entrar no grupo do WhatsApp
           </a>
 
-          {/* Botão WhatsApp direto */}
-          <a
-            href={WA_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10,
-              background: 'transparent', color: C.sageDark,
-              border: `1.5px solid ${C.sageLight}`,
-              padding: mobile ? '14px 28px' : '16px 36px',
-              borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: mobile ? 14 : 15, textDecoration: 'none',
-              letterSpacing: '0.2px',
-              transition: 'border-color 0.2s, color 0.2s',
-              width: '100%', justifyContent: 'center',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.sage; e.currentTarget.style.color = C.sageDark }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = C.sageLight; e.currentTarget.style.color = C.sageDark }}
-          >
-            Falar com a Chris no WhatsApp
-          </a>
         </div>
       </section>
     </>

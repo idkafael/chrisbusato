@@ -176,7 +176,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero ir Online dia 28 de Junho
+            Quero ir Online domingo dia 28 de Junho
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -193,7 +193,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente dia 11 de Julho
+            Quero ir Presencialmente sábado dia 11 de Julho
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -208,7 +208,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Online dia 28 de Junho
+            Quero ir Online domingo dia 28 de Junho
           </a>}
         </div>
 
