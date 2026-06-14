@@ -1565,17 +1565,24 @@ function InscricaoSection() {
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
 
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 18, color: highlightOnline ? 'rgba(196,180,160,0.5)' : C.brownLight,
+                textDecoration: 'line-through', letterSpacing: '-0.3px',
+              }}>R$ 167</div>
+              <div style={{
+                background: '#E8534A', color: C.white,
+                borderRadius: 100, padding: '2px 10px',
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 11, letterSpacing: '0.5px',
+              }}>60% OFF</div>
+            </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 17, color: highlightOnline ? 'rgba(196,180,160,0.5)' : C.brownLight,
-              textDecoration: 'line-through', marginBottom: 4,
-              letterSpacing: '-0.3px',
-            }}>R$ 197</div>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 'clamp(44px, 5vw, 60px)',
-              color: highlightOnline ? C.cream : C.brown, lineHeight: 1, marginBottom: 6,
-              letterSpacing: '-1px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 'clamp(48px, 5vw, 64px)',
+              color: highlightOnline ? C.cream : C.brown, lineHeight: 1, marginBottom: 4,
+              letterSpacing: '-2px',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
@@ -1670,11 +1677,24 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · Recomendado</div>
 
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 18, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.5)',
+                textDecoration: 'line-through', letterSpacing: '-0.3px',
+              }}>R$ 197</div>
+              <div style={{
+                background: '#E8534A', color: C.white,
+                borderRadius: 100, padding: '2px 10px',
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 11, letterSpacing: '0.5px',
+              }}>51% OFF</div>
+            </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 'clamp(44px, 5vw, 60px)',
-              color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 6,
-              letterSpacing: '-1px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 'clamp(48px, 5vw, 64px)',
+              color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
+              letterSpacing: '-2px',
             }}>R$ 97</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
