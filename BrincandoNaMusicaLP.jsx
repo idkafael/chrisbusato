@@ -1550,16 +1550,6 @@ function InscricaoSection() {
               opacity: 0.2, pointerEvents: 'none',
             }} />}
             <div style={{
-              display: 'inline-block',
-              background: highlightOnline ? C.sage : C.sagePale,
-              color: C.white,
-              borderRadius: 100, padding: '4px 14px',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 20,
-            }}>{highlightOnline ? 'Online · Recomendado' : 'Online · Ao vivo'}</div>
-
-            <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 22, color: highlightOnline ? C.cream : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
