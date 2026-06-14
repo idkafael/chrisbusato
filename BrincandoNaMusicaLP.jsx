@@ -1782,7 +1782,7 @@ function InscricaoSection() {
 const faqs = [
   {
     q: 'Preciso ter experiência em dança?',
-    a: 'Sim, alguma experiência ajuda: você vai entender melhor o mapa quando já tem um pouco de vivência no corpo. Não precisa ser avançado, mas é ideal ter pelo menos algumas aulas.',
+    a: 'Não necessariamente. Ter alguma experiência pode ajudar a compreender alguns conceitos mais rapidamente, mas não é um pré-requisito. A vivência foi pensada para acolher pessoas em diferentes momentos da sua jornada com a dança, desde quem está começando até quem já possui mais experiência.',
   },
   {
     q: 'Funciona para qualquer estilo de dança?',
