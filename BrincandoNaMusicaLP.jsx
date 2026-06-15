@@ -193,7 +193,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente sábado dia 11 de Julho
+            Quero ir Presencialmente domingo dia 12 de Julho
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -1713,7 +1713,7 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 15, color: C.white,
                 letterSpacing: '0.3px', marginBottom: 4,
-              }}>📅 <strong style={{textTransform:'uppercase'}}>11 DE JULHO DE 2026 — PRESENCIAL</strong></div>
+              }}>📅 <strong style={{textTransform:'uppercase'}}>12 DE JULHO DE 2026 — PRESENCIAL</strong></div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4,
