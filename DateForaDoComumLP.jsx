@@ -397,106 +397,108 @@ function OQueMudaSection() {
 
   const antes = [
     'Conversas que não chegam a lugar nenhum',
-    'Repetição dos mesmos conflitos',
-    'Sensação de distância',
-    'Cobrança',
-    'Interpretações erradas',
-    'Desgaste emocional',
+    'Os mesmos conflitos se repetindo',
+    'Aquela sensação de estar sozinho mesmo estando junto',
+    'Um insiste. O outro se fecha.',
+    'Desgaste que ninguém sabe bem de onde vem',
   ]
+
   const depois = [
-    'Mais clareza',
-    'Mais presença',
-    'Mais entendimento',
-    'Mais leveza',
-    'Mais parceria',
-    'Mais conexão',
+    'Enxergar o que está acontecendo antes de virar conflito',
+    'Entender o que o outro precisa sem precisar perguntar',
+    'Encontros que geram presença de verdade',
+    'Menos cobrança. Mais parceria.',
+    'A sensação de que vocês se reencontraram',
   ]
 
   return (
     <section ref={ref} style={{
-      background: C.cream,
-      padding: mobile ? '72px 24px' : '96px 40px',
+      background: C.creamDark,
+      padding: mobile ? '72px 24px' : '104px 40px',
       opacity: inView ? 1 : 0,
       transform: inView ? 'translateY(0)' : 'translateY(32px)',
       transition: 'opacity 0.7s ease, transform 0.7s ease',
     }}>
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: mobile ? 40 : 56 }}>
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+
+        {/* Título editorial */}
+        <div style={{ marginBottom: mobile ? 56 : 72 }}>
           <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
-            color: C.rose, marginBottom: 12,
-          }}>O que muda</p>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 'clamp(28px, 7vw, 40px)' : 'clamp(32px, 3.5vw, 44px)',
-            color: C.brown, lineHeight: 1.2, letterSpacing: '-1px',
-          }}>Antes e depois da vivência</h2>
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17, color: C.brownLight,
+            lineHeight: 1.8, maxWidth: 560,
+          }}>
+            Não é uma lista de promessas.<br />
+            É o que casais relatam quando param de tentar resolver tudo na fala.
+          </p>
         </div>
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-          gap: mobile ? 16 : 24,
+          gap: mobile ? 48 : 0,
         }}>
           {/* Antes */}
           <div style={{
-            background: C.white, borderRadius: 16,
-            padding: mobile ? '28px 24px' : '36px 32px',
-            border: `1px solid ${C.sageLight}`,
+            paddingRight: mobile ? 0 : 64,
+            borderRight: mobile ? 'none' : `1px solid ${C.sageLight}`,
           }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
-              color: C.brownLight, marginBottom: 24,
-            }}>Antes</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: mobile ? 22 : 26, color: C.brownLight,
+              fontStyle: 'italic', letterSpacing: '-0.5px',
+              marginBottom: 32, lineHeight: 1.3,
+            }}>Hoje, talvez vocês reconheçam isso...</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               {antes.map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                  <div style={{
-                    width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 1,
-                    background: '#F0E8E7',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M2 2l6 6M8 2l-6 6" stroke={C.roseDark} strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  </div>
+                <div key={i} style={{
+                  display: 'flex', gap: 16, alignItems: 'flex-start',
+                  paddingBottom: 24,
+                  borderBottom: i < antes.length - 1 ? `1px solid rgba(196,208,197,0.4)` : 'none',
+                }}>
                   <span style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 13, color: 'rgba(184,123,114,0.4)',
+                    marginTop: 3, flexShrink: 0, letterSpacing: '1px',
+                  }}>0{i + 1}</span>
+                  <p style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                    fontSize: 15, color: C.brownMid, lineHeight: 1.5,
-                  }}>{item}</span>
+                    fontSize: mobile ? 15 : 16, color: C.brownMid,
+                    lineHeight: 1.65,
+                    textDecoration: 'none',
+                  }}>{item}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Depois */}
-          <div style={{
-            background: C.brown, borderRadius: 16,
-            padding: mobile ? '28px 24px' : '36px 32px',
-          }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
-              color: C.sageLight, marginBottom: 24,
-            }}>Depois</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ paddingLeft: mobile ? 0 : 64 }}>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: mobile ? 22 : 26, color: C.sageDark,
+              fontStyle: 'italic', letterSpacing: '-0.5px',
+              marginBottom: 32, lineHeight: 1.3,
+            }}>Depois, é o que eles descrevem...</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               {depois.map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                  <div style={{
-                    width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 1,
-                    background: 'rgba(138,158,140,0.25)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1.5 5.5l2.5 2.5 4.5-5" stroke={C.sageLight} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
+                <div key={i} style={{
+                  display: 'flex', gap: 16, alignItems: 'flex-start',
+                  paddingBottom: 24,
+                  borderBottom: i < depois.length - 1 ? `1px solid rgba(196,208,197,0.4)` : 'none',
+                }}>
                   <span style={{
-                    fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                    fontSize: 15, color: C.cream, lineHeight: 1.5,
-                  }}>{item}</span>
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 13, color: C.sageLight,
+                    marginTop: 3, flexShrink: 0, letterSpacing: '1px',
+                  }}>0{i + 1}</span>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                    fontSize: mobile ? 15 : 16, color: C.brown,
+                    lineHeight: 1.65,
+                  }}>{item}</p>
                 </div>
               ))}
             </div>
