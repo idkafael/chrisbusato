@@ -61,9 +61,9 @@ function HeroSection({ vslUrl }) {
           color: C.brown, lineHeight: 1.2, letterSpacing: '-1.5px',
           marginBottom: 40,
         }}>
-          Para se conectar de verdade,<br />
-          vocês não precisam de{' '}
-          <em style={{ color: C.roseDark, fontStyle: 'italic' }}>mais conversas.</em>
+          Vocês conversam.<br />
+          Mas ainda não conseguem{' '}
+          <em style={{ color: C.roseDark, fontStyle: 'italic' }}>se encontrar.</em>
         </h1>
 
         {/* VSL */}
