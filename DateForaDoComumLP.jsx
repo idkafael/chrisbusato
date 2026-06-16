@@ -45,128 +45,76 @@ function Navbar() {
   )
 }
 
-// ─── HERO ─────────────────────────────────────────────────────────────────────
-function HeroSection() {
+// ─── HERO + VSL ───────────────────────────────────────────────────────────────
+function HeroSection({ vslUrl }) {
   const mobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false
   return (
     <section style={{
-      background: `linear-gradient(160deg, ${C.cream} 0%, ${C.creamDark} 100%)`,
-      padding: mobile ? '120px 24px 72px' : '140px 40px 80px',
+      background: C.cream,
+      padding: mobile ? '100px 24px 56px' : '120px 40px 64px',
       textAlign: 'center',
     }}>
-      <div style={{ maxWidth: 760, margin: '0 auto' }}>
-        <div style={{
-          display: 'inline-block',
-          background: C.rosePale, color: C.roseDark,
-          borderRadius: 100, padding: '5px 18px', marginBottom: 32,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 12, letterSpacing: '1.5px', textTransform: 'uppercase',
-        }}>Uma experiência para casais</div>
-
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <h1 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: mobile ? 'clamp(36px, 9vw, 52px)' : 'clamp(48px, 5vw, 68px)',
-          color: C.brown, lineHeight: 1.15, letterSpacing: '-1.5px',
-          marginBottom: 24,
+          fontSize: mobile ? 'clamp(32px, 9vw, 48px)' : 'clamp(44px, 5vw, 62px)',
+          color: C.brown, lineHeight: 1.2, letterSpacing: '-1.5px',
+          marginBottom: 40,
         }}>
-          Vocês conversam.<br />
-          <em style={{ color: C.roseDark, fontStyle: 'italic' }}>Mas ainda não conseguem se encontrar.</em>
+          Para se conectar de verdade,<br />
+          vocês não precisam de{' '}
+          <em style={{ color: C.roseDark, fontStyle: 'italic' }}>mais conversas.</em>
         </h1>
 
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: mobile ? 17 : 20, color: C.brownMid,
-          lineHeight: 1.75, marginBottom: 16, maxWidth: 600, margin: '0 auto 16px',
-        }}>
-          Existe uma diferença entre estar junto e estar conectado.
-        </p>
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: mobile ? 15 : 17, color: C.brownLight,
-          lineHeight: 1.75, maxWidth: 560, margin: '0 auto 40px',
-        }}>
-          A maioria dos casais tenta resolver a distância com mais conversas, mais explicações e mais acordos. Mas conexão não nasce primeiro na lógica. Ela nasce na capacidade de perceber.
-        </p>
-
-        <a href="#inscricao" style={{
-          display: 'inline-block',
-          background: C.rose, color: C.white,
-          padding: mobile ? '17px 36px' : '19px 48px',
-          borderRadius: 100,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-          fontSize: mobile ? 15 : 17, textDecoration: 'none',
-          letterSpacing: '0.2px',
-          boxShadow: `0 8px 28px rgba(184,123,114,0.35)`,
-          transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
-        }}
-          onMouseEnter={e => { e.currentTarget.style.background = C.roseDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(184,123,114,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = C.rose; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(184,123,114,0.35)' }}
-        >
-          Quero participar
-        </a>
-      </div>
-    </section>
-  )
-}
-
-// ─── VSL ──────────────────────────────────────────────────────────────────────
-function VslSection({ vslUrl }) {
-  const mobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false
-  const [ref, inView] = useInView(0.1)
-  return (
-    <section ref={ref} style={{
-      background: C.brown,
-      padding: mobile ? '56px 24px' : '72px 40px',
-      opacity: inView ? 1 : 0,
-      transform: inView ? 'translateY(0)' : 'translateY(32px)',
-      transition: 'opacity 0.7s ease, transform 0.7s ease',
-    }}>
-      <div style={{ maxWidth: 860, margin: '0 auto' }}>
-        {vslUrl ? (
-          <div style={{
-            position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden',
-            borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.4)',
-          }}>
-            <iframe
-              src={vslUrl}
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <div style={{
-            position: 'relative', paddingBottom: '56.25%',
-            background: 'rgba(255,255,255,0.05)',
-            borderRadius: 16, border: `1px dashed rgba(255,255,255,0.2)`,
-            boxShadow: '0 24px 64px rgba(0,0,0,0.4)',
-          }}>
+        {/* VSL */}
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          {vslUrl ? (
             <div style={{
-              position: 'absolute', inset: 0,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16,
+              position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden',
+              borderRadius: 12, boxShadow: '0 16px 48px rgba(61,53,48,0.18)',
+            }}>
+              <iframe
+                src={vslUrl}
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          ) : (
+            <div style={{
+              position: 'relative', paddingBottom: '56.25%',
+              background: C.creamDark,
+              borderRadius: 12,
+              boxShadow: '0 16px 48px rgba(61,53,48,0.12)',
+              border: `1px solid ${C.sageLight}`,
             }}>
               <div style={{
-                width: 72, height: 72, borderRadius: '50%',
-                background: C.rose, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 0 0 12px rgba(184,123,114,0.2)`,
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16,
               }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill={C.white} style={{ marginLeft: 4 }}>
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
+                <div style={{
+                  width: 72, height: 72, borderRadius: '50%',
+                  background: C.rose, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: `0 0 0 14px rgba(184,123,114,0.15)`,
+                }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill={C.white} style={{ marginLeft: 4 }}>
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                  fontSize: 14, color: C.brownLight, letterSpacing: '0.5px',
+                }}>Vídeo em breve</p>
               </div>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                fontSize: 14, color: 'rgba(255,255,255,0.4)',
-                letterSpacing: '0.5px',
-              }}>Vídeo em breve</p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   )
 }
+
+function VslSection() { return null }
 
 // ─── O QUE ACONTECE ───────────────────────────────────────────────────────────
 function OQueAconteceSection() {
@@ -966,8 +914,7 @@ export default function DateForaDoComumLP({ vslUrl }) {
       `}</style>
       <Navbar />
       <div style={{ paddingTop: 64 }}>
-        <HeroSection />
-        <VslSection vslUrl={vslUrl} />
+        <HeroSection vslUrl={vslUrl} />
         <OQueAconteceSection />
         <GrandeViradaSection />
         <OQueVaoDescobrirSection />
