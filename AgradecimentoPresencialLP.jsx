@@ -87,11 +87,22 @@ export default function AgradecimentoPresencialLP() {
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(36px, 9vw, 52px)' : 56,
             color: C.brown, lineHeight: 1.15,
-            letterSpacing: '-1px', marginBottom: 20,
+            letterSpacing: '-1px', marginBottom: 28,
           }}>
             Sua vaga está{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>garantida!</em>
           </h1>
+
+          {/* Vídeo de boas-vindas */}
+          <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
+            <video
+              src={`${presencialVideo}#t=0.001`}
+              controls
+              playsInline
+              preload="metadata"
+              style={{ width: '100%', display: 'block', borderRadius: 16 }}
+            />
+          </div>
 
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
@@ -110,17 +121,6 @@ export default function AgradecimentoPresencialLP() {
           }}>
             Você receberá os detalhes completos por e-mail em breve. Qualquer dúvida, fala comigo pelo WhatsApp.
           </p>
-
-          {/* Vídeo de boas-vindas */}
-          <div style={{ marginBottom: 40, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
-            <video
-              src={`${presencialVideo}#t=0.001`}
-              controls
-              playsInline
-              preload="metadata"
-              style={{ width: '100%', display: 'block', borderRadius: 16 }}
-            />
-          </div>
 
           <a
             href={GROUP_LINK}

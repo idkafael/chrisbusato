@@ -81,20 +81,11 @@ export default function AgradecimentoOnlineLP() {
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(36px, 9vw, 52px)' : 56,
             color: C.brown, lineHeight: 1.15,
-            letterSpacing: '-1px', marginBottom: 20,
+            letterSpacing: '-1px', marginBottom: 28,
           }}>
             Sua vaga está{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>garantida!</em>
           </h1>
-
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 16 : 18,
-            color: C.brownMid, lineHeight: 1.75,
-            marginBottom: 32,
-          }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 28 de junho</strong>, ao vivo com Chris Busato.
-          </p>
 
           {/* Vídeo de boas-vindas */}
           <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
@@ -106,6 +97,15 @@ export default function AgradecimentoOnlineLP() {
               style={{ width: '100%', display: 'block', borderRadius: 16 }}
             />
           </div>
+
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 16 : 18,
+            color: C.brownMid, lineHeight: 1.75,
+            marginBottom: 32,
+          }}>
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 28 de junho</strong>, ao vivo com Chris Busato.
+          </p>
 
           {/* Card com detalhes do evento */}
           <div style={{
