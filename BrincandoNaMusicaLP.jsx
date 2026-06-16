@@ -1721,7 +1721,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Yandê Dança e Movimento — R. Domingos Lopes, 61 - Campo Belo, São Paulo</div>
+              }}>📍 Zona Sul de São Paulo</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -1763,7 +1763,7 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Yandê Dança e Movimento · R. Domingos Lopes, 61 - Campo Belo, São Paulo</div>
+          }}>📍 Local — Zona Sul de São Paulo</div>
           <div style={{
             borderRadius: 16, overflow: 'hidden',
             border: `1px solid ${C.sageLight}`,
