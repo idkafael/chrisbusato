@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import presencialVideo from './images/presencial.mp4'
 
 const C = {
   cream: '#EDEAE3', creamDark: '#E4E0D7', white: '#FAFAF8',
@@ -105,10 +106,21 @@ export default function AgradecimentoPresencialLP() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 15 : 16,
             color: C.brownLight, lineHeight: 1.7,
-            marginBottom: 48,
+            marginBottom: 32,
           }}>
             Você receberá os detalhes completos por e-mail em breve. Qualquer dúvida, fala comigo pelo WhatsApp.
           </p>
+
+          {/* Vídeo de boas-vindas */}
+          <div style={{ marginBottom: 40, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
+            <video
+              src={`${presencialVideo}#t=0.001`}
+              controls
+              playsInline
+              preload="metadata"
+              style={{ width: '100%', display: 'block', borderRadius: 16 }}
+            />
+          </div>
 
           <a
             href={GROUP_LINK}

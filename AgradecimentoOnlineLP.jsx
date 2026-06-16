@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import onlineVideo from './images/online.mp4'
 
 const C = {
   cream: '#EDEAE3', creamDark: '#E4E0D7', white: '#FAFAF8',
@@ -94,6 +95,17 @@ export default function AgradecimentoOnlineLP() {
           }}>
             Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 28 de junho</strong>, ao vivo com Chris Busato.
           </p>
+
+          {/* Vídeo de boas-vindas */}
+          <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
+            <video
+              src={`${onlineVideo}#t=0.001`}
+              controls
+              playsInline
+              preload="metadata"
+              style={{ width: '100%', display: 'block', borderRadius: 16 }}
+            />
+          </div>
 
           {/* Card com detalhes do evento */}
           <div style={{
