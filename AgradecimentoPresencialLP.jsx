@@ -115,9 +115,9 @@ export default function AgradecimentoPresencialLP() {
           </p>
 
           <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 15 : 16,
-            color: C.brownLight, lineHeight: 1.7,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: mobile ? 16 : 17,
+            color: C.brownMid, lineHeight: 1.7,
             marginBottom: 32,
           }}>
             Você receberá os detalhes completos por e-mail em breve. Qualquer dúvida, fala comigo pelo WhatsApp.
