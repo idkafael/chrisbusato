@@ -111,7 +111,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 12 de julho</strong> na Yandê Dança e Movimento — R. Domingos Lopes, 61 - Campo Belo, São Paulo.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 12 de julho</strong> na Zona Sul de São Paulo.
           </p>
 
           <p style={{
