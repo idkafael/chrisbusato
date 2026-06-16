@@ -123,7 +123,7 @@ export default function AgradecimentoOnlineLP() {
                 <span style={{ fontSize: 18, lineHeight: 1 }}>🕙</span>
                 <div>
                   <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 15, color: C.brown }}>
-                    10h às 13h
+                    10h às 14h
                   </div>
                 </div>
               </div>

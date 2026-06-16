@@ -140,7 +140,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 12 de julho · 10h às 13h (Brasília) · Yandê Dança e Movimento, Campo Belo SP
+            📍 12 de julho · 10h às 14h (Brasília) · Yandê Dança e Movimento, Campo Belo SP
           </p>
         </div>
       </section>
