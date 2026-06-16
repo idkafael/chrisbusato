@@ -108,51 +108,15 @@ export default function AgradecimentoOnlineLP() {
             Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 28 de junho</strong>, ao vivo com Chris Busato.
           </p>
 
-          {/* Card com detalhes do evento */}
-          <div style={{
-            background: C.white,
-            border: `1px solid ${C.sageLight}`,
-            borderRadius: 16,
-            padding: mobile ? '24px 20px' : '28px 32px',
-            marginBottom: 32,
-            textAlign: 'left',
+          {/* Detalhes do evento */}
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 14 : 15, color: C.brownLight,
+            lineHeight: 1.8, marginBottom: 32,
           }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
-              color: C.sageDark, marginBottom: 16,
-            }}>Detalhes da vivência</div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ fontSize: 18, lineHeight: 1 }}>📅</span>
-                <div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 15, color: C.brown }}>
-                    Sábado, 28 de junho de 2025
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ fontSize: 18, lineHeight: 1 }}>🕙</span>
-                <div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 15, color: C.brown }}>
-                    10h às 14h
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ fontSize: 18, lineHeight: 1 }}>💻</span>
-                <div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 15, color: C.brown }}>
-                    Online ao vivo
-                  </div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 13, color: C.brownLight, marginTop: 2 }}>
-                    Link de acesso enviado por e-mail
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            Domingo, 28 de junho · 10h às 14h · Online ao vivo<br />
+            <span style={{ fontSize: 13, color: C.sageLight }}>Link de acesso enviado por e-mail</span>
+          </p>
 
           {/* Botão grupo WhatsApp */}
           <a
