@@ -110,12 +110,12 @@ export default function AgradecimentoOnlineLP() {
 
           {/* Detalhes do evento */}
           <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 14 : 15, color: C.brownLight,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: mobile ? 16 : 17, color: C.brownMid,
             lineHeight: 1.8, marginBottom: 32,
           }}>
             Domingo, 28 de junho · 10h às 14h · Online ao vivo<br />
-            <span style={{ fontSize: 13, color: C.sageLight }}>Link de acesso enviado por e-mail</span>
+            <span style={{ fontSize: 14, color: C.brownLight }}>Link de acesso enviado por e-mail</span>
           </p>
 
           {/* Botão grupo WhatsApp */}
