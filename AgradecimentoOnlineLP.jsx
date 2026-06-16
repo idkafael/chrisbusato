@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import onlineVideo from './images/online.mp4'
+
+const onlineVideo = '/online.mp4'
 
 const C = {
   cream: '#EDEAE3', creamDark: '#E4E0D7', white: '#FAFAF8',

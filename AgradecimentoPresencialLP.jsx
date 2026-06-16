@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import presencialVideo from './images/presencial.mp4'
+
+const presencialVideo = '/presencial.mp4'
 
 const C = {
   cream: '#EDEAE3', creamDark: '#E4E0D7', white: '#FAFAF8',

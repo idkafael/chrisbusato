@@ -1643,8 +1643,7 @@ function InscricaoSection() {
               transition: 'transform 0.2s, box-shadow 0.2s',
               position: 'relative', zIndex: 1,
             }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = highlightOnline ? '0 12px 36px rgba(196,144,58,0.55)' : '0 10px 28px rgba(107,127,109,0.4)' }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {highlightOnline ? 'Garantir minha vaga online →' : 'Quero o acesso online →'}
