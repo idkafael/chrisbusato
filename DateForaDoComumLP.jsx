@@ -687,108 +687,120 @@ function InscricaoSection() {
   const mobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false
   const [ref, inView] = useInView(0.1)
 
-  const itens = [
-    'Exercícios guiados',
-    'Experiências em dupla',
-    'Mapa da conexão',
-    'Material de apoio',
-    'Gravação completa inclusa',
-  ]
-
   return (
     <section id="inscricao" ref={ref} style={{
       background: C.brown,
-      padding: mobile ? '72px 24px' : '96px 40px',
+      padding: mobile ? '72px 24px' : '104px 40px',
       opacity: inView ? 1 : 0,
       transform: inView ? 'translateY(0)' : 'translateY(32px)',
       transition: 'opacity 0.7s ease, transform 0.7s ease',
     }}>
-      <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
-          color: C.rose, marginBottom: 12,
-        }}>Vivência Pauta Lógica para Casais</p>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: mobile ? 'clamp(28px, 7vw, 40px)' : 'clamp(32px, 3.5vw, 44px)',
-          color: C.cream, lineHeight: 1.2, letterSpacing: '-1px',
-          marginBottom: 12,
-        }}>Date Fora do Comum</h2>
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: mobile ? 15 : 17, color: 'rgba(237,234,227,0.6)',
-          lineHeight: 1.7, marginBottom: 40,
-        }}>
-          Uma experiência prática para descobrir os mecanismos invisíveis que criam conexão.
-        </p>
-
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
         <div style={{
-          background: 'rgba(255,255,255,0.06)', borderRadius: 20,
-          padding: mobile ? '28px 20px' : '36px 40px',
-          border: '1px solid rgba(255,255,255,0.1)',
-          marginBottom: 32, textAlign: 'left',
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: mobile ? 48 : 80,
+          alignItems: 'center',
         }}>
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
-            color: 'rgba(237,234,227,0.4)', marginBottom: 20,
-          }}>O que está incluído</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {itens.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{
-                  width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                  background: 'rgba(184,123,114,0.25)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M1.5 5.5l2.5 2.5 4.5-5" stroke={C.rose} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <span style={{
+
+          {/* Lado esquerdo — convite */}
+          <div>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+              fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
+              color: 'rgba(184,123,114,0.7)', marginBottom: 24,
+            }}>Date Fora do Comum</p>
+
+            <h2 style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: mobile ? 'clamp(32px, 8vw, 44px)' : 'clamp(36px, 3.8vw, 50px)',
+              color: C.cream, lineHeight: 1.2, letterSpacing: '-1px',
+              marginBottom: 24,
+            }}>
+              Uma tarde só de vocês dois.
+            </h2>
+
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+              fontSize: mobile ? 15 : 17,
+              color: 'rgba(237,234,227,0.6)',
+              lineHeight: 1.8, marginBottom: 32,
+            }}>
+              Ao longo de algumas horas, vocês vão sair da rotina — não para um jantar, mas para um encontro real. Com exercícios, experiências em dupla e um mapa que vai fazer sentido muito depois de ir embora.
+            </p>
+
+            <div style={{
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+              paddingTop: 28,
+              display: 'flex', flexDirection: 'column', gap: 12,
+            }}>
+              {[
+                'Exercícios guiados em dupla',
+                'Mapa da conexão para levar pra casa',
+                'Material de apoio',
+                'Gravação completa inclusa',
+              ].map((item, i) => (
+                <p key={i} style={{
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                  fontSize: mobile ? 14 : 15, color: C.cream, lineHeight: 1.5,
-                }}>{item}</span>
+                  fontSize: 14, color: 'rgba(237,234,227,0.45)',
+                  lineHeight: 1.5,
+                }}>— {item}</p>
+              ))}
+            </div>
+          </div>
+
+          {/* Lado direito — preço e CTA */}
+          <div style={{ textAlign: mobile ? 'center' : 'left' }}>
+            <div style={{
+              borderLeft: mobile ? 'none' : `1px solid rgba(255,255,255,0.1)`,
+              paddingLeft: mobile ? 0 : 64,
+            }}>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                fontSize: 14, color: 'rgba(237,234,227,0.3)',
+                textDecoration: 'line-through', marginBottom: 4,
+              }}>de R$ —</p>
+
+              <div style={{ marginBottom: 6 }}>
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 'clamp(52px, 6vw, 72px)',
+                  color: C.cream, lineHeight: 1, letterSpacing: '-2px',
+                }}>R$ —</span>
               </div>
-            ))}
+
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                fontSize: 13, color: 'rgba(237,234,227,0.3)',
+                marginBottom: 36,
+              }}>pagamento único · vagas limitadas</p>
+
+              <a href="#" style={{
+                display: 'block',
+                background: C.rose, color: C.white,
+                padding: mobile ? '18px 32px' : '20px 40px',
+                borderRadius: 100,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 16, textDecoration: 'none',
+                letterSpacing: '0.2px', textAlign: 'center',
+                boxShadow: `0 8px 28px rgba(184,123,114,0.35)`,
+                transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
+                marginBottom: 16,
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = C.roseDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(184,123,114,0.5)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = C.rose; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(184,123,114,0.35)' }}
+              >
+                Quero participar
+              </a>
+
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                fontSize: 12, color: 'rgba(237,234,227,0.25)',
+                textAlign: 'center',
+              }}>Compra segura · Acesso imediato</p>
+            </div>
           </div>
         </div>
-
-        {/* Preço */}
-        <div style={{ marginBottom: 28 }}>
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 14, color: 'rgba(237,234,227,0.4)',
-            textDecoration: 'line-through', marginBottom: 4,
-          }}>de R$ —</p>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-            fontSize: 'clamp(48px, 5vw, 64px)',
-            color: C.cream, lineHeight: 1, letterSpacing: '-2px', marginBottom: 6,
-          }}>R$ —</div>
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 13, color: 'rgba(237,234,227,0.4)',
-          }}>pagamento único · vagas limitadas</p>
-        </div>
-
-        <a href="#" style={{
-          display: 'inline-block', width: '100%',
-          background: C.rose, color: C.white,
-          padding: mobile ? '18px 32px' : '20px 48px',
-          borderRadius: 100,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-          fontSize: mobile ? 16 : 18, textDecoration: 'none',
-          letterSpacing: '0.2px', textAlign: 'center',
-          boxShadow: `0 8px 28px rgba(184,123,114,0.4)`,
-          transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
-        }}
-          onMouseEnter={e => { e.currentTarget.style.background = C.roseDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(184,123,114,0.5)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = C.rose; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(184,123,114,0.4)' }}
-        >
-          Quero participar →
-        </a>
       </div>
     </section>
   )
