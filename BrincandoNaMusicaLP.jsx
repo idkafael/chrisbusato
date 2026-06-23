@@ -1720,7 +1720,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 MK Danças — Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</div>
+              }}>📍 <a href="https://maps.app.goo.gl/CzsbkMhVyN78DRSP7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>MK Danças — Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</a></div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
