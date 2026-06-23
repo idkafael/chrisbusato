@@ -111,7 +111,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 12 de julho</strong> na Zona Sul de São Paulo.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 12 de julho</strong> na MK Danças — Av. Padre Antônio José dos Santos, 748 A - Cidade Monções, Zona Sul, São Paulo.
           </p>
 
           <p style={{
@@ -153,7 +153,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 12 de julho · 10h às 14h (Brasília) · Yandê Dança e Movimento, Campo Belo SP
+            📍 12 de julho · 10h às 14h · MK Danças, Cidade Monções, Zona Sul SP
           </p>
         </div>
       </section>

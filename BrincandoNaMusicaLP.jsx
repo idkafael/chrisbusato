@@ -1263,7 +1263,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · Yandê Dança e Movimento</span>
+              }}>📍 Presencial · MK Danças, Zona Sul SP</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -1720,7 +1720,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Zona Sul de São Paulo</div>
+              }}>📍 MK Danças — Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -1762,7 +1762,18 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Zona Sul de São Paulo</div>
+          }}>📍 Local — MK Danças · Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</div>
+          <div style={{ textAlign: 'center', marginBottom: 12 }}>
+            <a
+              href="https://maps.app.goo.gl/CzsbkMhVyN78DRSP7"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: C.sageDark,
+                textDecoration: 'underline', fontWeight: 500,
+              }}
+            >Ver no Google Maps →</a>
+          </div>
           <div style={{
             borderRadius: 16, overflow: 'hidden',
             border: `1px solid ${C.sageLight}`,
@@ -1770,7 +1781,7 @@ function InscricaoSection() {
           }}>
             <iframe
               title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=Território+da+Dança+-+Lounge+%26+Café+SP,+São+Paulo&output=embed&hl=pt-BR"
+              src="https://maps.google.com/maps?q=Av.+Padre+Antônio+José+dos+Santos,+748+A+-+Cidade+Monções,+São+Paulo&output=embed&hl=pt-BR"
               width="100%"
               height="340"
               style={{ border: 0, display: 'block' }}
