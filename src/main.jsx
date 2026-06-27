@@ -8,6 +8,7 @@ import AgradecimentoPresencialLP from '../AgradecimentoPresencialLP.jsx'
 import AgradecimentoOnlineLP from '../AgradecimentoOnlineLP.jsx'
 import BrincandoNaMusicaGlobalLP from '../BrincandoNaMusicaGlobalLP.jsx'
 import DateForaDoComumLP from '../DateForaDoComumLP.jsx'
+import VergonhaNaDancaLP from '../VergonhaNaDancaLP.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/ad2" element={<AgradecimentoOnlineLP />} />
         <Route path="/global" element={<BrincandoNaMusicaGlobalLP />} />
         <Route path="/casais" element={<DateForaDoComumLP />} />
+        <Route path="/vergonha" element={<VergonhaNaDancaLP />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
