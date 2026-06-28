@@ -162,7 +162,7 @@ function HeroSection() {
             marginBottom: 28,
             animation: 'fadeUp 0.7s 0.15s ease both',
           }}>
-            Entenda o que acontece no seu corpo quando você sente vergonha de dançar — e como sair disso.
+            Entenda o que acontece no seu corpo quando você sente vergonha de dançar e como sair disso.
           </p>
 
           <div style={{ animation: 'fadeUp 0.7s 0.3s ease both' }}>
@@ -287,7 +287,7 @@ function OQueESection() {
             color: 'rgba(237,234,227,0.75)',
             lineHeight: 1.75,
           }}>
-            A vergonha na dança não é frescura. É uma resposta real do sistema nervoso — e ela trava o corpo antes mesmo de você perceber.
+            A vergonha na dança não é frescura. É uma resposta real do sistema nervoso e ela trava o corpo antes mesmo de você perceber.
           </p>
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
@@ -339,7 +339,7 @@ const aprendizados = [
   {
     num: '01',
     titulo: 'Por que a vergonha trava o corpo',
-    descricao: 'Entender o que acontece no sistema nervoso quando você se sente exposto — e por que o corpo congela antes que você decida qualquer coisa.',
+    descricao: 'Entender o que acontece no sistema nervoso quando você se sente exposto e por que o corpo congela antes que você decida qualquer coisa.',
   },
   {
     num: '02',
@@ -559,7 +559,7 @@ function ChrisSection() {
               color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
               marginBottom: 24,
             }}>
-              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem se expressar com mais liberdade. Ela não ignora o que paralisa. Ela vai direto no que está embaixo — e ensina você a atravessar isso.
+              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem se expressar com mais liberdade. Ela não ignora o que paralisa. Ela vai direto no que está embaixo e ensina você a atravessar isso.
             </p>
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 10,
@@ -827,7 +827,7 @@ const faqItems = [
   },
   {
     q: 'Precisa ter experiência em dança?',
-    a: 'Não. O aulão é sobre o que acontece internamente — não sobre técnica. Vale para quem está começando agora e para quem dança há anos mas ainda trava na frente de outras pessoas.',
+    a: 'Não. O aulão é sobre o que acontece internamente, não sobre técnica. Vale para quem está começando agora e para quem dança há anos mas ainda trava na frente de outras pessoas.',
   },
   {
     q: 'É diferente das outras vivências da Chris?',
