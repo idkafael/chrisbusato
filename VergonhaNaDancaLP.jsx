@@ -136,7 +136,7 @@ function HeroSection() {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'flex-end',
-          padding: mobile ? '0 24px 30%' : '0 40px 28%',
+          padding: mobile ? '0 24px 42%' : '0 40px 40%',
           textAlign: 'center',
         }}>
           <h1 style={{
