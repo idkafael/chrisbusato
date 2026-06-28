@@ -641,12 +641,12 @@ function InscricaoSection() {
           }}>de R$ 297</div>
 
           <div style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 52 : 64,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+            fontSize: mobile ? 48 : 56,
             color: C.cream, lineHeight: 1, marginBottom: 4,
-            letterSpacing: '-2px',
+            letterSpacing: '-1px',
           }}>
-            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>157</span>
+            R$ 157
           </div>
 
           <div style={{
@@ -660,12 +660,11 @@ function InscricaoSection() {
               'Aulão A Vergonha na Dança com Chris Busato',
               'Gravação disponível para sempre',
               'Material de apoio exclusivo',
-              'Grupo secreto de prática pós-aula',
             ].map((item, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 0',
-                borderBottom: i < 3 ? '1px solid rgba(196,169,107,0.08)' : 'none',
+                borderBottom: i < 2 ? '1px solid rgba(196,169,107,0.08)' : 'none',
               }}>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <circle cx="7" cy="7" r="6" stroke="rgba(196,169,107,0.5)" strokeWidth="1"/>
