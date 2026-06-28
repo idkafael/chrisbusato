@@ -638,7 +638,7 @@ function InscricaoSection() {
             fontSize: 14, color: 'rgba(237,234,227,0.4)',
             letterSpacing: '0.3px', marginBottom: 8,
             textDecoration: 'line-through',
-          }}>de R$ 197</div>
+          }}>de R$ 297</div>
 
           <div style={{
             fontFamily: "'Playfair Display', serif",
@@ -646,7 +646,7 @@ function InscricaoSection() {
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-2px',
           }}>
-            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>97</span>
+            R$<span style={{ fontSize: mobile ? 64 : 80, fontWeight: 700 }}>157</span>
           </div>
 
           <div style={{
@@ -680,7 +680,7 @@ function InscricaoSection() {
           </div>
 
           <a
-            href="#"
+            href="https://pay.cakto.com.br/mpfwkpq"
             target="_blank" rel="noopener noreferrer"
             style={{
               display: 'block',
