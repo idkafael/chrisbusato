@@ -131,7 +131,7 @@ function HeroSection() {
           background: 'linear-gradient(to bottom, rgba(28,25,22,0.15) 0%, rgba(28,25,22,0.55) 60%, rgba(28,25,22,0.92) 100%)',
         }} />
 
-        {/* Navbar placeholder space + H1 centralizado */}
+        {/* H1 + subtítulo + CTA sobrepostos na imagem */}
         <div style={{
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column',
@@ -146,57 +146,51 @@ function HeroSection() {
             color: C.cream,
             animation: 'fadeUp 0.7s 0.1s ease both',
             maxWidth: 720,
+            marginBottom: 20,
           }}>
             A Vergonha{' '}
             <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>
               na Dança
             </em>
           </h1>
-        </div>
-      </div>
 
-      {/* Subtítulo e CTA abaixo da imagem */}
-      <div style={{
-        padding: mobile ? '48px 24px 64px' : '64px 40px 80px',
-        textAlign: 'center',
-        background: `linear-gradient(160deg, ${C.ink} 0%, ${C.inkMid} 60%, #1a1208 100%)`,
-      }}>
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: mobile ? 15 : 17,
-          color: 'rgba(237,234,227,0.75)',
-          lineHeight: 1.7, maxWidth: 440,
-          margin: '0 auto 36px',
-          animation: 'fadeUp 0.7s 0.15s ease both',
-        }}>
-          Entenda o que acontece no seu corpo quando você sente vergonha de dançar — e como sair disso.
-        </p>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17,
+            color: 'rgba(237,234,227,0.85)',
+            lineHeight: 1.7, maxWidth: 400,
+            marginBottom: 28,
+            animation: 'fadeUp 0.7s 0.15s ease both',
+          }}>
+            Entenda o que acontece no seu corpo quando você sente vergonha de dançar — e como sair disso.
+          </p>
 
-        <div style={{ animation: 'fadeUp 0.7s 0.3s ease both', display: 'flex', justifyContent: 'center' }}>
-          <a
-            href="#inscricao"
-            style={{
-              display: 'inline-block',
-              background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-              color: C.ink,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
-              padding: mobile ? '16px 36px' : '18px 48px',
-              borderRadius: 100, textDecoration: 'none',
-              boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-2px)'
-              e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
-            }}
-          >
-            Quero Participar
-          </a>
+          <div style={{ animation: 'fadeUp 0.7s 0.3s ease both' }}>
+            <a
+              href="#inscricao"
+              style={{
+                display: 'inline-block',
+                background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
+                color: C.ink,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
+                padding: mobile ? '16px 36px' : '18px 48px',
+                borderRadius: 100, textDecoration: 'none',
+                boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
+              }}
+            >
+              Quero Participar
+            </a>
+          </div>
         </div>
       </div>
     </section>
