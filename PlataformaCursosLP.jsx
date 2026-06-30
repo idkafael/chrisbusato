@@ -228,6 +228,8 @@ function Hero() {
 
 const publicos = [
   {
+    n: '01',
+    nivel: 'Começando',
     icon: '🌱',
     titulo: 'Quem está começando',
     bullets: [
@@ -236,6 +238,8 @@ const publicos = [
     ],
   },
   {
+    n: '02',
+    nivel: 'Evoluindo',
     icon: '💃',
     titulo: 'Quem já dança',
     bullets: [
@@ -244,6 +248,8 @@ const publicos = [
     ],
   },
   {
+    n: '03',
+    nivel: 'Ensinando',
     icon: '🎓',
     titulo: 'Professores de dança',
     bullets: [
@@ -268,9 +274,9 @@ function PublicoSection() {
       borderTopRightRadius: mobile ? 32 : 48,
       boxShadow: '0 -16px 40px rgba(61,53,48,0.06)',
     }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto' }}>
         <div ref={titleRef} style={{
-          textAlign: 'center', marginBottom: 56,
+          textAlign: 'center', marginBottom: mobile ? 48 : 72,
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: titleInView ? 1 : 0,
           transform: titleInView ? 'translateY(0)' : 'translateY(24px)',
@@ -285,53 +291,100 @@ function PublicoSection() {
             fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(32px, 3.6vw, 48px)',
             color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px',
           }}>
-            Feito para qualquer{' '}
-            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>nível.</em>
+            Três níveis,{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>um só caminho.</em>
           </h2>
         </div>
 
+        {/* trilha de progressão */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)',
-          gap: 20,
+          position: 'relative',
+          display: mobile ? 'flex' : 'grid',
+          flexDirection: mobile ? 'column' : undefined,
+          gridTemplateColumns: mobile ? undefined : 'repeat(3, 1fr)',
+          gap: mobile ? 0 : 32,
         }}>
-          {publicos.map((p, i) => <PublicoCard key={i} p={p} delay={i * 100} mobile={mobile} />)}
+          {/* linha conectora */}
+          <div style={{
+            position: 'absolute',
+            background: `linear-gradient(${mobile ? '180deg' : '90deg'}, ${C.sageLight} 0%, ${C.sage} 50%, ${C.sageLight} 100%)`,
+            ...(mobile
+              ? { left: 31, top: 32, bottom: 32, width: 2 }
+              : { top: 32, left: '17%', right: '17%', height: 2 }),
+            pointerEvents: 'none',
+          }} />
+          {publicos.map((p, i) => <NivelItem key={i} p={p} delay={i * 120} mobile={mobile} />)}
         </div>
       </div>
     </section>
   )
 }
 
-function PublicoCard({ p, delay, mobile }) {
+function NivelItem({ p, delay, mobile }) {
   const [ref, inView] = useInView()
   return (
     <div ref={ref} style={{
-      background: C.creamCard,
-      border: `1px solid ${C.sageLight}`,
-      borderRadius: 18, padding: mobile ? '32px 26px' : '38px 32px',
+      position: 'relative', zIndex: 1,
+      display: 'flex',
+      flexDirection: mobile ? 'row' : 'column',
+      alignItems: mobile ? 'flex-start' : 'center',
+      textAlign: mobile ? 'left' : 'center',
+      gap: mobile ? 20 : 0,
+      paddingBottom: mobile ? 44 : 0,
       transition: 'opacity 0.7s ease, transform 0.7s ease',
       transitionDelay: `${delay}ms`,
       opacity: inView ? 1 : 0,
       transform: inView ? 'translateY(0)' : 'translateY(24px)',
     }}>
-      <div style={{ fontSize: 36, marginBottom: 18 }}>{p.icon}</div>
-      <h3 style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: 22, color: C.brown, marginBottom: 18, lineHeight: 1.25,
-      }}>{p.titulo}</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {p.bullets.map((b, i) => (
-          <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            <div style={{
-              flexShrink: 0, width: 6, height: 6, borderRadius: '50%',
-              background: C.sage, marginTop: 8,
-            }} />
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 15, color: C.brownMid, lineHeight: 1.6,
-            }}>{b}</span>
-          </div>
-        ))}
+      {/* nó numerado */}
+      <div style={{
+        flexShrink: 0,
+        width: 64, height: 64, borderRadius: '50%',
+        background: `linear-gradient(150deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+        boxShadow: '0 10px 26px rgba(107,127,109,0.35)',
+        border: `4px solid ${C.white}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: mobile ? 0 : 22,
+      }}>
+        <span style={{
+          fontFamily: "'Playfair Display', serif", fontWeight: 700,
+          fontSize: 24, color: C.white, fontStyle: 'italic',
+        }}>{p.n}</span>
+      </div>
+
+      <div style={{ flex: 1 }}>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: 11, letterSpacing: '1.5px', color: C.sage,
+          textTransform: 'uppercase', marginBottom: 8,
+        }}>Nível {p.n} · {p.nivel}</div>
+        <h3 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 21 : 23, color: C.brown,
+          marginBottom: 14, lineHeight: 1.2,
+        }}>{p.titulo}</h3>
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: 10,
+          maxWidth: mobile ? '100%' : 280,
+          margin: mobile ? 0 : '0 auto',
+        }}>
+          {p.bullets.map((b, i) => (
+            <div key={i} style={{
+              display: 'flex', gap: 10,
+              alignItems: 'flex-start',
+              textAlign: 'left',
+            }}>
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0, marginTop: 3 }}>
+                <circle cx="7.5" cy="7.5" r="6.5" stroke={C.sageLight} strokeWidth="1"/>
+                <path d="M5 7.5l1.8 1.8 3.2-3.4" stroke={C.sageDark} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 14.5, color: C.brownMid, lineHeight: 1.55,
+              }}>{b}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
