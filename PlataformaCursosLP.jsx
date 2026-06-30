@@ -125,16 +125,19 @@ function Navbar() {
       <div style={{
         maxWidth: 1100, margin: '0 auto',
         padding: mobile ? '0 20px' : '0 40px',
-        height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'relative',
       }}>
         <span style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 17 : 20, color: C.brown, letterSpacing: '-0.3px',
+          whiteSpace: 'nowrap',
         }}>
-          Plataforma Chris Busato
+          Programa Caminho Musical
         </span>
         {!mobile && (
           <a href="#oferta" style={{
+            position: 'absolute', right: 40,
             background: C.sage, color: C.white,
             padding: '10px 22px', borderRadius: 100,
             fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
