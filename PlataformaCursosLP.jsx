@@ -162,9 +162,11 @@ function Hero() {
 
   return (
     <section style={{
-      background: C.cream, position: 'relative', overflow: 'hidden',
-      padding: mobile ? '120px 24px 80px' : '150px 40px 110px',
-      minHeight: mobile ? 'auto' : '92vh',
+      background: C.cream,
+      position: 'sticky', top: 0, zIndex: 1,
+      overflow: 'hidden',
+      padding: mobile ? '90px 24px' : '110px 40px',
+      height: '100vh',
       display: 'flex', alignItems: 'center',
     }}>
       {/* Imagem de fundo (somente primeira dobra) */}
@@ -1257,17 +1259,20 @@ export default function PlataformaCursosLP() {
       <style>{globalStyles}</style>
       <Navbar />
       <Hero />
-      <PublicoSection />
-      <SobreSection />
-      <ModulosSection />
-      <EncontrosSection />
-      <AntesDepoisSection />
-      <DepoimentosSection />
-      <PorDentroSection />
-      <OfertaSection />
-      <ChrisSection />
-      <FaqSection />
-      <Footer />
+      {/* conteúdo desliza por cima do hero sticky */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <PublicoSection />
+        <SobreSection />
+        <ModulosSection />
+        <EncontrosSection />
+        <AntesDepoisSection />
+        <DepoimentosSection />
+        <PorDentroSection />
+        <OfertaSection />
+        <ChrisSection />
+        <FaqSection />
+        <Footer />
+      </div>
     </>
   )
 }
