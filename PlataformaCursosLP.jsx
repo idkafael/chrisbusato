@@ -403,7 +403,6 @@ const modulos = [
   { titulo: 'Musicalização', cover: capaMusicalizacao },
   { titulo: 'Consciência Corporal', cover: capaConsciencia },
   { titulo: 'A Vergonha na Dança', cover: capaVergonha },
-  { titulo: 'Encontros Gravados', cover: capaReplay },
 ]
 
 function ModulosSection() {
