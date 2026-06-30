@@ -190,17 +190,6 @@ function Hero() {
           textAlign: mobile ? 'center' : 'left',
           maxWidth: mobile ? '100%' : 560,
         }}>
-          <div style={{
-            display: 'inline-block',
-            background: C.sagePale, border: `1px solid ${C.sageLight}`,
-            color: C.sageDark, borderRadius: 100,
-            padding: '6px 18px', marginBottom: 28,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-            letterSpacing: '0.5px',
-          }}>
-            A plataforma completa de dança da Chris
-          </div>
-
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(36px, 9vw, 50px)' : 'clamp(44px, 4.6vw, 66px)',
