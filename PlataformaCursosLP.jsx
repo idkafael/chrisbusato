@@ -179,8 +179,8 @@ function Hero() {
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: mobile
-          ? 'linear-gradient(to bottom, rgba(237,234,227,0.94) 0%, rgba(237,234,227,0.9) 48%, rgba(237,234,227,0.55) 78%, rgba(237,234,227,0.1) 100%)'
-          : 'linear-gradient(to right, rgba(237,234,227,0.95) 0%, rgba(237,234,227,0.85) 42%, rgba(237,234,227,0.35) 72%, rgba(237,234,227,0) 100%)',
+          ? 'linear-gradient(to bottom, rgba(237,234,227,0.85) 0%, rgba(237,234,227,0.5) 50%, rgba(237,234,227,0.12) 100%)'
+          : 'linear-gradient(to right, rgba(237,234,227,0.94) 0%, rgba(237,234,227,0.8) 38%, rgba(237,234,227,0.3) 70%, rgba(237,234,227,0) 100%)',
       }} />
 
       <div style={{
@@ -203,16 +203,7 @@ function Hero() {
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>corpo musical?</em>
           </h1>
 
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: mobile ? 16 : 19,
-            color: C.brown, lineHeight: 1.7,
-            maxWidth: 500, margin: mobile ? '0 auto 36px' : '0 0 36px',
-          }}>
-            Todos os cursos da Chris num lugar só: <strong style={{ fontWeight: 600, color: C.brown }}>Musicalidade</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Musicalização</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Consciência Corporal</strong> e os <strong style={{ fontWeight: 600, color: C.brown }}>replays das aulas ao vivo</strong>. Uma formação completa para dançar com mais liberdade, presença e musicalidade.
-          </p>
-
-          <div>
+          <div style={{ marginTop: 32 }}>
             <CtaButton mobile={mobile}>Quero acesso à plataforma →</CtaButton>
           </div>
         </div>
