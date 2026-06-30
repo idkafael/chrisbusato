@@ -8,6 +8,7 @@ import capaConsciencia from './images/Capa-Conciencia.png'
 import capaVergonha from './images/Capa-Vergonha.png'
 import capaReplay from './images/Capa-Replay.png'
 import fundoHero from './images/fundo-primeira-dobra.png'
+import bannerPlataforma from './images/banner-plataforma.png'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -820,6 +821,115 @@ function DepoimentoCard({ d, delay }) {
   )
 }
 
+// ─── Por dentro da plataforma ─────────────────────────────────────────────────
+
+function PorDentroSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.cream,
+      padding: mobile ? '72px 24px' : '100px 40px',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      {/* blobs decorativos */}
+      <div style={{
+        position: 'absolute', top: '8%', left: '-6%',
+        width: 260, height: 260, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.22, pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-8%', right: '-5%',
+        width: 320, height: 320, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.18, pointerEvents: 'none',
+      }} />
+
+      <div ref={ref} style={{
+        maxWidth: 940, margin: '0 auto', position: 'relative', zIndex: 1,
+        textAlign: 'center',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(28px)',
+      }}>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+          textTransform: 'uppercase', marginBottom: 18,
+        }}>Por dentro</div>
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(32px, 3.6vw, 48px)',
+          color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px', marginBottom: 16,
+        }}>
+          Veja a plataforma{' '}
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>por dentro.</em>
+        </h2>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+          fontSize: mobile ? 15 : 17, color: C.brownMid, maxWidth: 480,
+          margin: '0 auto 44px', lineHeight: 1.65,
+        }}>
+          Uma área de membros organizada e linda, feita para você encontrar tudo com facilidade e estudar no seu ritmo.
+        </p>
+
+        {/* Mockup janela do navegador */}
+        <div style={{
+          borderRadius: 16, overflow: 'hidden',
+          background: C.white,
+          border: `1px solid ${C.sageLight}`,
+          boxShadow: '0 30px 70px rgba(61,53,48,0.20)',
+          maxWidth: 820, margin: '0 auto',
+        }}>
+          {/* barra superior */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: mobile ? '10px 14px' : '12px 18px',
+            background: C.creamCard,
+            borderBottom: `1px solid ${C.sageLight}`,
+          }}>
+            <span style={{ width: 11, height: 11, borderRadius: '50%', background: '#E8534A', display: 'block' }} />
+            <span style={{ width: 11, height: 11, borderRadius: '50%', background: '#E6B450', display: 'block' }} />
+            <span style={{ width: 11, height: 11, borderRadius: '50%', background: C.sage, display: 'block' }} />
+            <div style={{
+              flex: 1, margin: '0 auto', maxWidth: 320,
+              background: C.white, border: `1px solid ${C.sageLight}`,
+              borderRadius: 100, padding: '4px 14px',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 11,
+              color: C.brownLight, textAlign: 'center',
+              marginLeft: mobile ? 8 : 24,
+              overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
+            }}>plataforma.chrisbusato.com</div>
+          </div>
+          <img
+            src={bannerPlataforma}
+            alt="Interior da plataforma de cursos da Chris Busato"
+            style={{ width: '100%', display: 'block' }}
+          />
+        </div>
+
+        {/* pills de features */}
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+          gap: 12, marginTop: 36,
+        }}>
+          {['📱 Assista no celular ou computador', '🕐 Acesso 24h por dia', '➕ Conteúdo novo sempre'].map((t, i) => (
+            <div key={i} style={{
+              background: C.white, border: `1px solid ${C.sageLight}`,
+              borderRadius: 100, padding: '9px 18px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13.5, color: C.brownMid,
+            }}>{t}</div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── Oferta / Preço ───────────────────────────────────────────────────────────
 
 const incluso = [
@@ -1136,6 +1246,7 @@ export default function PlataformaCursosLP() {
       <EncontrosSection />
       <AntesDepoisSection />
       <DepoimentosSection />
+      <PorDentroSection />
       <OfertaSection />
       <ChrisSection />
       <FaqSection />
