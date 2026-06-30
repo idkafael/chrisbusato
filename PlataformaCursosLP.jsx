@@ -828,18 +828,6 @@ function DepoimentosSection() {
         }}>
           {depoimentos.map((d, i) => <DepoimentoCard key={i} d={d} delay={i * 100} />)}
         </div>
-
-        {/* PLACEHOLDER: depoimentos reais */}
-        <div style={{
-          marginTop: 28,
-          borderRadius: 16, border: `2px dashed ${C.sageLight}`,
-          background: C.creamCard, padding: mobile ? '24px' : '28px 32px',
-          textAlign: 'center',
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 14, color: C.brownLight, lineHeight: 1.6,
-        }}>
-          💬 Tem prints de depoimentos reais (WhatsApp, Instagram) ou vídeos? Me manda que eu troco esses cards pelos verdadeiros.
-        </div>
       </div>
     </section>
   )
