@@ -399,10 +399,10 @@ function SobreSection() {
 // ─── Módulos / Cursos ─────────────────────────────────────────────────────────
 
 const modulos = [
-  { titulo: 'Musicalidade', cover: capaMusicalidade },
-  { titulo: 'Musicalização', cover: capaMusicalizacao },
-  { titulo: 'Consciência Corporal', cover: capaConsciencia },
-  { titulo: 'A Vergonha na Dança', cover: capaVergonha },
+  { titulo: 'Musicalidade', tag: 'Curso gravado', desc: 'Como se mover na música sem depender de passos decorados.', cover: capaMusicalidade },
+  { titulo: 'Musicalização', tag: 'Curso gravado', desc: 'Ritmo, tempo e estrutura musical para nunca mais dançar fora do tempo.', cover: capaMusicalizacao },
+  { titulo: 'Consciência Corporal', tag: 'Curso gravado', desc: 'Postura, eixo e expressão para dançar com mais liberdade.', cover: capaConsciencia },
+  { titulo: 'A Vergonha na Dança', tag: 'Aulão', desc: 'Destrave o medo de dançar e de ser visto se movimentando.', cover: capaVergonha },
 ]
 
 function ModulosSection() {
@@ -445,9 +445,10 @@ function ModulosSection() {
         </div>
 
         <div style={{
-          display: 'flex', flexWrap: 'wrap',
-          justifyContent: 'center',
-          gap: mobile ? 18 : 24,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: mobile ? 14 : 24,
+          maxWidth: 760, margin: '0 auto',
         }}>
           {modulos.map((m, i) => <ModuloCard key={i} m={m} delay={i * 80} mobile={mobile} />)}
         </div>
@@ -478,16 +479,16 @@ function ModuloCard({ m, delay, mobile }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        flex: mobile ? '1 1 100%' : '0 1 300px',
-        maxWidth: mobile ? 360 : 300,
-        borderRadius: 18, overflow: 'hidden',
+        borderRadius: 16, overflow: 'hidden',
         background: C.creamCard,
+        border: `1px solid ${C.sageLight}`,
         cursor: 'default',
+        display: 'flex', flexDirection: 'column',
         transition: 'opacity 0.7s ease, transform 0.45s ease, box-shadow 0.3s ease',
         transitionDelay: `${delay}ms`,
         opacity: inView ? 1 : 0,
         transform: inView ? (hovered ? 'translateY(-6px)' : 'translateY(0)') : 'translateY(24px)',
-        boxShadow: hovered ? '0 22px 48px rgba(61,53,48,0.20)' : '0 6px 20px rgba(61,53,48,0.08)',
+        boxShadow: hovered ? '0 22px 48px rgba(61,53,48,0.18)' : '0 4px 16px rgba(61,53,48,0.06)',
       }}>
       <div style={{ overflow: 'hidden' }}>
         <img
@@ -499,6 +500,24 @@ function ModuloCard({ m, delay, mobile }) {
             transform: hovered ? 'scale(1.05)' : 'scale(1)',
           }}
         />
+      </div>
+      <div style={{ padding: mobile ? '14px 14px 18px' : '18px 20px 22px' }}>
+        <div style={{
+          display: 'inline-block',
+          background: C.sagePale, color: C.sageDark,
+          borderRadius: 100, padding: '3px 11px', marginBottom: 10,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: 10, letterSpacing: '1px', textTransform: 'uppercase',
+        }}>{m.tag}</div>
+        <h3 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 17 : 20, color: C.brown,
+          lineHeight: 1.2, marginBottom: 6,
+        }}>{m.titulo}</h3>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: mobile ? 12.5 : 14, color: C.brownMid, lineHeight: 1.55,
+        }}>{m.desc}</p>
       </div>
     </div>
   )
