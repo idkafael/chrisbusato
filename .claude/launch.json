@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "chrisbusato-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "C:/Users/user/Downloads/chris professores lp-20260520T133210Z-3-001/chris professores lp",
+      "port": 5173
+    }
+  ]
+}

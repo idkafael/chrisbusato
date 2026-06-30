@@ -175,8 +175,8 @@ function Hero() {
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: mobile
-          ? 'linear-gradient(to bottom, rgba(237,234,227,0.82) 0%, rgba(237,234,227,0.55) 55%, rgba(237,234,227,0.7) 100%)'
-          : 'linear-gradient(to right, rgba(237,234,227,0.94) 0%, rgba(237,234,227,0.82) 38%, rgba(237,234,227,0.35) 68%, rgba(237,234,227,0) 100%)',
+          ? 'linear-gradient(to bottom, rgba(237,234,227,0.85) 0%, rgba(237,234,227,0.5) 50%, rgba(237,234,227,0.12) 100%)'
+          : 'linear-gradient(to right, rgba(237,234,227,0.94) 0%, rgba(237,234,227,0.8) 38%, rgba(237,234,227,0.3) 70%, rgba(237,234,227,0) 100%)',
       }} />
 
       <div style={{
@@ -206,8 +206,8 @@ function Hero() {
             color: C.brown, lineHeight: 1.13, letterSpacing: '-1px',
             marginBottom: 24,
           }}>
-            Todos os cursos da Chris,{' '}
-            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>num lugar só.</em>
+            Quer ter um{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>corpo musical?</em>
           </h1>
 
           <p style={{
@@ -216,7 +216,7 @@ function Hero() {
             color: C.brownMid, lineHeight: 1.7,
             maxWidth: 500, margin: mobile ? '0 auto 36px' : '0 0 36px',
           }}>
-            Musicalidade, Musicalização, Consciência Corporal e os replays das aulas ao vivo. Acesso imediato a uma formação completa para dançar com mais liberdade, presença e musicalidade.
+            Todos os cursos da Chris num lugar só: <strong style={{ fontWeight: 600, color: C.brown }}>Musicalidade</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Musicalização</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Consciência Corporal</strong> e os <strong style={{ fontWeight: 600, color: C.brown }}>replays das aulas ao vivo</strong>. Uma formação completa para dançar com mais liberdade, presença e musicalidade.
           </p>
 
           <div style={{ marginBottom: 18 }}>
@@ -272,6 +272,11 @@ function PublicoSection() {
     <section style={{
       background: C.white,
       padding: mobile ? '72px 24px' : '100px 40px',
+      position: 'relative', zIndex: 3,
+      marginTop: mobile ? -44 : -72,
+      borderTopLeftRadius: mobile ? 32 : 48,
+      borderTopRightRadius: mobile ? 32 : 48,
+      boxShadow: '0 -16px 40px rgba(61,53,48,0.06)',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div ref={titleRef} style={{
