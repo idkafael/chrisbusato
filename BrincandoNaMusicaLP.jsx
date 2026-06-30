@@ -1702,29 +1702,45 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · Recomendado</div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            {/* badge 2º lote */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              background: '#E8534A', color: C.white,
+              borderRadius: 100, padding: '5px 14px', marginBottom: 12,
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 11.5, letterSpacing: '1px', textTransform: 'uppercase',
+              animation: 'lotePulse 2s ease-out infinite',
+              position: 'relative', zIndex: 1,
+            }}>
+              <span style={{
+                width: 7, height: 7, borderRadius: '50%', background: C.white,
+                display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
+              }} />
+              2º lote ativo
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 18, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.5)',
+                fontSize: 16, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.55)',
                 textDecoration: 'line-through', letterSpacing: '-0.3px',
-              }}>R$ 197</div>
+              }}>1º lote R$ 97</div>
               <div style={{
-                background: '#E8534A', color: C.white,
-                borderRadius: 100, padding: '2px 10px',
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 11, letterSpacing: '0.5px',
-              }}>51% OFF</div>
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                fontSize: 11, letterSpacing: '0.5px', textTransform: 'uppercase',
+                color: '#E8534A',
+              }}>esgotado</div>
             </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 'clamp(48px, 5vw, 64px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
-            }}>R$ 97</div>
+            }}>R$ 120</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>pagamento único · vagas limitadas</div>
+            }}>pagamento único · últimas vagas deste lote</div>
 
             {/* bloco de data destacado */}
             <div style={{
@@ -2010,6 +2026,14 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         @keyframes ribbonPulse {
           0%, 100% { box-shadow: 0 2px 16px rgba(232,83,74,0.5); }
           50%       { box-shadow: 0 2px 28px rgba(232,83,74,0.85); }
+        }
+        @keyframes lotePulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(232,83,74,0.45); }
+          70%       { box-shadow: 0 0 0 8px rgba(232,83,74,0); }
+        }
+        @keyframes loteDot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.5; transform: scale(0.7); }
         }
         @keyframes marquee {
           from { transform: translateX(0); }
