@@ -493,19 +493,6 @@ function ModulosSection() {
           {modulos.map((m, i) => <ModuloCard key={i} m={m} delay={i * 80} mobile={mobile} />)}
         </div>
 
-        {/* PLACEHOLDER incentivo: mostre mais da plataforma */}
-        <div style={{
-          marginTop: 36,
-          borderRadius: 16,
-          border: `2px dashed ${C.sageLight}`,
-          background: C.creamCard,
-          padding: mobile ? '24px' : '28px 32px',
-          textAlign: 'center',
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 14, color: C.brownLight, lineHeight: 1.6,
-        }}>
-          💡 Quer mostrar mais? Me mande prints de aulas, número de vídeos por módulo, duração total ou depoimentos em vídeo que eu adiciono mais blocos aqui.
-        </div>
       </div>
     </section>
   )
