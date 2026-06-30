@@ -7,6 +7,7 @@ import capaMusicalizacao from './images/Capa-Musicalizacao.png'
 import capaConsciencia from './images/Capa-Conciencia.png'
 import capaVergonha from './images/Capa-Vergonha.png'
 import capaReplay from './images/Capa-Replay.png'
+import fundoHero from './images/fundo-primeira-dobra.png'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -158,30 +159,36 @@ function Hero() {
   return (
     <section style={{
       background: C.cream, position: 'relative', overflow: 'hidden',
-      padding: mobile ? '110px 24px 72px' : '150px 40px 100px',
+      padding: mobile ? '120px 24px 80px' : '150px 40px 110px',
+      minHeight: mobile ? 'auto' : '92vh',
+      display: 'flex', alignItems: 'center',
     }}>
-      {/* blobs */}
+      {/* Imagem de fundo (somente primeira dobra) */}
       <div style={{
-        position: 'absolute', top: '-8%', right: '-6%',
-        width: 460, height: 460, background: C.sageLight,
-        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-        opacity: 0.25, pointerEvents: 'none',
+        position: 'absolute', inset: 0,
+        backgroundImage: `url(${fundoHero})`,
+        backgroundSize: 'cover',
+        backgroundPosition: mobile ? 'center' : 'center right',
+        pointerEvents: 'none',
       }} />
+      {/* Overlay para legibilidade do texto */}
       <div style={{
-        position: 'absolute', bottom: '-10%', left: '-6%',
-        width: 300, height: 300, background: C.sageLight,
-        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-        opacity: 0.2, pointerEvents: 'none',
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: mobile
+          ? 'linear-gradient(to bottom, rgba(237,234,227,0.82) 0%, rgba(237,234,227,0.55) 55%, rgba(237,234,227,0.7) 100%)'
+          : 'linear-gradient(to right, rgba(237,234,227,0.94) 0%, rgba(237,234,227,0.82) 38%, rgba(237,234,227,0.35) 68%, rgba(237,234,227,0) 100%)',
       }} />
 
       <div style={{
         maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1,
-        display: 'grid',
-        gridTemplateColumns: mobile ? '1fr' : '1.05fr 0.95fr',
-        gap: mobile ? 48 : 64, alignItems: 'center',
+        width: '100%',
       }}>
         {/* texto */}
-        <div style={{ animation: 'fadeUp 0.8s ease both', textAlign: mobile ? 'center' : 'left' }}>
+        <div style={{
+          animation: 'fadeUp 0.8s ease both',
+          textAlign: mobile ? 'center' : 'left',
+          maxWidth: mobile ? '100%' : 560,
+        }}>
           <div style={{
             display: 'inline-block',
             background: C.sagePale, border: `1px solid ${C.sageLight}`,
@@ -204,7 +211,7 @@ function Hero() {
           </h1>
 
           <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
             fontSize: mobile ? 16 : 19,
             color: C.brownMid, lineHeight: 1.7,
             maxWidth: 500, margin: mobile ? '0 auto 36px' : '0 0 36px',
@@ -222,42 +229,8 @@ function Hero() {
             Acesso imediato · Estude no seu ritmo · Para sempre
           </div>
         </div>
-
-        {/* PLACEHOLDER: mockup/print da plataforma */}
-        <div style={{ animation: 'fadeUp 0.8s 0.15s ease both' }}>
-          <PlatformMockupPlaceholder mobile={mobile} />
-        </div>
       </div>
     </section>
-  )
-}
-
-// ─── Placeholder do mockup da plataforma ──────────────────────────────────────
-// Troque este bloco por uma <img src={printDaPlataforma} /> quando tiver o print.
-
-function PlatformMockupPlaceholder({ mobile }) {
-  return (
-    <div style={{
-      aspectRatio: '4/3',
-      borderRadius: 20,
-      border: `2px dashed ${C.sageLight}`,
-      background: `linear-gradient(160deg, ${C.creamCard} 0%, ${C.sagePale} 100%)`,
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      gap: 14, padding: 32, textAlign: 'center',
-      boxShadow: '0 24px 60px rgba(61,53,48,0.10)',
-      animation: 'floatY 5s ease-in-out infinite',
-    }}>
-      <div style={{ fontSize: 44 }}>🖥️</div>
-      <div style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-        fontSize: mobile ? 15 : 16, color: C.sageDark,
-      }}>Print da plataforma aqui</div>
-      <div style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-        fontSize: 13, color: C.brownLight, maxWidth: 240, lineHeight: 1.5,
-      }}>Coloque um screenshot da área de membros / dashboard dos cursos.</div>
-    </div>
   )
 }
 
