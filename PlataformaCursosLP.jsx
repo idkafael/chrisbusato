@@ -633,35 +633,34 @@ function EncontrosSection() {
 
 // ─── Antes / Depois ───────────────────────────────────────────────────────────
 
-const antes = [
-  'Dança contando os passos na cabeça, sem sentir a música',
-  'Trava quando alguém olha ou quando precisa improvisar',
-  'Junta aulas soltas sem um caminho que faça sentido',
-  'Sente que o corpo é "duro" e não responde do jeito que queria',
-]
-const depois = [
-  'Ouve a música e o corpo responde com naturalidade',
-  'Dança com presença, mesmo sem decorar coreografia',
-  'Segue uma formação organizada, do básico ao avançado',
-  'Tem consciência do próprio corpo e dança com liberdade',
+const transformacoes = [
+  { antes: 'Dança contando os passos na cabeça, sem sentir a música', depois: 'Ouve a música e o corpo responde com naturalidade' },
+  { antes: 'Trava quando alguém olha ou quando precisa improvisar', depois: 'Dança com presença, mesmo sem decorar coreografia' },
+  { antes: 'Junta aulas soltas sem um caminho que faça sentido', depois: 'Segue uma formação organizada, do básico ao avançado' },
+  { antes: 'Sente que o corpo é "duro" e não responde do jeito que queria', depois: 'Tem consciência do próprio corpo e dança com liberdade' },
 ]
 
 function AntesDepoisSection() {
-  const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
 
   return (
     <section style={{
       background: C.cream,
-      padding: mobile ? '72px 24px' : '100px 40px',
+      padding: mobile ? '72px 24px' : '110px 40px',
     }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-        <div ref={ref} style={{
-          textAlign: 'center', marginBottom: 52,
-          transition: 'opacity 0.7s ease, transform 0.7s ease',
-          opacity: inView ? 1 : 0,
-          transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      <div style={{
+        maxWidth: 1080, margin: '0 auto',
+        display: mobile ? 'block' : 'grid',
+        gridTemplateColumns: mobile ? undefined : '0.85fr 1.15fr',
+        gap: mobile ? 0 : 64,
+        alignItems: 'start',
+      }}>
+        {/* título (sticky no desktop) */}
+        <div style={{
+          position: mobile ? 'static' : 'sticky',
+          top: mobile ? undefined : 110,
+          marginBottom: mobile ? 44 : 0,
         }}>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
@@ -670,71 +669,115 @@ function AntesDepoisSection() {
           }}>A transformação</div>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(32px, 3.6vw, 48px)',
-            color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px',
+            fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(30px, 3.2vw, 46px)',
+            color: C.brown, lineHeight: 1.18, letterSpacing: '-0.5px', marginBottom: 20,
           }}>
             De onde você está{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>para onde quer chegar.</em>
           </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17, color: C.brownMid, lineHeight: 1.65,
+            maxWidth: 360,
+          }}>
+            Role e veja cada bloqueio de hoje virar uma nova forma de dançar.
+          </p>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-          gap: 20,
-        }}>
-          {/* Antes */}
-          <div style={{
-            background: C.white, border: `1px solid ${C.sageLight}`,
-            borderRadius: 18, padding: mobile ? '28px 24px' : '36px 32px',
-          }}>
-            <h3 style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
-              color: C.brownLight, marginBottom: 24,
-            }}>Hoje</h3>
-            {antes.map((item, i) => (
-              <div key={i} style={{
-                display: 'flex', gap: 12, alignItems: 'flex-start',
-                padding: '12px 0',
-                borderBottom: i < antes.length - 1 ? `1px solid ${C.cream}` : 'none',
-              }}>
-                <span style={{ flexShrink: 0, fontSize: 16, marginTop: 1 }}>🥀</span>
-                <span style={{
-                  fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                  fontSize: 15, color: C.brownMid, lineHeight: 1.55,
-                }}>{item}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Depois */}
-          <div style={{
-            background: C.sageDark, borderRadius: 18,
-            padding: mobile ? '28px 24px' : '36px 32px',
-          }}>
-            <h3 style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 13, letterSpacing: '1.5px', textTransform: 'uppercase',
-              color: C.sageLight, marginBottom: 24,
-            }}>Com a plataforma</h3>
-            {depois.map((item, i) => (
-              <div key={i} style={{
-                display: 'flex', gap: 12, alignItems: 'flex-start',
-                padding: '12px 0',
-                borderBottom: i < depois.length - 1 ? '1px solid rgba(255,255,255,0.12)' : 'none',
-              }}>
-                <span style={{ flexShrink: 0, fontSize: 16, marginTop: 1 }}>🌷</span>
-                <span style={{
-                  fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                  fontSize: 15, color: 'rgba(255,255,255,0.92)', lineHeight: 1.55,
-                }}>{item}</span>
-              </div>
-            ))}
-          </div>
+        {/* linhas de transformação */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: mobile ? 16 : 20 }}>
+          {transformacoes.map((t, i) => <TransformRow key={i} t={t} index={i} mobile={mobile} />)}
         </div>
       </div>
     </section>
+  )
+}
+
+function TransformRow({ t, index, mobile }) {
+  const [ref, inView] = useInView()
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        borderRadius: 18, overflow: 'hidden',
+        background: C.white,
+        border: `1px solid ${C.sageLight}`,
+        boxShadow: hovered ? '0 18px 40px rgba(61,53,48,0.12)' : '0 3px 14px rgba(61,53,48,0.05)',
+        transition: 'opacity 0.7s ease, transform 0.6s ease, box-shadow 0.3s ease',
+        transitionDelay: `${index * 90}ms`,
+        opacity: inView ? 1 : 0,
+        transform: inView ? (hovered ? 'translateY(-3px)' : 'translateY(0)') : 'translateY(22px)',
+      }}>
+      {/* numeral de fundo */}
+      <div style={{
+        position: 'absolute', top: -14, right: 14,
+        fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+        fontSize: 88, color: C.sagePale, lineHeight: 1,
+        pointerEvents: 'none', userSelect: 'none', zIndex: 0,
+      }}>{String(index + 1).padStart(2, '0')}</div>
+
+      <div style={{
+        position: 'relative', zIndex: 1,
+        display: 'flex',
+        flexDirection: mobile ? 'column' : 'row',
+        alignItems: mobile ? 'stretch' : 'stretch',
+      }}>
+        {/* antes */}
+        <div style={{
+          flex: 1, padding: mobile ? '22px 22px 18px' : '26px 26px',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+            fontSize: 10, letterSpacing: '1.5px', color: C.brownLight,
+            textTransform: 'uppercase', marginBottom: 8,
+          }}>Hoje</div>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 14.5, color: C.brownLight, lineHeight: 1.5,
+          }}>{t.antes}</span>
+        </div>
+
+        {/* seta */}
+        <div style={{
+          flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: mobile ? '0' : '0 4px',
+          alignSelf: 'center',
+        }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: '50%',
+            background: `linear-gradient(150deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 6px 16px rgba(107,127,109,0.35)',
+            transform: mobile ? 'rotate(90deg)' : 'none',
+            margin: mobile ? '-2px 0' : 0,
+          }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke={C.white} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* depois */}
+        <div style={{
+          flex: 1, padding: mobile ? '18px 22px 22px' : '26px 26px',
+          background: C.sagePale,
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+            fontSize: 10, letterSpacing: '1.5px', color: C.sageDark,
+            textTransform: 'uppercase', marginBottom: 8,
+          }}>Com a plataforma</div>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+            fontSize: 14.5, color: C.brown, lineHeight: 1.5,
+          }}>{t.depois}</span>
+        </div>
+      </div>
+    </div>
   )
 }
 
