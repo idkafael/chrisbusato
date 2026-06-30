@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Imagens de capa dos módulos ─────────────────────────────────────────────
-// Quando tiver as capas, descomente os imports abaixo e passe em `cover` no array `modulos`.
-// import capaMusicalidade from './images/capa-musicalidade.png'
-// import capaMusicalizacao from './images/capa-musicalizacao.png'
-// import capaConsciencia from './images/capa-consciencia.png'
-// import capaEncontros from './images/capa-encontros.png'
+import capaMusicalidade from './images/Capa-Musicalidade.png'
+import capaMusicalizacao from './images/Capa-Musicalizacao.png'
+import capaConsciencia from './images/Capa-Conciencia.png'
+import capaVergonha from './images/Capa-Vergonha.png'
+import capaReplay from './images/Capa-Replay.png'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -419,38 +419,13 @@ function SobreSection() {
 }
 
 // ─── Módulos / Cursos ─────────────────────────────────────────────────────────
-// Para usar capas reais: descomente o import lá em cima e adicione `cover: capaX` no módulo.
 
 const modulos = [
-  {
-    icon: '🎵',
-    titulo: 'Musicalidade',
-    tag: 'Curso gravado',
-    descricao: 'Aprenda a ouvir, sentir e traduzir a música em movimento. A base de quem dança com presença.',
-    cover: null,
-  },
-  {
-    icon: '🎼',
-    titulo: 'Musicalização',
-    tag: 'Curso gravado',
-    descricao: 'Entenda ritmo, tempo e estrutura musical de forma prática para nunca mais dançar "fora do tempo".',
-    cover: null,
-  },
-  {
-    icon: '🧘‍♀️',
-    titulo: 'Consciência Corporal',
-    tag: 'Curso gravado',
-    descricao: 'Reconecte-se com o próprio corpo: postura, eixo, controle e expressão para dançar com liberdade.',
-    cover: null,
-  },
-  {
-    icon: '✨',
-    titulo: 'Em breve',
-    tag: 'Novo módulo',
-    descricao: 'Novos cursos sendo adicionados à plataforma. Quem entra agora acompanha tudo que vem por aí.',
-    cover: null,
-    placeholder: true,
-  },
+  { titulo: 'Musicalidade', cover: capaMusicalidade },
+  { titulo: 'Musicalização', cover: capaMusicalizacao },
+  { titulo: 'Consciência Corporal', cover: capaConsciencia },
+  { titulo: 'A Vergonha na Dança', cover: capaVergonha },
+  { titulo: 'Encontros Gravados', cover: capaReplay },
 ]
 
 function ModulosSection() {
@@ -493,16 +468,16 @@ function ModulosSection() {
         </div>
 
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)',
-          gap: 24,
+          display: 'flex', flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: mobile ? 18 : 24,
         }}>
-          {modulos.map((m, i) => <ModuloCard key={i} m={m} delay={i * 90} mobile={mobile} />)}
+          {modulos.map((m, i) => <ModuloCard key={i} m={m} delay={i * 80} mobile={mobile} />)}
         </div>
 
         {/* PLACEHOLDER incentivo: mostre mais da plataforma */}
         <div style={{
-          marginTop: 28,
+          marginTop: 36,
           borderRadius: 16,
           border: `2px dashed ${C.sageLight}`,
           background: C.creamCard,
@@ -526,45 +501,27 @@ function ModuloCard({ m, delay, mobile }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: m.placeholder ? C.sagePale : C.creamCard,
-        border: `1px solid ${C.sageLight}`,
+        flex: mobile ? '1 1 100%' : '0 1 300px',
+        maxWidth: mobile ? 360 : 300,
         borderRadius: 18, overflow: 'hidden',
-        display: 'flex', flexDirection: mobile ? 'column' : 'row',
-        transition: 'opacity 0.7s ease, transform 0.7s ease, box-shadow 0.25s ease',
+        background: C.creamCard,
+        cursor: 'default',
+        transition: 'opacity 0.7s ease, transform 0.45s ease, box-shadow 0.3s ease',
         transitionDelay: `${delay}ms`,
         opacity: inView ? 1 : 0,
-        transform: inView ? (hovered ? 'translateY(-4px)' : 'translateY(0)') : 'translateY(24px)',
-        boxShadow: hovered ? '0 16px 40px rgba(61,53,48,0.12)' : '0 2px 12px rgba(61,53,48,0.04)',
+        transform: inView ? (hovered ? 'translateY(-6px)' : 'translateY(0)') : 'translateY(24px)',
+        boxShadow: hovered ? '0 22px 48px rgba(61,53,48,0.20)' : '0 6px 20px rgba(61,53,48,0.08)',
       }}>
-      {/* Capa do módulo (placeholder ou imagem real) */}
-      <div style={{
-        flexShrink: 0,
-        width: mobile ? '100%' : 150,
-        height: mobile ? 140 : 'auto',
-        minHeight: mobile ? 0 : 170,
-        background: m.cover ? `url(${m.cover}) center/cover` : `linear-gradient(150deg, ${C.sageLight} 0%, ${C.sage} 100%)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {!m.cover && <span style={{ fontSize: 46 }}>{m.icon}</span>}
-      </div>
-
-      <div style={{ padding: mobile ? '24px' : '28px 30px' }}>
-        <div style={{
-          display: 'inline-block',
-          background: m.placeholder ? C.white : C.sagePale,
-          color: C.sageDark, borderRadius: 100, padding: '3px 12px',
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-          fontSize: 10.5, letterSpacing: '1px', textTransform: 'uppercase',
-          marginBottom: 14,
-        }}>{m.tag}</div>
-        <h3 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 23, color: C.brown, marginBottom: 10, lineHeight: 1.25,
-        }}>{m.titulo}</h3>
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 14.5, color: C.brownMid, lineHeight: 1.6,
-        }}>{m.descricao}</p>
+      <div style={{ overflow: 'hidden' }}>
+        <img
+          src={m.cover}
+          alt={m.titulo}
+          style={{
+            width: '100%', display: 'block',
+            transition: 'transform 0.5s ease',
+            transform: hovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        />
       </div>
     </div>
   )
@@ -640,24 +597,18 @@ function EncontrosSection() {
           </div>
         </div>
 
-        {/* PLACEHOLDER print dos replays */}
+        {/* Capa dos replays */}
         <div style={{
-          aspectRatio: '4/3', borderRadius: 18,
-          border: '2px dashed rgba(196,208,197,0.4)',
-          background: 'rgba(255,255,255,0.04)',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          gap: 12, padding: 28, textAlign: 'center',
+          borderRadius: 18, overflow: 'hidden',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.35)',
+          maxWidth: mobile ? 320 : '100%',
+          margin: mobile ? '0 auto' : 0,
         }}>
-          <div style={{ fontSize: 40 }}>▶️</div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            fontSize: 15, color: C.sageLight,
-          }}>Print dos replays aqui</div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 13, color: 'rgba(237,234,227,0.6)', maxWidth: 220, lineHeight: 1.5,
-          }}>Coloque uma imagem da lista de aulas gravadas.</div>
+          <img
+            src={capaReplay}
+            alt="Encontros gravados — replays das aulas ao vivo"
+            style={{ width: '100%', display: 'block' }}
+          />
         </div>
       </div>
     </section>
