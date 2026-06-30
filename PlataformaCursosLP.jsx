@@ -212,14 +212,8 @@ function Hero() {
             Todos os cursos da Chris num lugar só: <strong style={{ fontWeight: 600, color: C.brown }}>Musicalidade</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Musicalização</strong>, <strong style={{ fontWeight: 600, color: C.brown }}>Consciência Corporal</strong> e os <strong style={{ fontWeight: 600, color: C.brown }}>replays das aulas ao vivo</strong>. Uma formação completa para dançar com mais liberdade, presença e musicalidade.
           </p>
 
-          <div style={{ marginBottom: 18 }}>
+          <div>
             <CtaButton mobile={mobile}>Quero acesso à plataforma →</CtaButton>
-          </div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-            color: C.brownLight, letterSpacing: '0.3px',
-          }}>
-            Acesso imediato · Estude no seu ritmo · Para sempre
           </div>
         </div>
       </div>
