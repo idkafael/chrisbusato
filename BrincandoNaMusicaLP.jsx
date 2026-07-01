@@ -120,10 +120,9 @@ function Hero() {
   return (
     <section style={{
       background: C.cream,
-      position: mobile ? 'relative' : 'sticky', top: 0, zIndex: 1,
+      position: 'sticky', top: 0, zIndex: 1,
       overflow: 'hidden',
-      minHeight: mobile ? undefined : '100vh',
-      height: mobile ? undefined : '100vh',
+      minHeight: '100vh',
       padding: mobile ? '104px 20px 56px' : '124px 40px 56px',
       display: 'flex', alignItems: 'center',
     }}>
@@ -135,12 +134,12 @@ function Hero() {
         backgroundPosition: mobile ? 'center 15%' : 'center 20%',
         pointerEvents: 'none',
       }} />
-      {/* overlay pra legibilidade */}
+      {/* overlay pra legibilidade (mais leve, deixa a imagem aparecer mais) */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: mobile
-          ? 'linear-gradient(to bottom, rgba(237,234,227,0.92) 0%, rgba(237,234,227,0.5) 42%, rgba(237,234,227,0.88) 100%)'
-          : 'linear-gradient(to bottom, rgba(237,234,227,0.88) 0%, rgba(237,234,227,0.32) 40%, rgba(237,234,227,0.85) 100%)',
+          ? 'linear-gradient(to bottom, rgba(237,234,227,0.72) 0%, rgba(237,234,227,0.22) 42%, rgba(237,234,227,0.68) 100%)'
+          : 'linear-gradient(to bottom, rgba(237,234,227,0.68) 0%, rgba(237,234,227,0.14) 40%, rgba(237,234,227,0.62) 100%)',
       }} />
       {/* rabiscos decorativos (tema brincando) */}
       {!mobile && <>
@@ -164,6 +163,7 @@ function Hero() {
           fontSize: 'clamp(32px, 6vw, 72px)',
           color: C.brown, lineHeight: 1.15,
           marginBottom: mobile ? 24 : 36, letterSpacing: '-1px',
+          textShadow: '0 2px 24px rgba(237,234,227,0.85), 0 1px 3px rgba(237,234,227,0.6)',
         }}>
           Para brincar mais na dança,<br />
           você não precisa de{' '}
