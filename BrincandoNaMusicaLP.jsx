@@ -749,6 +749,214 @@ function VivenciaSection() {
   )
 }
 
+// ─── Consciência Corporal & Relacional ────────────────────────────────────────
+
+const consciencia = [
+  {
+    sintoma: 'Corpo rígido',
+    sintomaDesc: 'tensão nos ombros, braços e quadril — o movimento não circula',
+    depois: 'Corpo solto',
+    depoisDesc: 'mais chão, respiração e disponibilidade pra se mover',
+  },
+  {
+    sintoma: 'Sem eixo',
+    sintomaDesc: 'desequilíbrio, pisada insegura, "não sei onde me apoiar"',
+    depois: 'Autonomia',
+    depoisDesc: 'sente o próprio centro e se organiza sozinho',
+  },
+  {
+    sintoma: 'Cabeça no comando',
+    sintomaDesc: '"qual passo? tá certo?" — corpo mecânico e atrasado',
+    depois: 'Escuta no comando',
+    depoisDesc: 'responde ao pulso, não à memória',
+  },
+  {
+    sintoma: 'Fronteira confusa',
+    sintomaDesc: 'puxa, pesa, antecipa ou desaparece no parceiro',
+    depois: 'Conexão real',
+    depoisDesc: 'sente limite, direção e resposta do outro',
+  },
+]
+
+function ConscienciaRow({ item, index, mobile }) {
+  const [ref, inView] = useInView()
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        borderRadius: 16, overflow: 'hidden',
+        background: C.white,
+        border: `1px solid ${C.sageLight}`,
+        boxShadow: hovered ? '0 16px 38px rgba(61,53,48,0.12)' : '0 3px 12px rgba(61,53,48,0.05)',
+        transition: 'opacity 0.7s ease, transform 0.55s ease, box-shadow 0.3s ease',
+        transitionDelay: `${index * 80}ms`,
+        opacity: inView ? 1 : 0,
+        transform: inView ? (hovered ? 'translateY(-3px)' : 'translateY(0)') : 'translateY(20px)',
+      }}>
+      <div style={{
+        position: 'absolute', top: -12, right: 12,
+        fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+        fontSize: 76, color: C.sagePale, lineHeight: 1,
+        pointerEvents: 'none', userSelect: 'none', zIndex: 0,
+      }}>{String(index + 1).padStart(2, '0')}</div>
+
+      <div style={{
+        position: 'relative', zIndex: 1,
+        display: 'flex', flexDirection: mobile ? 'column' : 'row',
+      }}>
+        <div style={{ flex: 1, padding: mobile ? '20px 20px 16px' : '22px 24px' }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+            fontSize: 15, color: C.brown, marginBottom: 5,
+          }}>{item.sintoma}</div>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 13.5, color: C.brownLight, lineHeight: 1.5,
+          }}>{item.sintomaDesc}</span>
+        </div>
+
+        <div style={{
+          flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: mobile ? 0 : '0 4px',
+        }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: `linear-gradient(150deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 6px 14px rgba(107,127,109,0.35)',
+            transform: mobile ? 'rotate(90deg)' : 'none',
+            margin: mobile ? '-2px 0' : 0,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h9M8 3.5L11.5 7 8 10.5" stroke={C.white} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div style={{
+          flex: 1, padding: mobile ? '16px 20px 20px' : '22px 24px',
+          background: C.sagePale,
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+            fontSize: 15, color: C.sageDark, marginBottom: 5,
+          }}>{item.depois}</div>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 13.5, color: C.brownMid, lineHeight: 1.5,
+          }}>{item.depoisDesc}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ConscienciaSection() {
+  const [titleRef, titleInView] = useInView()
+  const [quoteRef, quoteInView] = useInView()
+  const [closeRef, closeInView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  return (
+    <section style={{
+      background: C.white,
+      padding: mobile ? '80px 24px' : '112px 40px',
+    }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div ref={titleRef} style={{
+          textAlign: 'center', marginBottom: 40,
+          transition: 'opacity 0.7s ease, transform 0.7s ease',
+          opacity: titleInView ? 1 : 0,
+          transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 20,
+          }}>Consciência Corporal & Relacional</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(28px, 4vw, 46px)',
+            color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px',
+          }}>
+            O corpo trava antes da cabeça perceber.{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>A consciência é o que muda isso.</em>
+          </h2>
+        </div>
+
+        <div ref={quoteRef} style={{
+          textAlign: 'center', maxWidth: 620, margin: '0 auto 56px',
+          transition: 'opacity 0.8s ease, transform 0.8s ease',
+          opacity: quoteInView ? 1 : 0,
+          transform: quoteInView ? 'translateY(0)' : 'translateY(20px)',
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+            fontSize: mobile ? 17 : 20, color: C.brownMid, lineHeight: 1.6,
+          }}>
+            Quando falta consciência corporal, você não sente bem o próprio corpo.{' '}
+            Quando falta consciência relacional, você não sente bem o corpo do outro perto do seu.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 64 }}>
+          {consciencia.map((item, i) => (
+            <ConscienciaRow key={i} item={item} index={i} mobile={mobile} />
+          ))}
+        </div>
+
+        {/* fechamento: ideia central + prova real */}
+        <div ref={closeRef} style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1.3fr 0.7fr',
+          gap: mobile ? 40 : 56,
+          alignItems: 'center',
+          transition: 'opacity 0.8s ease, transform 0.8s ease',
+          opacity: closeInView ? 1 : 0,
+          transform: closeInView ? 'translateY(0)' : 'translateY(24px)',
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 22 : 28, color: C.brown, lineHeight: 1.4,
+            letterSpacing: '-0.3px',
+          }}>
+            A dança melhora quando o corpo deixa de só executar movimentos e passa a{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>perceber: a si mesmo, a música, o outro e o espaço.</em>
+          </p>
+
+          {/* foto real: depoimento que fala exatamente disso */}
+          <div style={{ display: 'flex', justifyContent: mobile ? 'flex-start' : 'center' }}>
+            <div style={{
+              position: 'relative',
+              background: C.white,
+              padding: '9px 9px 30px',
+              borderRadius: 8,
+              boxShadow: '0 18px 42px rgba(61,53,48,0.22)',
+              transform: 'rotate(2deg)',
+              maxWidth: 220, width: '100%',
+            }}>
+              <WashiTape color={C.brownLight} rotate={-8} top={-14} left="70%" width={50} />
+              <div style={{ borderRadius: 4, overflow: 'hidden' }}>
+                <img src={jul1} alt="Depoimento sobre dança e conexão a dois"
+                  style={{ width: '100%', display: 'block' }} />
+              </div>
+              <div style={{
+                position: 'absolute', bottom: 7, left: 0, right: 0, textAlign: 'center',
+                fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+                fontSize: 12.5, color: C.brownMid,
+              }}>Juliana, sobre dançar a dois</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── Transformação ───────────────────────────────────────────────────────────
 
 const antes = [
@@ -2186,6 +2394,7 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         <DorSection />
         <StatementStrip />
         <VivenciaSection />
+        <ConscienciaSection />
         <MarqueeStrip />
         <TransformacaoSection />
         <ParaQuemSection />
