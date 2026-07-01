@@ -1362,9 +1362,6 @@ const feedbackItems = [
   { src: carol3, name: 'Carol' },
   { src: chris1, name: 'Chris' },
   { src: mark1,  name: 'Mark'  },
-  { src: eve1,   name: 'Evelyni'  },
-  { src: jul1,   name: 'Juliana' },
-  { src: mire1,  name: 'Mirella' },
 ]
 
 // ─── Colagem lúdica (fita + moldura tipo foto colada) ─────────────────────────
