@@ -2414,7 +2414,6 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         <MarqueeStrip />
         <TransformacaoSection />
         <ParaQuemSection />
-        <StatsStrip />
         <VivenciasSection />
         <InscricaoSection />
         <TestemunhosSection />
