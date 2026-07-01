@@ -14,6 +14,8 @@ import onlineImg1 from './images/online (1).jpeg'
 import eve1 from './images/eve1.png'
 import jul1 from './images/jul1.png'
 import mire1 from './images/mire1.png'
+import feedback10 from './images/feedback10.jpeg'
+import feedback11 from './images/feedback11.jpeg'
 import fundoHero from './images/fundo-primeira-dobra.png'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 
@@ -854,6 +856,36 @@ function ConscienciaRow({ item, index, mobile }) {
   )
 }
 
+function MiniPolaroid({ src, caption, rotate = 0, tapeColor = C.sage, offsetY = 0 }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        background: C.white,
+        padding: '8px 8px 26px',
+        borderRadius: 8,
+        boxShadow: hovered ? '0 20px 44px rgba(61,53,48,0.28)' : '0 12px 30px rgba(61,53,48,0.18)',
+        transform: `translateY(${offsetY}px) rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.04 : 1})`,
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        width: 168,
+      }}>
+      <WashiTape color={tapeColor} rotate={rotate <= 0 ? 8 : -8} top={-14} left="50%" width={48} />
+      <div style={{ borderRadius: 4, overflow: 'hidden', aspectRatio: '4/5' }}>
+        <img src={src} alt={caption}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 6, left: 0, right: 0, textAlign: 'center', padding: '0 6px',
+        fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+        fontSize: 11.5, color: C.brownMid, lineHeight: 1.25,
+      }}>{caption}</div>
+    </div>
+  )
+}
+
 function ConscienciaSection() {
   const [titleRef, titleInView] = useInView()
   const [quoteRef, quoteInView] = useInView()
@@ -911,10 +943,7 @@ function ConscienciaSection() {
 
         {/* fechamento: ideia central + prova real */}
         <div ref={closeRef} style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : '1.3fr 0.7fr',
-          gap: mobile ? 40 : 56,
-          alignItems: 'center',
+          textAlign: 'center',
           transition: 'opacity 0.8s ease, transform 0.8s ease',
           opacity: closeInView ? 1 : 0,
           transform: closeInView ? 'translateY(0)' : 'translateY(24px)',
@@ -923,33 +952,20 @@ function ConscienciaSection() {
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 22 : 28, color: C.brown, lineHeight: 1.4,
             letterSpacing: '-0.3px',
+            maxWidth: 680, margin: '0 auto',
           }}>
             A dança melhora quando o corpo deixa de só executar movimentos e passa a{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>perceber: a si mesmo, a música, o outro e o espaço.</em>
           </p>
 
-          {/* foto real: depoimento que fala exatamente disso */}
-          <div style={{ display: 'flex', justifyContent: mobile ? 'flex-start' : 'center' }}>
-            <div style={{
-              position: 'relative',
-              background: C.white,
-              padding: '9px 9px 30px',
-              borderRadius: 8,
-              boxShadow: '0 18px 42px rgba(61,53,48,0.22)',
-              transform: 'rotate(2deg)',
-              maxWidth: 220, width: '100%',
-            }}>
-              <WashiTape color={C.brownLight} rotate={-8} top={-14} left="70%" width={50} />
-              <div style={{ borderRadius: 4, overflow: 'hidden' }}>
-                <img src={jul1} alt="Depoimento sobre dança e conexão a dois"
-                  style={{ width: '100%', display: 'block' }} />
-              </div>
-              <div style={{
-                position: 'absolute', bottom: 7, left: 0, right: 0, textAlign: 'center',
-                fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
-                fontSize: 12.5, color: C.brownMid,
-              }}>Juliana, sobre dançar a dois</div>
-            </div>
+          {/* mural de fotos reais: quem já viveu essa mudança */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
+            gap: mobile ? 24 : 28, marginTop: mobile ? 44 : 56,
+          }}>
+            <MiniPolaroid src={jul1} caption="Juliana, sobre dançar a dois" rotate={-3} tapeColor={C.sage} offsetY={0} />
+            <MiniPolaroid src={feedback11} caption="Aluna, sobre consciência corporal" rotate={2.2} tapeColor={C.brownLight} offsetY={mobile ? 0 : 16} />
+            <MiniPolaroid src={feedback10} caption="Ana, sobre anos dançando no automático" rotate={-1.5} tapeColor={C.sageDark} offsetY={mobile ? 0 : -12} />
           </div>
         </div>
       </div>
