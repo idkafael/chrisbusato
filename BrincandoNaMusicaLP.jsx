@@ -11,6 +11,7 @@ import online2 from './images/online (2).mp4'
 import online3 from './images/online (3).mp4'
 import online4 from './images/online (4).mp4'
 import onlineImg1 from './images/online (1).jpeg'
+import fundoHero from './images/fundo-primeira-dobra.png'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
@@ -113,22 +114,39 @@ function Hero() {
   return (
     <section style={{
       background: C.cream,
-      position: 'relative', overflow: 'hidden',
-      padding: mobile ? '80px 24px 64px' : '120px 40px 80px',
+      position: mobile ? 'relative' : 'sticky', top: 0, zIndex: 1,
+      overflow: 'hidden',
+      minHeight: mobile ? undefined : '100vh',
+      height: mobile ? undefined : '100vh',
+      padding: mobile ? '104px 20px 56px' : '124px 40px 56px',
+      display: 'flex', alignItems: 'center',
     }}>
-      {/* blobs */}
+      {/* imagem de fundo (mesma da plataforma, efeito sticky) */}
       <div style={{
-        position: 'absolute', top: '-8%', right: '-6%',
-        width: 480, height: 480, background: C.sageLight,
-        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-        opacity: 0.25, pointerEvents: 'none',
+        position: 'absolute', inset: 0,
+        backgroundImage: `url(${fundoHero})`,
+        backgroundSize: 'cover',
+        backgroundPosition: mobile ? 'center 15%' : 'center 20%',
+        pointerEvents: 'none',
       }} />
+      {/* overlay pra legibilidade */}
       <div style={{
-        position: 'absolute', bottom: '4%', left: '-5%',
-        width: 280, height: 280, background: C.sageLight,
-        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-        opacity: 0.2, pointerEvents: 'none',
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: mobile
+          ? 'linear-gradient(to bottom, rgba(237,234,227,0.92) 0%, rgba(237,234,227,0.5) 42%, rgba(237,234,227,0.88) 100%)'
+          : 'linear-gradient(to bottom, rgba(237,234,227,0.88) 0%, rgba(237,234,227,0.32) 40%, rgba(237,234,227,0.85) 100%)',
       }} />
+      {/* rabiscos decorativos (tema brincando) */}
+      {!mobile && <>
+        <svg style={{ position: 'absolute', top: '14%', left: '6%', opacity: 0.5, pointerEvents: 'none' }} width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <path d="M4 28c8-16 24-20 30-8s-4 20-14 16 2-22 18-18" stroke={C.sageDark} strokeWidth="2" strokeLinecap="round" fill="none"/>
+        </svg>
+        <svg style={{ position: 'absolute', bottom: '10%', right: '7%', opacity: 0.5, pointerEvents: 'none' }} width="44" height="44" viewBox="0 0 44 44" fill="none">
+          <circle cx="14" cy="30" r="5" stroke={C.sageDark} strokeWidth="2"/>
+          <path d="M19 30V8l16-4v20" stroke={C.sageDark} strokeWidth="2" strokeLinecap="round"/>
+          <circle cx="35" cy="24" r="5" stroke={C.sageDark} strokeWidth="2"/>
+        </svg>
+      </>}
 
       <div style={{
         maxWidth: 760, textAlign: 'center', position: 'relative', zIndex: 1,
@@ -137,30 +155,36 @@ function Hero() {
       }}>
         <h1 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(40px, 6vw, 72px)',
+          fontSize: 'clamp(32px, 6vw, 72px)',
           color: C.brown, lineHeight: 1.15,
-          marginBottom: 40, letterSpacing: '-1px',
+          marginBottom: mobile ? 24 : 36, letterSpacing: '-1px',
         }}>
           Para brincar mais na dança,<br />
           você não precisa de{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
         </h1>
 
-        {/* VSL */}
-        <div style={{ marginBottom: 40 }}>
-          <vturb-smartplayer
-            id="vid-6a120f7fc9941c35508e9807"
-            style={{ display: 'block', margin: '0 auto', width: '100%' }}
-          />
+        {/* VSL em moldura tipo foto colada */}
+        <div style={{ marginBottom: mobile ? 24 : 36, display: 'flex', justifyContent: 'center' }}>
+          <div style={{
+            position: 'relative',
+            background: C.white,
+            padding: mobile ? '8px 8px 8px' : '12px 12px 12px',
+            borderRadius: 10,
+            boxShadow: '0 24px 54px rgba(61,53,48,0.30)',
+            transform: 'rotate(-1.1deg)',
+            maxWidth: 560, width: '100%',
+          }}>
+            <WashiTape color={C.sage} rotate={-7} top={-15} left="20%" width={62} />
+            <WashiTape color={C.brownLight} rotate={9} top={-13} left="82%" width={54} />
+            <div style={{ borderRadius: 6, overflow: 'hidden' }}>
+              <vturb-smartplayer
+                id="vid-6a120f7fc9941c35508e9807"
+                style={{ display: 'block', margin: '0 auto', width: '100%' }}
+              />
+            </div>
+          </div>
         </div>
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 'clamp(16px, 2.2vw, 20px)',
-          color: C.brownMid, maxWidth: 560, margin: '0 auto 40px',
-          lineHeight: 1.7,
-        }}>
-        </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
           {/* Botão online — primeiro quando highlightOnline */}
@@ -297,6 +321,11 @@ function DorSection() {
     <section style={{
       background: C.brown,
       padding: mobile ? '80px 24px' : '112px 40px',
+      position: 'relative', zIndex: 2,
+      marginTop: mobile ? -36 : -60,
+      borderTopLeftRadius: mobile ? 28 : 44,
+      borderTopRightRadius: mobile ? 28 : 44,
+      boxShadow: '0 -24px 50px rgba(0,0,0,0.18)',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div ref={titleRef} style={{
@@ -1068,6 +1097,53 @@ const feedbackItems = [
   { src: mark1,  name: 'Mark'  },
 ]
 
+// ─── Colagem lúdica (fita + moldura tipo foto colada) ─────────────────────────
+
+function WashiTape({ color = C.sage, rotate = -8, top = -15, left = '50%', width = 64 }) {
+  return (
+    <div style={{
+      position: 'absolute', top, left,
+      transform: `translateX(-50%) rotate(${rotate}deg)`,
+      width, height: 24,
+      background: color, opacity: 0.88,
+      boxShadow: '0 3px 8px rgba(0,0,0,0.18)',
+      backgroundImage: 'repeating-linear-gradient(115deg, rgba(255,255,255,0.24) 0px, rgba(255,255,255,0.24) 3px, transparent 3px, transparent 7px)',
+      zIndex: 5, pointerEvents: 'none',
+    }} />
+  )
+}
+
+function PolaroidVideo({ src, caption, rotate = 0, tapeColor = C.sage, tapeLeft = '50%' }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        background: C.white,
+        padding: caption ? '10px 10px 32px' : '10px 10px 10px',
+        borderRadius: 8,
+        boxShadow: hovered ? '0 22px 50px rgba(61,53,48,0.30)' : '0 12px 32px rgba(61,53,48,0.20)',
+        transform: `rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.02 : 1})`,
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+      }}
+    >
+      <WashiTape color={tapeColor} rotate={rotate <= 0 ? 7 : -7} top={-15} left={tapeLeft} width={58} />
+      <div style={{ borderRadius: 4, overflow: 'hidden', aspectRatio: '16/9' }}>
+        <VideoPlayer src={src} />
+      </div>
+      {caption && (
+        <div style={{
+          position: 'absolute', bottom: 8, left: 0, right: 0, textAlign: 'center',
+          fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+          fontSize: 13, color: C.brownMid,
+        }}>{caption}</div>
+      )}
+    </div>
+  )
+}
+
 // ─── VIVÊNCIAS ───────────────────────────────────────────────────────────────
 function VideoPlayer({ src }) {
   const videoRef = useRef(null)
@@ -1270,20 +1346,20 @@ function VivenciasSection() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-              gap: 16,
+              gap: mobile ? 32 : 20,
+              paddingTop: 14,
             }}>
               {[
                 'https://i.imgur.com/k1A44n2.mp4',
                 'https://i.imgur.com/KVxXjuR.mp4',
               ].map((src, i) => (
-                <div key={i} style={{
-                  borderRadius: 16, overflow: 'hidden',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-                  transform: i === 0 ? 'rotate(-0.6deg)' : 'rotate(0.6deg)',
-                  aspectRatio: '16/9',
-                }}>
-                  <VideoPlayer src={src} />
-                </div>
+                <PolaroidVideo
+                  key={i}
+                  src={src}
+                  rotate={i === 0 ? -2.5 : 2}
+                  tapeColor={i === 0 ? C.sage : C.brownLight}
+                  tapeLeft={i === 0 ? '22%' : '78%'}
+                />
               ))}
             </div>
           </div>
@@ -1306,17 +1382,17 @@ function VivenciasSection() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-              gap: 16, marginBottom: 16,
+              gap: mobile ? 32 : 20, marginBottom: mobile ? 32 : 24,
+              paddingTop: 14,
             }}>
               {[online1, online2].map((src, i) => (
-                <div key={i} style={{
-                  borderRadius: 16, overflow: 'hidden',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-                  transform: i === 0 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)',
-                  aspectRatio: '16/9',
-                }}>
-                  <VideoPlayer src={src} />
-                </div>
+                <PolaroidVideo
+                  key={i}
+                  src={src}
+                  rotate={i === 0 ? 2 : -1.8}
+                  tapeColor={i === 0 ? C.sageDark : C.sage}
+                  tapeLeft={i === 0 ? '78%' : '24%'}
+                />
               ))}
             </div>
 
@@ -1324,16 +1400,17 @@ function VivenciasSection() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: 12,
+              gap: mobile ? 20 : 16,
+              paddingTop: 14,
             }}>
               {[online3, online4].map((src, i) => (
-                <div key={i} style={{
-                  borderRadius: 12, overflow: 'hidden',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
-                  aspectRatio: '16/9',
-                }}>
-                  <VideoPlayer src={src} />
-                </div>
+                <PolaroidVideo
+                  key={i}
+                  src={src}
+                  rotate={i === 0 ? -1.5 : 1.5}
+                  tapeColor={i === 0 ? C.brownLight : C.sageDark}
+                  tapeLeft="50%"
+                />
               ))}
             </div>
           </div>
@@ -1383,9 +1460,9 @@ function TestemunhosSection() {
         </h2>
       </div>
 
-      {/* trilha animada */}
+      {/* trilha animada — mural de fotos coladas */}
       <div
-        style={{ overflow: 'hidden', userSelect: 'none' }}
+        style={{ overflow: 'hidden', userSelect: 'none', paddingTop: 22 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -1397,39 +1474,48 @@ function TestemunhosSection() {
           animationPlayState: paused ? 'paused' : 'running',
           paddingLeft: GAP,
         }}>
-          {looped.map((item, i) => (
-            <div key={i} style={{
-              flexShrink: 0,
-              width: CARD_W,
-              background: C.white,
-              borderRadius: 16,
-              overflow: 'hidden',
-              boxShadow: '0 6px 28px rgba(0,0,0,0.22)',
-            }}>
-              <img
-                src={item.src}
-                alt={`Feedback de ${item.name}`}
-                style={{
-                  width: '100%',
-                  height: 480,
-                  objectFit: 'cover',
-                  objectPosition: 'top',
-                  display: 'block',
-                }}
-              />
-              <div style={{
-                padding: '10px 16px',
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 500,
-                fontSize: 13,
-                color: C.brownMid,
-                letterSpacing: '0.3px',
-                background: C.creamCard,
+          {looped.map((item, i) => {
+            const rotate = [-2.4, 1.8, -1.2, 2.4][i % 4]
+            const tapeColor = [C.sage, C.brownLight, C.sageDark][i % 3]
+            const tapeLeft = i % 2 === 0 ? '28%' : '72%'
+            return (
+              <div key={i} style={{
+                flexShrink: 0,
+                width: CARD_W,
+                position: 'relative',
+                background: C.white,
+                padding: '10px 10px 6px',
+                borderRadius: 8,
+                boxShadow: '0 12px 34px rgba(0,0,0,0.30)',
+                transform: `rotate(${rotate}deg)`,
               }}>
-                {item.name}
+                <WashiTape color={tapeColor} rotate={rotate <= 0 ? 7 : -7} top={-15} left={tapeLeft} width={52} />
+                <div style={{ borderRadius: 4, overflow: 'hidden' }}>
+                  <img
+                    src={item.src}
+                    alt={`Feedback de ${item.name}`}
+                    style={{
+                      width: '100%',
+                      height: mobile ? 380 : 440,
+                      objectFit: 'cover',
+                      objectPosition: 'top',
+                      display: 'block',
+                    }}
+                  />
+                </div>
+                <div style={{
+                  padding: '10px 6px 4px',
+                  textAlign: 'center',
+                  fontFamily: "'Playfair Display', serif",
+                  fontStyle: 'italic',
+                  fontSize: 14,
+                  color: C.brownMid,
+                }}>
+                  {item.name}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -2049,18 +2135,21 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
       `}</style>
       <Navbar />
       <Hero />
-      <DorSection />
-      <StatementStrip />
-      <VivenciaSection />
-      <MarqueeStrip />
-      <TransformacaoSection />
-      <ParaQuemSection />
-      <StatsStrip />
-      <VivenciasSection />
-      <InscricaoSection />
-      <TestemunhosSection />
-      <FaqSection />
-      <Footer />
+      {/* conteúdo desliza por cima do hero sticky */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <DorSection />
+        <StatementStrip />
+        <VivenciaSection />
+        <MarqueeStrip />
+        <TransformacaoSection />
+        <ParaQuemSection />
+        <StatsStrip />
+        <VivenciasSection />
+        <InscricaoSection />
+        <TestemunhosSection />
+        <FaqSection />
+        <Footer />
+      </div>
     </>
     </GlobalModeCtx.Provider>
   )
