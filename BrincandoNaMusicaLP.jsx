@@ -11,7 +11,11 @@ import online2 from './images/online (2).mp4'
 import online3 from './images/online (3).mp4'
 import online4 from './images/online (4).mp4'
 import onlineImg1 from './images/online (1).jpeg'
+import eve1 from './images/eve1.png'
+import jul1 from './images/jul1.png'
+import mire1 from './images/mire1.png'
 import fundoHero from './images/fundo-primeira-dobra.png'
+import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
@@ -276,38 +280,36 @@ const dorCards = [
   },
 ]
 
-function DorCard({ card, delay }) {
+function DorCard({ card, delay, mobile }) {
   const [ref, inView] = useInView()
-  const [hovered, setHovered] = useState(false)
   return (
     <div ref={ref} style={{
-      background: hovered ? 'rgba(255,255,255,0.06)' : 'transparent',
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 16, padding: '32px 28px',
-      position: 'relative', overflow: 'hidden',
-      transition: 'opacity 0.7s ease, transform 0.7s ease, background 0.2s',
+      display: 'grid',
+      gridTemplateColumns: mobile ? '52px 1fr' : '72px 1fr',
+      gap: mobile ? 16 : 24,
+      padding: mobile ? '26px 0' : '30px 0',
+      borderTop: '1px solid rgba(237,234,227,0.14)',
+      transition: 'opacity 0.6s ease, transform 0.6s ease',
       transitionDelay: `${delay}ms`,
       opacity: inView ? 1 : 0,
-      transform: inView ? 'translateY(0)' : 'translateY(28px)',
-      cursor: 'default',
-    }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+      transform: inView ? 'translateY(0)' : 'translateY(20px)',
+    }}>
       <div style={{
         fontFamily: "'Playfair Display', serif",
-        fontStyle: 'italic', fontSize: 64,
-        color: C.sageLight, opacity: 0.3,
-        lineHeight: 1, marginBottom: 8, userSelect: 'none',
+        fontStyle: 'italic', fontSize: mobile ? 34 : 42,
+        color: 'rgba(196,208,197,0.4)',
+        lineHeight: 1, userSelect: 'none', paddingTop: 2,
       }}>{card.n}</div>
-      <h3 style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-        fontSize: 16, color: C.cream, marginBottom: 10,
-      }}>{card.title}</h3>
-      <p style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-        fontSize: 15, color: C.brownLight, lineHeight: 1.65,
-      }}>{card.text}</p>
+      <div>
+        <h3 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 18 : 20, color: C.cream, marginBottom: 8, lineHeight: 1.3,
+        }}>{card.title}</h3>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: mobile ? 14.5 : 15.5, color: C.brownLight, lineHeight: 1.65,
+        }}>{card.text}</p>
+      </div>
     </div>
   )
 }
@@ -360,11 +362,11 @@ function DorSection() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)',
-          gap: 20,
+          gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)',
+          columnGap: 56,
         }}>
           {dorCards.map((card, i) => (
-            <DorCard key={i} card={card} delay={i * 100} />
+            <DorCard key={i} card={card} delay={i * 70} mobile={mobile} />
           ))}
         </div>
       </div>
@@ -628,33 +630,41 @@ const experiencias = [
   },
 ]
 
-function ExpCard({ exp, delay }) {
+function ExpItem({ exp, index, delay }) {
   const [ref, inView] = useInView()
   return (
     <div ref={ref} style={{
-      background: C.creamCard,
-      borderLeft: `3px solid ${C.sage}`,
-      borderRadius: '0 12px 12px 0',
-      padding: '28px 28px',
-      transition: 'opacity 0.7s ease, transform 0.7s ease',
+      display: 'flex', gap: 16, alignItems: 'flex-start',
+      padding: '18px 0',
+      borderBottom: index < experiencias.length - 1 ? `1px solid ${C.sageLight}` : 'none',
+      transition: 'opacity 0.6s ease, transform 0.6s ease',
       transitionDelay: `${delay}ms`,
       opacity: inView ? 1 : 0,
-      transform: inView ? 'translateY(0)' : 'translateY(28px)',
+      transform: inView ? 'translateY(0)' : 'translateY(18px)',
     }}>
-      <h3 style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-        fontSize: 16, color: C.brown, marginBottom: 10, lineHeight: 1.4,
-      }}>{exp.title}</h3>
-      <p style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-        fontSize: 15, color: C.brownMid, lineHeight: 1.7,
-      }}>{exp.text}</p>
+      <div style={{
+        flexShrink: 0,
+        fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+        fontSize: 22, color: C.sageDark, opacity: 0.55,
+        lineHeight: 1.3, width: 30,
+      }}>{String(index + 1).padStart(2, '0')}</div>
+      <div>
+        <h3 style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: 16, color: C.brown, marginBottom: 6, lineHeight: 1.4,
+        }}>{exp.title}</h3>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 14.5, color: C.brownMid, lineHeight: 1.65,
+        }}>{exp.text}</p>
+      </div>
     </div>
   )
 }
 
 function VivenciaSection() {
   const [titleRef, titleInView] = useInView()
+  const [photoRef, photoInView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
 
@@ -665,7 +675,7 @@ function VivenciaSection() {
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div ref={titleRef} style={{
-          textAlign: 'center', marginBottom: 64,
+          textAlign: 'center', marginBottom: 56,
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: titleInView ? 1 : 0,
           transform: titleInView ? 'translateY(0)' : 'translateY(28px)',
@@ -694,12 +704,45 @@ function VivenciaSection() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)',
-          gap: 20,
+          gridTemplateColumns: mobile ? '1fr' : '0.8fr 1.2fr',
+          gap: mobile ? 40 : 64,
+          alignItems: 'center',
         }}>
-          {experiencias.map((exp, i) => (
-            <ExpCard key={i} exp={exp} delay={i * 100} />
-          ))}
+          {/* foto da Chris, moldura tipo foto colada */}
+          <div ref={photoRef} style={{
+            display: 'flex', justifyContent: 'center',
+            transition: 'opacity 0.8s ease, transform 0.8s ease',
+            opacity: photoInView ? 1 : 0,
+            transform: photoInView ? 'translateY(0)' : 'translateY(24px)',
+          }}>
+            <div style={{
+              position: 'relative',
+              background: C.white,
+              padding: '10px 10px 34px',
+              borderRadius: 8,
+              boxShadow: '0 20px 46px rgba(61,53,48,0.22)',
+              transform: 'rotate(-1.5deg)',
+              maxWidth: 340, width: '100%',
+            }}>
+              <WashiTape color={C.sage} rotate={7} top={-15} left="24%" width={58} />
+              <div style={{ borderRadius: 4, overflow: 'hidden', aspectRatio: '4/5' }}>
+                <img src={chrisSorrindo} alt="Chris Busato"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              </div>
+              <div style={{
+                position: 'absolute', bottom: 8, left: 0, right: 0, textAlign: 'center',
+                fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+                fontSize: 14, color: C.brownMid,
+              }}>Chris Busato</div>
+            </div>
+          </div>
+
+          {/* lista editorial */}
+          <div>
+            {experiencias.map((exp, i) => (
+              <ExpItem key={i} exp={exp} index={i} delay={i * 90} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -1095,6 +1138,9 @@ const feedbackItems = [
   { src: carol3, name: 'Carol' },
   { src: chris1, name: 'Chris' },
   { src: mark1,  name: 'Mark'  },
+  { src: eve1,   name: 'Evelyni'  },
+  { src: jul1,   name: 'Juliana' },
+  { src: mire1,  name: 'Mirella' },
 ]
 
 // ─── Colagem lúdica (fita + moldura tipo foto colada) ─────────────────────────
