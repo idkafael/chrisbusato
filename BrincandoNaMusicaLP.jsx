@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/bou4zi4_927919' })
+const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/3c73ydp' })
 
 const DIA_MUSICAL_URL = 'https://pay.cakto.com.br/xsj3gmd'
 import carol1 from './images/carol1.jpeg'
@@ -2313,7 +2313,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/bou4zi4_927919' }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/3c73ydp' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
