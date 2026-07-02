@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
-import vergonhaImg from './images/vergonha.png'
+import vergonhaImg from './images/vergonha.jpg'
 
 const C = {
   cream: '#EDEAE3',

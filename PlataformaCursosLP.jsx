@@ -7,8 +7,8 @@ import capaMusicalizacao from './images/Capa-Musicalizacao.png'
 import capaConsciencia from './images/Capa-Conciencia.png'
 import capaVergonha from './images/Capa-Vergonha.png'
 import capaReplay from './images/Capa-Replay.png'
-import fundoHero from './images/fundo-primeira-dobra.png'
-import bannerPlataforma from './images/banner-plataforma.png'
+import fundoHero from './images/fundo-primeira-dobra.jpg'
+import bannerPlataforma from './images/banner-plataforma.jpg'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
