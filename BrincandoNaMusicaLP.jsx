@@ -1805,51 +1805,37 @@ function TestemunhosSection() {
 
 // ─── Dia Musical · Lote no Escuro ─────────────────────────────────────────────
 
-const misterios = [
-  { icon: '📅', label: 'Data', value: 'em breve', hidden: true },
-  { icon: '📍', label: 'Local', value: 'São Paulo', hidden: false },
-  { icon: '🎶', label: 'Programação', value: 'em breve', hidden: true },
-]
-
-function MisterioCard({ item, index, mobile }) {
+function LocalReveladoBadge({ mobile }) {
   return (
     <div style={{
+      display: 'inline-block',
       background: 'rgba(255,255,255,0.04)',
-      border: item.hidden ? '1px dashed rgba(196,208,197,0.25)' : `1px solid ${C.sage}`,
+      border: `1px solid ${C.sage}`,
       borderRadius: 16,
-      padding: mobile ? '18px 14px' : '22px 18px',
+      padding: mobile ? '18px 28px' : '22px 40px',
       textAlign: 'center',
-      animation: `mysteryFloat ${4 + index * 0.7}s ease-in-out ${index * 0.4}s infinite`,
+      animation: 'mysteryFloat 4s ease-in-out infinite',
       position: 'relative',
     }}>
-      {!item.hidden && <div style={{
+      <div style={{
         position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
         background: C.sage, color: C.white,
         borderRadius: 100, padding: '2px 12px',
         fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
         fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase',
         whiteSpace: 'nowrap',
-      }}>revelado</div>}
-      <div style={{ fontSize: 24, marginBottom: 8 }}>{item.icon}</div>
+      }}>único detalhe revelado</div>
+      <div style={{ fontSize: 24, marginBottom: 8 }}>📍</div>
       <div style={{
         fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
         fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
         color: 'rgba(196,208,197,0.6)', marginBottom: 6,
-      }}>{item.label}</div>
+      }}>Local</div>
       <div style={{
         fontFamily: "'Playfair Display', serif",
-        fontSize: mobile ? 16 : 19,
-        color: item.hidden ? 'rgba(237,234,227,0.85)' : C.white,
-        fontWeight: item.hidden ? 400 : 700,
-        fontStyle: item.hidden ? 'italic' : 'normal',
-        filter: item.hidden ? 'blur(5px)' : 'none',
-        userSelect: item.hidden ? 'none' : 'auto',
-      }}>{item.hidden ? 'segredo por enquanto' : item.value}</div>
-      {item.hidden && <div style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-        fontSize: 10, color: 'rgba(196,208,197,0.45)', marginTop: 6,
-        letterSpacing: '0.5px',
-      }}>ainda no escuro</div>}
+        fontSize: mobile ? 19 : 22,
+        color: C.white, fontWeight: 700,
+      }}>São Paulo</div>
     </div>
   )
 }
@@ -1933,16 +1919,9 @@ function DiaMusicalSection() {
           <strong style={{ fontWeight: 700, color: C.white }}>valor de lote no escuro</strong>.
         </p>
 
-        {/* cards de mistério */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: mobile ? 10 : 16,
-          marginBottom: 44,
-        }}>
-          {misterios.map((item, i) => (
-            <MisterioCard key={i} item={item} index={i} mobile={mobile} />
-          ))}
+        {/* único detalhe revelado */}
+        <div style={{ marginBottom: 44 }}>
+          <LocalReveladoBadge mobile={mobile} />
         </div>
 
         {/* badge lote no escuro */}
