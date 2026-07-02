@@ -1814,8 +1814,8 @@ const inclusosOnline = [
 ]
 
 const inclusosPresencial = [
-  'Tudo do acesso online',
-  'Vivência presencial com Chris Busato',
+  'Um Dia Musical inteiro com Chris Busato',
+  'Buffet incluso',
   'Prática ao vivo com música',
   'Exercícios em dupla e em grupo',
   'Interação direta e feedback em tempo real',
@@ -2123,24 +2123,11 @@ function InscricaoSection() {
               1º lote no escuro · valor exclusivo
             </div>
 
-            {/* bloco de mistério: só São Paulo é conhecido */}
             <div style={{
-              background: C.sage,
-              borderRadius: 12,
-              padding: '16px 20px',
-              marginBottom: 24,
-              position: 'relative', zIndex: 1,
-            }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 15, color: C.white,
-                letterSpacing: '0.3px', marginBottom: 6,
-              }}>📍 <strong>São Paulo</strong></div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 12.5, color: 'rgba(255,255,255,0.8)', fontStyle: 'italic',
-              }}>Data e local exatos ainda no escuro — único detalhe revelado por enquanto. Quando forem revelados, o preço sobe.</div>
-            </div>
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontSize: 13, color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.75)',
+              marginBottom: 20,
+            }}>📍 <strong style={{ color: highlightOnline ? C.brown : C.white }}>São Paulo</strong> · demais detalhes no escuro</div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
