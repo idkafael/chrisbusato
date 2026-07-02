@@ -1803,197 +1803,6 @@ function TestemunhosSection() {
   )
 }
 
-// ─── Dia Musical · Lote no Escuro ─────────────────────────────────────────────
-
-function LocalReveladoBadge({ mobile }) {
-  return (
-    <div style={{
-      display: 'inline-block',
-      background: 'rgba(255,255,255,0.04)',
-      border: `1px solid ${C.sage}`,
-      borderRadius: 16,
-      padding: mobile ? '18px 28px' : '22px 40px',
-      textAlign: 'center',
-      animation: 'mysteryFloat 4s ease-in-out infinite',
-      position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
-        background: C.sage, color: C.white,
-        borderRadius: 100, padding: '2px 12px',
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-        fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-      }}>único detalhe revelado</div>
-      <div style={{ fontSize: 24, marginBottom: 8 }}>📍</div>
-      <div style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-        fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
-        color: 'rgba(196,208,197,0.6)', marginBottom: 6,
-      }}>Local</div>
-      <div style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: mobile ? 19 : 22,
-        color: C.white, fontWeight: 700,
-      }}>São Paulo</div>
-    </div>
-  )
-}
-
-function DiaMusicalSection() {
-  const [ref, inView] = useInView()
-  const { globalMode } = useContext(GlobalModeCtx)
-  const w = useWindowWidth()
-  const mobile = w < 768
-
-  if (globalMode) return null
-
-  return (
-    <section id="dia-musical" style={{
-      background: 'linear-gradient(165deg, #1E1A16 0%, #2C2620 55%, #1E1A16 100%)',
-      padding: mobile ? '80px 24px 88px' : '112px 40px 120px',
-      position: 'relative', overflow: 'hidden',
-    }}>
-      {/* glow central */}
-      <div style={{
-        position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
-        width: mobile ? 340 : 620, height: mobile ? 340 : 620,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(138,158,140,0.10) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div ref={ref} style={{
-        maxWidth: 640, margin: '0 auto', textAlign: 'center',
-        position: 'relative', zIndex: 1,
-        transition: 'opacity 0.8s ease, transform 0.8s ease',
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(32px)',
-      }}>
-
-        {/* chip: 12/07 esgotada */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(232,83,74,0.12)',
-          border: '1px solid rgba(232,83,74,0.35)',
-          color: '#f0968f',
-          borderRadius: 100, padding: '6px 16px', marginBottom: 28,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-          fontSize: 11.5, letterSpacing: '1px', textTransform: 'uppercase',
-        }}>
-          <span style={{ textDecoration: 'line-through', opacity: 0.8 }}>Vivência 12/07</span>
-          esgotada
-        </div>
-
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 12, letterSpacing: '2.5px', color: C.sageLight,
-          textTransform: 'uppercase', marginBottom: 18,
-        }}>Vem aí</div>
-
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: mobile ? 'clamp(30px, 8vw, 42px)' : 'clamp(38px, 4vw, 56px)',
-          color: C.cream, lineHeight: 1.15, letterSpacing: '-0.5px',
-          marginBottom: 16,
-        }}>
-          O próximo capítulo já tem nome:{' '}
-          <em style={{
-            fontStyle: 'italic', fontWeight: 700,
-            background: `linear-gradient(90deg, ${C.sageLight} 0%, #ffffff 50%, ${C.sageLight} 100%)`,
-            backgroundSize: '200% auto',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            animation: 'goldShimmer 3.5s linear infinite',
-            display: 'inline-block',
-          }}>Dia Musical.</em>
-        </h2>
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: mobile ? 15.5 : 17,
-          color: 'rgba(237,234,227,0.8)', lineHeight: 1.7,
-          maxWidth: 460, margin: '0 auto 44px',
-        }}>
-          A vivência de 12 de julho esgotou. Garanta agora o ingresso da próxima pelo{' '}
-          <strong style={{ fontWeight: 700, color: C.white }}>valor de lote no escuro</strong>.
-        </p>
-
-        {/* único detalhe revelado */}
-        <div style={{ marginBottom: 44 }}>
-          <LocalReveladoBadge mobile={mobile} />
-        </div>
-
-        {/* preço do lote no escuro */}
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-          fontSize: 'clamp(44px, 5vw, 60px)',
-          color: C.white, lineHeight: 1, marginBottom: 4,
-          letterSpacing: '-2px',
-        }}>R$ 197</div>
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 13, color: 'rgba(237,234,227,0.6)', marginBottom: 20,
-        }}>pagamento único · valor exclusivo do 1º lote</div>
-
-        {/* badge lote no escuro */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: C.sage, color: C.white,
-          borderRadius: 100, padding: '7px 18px', marginBottom: 20,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-          fontSize: 12, letterSpacing: '1.5px', textTransform: 'uppercase',
-          animation: 'escuroPulse 2.2s ease-out infinite',
-        }}>
-          <span style={{
-            width: 7, height: 7, borderRadius: '50%', background: C.white,
-            display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
-          }} />
-          1º lote no escuro · Aberto
-        </div>
-
-        {/* copy do escuro */}
-        <p style={{
-          fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
-          fontSize: mobile ? 17 : 20,
-          color: 'rgba(237,234,227,0.85)', lineHeight: 1.65,
-          maxWidth: 480, margin: '0 auto 36px',
-        }}>
-          "Antes de abrir oficialmente, liberamos um lote para quem já sabe que quer viver essa experiência com a Chris. Quando os detalhes forem revelados, o preço sobe."
-        </p>
-
-        {/* CTA */}
-        <a
-          href={DIA_MUSICAL_URL}
-          target="_blank" rel="noopener noreferrer"
-          style={{
-            display: 'block', maxWidth: 420, margin: '0 auto 16px',
-            background: C.sage, color: C.white,
-            padding: '19px 32px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
-            textDecoration: 'none', textAlign: 'center',
-            letterSpacing: '0.2px',
-            boxShadow: '0 8px 32px rgba(138,158,140,0.35)',
-            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(138,158,140,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(138,158,140,0.35)' }}
-        >
-          Garantir meu ingresso no escuro →
-        </a>
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-          fontSize: 12.5, color: 'rgba(237,234,227,0.4)',
-          letterSpacing: '0.3px',
-        }}>
-          R$ 197 é o menor valor que o Dia Musical jamais terá · Vagas limitadas do 1º lote
-        </p>
-      </div>
-    </section>
-  )
-}
-
 // ─── Inscrição ────────────────────────────────────────────────────────────────
 
 const inclusosOnline = [
@@ -2269,39 +2078,50 @@ function InscricaoSection() {
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 20,
-            }}>Presencial · Esgotado</div>
+              marginBottom: 16,
+            }}>Presencial · Dia Musical</div>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 12.5, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.6)',
+              textDecoration: 'line-through', marginBottom: 4,
+            }}>Vivência 12/07 esgotada</div>
+
+            <div style={{
+              fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700,
+              fontSize: 24, marginBottom: 14, lineHeight: 1.2,
+              background: `linear-gradient(90deg, ${C.sageLight} 0%, ${highlightOnline ? C.sageDark : '#ffffff'} 50%, ${C.sageLight} 100%)`,
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: 'goldShimmer 3.5s linear infinite',
+              display: 'inline-block',
+            }}>O próximo capítulo: Dia Musical</div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 16, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.55)',
-                textDecoration: 'line-through', letterSpacing: '-0.3px',
-              }}>1º lote R$ 97</div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-                fontSize: 11, letterSpacing: '0.5px', textTransform: 'uppercase',
-                color: '#E8534A',
-              }}>esgotado</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 4 }}>
-              <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 'clamp(40px, 4.5vw, 54px)',
-                color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.6)',
-                lineHeight: 1, letterSpacing: '-2px',
-                textDecoration: 'line-through',
-              }}>R$ 120</div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 12, letterSpacing: '1px', textTransform: 'uppercase',
-                color: '#E8534A',
-              }}>esgotado</div>
+                fontSize: 'clamp(44px, 5vw, 58px)',
+                color: highlightOnline ? C.brown : C.cream, lineHeight: 1,
+                letterSpacing: '-2px',
+              }}>R$ 197</div>
             </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>todos os ingressos da vivência de 12/07 foram vendidos</div>
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              background: highlightOnline ? C.sagePale : C.sage,
+              color: highlightOnline ? C.sageDark : C.white,
+              borderRadius: 100, padding: '4px 12px', marginBottom: 20,
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 10.5, letterSpacing: '1px', textTransform: 'uppercase',
+              animation: 'escuroPulse 2.2s ease-out infinite',
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: highlightOnline ? C.sageDark : C.white,
+                display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
+              }} />
+              1º lote no escuro · valor exclusivo
+            </div>
 
             {/* bloco de mistério: só São Paulo é conhecido */}
             <div style={{
@@ -2319,7 +2139,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 12.5, color: 'rgba(255,255,255,0.8)', fontStyle: 'italic',
-              }}>Data e local exatos ainda no escuro — único detalhe revelado por enquanto.</div>
+              }}>Data e local exatos ainda no escuro — único detalhe revelado por enquanto. Quando forem revelados, o preço sobe.</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -2328,7 +2148,7 @@ function InscricaoSection() {
               {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
-            <a href="#dia-musical" style={{
+            <a href={DIA_MUSICAL_URL} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: C.white, color: C.brown,
               padding: '17px 24px', borderRadius: 100,
@@ -2342,14 +2162,14 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
             >
-              Quero a próxima vivência · lote no escuro →
+              Garantir meu ingresso no escuro →
             </a>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
               color: 'rgba(255,255,255,0.4)', textAlign: 'center',
             }}>
-              Novo: Dia Musical · 1º lote no escuro aberto
+              R$ 197 é o menor valor que o Dia Musical jamais terá
             </div>
           </div>}
 
@@ -2629,7 +2449,6 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         <ParaQuemSection />
         <VivenciasSection />
         <InscricaoSection />
-        <DiaMusicalSection />
         <TestemunhosSection />
         <FaqSection />
         <Footer />
