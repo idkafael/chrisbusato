@@ -1905,31 +1905,6 @@ function InscricaoSection() {
               opacity: 0.2, pointerEvents: 'none',
             }} />}
 
-            {/* Ribbon ESGOTADO */}
-            <div style={{
-              position: 'absolute', top: 28, right: -36,
-              width: 148,
-              background: 'linear-gradient(135deg, #E8534A 0%, #c0392b 100%)',
-              color: '#fff',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-              fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
-              textAlign: 'center', padding: '7px 0',
-              transform: 'rotate(45deg)',
-              animation: 'ribbonSlideIn 0.6s 0.3s ease both, ribbonPulse 2.5s 1s ease-in-out infinite',
-              zIndex: 10, pointerEvents: 'none',
-              overflow: 'hidden',
-            }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>ESGOTADO</span>
-              {/* shimmer */}
-              <div style={{
-                position: 'absolute', top: 0, left: '-100%',
-                width: '60%', height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
-                animation: 'ribbonShimmer 2.2s 1s ease-in-out infinite',
-                zIndex: 3,
-              }} />
-            </div>
-
             <div style={{
               display: 'inline-block',
               background: highlightOnline ? C.sage : C.sagePale,
@@ -1938,7 +1913,7 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Online · Gravação disponível</div>
+            }}>Online · 11 de julho</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
@@ -1968,7 +1943,7 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.sageLight : C.brownLight, marginBottom: 16,
-            }}>pagamento único · acesso imediato à gravação</div>
+            }}>pagamento único · vagas limitadas</div>
 
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -1985,7 +1960,7 @@ function InscricaoSection() {
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: highlightOnline ? C.white : C.sageDark,
-              }}>Vivência do dia 28 de junho · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>gravação completa</strong></span>
+              }}>Vivência do dia 11 de julho (sábado) · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>10h às 14h</strong></span>
             </div>
 
             {/* nota gravação */}
@@ -1998,11 +1973,11 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 13, color: highlightOnline ? C.sageLight : C.sageDark, marginBottom: 4,
-              }}>🎥 Acesso à gravação completa</div>
+              }}>🎥 Gravação completa inclusa</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13, color: highlightOnline ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
-              }}>A vivência ao vivo esgotou. Assista a gravação completa quando e quantas vezes quiser.</div>
+              }}>Não pode ao vivo? Você recebe a gravação e assiste quando quiser.</div>
             </div>
 
             <div style={{ height: 1, background: highlightOnline ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
@@ -2027,7 +2002,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              {highlightOnline ? 'Quero a gravação →' : 'Quero a gravação →'}
+              Quero minha vaga online →
             </a>
           </div>
 
@@ -2046,30 +2021,6 @@ function InscricaoSection() {
               borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
               opacity: 0.2, pointerEvents: 'none',
             }} />
-
-            {/* Ribbon ESGOTADO */}
-            <div style={{
-              position: 'absolute', top: 28, right: -36,
-              width: 148,
-              background: 'linear-gradient(135deg, #E8534A 0%, #c0392b 100%)',
-              color: '#fff',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-              fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
-              textAlign: 'center', padding: '7px 0',
-              transform: 'rotate(45deg)',
-              animation: 'ribbonSlideIn 0.6s 0.3s ease both, ribbonPulse 2.5s 1s ease-in-out infinite',
-              zIndex: 10, pointerEvents: 'none',
-              overflow: 'hidden',
-            }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>ESGOTADO</span>
-              <div style={{
-                position: 'absolute', top: 0, left: '-100%',
-                width: '60%', height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
-                animation: 'ribbonShimmer 2.2s 1s ease-in-out infinite',
-                zIndex: 3,
-              }} />
-            </div>
 
             <div style={{
               display: 'inline-block',
