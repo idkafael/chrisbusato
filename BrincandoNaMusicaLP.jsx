@@ -1924,6 +1924,18 @@ function DiaMusicalSection() {
           <LocalReveladoBadge mobile={mobile} />
         </div>
 
+        {/* preço do lote no escuro */}
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: 'clamp(44px, 5vw, 60px)',
+          color: C.white, lineHeight: 1, marginBottom: 4,
+          letterSpacing: '-2px',
+        }}>R$ 197</div>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 13, color: 'rgba(237,234,227,0.6)', marginBottom: 20,
+        }}>pagamento único · valor exclusivo do 1º lote</div>
+
         {/* badge lote no escuro */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -1975,7 +1987,7 @@ function DiaMusicalSection() {
           fontSize: 12.5, color: 'rgba(237,234,227,0.4)',
           letterSpacing: '0.3px',
         }}>
-          O menor valor que o Dia Musical jamais terá · Vagas limitadas do 1º lote
+          R$ 197 é o menor valor que o Dia Musical jamais terá · Vagas limitadas do 1º lote
         </p>
       </div>
     </section>
@@ -2258,7 +2270,7 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Presencial · 12 de julho</div>
+            }}>Presencial · Esgotado</div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
               <div style={{
@@ -2291,7 +2303,7 @@ function InscricaoSection() {
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>todos os ingressos da vivência de 12/07 foram vendidos</div>
 
-            {/* bloco de data destacado */}
+            {/* bloco de mistério: só São Paulo é conhecido */}
             <div style={{
               background: C.sage,
               borderRadius: 12,
@@ -2302,16 +2314,12 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 15, color: C.white,
-                letterSpacing: '0.3px', marginBottom: 4,
-              }}>📅 <strong style={{textTransform:'uppercase'}}>12 DE JULHO DE 2026 (domingo) — PRESENCIAL</strong></div>
+                letterSpacing: '0.3px', marginBottom: 6,
+              }}>📍 <strong>São Paulo</strong></div>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4,
-              }}>🕙 <strong style={{ fontWeight: 700, color: C.white }}>10h às 14h</strong></div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 <a href="https://maps.app.goo.gl/CzsbkMhVyN78DRSP7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>MK Danças — Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</a></div>
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 12.5, color: 'rgba(255,255,255,0.8)', fontStyle: 'italic',
+              }}>Data e local exatos ainda no escuro — único detalhe revelado por enquanto.</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
