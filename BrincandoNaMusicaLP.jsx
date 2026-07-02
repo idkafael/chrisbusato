@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/bou4zi4_927919' })
+
+const DIA_MUSICAL_URL = 'https://pay.cakto.com.br/xsj3gmd'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -208,8 +210,8 @@ function Hero() {
           >
             Quero a gravação da vivência online
           </a>}
-          {/* Botão presencial */}
-          {!globalMode && <a href="#ingresso-presencial" style={{
+          {/* Botão presencial → agora aponta pro Dia Musical (12/07 esgotado) */}
+          {!globalMode && <a href="#dia-musical" style={{
             display: 'inline-block',
             background: highlightOnline ? C.sagePale : C.sage,
             color: highlightOnline ? C.sageDark : C.white,
@@ -223,7 +225,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente domingo dia 12 de Julho
+            Presencial 12/07 esgotou · Vem aí o Dia Musical
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -1801,6 +1803,206 @@ function TestemunhosSection() {
   )
 }
 
+// ─── Dia Musical · Lote no Escuro ─────────────────────────────────────────────
+
+const misterios = [
+  { icon: '📅', label: 'Data', value: 'em breve', hidden: true },
+  { icon: '📍', label: 'Local', value: 'São Paulo', hidden: false },
+  { icon: '🎶', label: 'Programação', value: 'em breve', hidden: true },
+]
+
+function MisterioCard({ item, index, mobile }) {
+  return (
+    <div style={{
+      background: 'rgba(255,255,255,0.04)',
+      border: item.hidden ? '1px dashed rgba(196,208,197,0.25)' : `1px solid ${C.sage}`,
+      borderRadius: 16,
+      padding: mobile ? '18px 14px' : '22px 18px',
+      textAlign: 'center',
+      animation: `mysteryFloat ${4 + index * 0.7}s ease-in-out ${index * 0.4}s infinite`,
+      position: 'relative',
+    }}>
+      {!item.hidden && <div style={{
+        position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+        background: C.sage, color: C.white,
+        borderRadius: 100, padding: '2px 12px',
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+        fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}>revelado</div>}
+      <div style={{ fontSize: 24, marginBottom: 8 }}>{item.icon}</div>
+      <div style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+        fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
+        color: 'rgba(196,208,197,0.6)', marginBottom: 6,
+      }}>{item.label}</div>
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: mobile ? 16 : 19,
+        color: item.hidden ? 'rgba(237,234,227,0.85)' : C.white,
+        fontWeight: item.hidden ? 400 : 700,
+        fontStyle: item.hidden ? 'italic' : 'normal',
+        filter: item.hidden ? 'blur(5px)' : 'none',
+        userSelect: item.hidden ? 'none' : 'auto',
+      }}>{item.hidden ? 'segredo por enquanto' : item.value}</div>
+      {item.hidden && <div style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+        fontSize: 10, color: 'rgba(196,208,197,0.45)', marginTop: 6,
+        letterSpacing: '0.5px',
+      }}>ainda no escuro</div>}
+    </div>
+  )
+}
+
+function DiaMusicalSection() {
+  const [ref, inView] = useInView()
+  const { globalMode } = useContext(GlobalModeCtx)
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  if (globalMode) return null
+
+  return (
+    <section id="dia-musical" style={{
+      background: 'linear-gradient(165deg, #1E1A16 0%, #2C2620 55%, #1E1A16 100%)',
+      padding: mobile ? '80px 24px 88px' : '112px 40px 120px',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      {/* glow central */}
+      <div style={{
+        position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
+        width: mobile ? 340 : 620, height: mobile ? 340 : 620,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(138,158,140,0.10) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div ref={ref} style={{
+        maxWidth: 640, margin: '0 auto', textAlign: 'center',
+        position: 'relative', zIndex: 1,
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(32px)',
+      }}>
+
+        {/* chip: 12/07 esgotada */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: 'rgba(232,83,74,0.12)',
+          border: '1px solid rgba(232,83,74,0.35)',
+          color: '#f0968f',
+          borderRadius: 100, padding: '6px 16px', marginBottom: 28,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: 11.5, letterSpacing: '1px', textTransform: 'uppercase',
+        }}>
+          <span style={{ textDecoration: 'line-through', opacity: 0.8 }}>Vivência 12/07</span>
+          esgotada
+        </div>
+
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 12, letterSpacing: '2.5px', color: C.sageLight,
+          textTransform: 'uppercase', marginBottom: 18,
+        }}>Vem aí</div>
+
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 'clamp(30px, 8vw, 42px)' : 'clamp(38px, 4vw, 56px)',
+          color: C.cream, lineHeight: 1.15, letterSpacing: '-0.5px',
+          marginBottom: 16,
+        }}>
+          O próximo capítulo já tem nome:{' '}
+          <em style={{
+            fontStyle: 'italic', fontWeight: 700,
+            background: `linear-gradient(90deg, ${C.sageLight} 0%, #ffffff 50%, ${C.sageLight} 100%)`,
+            backgroundSize: '200% auto',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            animation: 'goldShimmer 3.5s linear infinite',
+            display: 'inline-block',
+          }}>Dia Musical.</em>
+        </h2>
+
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: mobile ? 15.5 : 17,
+          color: 'rgba(237,234,227,0.8)', lineHeight: 1.7,
+          maxWidth: 460, margin: '0 auto 44px',
+        }}>
+          A vivência de 12 de julho esgotou. Garanta agora o ingresso da próxima pelo{' '}
+          <strong style={{ fontWeight: 700, color: C.white }}>valor de lote no escuro</strong>.
+        </p>
+
+        {/* cards de mistério */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: mobile ? 10 : 16,
+          marginBottom: 44,
+        }}>
+          {misterios.map((item, i) => (
+            <MisterioCard key={i} item={item} index={i} mobile={mobile} />
+          ))}
+        </div>
+
+        {/* badge lote no escuro */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: C.sage, color: C.white,
+          borderRadius: 100, padding: '7px 18px', marginBottom: 20,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: 12, letterSpacing: '1.5px', textTransform: 'uppercase',
+          animation: 'escuroPulse 2.2s ease-out infinite',
+        }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: '50%', background: C.white,
+            display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
+          }} />
+          1º lote no escuro · Aberto
+        </div>
+
+        {/* copy do escuro */}
+        <p style={{
+          fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+          fontSize: mobile ? 17 : 20,
+          color: 'rgba(237,234,227,0.85)', lineHeight: 1.65,
+          maxWidth: 480, margin: '0 auto 36px',
+        }}>
+          "Antes de abrir oficialmente, liberamos um lote para quem já sabe que quer viver essa experiência com a Chris. Quando os detalhes forem revelados, o preço sobe."
+        </p>
+
+        {/* CTA */}
+        <a
+          href={DIA_MUSICAL_URL}
+          target="_blank" rel="noopener noreferrer"
+          style={{
+            display: 'block', maxWidth: 420, margin: '0 auto 16px',
+            background: C.sage, color: C.white,
+            padding: '19px 32px', borderRadius: 100,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
+            textDecoration: 'none', textAlign: 'center',
+            letterSpacing: '0.2px',
+            boxShadow: '0 8px 32px rgba(138,158,140,0.35)',
+            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(138,158,140,0.45)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(138,158,140,0.35)' }}
+        >
+          Garantir meu ingresso no escuro →
+        </a>
+
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: 12.5, color: 'rgba(237,234,227,0.4)',
+          letterSpacing: '0.3px',
+        }}>
+          O menor valor que o Dia Musical jamais terá · Vagas limitadas do 1º lote
+        </p>
+      </div>
+    </section>
+  )
+}
+
 // ─── Inscrição ────────────────────────────────────────────────────────────────
 
 const inclusosOnline = [
@@ -2045,6 +2247,30 @@ function InscricaoSection() {
               opacity: 0.2, pointerEvents: 'none',
             }} />
 
+            {/* Ribbon ESGOTADO */}
+            <div style={{
+              position: 'absolute', top: 28, right: -36,
+              width: 148,
+              background: 'linear-gradient(135deg, #E8534A 0%, #c0392b 100%)',
+              color: '#fff',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+              fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
+              textAlign: 'center', padding: '7px 0',
+              transform: 'rotate(45deg)',
+              animation: 'ribbonSlideIn 0.6s 0.3s ease both, ribbonPulse 2.5s 1s ease-in-out infinite',
+              zIndex: 10, pointerEvents: 'none',
+              overflow: 'hidden',
+            }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>ESGOTADO</span>
+              <div style={{
+                position: 'absolute', top: 0, left: '-100%',
+                width: '60%', height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
+                animation: 'ribbonShimmer 2.2s 1s ease-in-out infinite',
+                zIndex: 3,
+              }} />
+            </div>
+
             <div style={{
               display: 'inline-block',
               background: highlightOnline ? C.sagePale : C.sage,
@@ -2053,24 +2279,7 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Presencial · Recomendado</div>
-
-            {/* badge 2º lote */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 7,
-              background: '#E8534A', color: C.white,
-              borderRadius: 100, padding: '5px 14px', marginBottom: 12,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 11.5, letterSpacing: '1px', textTransform: 'uppercase',
-              animation: 'lotePulse 2s ease-out infinite',
-              position: 'relative', zIndex: 1,
-            }}>
-              <span style={{
-                width: 7, height: 7, borderRadius: '50%', background: C.white,
-                display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
-              }} />
-              2º lote ativo
-            </div>
+            }}>Presencial · 12 de julho</div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
               <div style={{
@@ -2084,16 +2293,24 @@ function InscricaoSection() {
                 color: '#E8534A',
               }}>esgotado</div>
             </div>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 'clamp(48px, 5vw, 64px)',
-              color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
-              letterSpacing: '-2px',
-            }}>R$ 120</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 4 }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 'clamp(40px, 4.5vw, 54px)',
+                color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.6)',
+                lineHeight: 1, letterSpacing: '-2px',
+                textDecoration: 'line-through',
+              }}>R$ 120</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 12, letterSpacing: '1px', textTransform: 'uppercase',
+                color: '#E8534A',
+              }}>esgotado</div>
+            </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>pagamento único · últimas vagas deste lote</div>
+            }}>todos os ingressos da vivência de 12/07 foram vendidos</div>
 
             {/* bloco de data destacado */}
             <div style={{
@@ -2124,7 +2341,7 @@ function InscricaoSection() {
               {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
-            <a href="https://pay.cakto.com.br/32sb5i6" target="_blank" rel="noopener noreferrer" style={{
+            <a href="#dia-musical" style={{
               display: 'block', width: '100%',
               background: C.white, color: C.brown,
               padding: '17px 24px', borderRadius: 100,
@@ -2138,14 +2355,14 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
             >
-              Quero participar presencialmente →
+              Quero a próxima vivência · lote no escuro →
             </a>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
               color: 'rgba(255,255,255,0.4)', textAlign: 'center',
             }}>
-              Confirmação imediata após pagamento · Pagamento seguro
+              Novo: Dia Musical · 1º lote no escuro aberto
             </div>
           </div>}
 
@@ -2384,6 +2601,18 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
           0%, 100% { box-shadow: 0 0 0 0 rgba(232,83,74,0.45); }
           70%       { box-shadow: 0 0 0 8px rgba(232,83,74,0); }
         }
+        @keyframes escuroPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(196,208,197,0.35); }
+          70%       { box-shadow: 0 0 0 10px rgba(196,208,197,0); }
+        }
+        @keyframes goldShimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes mysteryFloat {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-6px); }
+        }
         @keyframes loteDot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50%       { opacity: 0.5; transform: scale(0.7); }
@@ -2413,6 +2642,7 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         <ParaQuemSection />
         <VivenciasSection />
         <InscricaoSection />
+        <DiaMusicalSection />
         <TestemunhosSection />
         <FaqSection />
         <Footer />
