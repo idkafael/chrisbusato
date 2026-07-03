@@ -208,7 +208,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero a gravação da vivência online
+            Quero ir online dia 11 de Julho
           </a>}
           {/* Botão presencial → agora aponta pro Dia Musical (12/07 esgotado) */}
           {!globalMode && <a href="#dia-musical" style={{
@@ -240,7 +240,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero a gravação da vivência online
+            Quero ir online dia 11 de Julho
           </a>}
         </div>
 
@@ -1913,13 +1913,32 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Online · 11 de julho</div>
+            }}>Online · Recomendado</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 22, color: highlightOnline ? C.cream : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
+
+            {/* data em destaque */}
+            <div style={{
+              background: highlightOnline ? C.sage : C.sagePale,
+              borderRadius: 12,
+              padding: '14px 18px',
+              marginBottom: 20,
+              position: 'relative', zIndex: 1,
+            }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+                fontSize: 20, color: highlightOnline ? C.white : C.brown,
+                letterSpacing: '-0.3px', marginBottom: 2,
+              }}>📅 11 de Julho</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: highlightOnline ? 'rgba(255,255,255,0.85)' : C.sageDark,
+              }}>sábado · 10h às 14h</div>
+            </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
               <div style={{
@@ -1944,24 +1963,6 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.sageLight : C.brownLight, marginBottom: 16,
             }}>pagamento único · vagas limitadas</div>
-
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: highlightOnline ? C.sage : C.sagePale,
-              borderRadius: 8, padding: '8px 14px',
-              marginBottom: 24,
-              position: 'relative', zIndex: 1,
-            }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="1" y="2" width="12" height="11" rx="2" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3"/>
-                <path d="M1 6h12" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3"/>
-                <path d="M4 1v2M10 1v2" stroke={highlightOnline ? C.white : C.sage} strokeWidth="1.3" strokeLinecap="round"/>
-              </svg>
-              <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: highlightOnline ? C.white : C.sageDark,
-              }}>Vivência do dia 11 de julho (sábado) · <strong style={{ fontWeight: 700, color: highlightOnline ? C.white : C.brown }}>10h às 14h</strong></span>
-            </div>
 
             {/* nota gravação */}
             <div style={{
