@@ -1608,7 +1608,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · Zona Sul SP</span>
+              }}>📍 Presencial · São Paulo</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -2038,7 +2038,7 @@ function InscricaoSection() {
               fontSize: 'clamp(44px, 5vw, 58px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
-            }}>R$ 197</div>
+            }}>R$ 120</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
@@ -2060,7 +2060,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 Zona Sul de São Paulo · local exato em breve</div>
+              }}>📍 São Paulo · local exato em breve</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
