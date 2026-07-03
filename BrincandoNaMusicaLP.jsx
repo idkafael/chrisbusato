@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/3c73ydp' })
 
-const DIA_MUSICAL_URL = 'https://pay.cakto.com.br/xsj3gmd'
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/xsj3gmd'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -210,8 +210,8 @@ function Hero() {
           >
             Quero ir online dia 11 de Julho
           </a>}
-          {/* Botão presencial → agora aponta pro Dia Musical (12/07 esgotado) */}
-          {!globalMode && <a href="#dia-musical" style={{
+          {/* Botão presencial */}
+          {!globalMode && <a href="#ingresso-presencial" style={{
             display: 'inline-block',
             background: highlightOnline ? C.sagePale : C.sage,
             color: highlightOnline ? C.sageDark : C.white,
@@ -225,7 +225,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Presencial 12/07 esgotou · Vem aí o Dia Musical
+            Quero ir Presencialmente domingo dia 16 de Agosto
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -1608,7 +1608,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · MK Danças, Zona Sul SP</span>
+              }}>📍 Presencial · Zona Sul SP</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -1814,8 +1814,8 @@ const inclusosOnline = [
 ]
 
 const inclusosPresencial = [
-  'Um Dia Musical inteiro com Chris Busato',
-  'Buffet incluso',
+  'Tudo do acesso online',
+  'Vivência presencial com Chris Busato',
   'Prática ao vivo com música',
   'Exercícios em dupla e em grupo',
   'Interação direta e feedback em tempo real',
@@ -2030,56 +2030,38 @@ function InscricaoSection() {
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 16,
-            }}>Presencial · Dia Musical</div>
+              marginBottom: 20,
+            }}>Presencial · Recomendado</div>
 
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 'clamp(44px, 5vw, 58px)',
+              color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
+              letterSpacing: '-2px',
+            }}>R$ 197</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 12.5, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.6)',
-              textDecoration: 'line-through', marginBottom: 4,
-            }}>Vivência 12/07 esgotada</div>
+              fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
+            }}>pagamento único · vagas limitadas</div>
 
+            {/* bloco de data destacado */}
             <div style={{
-              fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700,
-              fontSize: 24, marginBottom: 14, lineHeight: 1.2,
-              background: `linear-gradient(90deg, ${C.sageLight} 0%, ${highlightOnline ? C.sageDark : '#ffffff'} 50%, ${C.sageLight} 100%)`,
-              backgroundSize: '200% auto',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'goldShimmer 3.5s linear infinite',
-              display: 'inline-block',
-            }}>O próximo capítulo: Dia Musical</div>
-
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
+              background: C.sage,
+              borderRadius: 12,
+              padding: '16px 20px',
+              marginBottom: 24,
+              position: 'relative', zIndex: 1,
+            }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 'clamp(44px, 5vw, 58px)',
-                color: highlightOnline ? C.brown : C.cream, lineHeight: 1,
-                letterSpacing: '-2px',
-              }}>R$ 197</div>
+                fontSize: 15, color: C.white,
+                letterSpacing: '0.3px', marginBottom: 4,
+              }}>📅 <strong style={{textTransform:'uppercase'}}>16 DE AGOSTO DE 2026 (domingo) — PRESENCIAL</strong></div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.85)',
+              }}>📍 Zona Sul de São Paulo · local exato em breve</div>
             </div>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 7,
-              background: highlightOnline ? C.sagePale : C.sage,
-              color: highlightOnline ? C.sageDark : C.white,
-              borderRadius: 100, padding: '4px 12px', marginBottom: 20,
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 10.5, letterSpacing: '1px', textTransform: 'uppercase',
-              animation: 'escuroPulse 2.2s ease-out infinite',
-            }}>
-              <span style={{
-                width: 6, height: 6, borderRadius: '50%',
-                background: highlightOnline ? C.sageDark : C.white,
-                display: 'block', animation: 'loteDot 1.2s ease-in-out infinite',
-              }} />
-              1º lote no escuro · valor exclusivo
-            </div>
-
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 13, color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.75)',
-              marginBottom: 20,
-            }}>📍 <strong style={{ color: highlightOnline ? C.brown : C.white }}>São Paulo</strong> · demais detalhes no escuro</div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
@@ -2087,7 +2069,7 @@ function InscricaoSection() {
               {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
-            <a href={DIA_MUSICAL_URL} target="_blank" rel="noopener noreferrer" style={{
+            <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: C.white, color: C.brown,
               padding: '17px 24px', borderRadius: 100,
@@ -2101,54 +2083,18 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
             >
-              Garantir meu ingresso no escuro →
+              Quero participar presencialmente →
             </a>
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
               color: 'rgba(255,255,255,0.4)', textAlign: 'center',
             }}>
-              R$ 197 é o menor valor que o Dia Musical jamais terá
+              Confirmação imediata após pagamento · Pagamento seguro
             </div>
           </div>}
 
         </div>
-
-        {/* mapa presencial */}
-        {!globalMode && <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 12, letterSpacing: '2px', color: C.sage,
-            textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — MK Danças · Av. Padre Antônio José dos Santos, 748 A · Cidade Monções, Zona Sul SP</div>
-          <div style={{ textAlign: 'center', marginBottom: 12 }}>
-            <a
-              href="https://maps.app.goo.gl/CzsbkMhVyN78DRSP7"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: C.sageDark,
-                textDecoration: 'underline', fontWeight: 500,
-              }}
-            >Ver no Google Maps →</a>
-          </div>
-          <div style={{
-            borderRadius: 16, overflow: 'hidden',
-            border: `1px solid ${C.sageLight}`,
-            boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
-          }}>
-            <iframe
-              title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=Av.+Padre+Antônio+José+dos+Santos,+748+A+-+Cidade+Monções,+São+Paulo&output=embed&hl=pt-BR"
-              width="100%"
-              height="340"
-              style={{ border: 0, display: 'block' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>}
 
       </div>
     </section>
