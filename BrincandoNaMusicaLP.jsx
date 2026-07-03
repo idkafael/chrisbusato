@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/3c73ydp' })
 
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/xsj3gmd'
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/33j8q2y'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -122,13 +122,13 @@ function Hero() {
   return (
     <section style={{
       background: C.cream,
-      position: 'sticky', top: 0, zIndex: 1,
+      position: 'relative',
       overflow: 'hidden',
       minHeight: '100vh',
       padding: mobile ? '104px 20px 56px' : '124px 40px 56px',
       display: 'flex', alignItems: 'center',
     }}>
-      {/* imagem de fundo (mesma da plataforma, efeito sticky) */}
+      {/* imagem de fundo */}
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `url(${fundoHero})`,
