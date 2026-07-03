@@ -2034,8 +2034,46 @@ function InscricaoSection() {
             }}>Presencial · Recomendado</div>
 
             <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 22, color: highlightOnline ? C.brown : C.cream,
+              letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
+            }}>Brincando na Música</div>
+
+            {/* data em destaque */}
+            <div style={{
+              background: C.sage,
+              borderRadius: 12,
+              padding: '14px 18px',
+              marginBottom: 20,
+              position: 'relative', zIndex: 1,
+            }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+                fontSize: 20, color: C.white,
+                letterSpacing: '-0.3px', marginBottom: 2,
+              }}>📅 16 de Agosto</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.85)',
+              }}>domingo · São Paulo · local exato em breve</div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 18, color: highlightOnline ? C.brownLight : 'rgba(196,180,160,0.5)',
+                textDecoration: 'line-through', letterSpacing: '-0.3px',
+              }}>R$ 197</div>
+              <div style={{
+                background: '#E8534A', color: C.white,
+                borderRadius: 100, padding: '2px 10px',
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 11, letterSpacing: '0.5px',
+              }}>39% OFF</div>
+            </div>
+            <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 'clamp(44px, 5vw, 58px)',
+              fontSize: 'clamp(48px, 5vw, 64px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
             }}>R$ 120</div>
@@ -2043,25 +2081,6 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>pagamento único · vagas limitadas</div>
-
-            {/* bloco de data destacado */}
-            <div style={{
-              background: C.sage,
-              borderRadius: 12,
-              padding: '16px 20px',
-              marginBottom: 24,
-              position: 'relative', zIndex: 1,
-            }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 15, color: C.white,
-                letterSpacing: '0.3px', marginBottom: 4,
-              }}>📅 <strong style={{textTransform:'uppercase'}}>16 DE AGOSTO DE 2026 (domingo) — PRESENCIAL</strong></div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>📍 São Paulo · local exato em breve</div>
-            </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
