@@ -873,7 +873,7 @@ function MiniPolaroid({ src, caption, rotate = 0, tapeColor = C.sage, offsetY = 
       style={{
         position: 'relative',
         background: C.white,
-        padding: '8px 8px 26px',
+        padding: '8px 8px 10px',
         borderRadius: 8,
         boxShadow: hovered ? '0 20px 44px rgba(61,53,48,0.28)' : '0 12px 30px rgba(61,53,48,0.18)',
         transform: `translateY(${offsetY}px) rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.04 : 1})`,
@@ -886,7 +886,7 @@ function MiniPolaroid({ src, caption, rotate = 0, tapeColor = C.sage, offsetY = 
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
       </div>
       <div style={{
-        position: 'absolute', bottom: 6, left: 0, right: 0, textAlign: 'center', padding: '0 6px',
+        textAlign: 'center', padding: '8px 6px 0',
         fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
         fontSize: 11.5, color: C.brownMid, lineHeight: 1.25,
       }}>{caption}</div>
