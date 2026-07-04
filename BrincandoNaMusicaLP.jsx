@@ -160,15 +160,21 @@ function Hero() {
         margin: '0 auto',
         animation: 'fadeUp 0.9s ease forwards',
       }}>
+        {/* divisor fino acima da H1 */}
+        <div style={{
+          width: 44, height: 1.5, background: C.brownLight, opacity: 0.5,
+          margin: `0 auto ${mobile ? 28 : 36}px`,
+        }} />
+
         <h1 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(32px, 6vw, 72px)',
-          color: C.brown, lineHeight: 1.15,
-          marginBottom: mobile ? 24 : 36, letterSpacing: '-1px',
-          textShadow: '0 2px 24px rgba(237,234,227,0.85), 0 1px 3px rgba(237,234,227,0.6)',
+          fontWeight: 500,
+          fontSize: 'clamp(32px, 6vw, 64px)',
+          color: C.brown, lineHeight: 1.22,
+          marginBottom: mobile ? 28 : 40, letterSpacing: '-0.5px',
+          maxWidth: 640, marginLeft: 'auto', marginRight: 'auto',
         }}>
-          Para brincar mais na dança,<br />
-          você não precisa de{' '}
+          Para brincar mais na dança, você não precisa de{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
         </h1>
 
