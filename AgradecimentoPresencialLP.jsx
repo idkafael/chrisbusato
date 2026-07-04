@@ -13,7 +13,7 @@ const C = {
 const WA_NUMBER = '5511967068271'
 const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso presencial')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
-const GROUP_LINK = 'https://chat.whatsapp.com/F5ahSYwzFGQIwA3oqyZIoT?mode=gi_t'
+const GROUP_LINK = 'https://chat.whatsapp.com/JViTLNZmaUYBOjG05cZchA?mode=gi_t'
 
 function useWindowWidth() {
   const [w, setW] = [typeof window !== 'undefined' ? window.innerWidth : 1200, null]
@@ -111,7 +111,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 12 de julho</strong> na MK Danças — Av. Padre Antônio José dos Santos, 748 A - Cidade Monções, Zona Sul, São Paulo.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 16 de agosto (domingo)</strong>, em São Paulo — o local exato será divulgado em breve.
           </p>
 
           <p style={{
@@ -153,7 +153,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 12 de julho · 10h às 14h · MK Danças, Cidade Monções, Zona Sul SP
+            📍 16 de agosto (domingo) · São Paulo · local exato em breve
           </p>
         </div>
       </section>
