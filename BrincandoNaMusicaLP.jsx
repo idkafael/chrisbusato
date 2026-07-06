@@ -143,12 +143,6 @@ function Hero() {
         margin: '0 auto',
         animation: 'fadeUp 0.9s ease forwards',
       }}>
-        {/* divisor fino acima da H1 */}
-        <div style={{
-          width: 44, height: 1.5, background: C.brownLight, opacity: 0.5,
-          margin: `0 auto ${mobile ? 28 : 36}px`,
-        }} />
-
         <h1 style={{
           fontFamily: "'Playfair Display', serif",
           fontWeight: 500,
@@ -161,25 +155,17 @@ function Hero() {
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
         </h1>
 
-        {/* VSL em moldura tipo foto colada */}
+        {/* VSL */}
         <div style={{ marginBottom: mobile ? 24 : 36, display: 'flex', justifyContent: 'center' }}>
           <div style={{
-            position: 'relative',
-            background: C.white,
-            padding: mobile ? '8px 8px 8px' : '12px 12px 12px',
-            borderRadius: 10,
-            boxShadow: '0 24px 54px rgba(61,53,48,0.30)',
-            transform: 'rotate(-1.1deg)',
+            borderRadius: 12, overflow: 'hidden',
+            boxShadow: '0 16px 40px rgba(61,53,48,0.18)',
             maxWidth: 560, width: '100%',
           }}>
-            <WashiTape color={C.sage} rotate={-7} top={-15} left="20%" width={62} />
-            <WashiTape color={C.brownLight} rotate={9} top={-13} left="82%" width={54} />
-            <div style={{ borderRadius: 6, overflow: 'hidden' }}>
-              <vturb-smartplayer
-                id="vid-6a120f7fc9941c35508e9807"
-                style={{ display: 'block', margin: '0 auto', width: '100%' }}
-              />
-            </div>
+            <vturb-smartplayer
+              id="vid-6a120f7fc9941c35508e9807"
+              style={{ display: 'block', margin: '0 auto', width: '100%' }}
+            />
           </div>
         </div>
 
