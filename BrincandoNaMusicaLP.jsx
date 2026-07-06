@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/3c73ydp' })
 
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/33j8q2y'
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/377ksba'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -2075,14 +2075,14 @@ function InscricaoSection() {
                 borderRadius: 100, padding: '2px 10px',
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 11, letterSpacing: '0.5px',
-              }}>39% OFF</div>
+              }}>51% OFF</div>
             </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 'clamp(48px, 5vw, 64px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
-            }}>R$ 120</div>
+            }}>R$ 97</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
