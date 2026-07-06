@@ -18,7 +18,6 @@ import jul1 from './images/jul1.png'
 import mire1 from './images/mire1.png'
 import feedback10 from './images/feedback10.jpeg'
 import feedback11 from './images/feedback11.jpeg'
-import fundoHero from './images/fundo-primeira-dobra.jpg'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
@@ -122,38 +121,22 @@ function Hero() {
   return (
     <section style={{
       background: C.cream,
-      position: 'relative',
-      overflow: 'hidden',
-      minHeight: '100vh',
-      padding: mobile ? '104px 20px 56px' : '124px 40px 56px',
-      display: 'flex', alignItems: 'center',
+      position: 'relative', overflow: 'hidden',
+      padding: mobile ? '80px 24px 64px' : '120px 40px 80px',
     }}>
-      {/* imagem de fundo */}
+      {/* blobs */}
       <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `url(${fundoHero})`,
-        backgroundSize: 'cover',
-        backgroundPosition: mobile ? 'center 15%' : 'center 20%',
-        pointerEvents: 'none',
+        position: 'absolute', top: '-8%', right: '-6%',
+        width: 480, height: 480, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.25, pointerEvents: 'none',
       }} />
-      {/* overlay pra legibilidade (mais leve, deixa a imagem aparecer mais) */}
       <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: mobile
-          ? 'linear-gradient(to bottom, rgba(237,234,227,0.72) 0%, rgba(237,234,227,0.22) 42%, rgba(237,234,227,0.68) 100%)'
-          : 'linear-gradient(to bottom, rgba(237,234,227,0.68) 0%, rgba(237,234,227,0.14) 40%, rgba(237,234,227,0.62) 100%)',
+        position: 'absolute', bottom: '4%', left: '-5%',
+        width: 280, height: 280, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.2, pointerEvents: 'none',
       }} />
-      {/* rabiscos decorativos (tema brincando) */}
-      {!mobile && <>
-        <svg style={{ position: 'absolute', top: '14%', left: '6%', opacity: 0.5, pointerEvents: 'none' }} width="56" height="56" viewBox="0 0 56 56" fill="none">
-          <path d="M4 28c8-16 24-20 30-8s-4 20-14 16 2-22 18-18" stroke={C.sageDark} strokeWidth="2" strokeLinecap="round" fill="none"/>
-        </svg>
-        <svg style={{ position: 'absolute', bottom: '10%', right: '7%', opacity: 0.5, pointerEvents: 'none' }} width="44" height="44" viewBox="0 0 44 44" fill="none">
-          <circle cx="14" cy="30" r="5" stroke={C.sageDark} strokeWidth="2"/>
-          <path d="M19 30V8l16-4v20" stroke={C.sageDark} strokeWidth="2" strokeLinecap="round"/>
-          <circle cx="35" cy="24" r="5" stroke={C.sageDark} strokeWidth="2"/>
-        </svg>
-      </>}
 
       <div style={{
         maxWidth: 760, textAlign: 'center', position: 'relative', zIndex: 1,
