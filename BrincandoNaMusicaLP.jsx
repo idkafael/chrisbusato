@@ -1583,7 +1583,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · São Paulo</span>
+              }}>📍 Presencial · Consolação, São Paulo</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -2025,12 +2025,12 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
                 fontSize: 20, color: C.white,
-                letterSpacing: '-0.3px', marginBottom: 2,
-              }}>📅 16 de Agosto</div>
+                letterSpacing: '-0.3px', marginBottom: 4,
+              }}>📅 16 de Agosto · domingo</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.85)',
-              }}>domingo · São Paulo · local exato em breve</div>
+                fontSize: 13, color: 'rgba(255,255,255,0.9)',
+              }}>📍 <a href="https://share.google/ZBCvc3rRsOkFefARa" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP</a></div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2089,6 +2089,42 @@ function InscricaoSection() {
           </div>}
 
         </div>
+
+        {/* mapa presencial */}
+        {!globalMode && <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2px', color: C.sage,
+            textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
+          }}>📍 Local — Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP</div>
+          <div style={{ textAlign: 'center', marginBottom: 12 }}>
+            <a
+              href="https://share.google/ZBCvc3rRsOkFefARa"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: C.sageDark,
+                textDecoration: 'underline', fontWeight: 500,
+              }}
+            >Ver no Google Maps →</a>
+          </div>
+          <div style={{
+            borderRadius: 16, overflow: 'hidden',
+            border: `1px solid ${C.sageLight}`,
+            boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+          }}>
+            <iframe
+              title="Local da vivência presencial"
+              src="https://maps.google.com/maps?q=Rua+da+Consolação,+93+-+Centro,+São+Paulo&output=embed&hl=pt-BR"
+              width="100%"
+              height="340"
+              style={{ border: 0, display: 'block' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>}
 
       </div>
     </section>
