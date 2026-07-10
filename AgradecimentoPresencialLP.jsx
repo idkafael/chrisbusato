@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 
-const presencialVideo = '/presencial.mp4'
-
 const C = {
   cream: '#EDEAE3', creamDark: '#E4E0D7', white: '#FAFAF8',
   sage: '#8A9E8C', sageDark: '#6B7F6D', sageLight: '#C4D0C5', sagePale: '#E8EDEA',
@@ -27,6 +25,14 @@ export default function AgradecimentoPresencialLP() {
     link.rel = 'stylesheet'
     document.head.appendChild(link)
     return () => document.head.removeChild(link)
+  }, [])
+
+  useEffect(() => {
+    if (document.querySelector('script[src*="6a503164072eab04f801ecfe"]')) return
+    const s = document.createElement('script')
+    s.src = 'https://scripts.converteai.net/1c6e6f27-d6f0-4013-b98a-0067464a2b63/players/6a503164072eab04f801ecfe/v4/player.js'
+    s.async = true
+    document.head.appendChild(s)
   }, [])
 
   const mobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false
@@ -96,12 +102,9 @@ export default function AgradecimentoPresencialLP() {
 
           {/* Vídeo de boas-vindas */}
           <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
-            <video
-              src={`${presencialVideo}#t=0.001`}
-              controls
-              playsInline
-              preload="metadata"
-              style={{ width: '100%', display: 'block', borderRadius: 16 }}
+            <vturb-smartplayer
+              id="vid-6a503164072eab04f801ecfe"
+              style={{ display: 'block', margin: '0 auto', width: '100%' }}
             />
           </div>
 
