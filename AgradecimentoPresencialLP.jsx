@@ -78,17 +78,13 @@ export default function AgradecimentoPresencialLP() {
           maxWidth: 640, width: '100%', textAlign: 'center',
           animation: 'fadeUp 0.8s ease both',
         }}>
-          {/* Ícone */}
-          <div style={{ fontSize: 56, marginBottom: 24 }}>🎉</div>
-
-          {/* Eyebrow */}
-          <div style={{
-            display: 'inline-block',
-            background: C.sagePale, color: C.sageDark,
-            borderRadius: 100, padding: '5px 18px', marginBottom: 24,
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 12, letterSpacing: '1.5px', textTransform: 'uppercase',
-          }}>Vaga confirmada · Presencial</div>
+          {/* Vídeo de boas-vindas — primeiro elemento */}
+          <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
+            <vturb-smartplayer
+              id="vid-6a503164072eab04f801ecfe"
+              style={{ display: 'block', margin: '0 auto', width: '100%' }}
+            />
+          </div>
 
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
@@ -99,14 +95,6 @@ export default function AgradecimentoPresencialLP() {
             Sua vaga está{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>garantida!</em>
           </h1>
-
-          {/* Vídeo de boas-vindas */}
-          <div style={{ marginBottom: 32, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(61,53,48,0.12)' }}>
-            <vturb-smartplayer
-              id="vid-6a503164072eab04f801ecfe"
-              style={{ display: 'block', margin: '0 auto', width: '100%' }}
-            />
-          </div>
 
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
