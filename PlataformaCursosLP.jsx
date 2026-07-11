@@ -76,11 +76,12 @@ function useWindowWidth() {
 
 // ─── CTA reutilizável ───────────────────────────────────────────────────────
 
-function CtaButton({ children, mobile, full = false }) {
+function CtaButton({ children, mobile, full = false, href = CHECKOUT_URL }) {
+  const isAnchor = href.charAt(0) === '#'
   return (
     <a
-      href={CHECKOUT_URL}
-      target="_blank" rel="noopener noreferrer"
+      href={href}
+      {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
       style={{
         display: full ? 'block' : 'inline-block',
         width: full ? '100%' : 'auto',
@@ -206,7 +207,7 @@ function Hero() {
           </h1>
 
           <div style={{ marginTop: 32 }}>
-            <CtaButton mobile={mobile}>Quero acesso à plataforma →</CtaButton>
+            <CtaButton mobile={mobile} href="#para-quem">Quero conhecer a plataforma →</CtaButton>
           </div>
         </div>
       </div>
@@ -255,7 +256,7 @@ function PublicoSection() {
   const mobile = w < 768
 
   return (
-    <section style={{
+    <section id="para-quem" style={{
       background: C.white,
       padding: mobile ? '72px 24px' : '100px 40px',
       position: 'relative', zIndex: 3,
@@ -1247,7 +1248,7 @@ function FaqSection() {
         {faqItems.map((item, i) => <FaqItem key={i} item={item} index={i} />)}
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <CtaButton mobile={mobile}>Quero acesso à plataforma →</CtaButton>
+          <CtaButton mobile={mobile} href="#oferta">Quero acesso à plataforma →</CtaButton>
         </div>
       </div>
     </section>
