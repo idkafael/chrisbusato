@@ -183,7 +183,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero ir online dia 11 de Julho
+            Quero a gravação online
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -215,7 +215,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir online dia 11 de Julho
+            Quero a gravação online
           </a>}
         </div>
 
@@ -1880,6 +1880,30 @@ function InscricaoSection() {
               opacity: 0.2, pointerEvents: 'none',
             }} />}
 
+            {/* Ribbon ESGOTADO */}
+            <div style={{
+              position: 'absolute', top: 28, right: -36,
+              width: 148,
+              background: 'linear-gradient(135deg, #E8534A 0%, #c0392b 100%)',
+              color: '#fff',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+              fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
+              textAlign: 'center', padding: '7px 0',
+              transform: 'rotate(45deg)',
+              animation: 'ribbonSlideIn 0.6s 0.3s ease both, ribbonPulse 2.5s 1s ease-in-out infinite',
+              zIndex: 10, pointerEvents: 'none',
+              overflow: 'hidden',
+            }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>ESGOTADO</span>
+              <div style={{
+                position: 'absolute', top: 0, left: '-100%',
+                width: '60%', height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
+                animation: 'ribbonShimmer 2.2s 1s ease-in-out infinite',
+                zIndex: 3,
+              }} />
+            </div>
+
             <div style={{
               display: 'inline-block',
               background: highlightOnline ? C.sage : C.sagePale,
@@ -1888,32 +1912,13 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Online · Recomendado</div>
+            }}>Online · Gravação</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 22, color: highlightOnline ? C.cream : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
-
-            {/* data em destaque */}
-            <div style={{
-              background: highlightOnline ? C.sage : C.sagePale,
-              borderRadius: 12,
-              padding: '14px 18px',
-              marginBottom: 20,
-              position: 'relative', zIndex: 1,
-            }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-                fontSize: 20, color: highlightOnline ? C.white : C.brown,
-                letterSpacing: '-0.3px', marginBottom: 2,
-              }}>📅 11 de Julho</div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: highlightOnline ? 'rgba(255,255,255,0.85)' : C.sageDark,
-              }}>sábado · 10h às 14h</div>
-            </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
               <div style={{
@@ -1937,7 +1942,7 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.sageLight : C.brownLight, marginBottom: 16,
-            }}>pagamento único · vagas limitadas</div>
+            }}>pagamento único · acesso imediato à gravação</div>
 
             {/* nota gravação */}
             <div style={{
@@ -1949,11 +1954,11 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 13, color: highlightOnline ? C.sageLight : C.sageDark, marginBottom: 4,
-              }}>🎥 Gravação completa inclusa</div>
+              }}>🎥 Acesso à gravação completa</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13, color: highlightOnline ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
-              }}>Não pode ao vivo? Você recebe a gravação e assiste quando quiser.</div>
+              }}>A vivência ao vivo esgotou. Você recebe a gravação completa e assiste quando e quantas vezes quiser.</div>
             </div>
 
             <div style={{ height: 1, background: highlightOnline ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
@@ -1978,7 +1983,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              Quero minha vaga online →
+              Quero a gravação →
             </a>
           </div>
 
