@@ -163,7 +163,7 @@ function Hero() {
   return (
     <section style={{
       background: C.cream,
-      position: 'sticky', top: 0, zIndex: 1,
+      position: 'relative',
       overflow: 'hidden',
       padding: mobile ? '90px 24px' : '110px 40px',
       height: '100vh',
@@ -259,10 +259,6 @@ function PublicoSection() {
       background: C.white,
       padding: mobile ? '72px 24px' : '100px 40px',
       position: 'relative', zIndex: 3,
-      marginTop: mobile ? -44 : -72,
-      borderTopLeftRadius: mobile ? 32 : 48,
-      borderTopRightRadius: mobile ? 32 : 48,
-      boxShadow: '0 -16px 40px rgba(61,53,48,0.06)',
     }}>
       <div style={{ maxWidth: 1080, margin: '0 auto' }}>
         <div ref={titleRef} style={{
@@ -1040,7 +1036,7 @@ function OfertaSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
             fontSize: mobile ? 48 : 58, color: C.brown, lineHeight: 1,
             letterSpacing: '-1px', marginBottom: 6,
-          }}>R$ 49,70</div>
+          }}>R$ 48,32</div>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
             fontSize: 15, color: C.brownMid, marginBottom: 32,
@@ -1297,7 +1293,8 @@ export default function PlataformaCursosLP() {
         <ModulosSection />
         <EncontrosSection />
         <AntesDepoisSection />
-        <DepoimentosSection />
+        {/* TODO: reativar quando os feedbacks reais forem adicionados */}
+        {/* <DepoimentosSection /> */}
         <PorDentroSection />
         <OfertaSection />
         <ChrisSection />
