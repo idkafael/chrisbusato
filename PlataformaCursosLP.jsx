@@ -963,13 +963,21 @@ function PorDentroSection() {
           display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
           gap: 12, marginTop: 36,
         }}>
-          {['📱 Assista no celular ou computador', '🕐 Acesso 24h por dia', '➕ Conteúdo novo sempre'].map((t, i) => (
+          {[
+            { label: 'Assista no celular ou computador', svg: <><rect x="2" y="4" width="14" height="11" rx="1.5"/><path d="M2 18h11"/><rect x="16" y="9" width="6" height="11" rx="1.5"/></> },
+            { label: 'Acesso 24h por dia', svg: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></> },
+            { label: 'Conteúdo novo sempre', svg: <path d="M12 5v14M5 12h14"/> },
+          ].map((t, i) => (
             <div key={i} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
               background: C.white, border: `1px solid ${C.sageLight}`,
               borderRadius: 100, padding: '9px 18px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 13.5, color: C.brownMid,
-            }}>{t}</div>
+            }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>{t.svg}</svg>
+              {t.label}
+            </div>
           ))}
         </div>
       </div>

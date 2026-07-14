@@ -70,6 +70,37 @@ function useWindowWidth() {
   return width
 }
 
+// ─── Ícones (SVG de traço — renderizam igual em qualquer dispositivo) ─────────
+
+function Icon({ path, size = 15, color = 'currentColor', stroke = 1.6, fill = 'none' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} style={{ flexShrink: 0, display: 'block' }}>
+      {path(color, stroke)}
+    </svg>
+  )
+}
+
+const icons = {
+  gift: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="8" width="18" height="4" rx="1" /><path d="M5 12v8h14v-8M12 8v12" />
+    <path d="M12 8S10.5 4 8.5 4 6 6 8 8m4 0s1.5-4 3.5-4S18 6 16 8" />
+  </g>),
+  calendar: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4.5" width="18" height="17" rx="2.5" /><path d="M3 9h18M8 2.5v4M16 2.5v4" />
+  </g>),
+  rotate: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 11a8 8 0 0 1 14-5l2 2M20 13a8 8 0 0 1-14 5l-2-2" /><path d="M20 3v5h-5M4 21v-5h5" />
+  </g>),
+  devices: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="14" height="11" rx="1.5" /><path d="M2 18h11" /><rect x="16" y="9" width="6" height="11" rx="1.5" />
+  </g>),
+  clock: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" />
+  </g>),
+  plus: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round"><path d="M12 5v14M5 12h14" /></g>),
+  check: (c, s) => (<g stroke={c} strokeWidth={s} strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></g>),
+}
+
 // ─── CTA reutilizável ───────────────────────────────────────────────────────
 
 function CtaButton({ children, mobile, full = false, href = CHECKOUT_URL }) {
@@ -441,8 +472,8 @@ function EncontrosAoVivoSection() {
   const mobile = w < 768
 
   const horarios = [
-    { dia: 'Segunda-feira', hora: '20h', nota: 'Encontro fixo toda semana', icon: '🗓️' },
-    { dia: 'Dia rotativo', hora: 'atualmente quarta · 8h30', nota: 'Horário alternativo para caber na sua rotina', icon: '🔁' },
+    { dia: 'Segunda-feira', hora: '20h', nota: 'Encontro fixo toda semana', icon: icons.calendar },
+    { dia: 'Dia rotativo', hora: 'atualmente quarta · 8h30', nota: 'Horário alternativo para caber na sua rotina', icon: icons.rotate },
   ]
 
   return (
@@ -513,7 +544,14 @@ function EncontrosAoVivoSection() {
               padding: mobile ? '22px 22px' : '26px 28px',
               display: 'flex', gap: 16, alignItems: 'flex-start',
             }}>
-              <div style={{ fontSize: 26, lineHeight: 1 }}>{h.icon}</div>
+              <div style={{
+                flexShrink: 0,
+                width: 44, height: 44, borderRadius: 12,
+                background: C.sagePale,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Icon path={h.icon} size={22} color={C.sageDark} stroke={1.6} />
+              </div>
               <div>
                 <div style={{
                   fontFamily: "'Playfair Display', serif",
@@ -571,14 +609,17 @@ function BonusSection() {
           transform: titleInView ? 'translateY(0)' : 'translateY(24px)',
         }}>
           <div style={{
-            display: 'inline-block',
+            display: 'inline-flex', alignItems: 'center', gap: 7,
             background: 'rgba(196,208,197,0.14)',
             border: '1px solid rgba(196,208,197,0.3)',
-            borderRadius: 100, padding: '5px 16px', marginBottom: 18,
+            borderRadius: 100, padding: '6px 16px', marginBottom: 18,
             fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
             fontSize: 11, letterSpacing: '2px', color: C.sageLight,
             textTransform: 'uppercase',
-          }}>🎁 Bônus incluso</div>
+          }}>
+            <Icon path={icons.gift} size={13} color={C.sageLight} stroke={1.7} />
+            Bônus incluso
+          </div>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(30px, 3.4vw, 46px)',
@@ -746,13 +787,21 @@ function PorDentroSection() {
           display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
           gap: 12, marginTop: 36,
         }}>
-          {['📱 Assista no celular ou computador', '🕐 Acesso 24h por dia', '➕ Conteúdo novo sempre'].map((t, i) => (
+          {[
+            { icon: icons.devices, label: 'Assista no celular ou computador' },
+            { icon: icons.clock, label: 'Acesso 24h por dia' },
+            { icon: icons.plus, label: 'Conteúdo novo sempre' },
+          ].map((t, i) => (
             <div key={i} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
               background: C.white, border: `1px solid ${C.sageLight}`,
               borderRadius: 100, padding: '9px 18px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 13.5, color: C.brownMid,
-            }}>{t}</div>
+            }}>
+              <Icon path={t.icon} size={15} color={C.sage} stroke={1.7} />
+              {t.label}
+            </div>
           ))}
         </div>
       </div>
@@ -947,12 +996,15 @@ function OfertaSection() {
           boxShadow: '0 16px 50px rgba(61,53,48,0.08)',
         }}>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
+            display: 'inline-flex', alignItems: 'center', gap: 7,
             background: C.sagePale, color: C.sageDark,
-            borderRadius: 100, padding: '5px 14px', marginBottom: 20,
+            borderRadius: 100, padding: '6px 15px', marginBottom: 20,
             fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
             fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-          }}>🎁 Com 1 ano de plataforma incluso</div>
+          }}>
+            <Icon path={icons.gift} size={14} color={C.sageDark} stroke={1.7} />
+            1 ano de plataforma incluso
+          </div>
 
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
