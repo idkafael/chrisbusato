@@ -6,7 +6,6 @@ import capaMusicalidade from './images/Capa-Musicalidade.png'
 import capaMusicalizacao from './images/Capa-Musicalizacao.png'
 import capaConsciencia from './images/Capa-Conciencia.png'
 import capaVergonha from './images/Capa-Vergonha.png'
-import fundoHero from './images/fundo-primeira-dobra.jpg'
 import bannerPlataforma from './images/banner-plataforma.jpg'
 import encontrosAoVivo from './images/encontrosaovivo.png'
 
@@ -193,57 +192,54 @@ function Hero() {
       background: C.cream,
       position: 'relative',
       overflow: 'hidden',
-      padding: mobile ? '110px 24px 80px' : '120px 40px',
-      minHeight: mobile ? 'auto' : '100vh',
+      padding: mobile ? '112px 24px 80px' : '150px 40px 110px',
+      minHeight: mobile ? 'auto' : '86vh',
       display: 'flex', alignItems: 'center',
     }}>
-      {/* Imagem de fundo */}
+      {/* blobs decorativos (sem competir com o texto) */}
       <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `url(${fundoHero})`,
-        backgroundSize: 'cover',
-        backgroundPosition: mobile ? 'center' : 'center right',
-        pointerEvents: 'none',
+        position: 'absolute', top: '-10%', right: '-8%',
+        width: 460, height: 460, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.22, pointerEvents: 'none',
       }} />
-      {/* Overlay para legibilidade */}
       <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: mobile
-          ? 'linear-gradient(to bottom, rgba(237,234,227,0.9) 0%, rgba(237,234,227,0.55) 50%, rgba(237,234,227,0.2) 100%)'
-          : 'linear-gradient(to right, rgba(237,234,227,0.95) 0%, rgba(237,234,227,0.82) 38%, rgba(237,234,227,0.3) 70%, rgba(237,234,227,0) 100%)',
+        position: 'absolute', bottom: '-12%', left: '-8%',
+        width: 320, height: 320, background: C.sageLight,
+        borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
+        opacity: 0.18, pointerEvents: 'none',
       }} />
 
       <div style={{
-        maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1,
-        width: '100%',
+        maxWidth: 760, margin: '0 auto', position: 'relative', zIndex: 1,
+        width: '100%', textAlign: 'center',
+        animation: 'fadeUp 0.8s ease both',
       }}>
         <div style={{
-          animation: 'fadeUp 0.8s ease both',
-          textAlign: mobile ? 'center' : 'left',
-          maxWidth: mobile ? '100%' : 580,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+          textTransform: 'uppercase', marginBottom: 22,
+        }}>Programa Online · Ao vivo toda semana</div>
+
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 'clamp(34px, 9vw, 46px)' : 'clamp(44px, 4.6vw, 64px)',
+          color: C.brown, lineHeight: 1.16, letterSpacing: '-1px',
+          marginBottom: 24, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto',
         }}>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 'clamp(34px, 9vw, 48px)' : 'clamp(42px, 4.4vw, 62px)',
-            color: C.brown, lineHeight: 1.15, letterSpacing: '-1px',
-            marginBottom: 22,
-          }}>
-            Evolua na dança com a Chris,{' '}
-            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>ao vivo, toda semana.</em>
-          </h1>
+          Evolua na dança com a Chris,{' '}
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>ao vivo, toda semana.</em>
+        </h1>
 
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: mobile ? 16 : 19, color: C.brownMid, lineHeight: 1.7,
-            maxWidth: 480, margin: mobile ? '0 auto 32px' : '0 0 32px',
-          }}>
-            O Programa Online Brincando na Música: encontros ao vivo duas vezes por semana, prática guiada e um ano inteiro de acesso à plataforma de cursos como bônus.
-          </p>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+          fontSize: mobile ? 16 : 18, color: C.brownMid, lineHeight: 1.7,
+          maxWidth: 500, margin: '0 auto 36px',
+        }}>
+          Encontros ao vivo duas vezes por semana, prática guiada e um ano inteiro de acesso à plataforma de cursos como bônus.
+        </p>
 
-          <div>
-            <CtaButton mobile={mobile} href="#encontros">Como funciona o programa →</CtaButton>
-          </div>
-        </div>
+        <CtaButton mobile={mobile} href="#encontros">Como funciona o programa →</CtaButton>
       </div>
     </section>
   )
