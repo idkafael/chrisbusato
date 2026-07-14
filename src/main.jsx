@@ -10,6 +10,7 @@ import BrincandoNaMusicaGlobalLP from '../BrincandoNaMusicaGlobalLP.jsx'
 import DateForaDoComumLP from '../DateForaDoComumLP.jsx'
 import VergonhaNaDancaLP from '../VergonhaNaDancaLP.jsx'
 import PlataformaCursosLP from '../PlataformaCursosLP.jsx'
+import ProgramaOnlineLP from '../ProgramaOnlineLP.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/casais" element={<DateForaDoComumLP />} />
         <Route path="/vergonha" element={<VergonhaNaDancaLP />} />
         <Route path="/plataforma" element={<PlataformaCursosLP />} />
+        <Route path="/online" element={<ProgramaOnlineLP />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
