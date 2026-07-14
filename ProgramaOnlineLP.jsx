@@ -236,7 +236,7 @@ function Hero() {
           fontSize: mobile ? 16 : 18, color: C.brownMid, lineHeight: 1.7,
           maxWidth: 500, margin: '0 auto 36px',
         }}>
-          Encontros ao vivo duas vezes por semana, prática guiada e um ano inteiro de acesso à plataforma de cursos como bônus.
+          Encontros ao vivo duas vezes por semana, prática guiada e um ano inteiro de acesso à plataforma de módulos como bônus.
         </p>
 
         <CtaButton mobile={mobile} href="#encontros">Como funciona o programa →</CtaButton>
@@ -424,7 +424,7 @@ function SobreSection() {
           fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(30px, 3.4vw, 46px)',
           color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px', marginBottom: 28,
         }}>
-          Não é curso solto.{' '}
+          Não é módulo solto.{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>É acompanhamento ao vivo.</em>
         </h2>
         <p style={{
@@ -438,7 +438,7 @@ function SobreSection() {
           fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
           fontSize: mobile ? 18 : 22, color: C.brownMid, lineHeight: 1.6,
         }}>
-          E ainda leva 1 ano inteiro de acesso à plataforma de cursos como bônus.
+          E ainda leva 1 ano inteiro de acesso à plataforma de módulos como bônus.
         </p>
       </div>
     </section>
@@ -555,12 +555,12 @@ function EncontrosAoVivoSection() {
   )
 }
 
-// ─── Bônus: plataforma de cursos ──────────────────────────────────────────────
+// ─── Bônus: plataforma de módulos ──────────────────────────────────────────────
 
 const modulos = [
-  { titulo: 'Musicalidade', tag: 'Curso gravado', desc: 'Como se mover na música sem depender de passos decorados.', cover: capaMusicalidade },
-  { titulo: 'Musicalização', tag: 'Curso gravado', desc: 'Ritmo, tempo e estrutura musical para nunca mais dançar fora do tempo.', cover: capaMusicalizacao },
-  { titulo: 'Consciência Corporal', tag: 'Curso gravado', desc: 'Postura, eixo e expressão para dançar com mais liberdade.', cover: capaConsciencia },
+  { titulo: 'Musicalidade', tag: 'Módulo', desc: 'Como se mover na música sem depender de passos decorados.', cover: capaMusicalidade },
+  { titulo: 'Musicalização', tag: 'Módulo', desc: 'Ritmo, tempo e estrutura musical para nunca mais dançar fora do tempo.', cover: capaMusicalizacao },
+  { titulo: 'Consciência Corporal', tag: 'Módulo', desc: 'Postura, eixo e expressão para dançar com mais liberdade.', cover: capaConsciencia },
   { titulo: 'A Vergonha na Dança', tag: 'Aulão', desc: 'Destrave o medo de dançar e de ser visto se movimentando.', cover: capaVergonha },
 ]
 
@@ -607,14 +607,14 @@ function BonusSection() {
             color: C.cream, lineHeight: 1.2, letterSpacing: '-0.5px', marginBottom: 16,
           }}>
             1 ano de acesso à{' '}
-            <em style={{ color: C.sageLight, fontStyle: 'italic' }}>plataforma de cursos.</em>
+            <em style={{ color: C.sageLight, fontStyle: 'italic' }}>plataforma de módulos.</em>
           </h2>
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 15 : 17, color: 'rgba(237,234,227,0.78)', maxWidth: 560,
             margin: '0 auto', lineHeight: 1.65,
           }}>
-            Quem entra no programa recebe, de brinde, um ano inteiro na plataforma com todos os cursos gravados para estudar no seu ritmo.
+            Quem entra no programa recebe, de brinde, um ano inteiro na plataforma com todos os módulos gravados para estudar no seu ritmo.
           </p>
         </div>
 
@@ -760,7 +760,7 @@ function PorDentroSection() {
               overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
             }}>plataforma.chrisbusato.com</div>
           </div>
-          <img src={bannerPlataforma} alt="Interior da plataforma de cursos da Chris Busato"
+          <img src={bannerPlataforma} alt="Interior da plataforma de módulos da Chris Busato"
             style={{ width: '100%', display: 'block' }} />
         </div>
 
@@ -937,8 +937,8 @@ const incluso = [
   '2 encontros ao vivo por semana com a Chris',
   'Prática guiada e correções em tempo real',
   'Comunidade que evolui junto com você',
-  'Bônus: 1 ano de acesso à plataforma de cursos',
-  'Todos os cursos gravados (Musicalidade, Musicalização, Consciência Corporal e mais)',
+  'Bônus: 1 ano de acesso à plataforma de módulos',
+  'Todos os módulos gravados (Musicalidade, Musicalização, Consciência Corporal e mais)',
 ]
 
 function OfertaSection() {
@@ -1104,11 +1104,11 @@ const faqItems = [
   },
   {
     q: 'E se eu não puder participar ao vivo?',
-    a: 'Sem problema. Além dos dois horários por semana, você tem 1 ano de acesso à plataforma com os cursos gravados para estudar quando quiser.',
+    a: 'Sem problema. Além dos dois horários por semana, você tem 1 ano de acesso à plataforma com os módulos gravados para estudar quando quiser.',
   },
   {
     q: 'O que é o bônus de 1 ano de plataforma?',
-    a: 'Quem entra no programa recebe um ano inteiro de acesso à plataforma de cursos da Chris — Musicalidade, Musicalização, Consciência Corporal e mais — para revisitar no seu ritmo.',
+    a: 'Quem entra no programa recebe um ano inteiro de acesso à plataforma de módulos da Chris — Musicalidade, Musicalização, Consciência Corporal e mais — para revisitar no seu ritmo.',
   },
   {
     q: 'Preciso ter experiência em dança?',
