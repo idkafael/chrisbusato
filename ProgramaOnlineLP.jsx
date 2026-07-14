@@ -222,21 +222,6 @@ function Hero() {
           textAlign: mobile ? 'center' : 'left',
           maxWidth: mobile ? '100%' : 580,
         }}>
-          {/* pill ao vivo */}
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: C.white, border: `1px solid ${C.sageLight}`,
-            borderRadius: 100, padding: '7px 16px', marginBottom: 24,
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            fontSize: 12, letterSpacing: '0.5px', color: C.brownMid,
-          }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', background: '#E8534A',
-              display: 'block', animation: 'livePulse 2s ease-out infinite',
-            }} />
-            Encontros ao vivo · 2x por semana
-          </div>
-
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(34px, 9vw, 48px)' : 'clamp(42px, 4.4vw, 62px)',
