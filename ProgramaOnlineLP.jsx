@@ -236,7 +236,7 @@ function Hero() {
           fontSize: mobile ? 16 : 18, color: C.brownMid, lineHeight: 1.7,
           maxWidth: 500, margin: '0 auto 36px',
         }}>
-          Encontros ao vivo duas vezes por semana, prática guiada e um ano inteiro de acesso à plataforma de módulos como bônus.
+          Encontros ao vivo duas vezes por semana, com prática guiada e acompanhamento de perto para você evoluir na dança.
         </p>
 
         <CtaButton mobile={mobile} href="#encontros">Como funciona o programa →</CtaButton>
@@ -438,7 +438,7 @@ function SobreSection() {
           fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
           fontSize: mobile ? 18 : 22, color: C.brownMid, lineHeight: 1.6,
         }}>
-          E ainda leva 1 ano inteiro de acesso à plataforma de módulos como bônus.
+          Você evolui toda semana, com alguém guiando o seu caminho de perto.
         </p>
       </div>
     </section>
