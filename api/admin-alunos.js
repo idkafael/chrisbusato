@@ -84,8 +84,12 @@ export default async function handler(req, res) {
       if (!b.nome || !String(b.nome).trim()) return json(res, 400, { error: 'nome é obrigatório' })
       if (!b.data_inicio) return json(res, 400, { error: 'data_inicio é obrigatória' })
 
-      const totalParcelas = Math.max(1, parseInt(b.total_parcelas, 10) || 1)
-      const diaVenc = Math.min(31, Math.max(1, parseInt(b.dia_vencimento, 10) || 10))
+      // "pago à vista": 1 parcela única, já quitada na data de início (só controle de acesso)
+      const aVista = Boolean(b.pago_a_vista)
+      const totalParcelas = aVista ? 1 : Math.max(1, parseInt(b.total_parcelas, 10) || 1)
+      const diaVenc = aVista
+        ? new Date(b.data_inicio + 'T00:00:00Z').getUTCDate()
+        : Math.min(31, Math.max(1, parseInt(b.dia_vencimento, 10) || 10))
 
       const aluno = {
         nome: String(b.nome).trim(),
@@ -109,13 +113,15 @@ export default async function handler(req, res) {
       const criado = JSON.parse(tIns)[0]
 
       // gera as parcelas
+      const agora = new Date().toISOString()
       const valores = dividirParcelas(aluno.valor_total, totalParcelas)
       const parcelas = valores.map((valor, i) => ({
         aluno_id: criado.id,
         numero: i + 1,
-        vencimento: vencimentoParcela(aluno.data_inicio, diaVenc, i),
+        vencimento: aVista ? aluno.data_inicio : vencimentoParcela(aluno.data_inicio, diaVenc, i),
         valor,
-        pago: false,
+        pago: aVista,
+        pago_em: aVista ? agora : null,
       }))
 
       const rPag = await fetch(`${url}/rest/v1/pagamentos`, {

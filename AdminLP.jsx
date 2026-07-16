@@ -292,20 +292,25 @@ function Agenda({ ref_, setRef, pagamentos }) {
   const diasNoMes = new Date(ref_.ano, ref_.mes + 1, 0).getDate()
   const offset = primeiro.getDay()
 
-  /** dia -> [{ nome, valor, pago, atrasado }] — agrupa por aluno quando cai no mesmo dia */
+  const [hover, setHover] = useState(null) // { dia, entradas, rect }
+
+  /** dia -> [{ aluno, nome, valor, pago, atrasado, parcelas[] }] — agrupa por aluno no mesmo dia */
   const porDia = useMemo(() => {
     const mapa = {}
     pagamentos.forEach(p => {
       const v = d(p.vencimento)
       if (v.getFullYear() !== ref_.ano || v.getMonth() !== ref_.mes) return
       const dia = v.getDate()
-      const nome = p.aluno?.nome || '—'
+      const chave = p.aluno?.id || p.aluno?.nome || '—'
       mapa[dia] = mapa[dia] || {}
-      const e = mapa[dia][nome] || { nome, valor: 0, pago: true, atrasado: false, qtd: 0 }
+      const e = mapa[dia][chave] || {
+        aluno: p.aluno, nome: p.aluno?.nome || '—',
+        valor: 0, pago: true, atrasado: false, parcelas: [],
+      }
       e.valor += Number(p.valor || 0)
-      e.qtd += 1
+      e.parcelas.push(p)
       if (!p.pago) { e.pago = false; if (v < hoje) e.atrasado = true }
-      mapa[dia][nome] = e
+      mapa[dia][chave] = e
     })
     const out = {}
     Object.entries(mapa).forEach(([dia, alunos]) => {
@@ -384,7 +389,7 @@ function Agenda({ ref_, setRef, pagamentos }) {
                     }}>
                       <span style={{ width: 7, height: 7, borderRadius: '50%', background: corDe(e), flexShrink: 0 }} />
                       <span style={{ fontFamily: F, fontSize: 13, fontWeight: 600, color: C.brown, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {e.nome}{e.qtd > 1 ? ` (${e.qtd}×)` : ''}
+                        {e.nome}{e.parcelas.length > 1 ? ` (${e.parcelas.length}×)` : ''}
                       </span>
                       <span style={{ fontFamily: F, fontSize: 12.5, fontWeight: 600, color: corDe(e) }}>{brlCurto(e.valor)}</span>
                     </div>
@@ -421,14 +426,21 @@ function Agenda({ ref_, setRef, pagamentos }) {
           const visiveis = entradas.slice(0, MAX_CHIPS)
           const resto = entradas.length - visiveis.length
 
+          const ativo = hover?.dia === dia
+
           return (
             <div key={dia}
-              title={entradas.map(e => `${e.nome} — ${brl(e.valor)}${e.pago ? ' (pago)' : e.atrasado ? ' (atrasado)' : ''}`).join('\n')}
+              onMouseEnter={e => !vazio && setHover({ dia, entradas, rect: e.currentTarget.getBoundingClientRect() })}
+              onMouseLeave={() => setHover(h => (h?.dia === dia ? null : h))}
               style={{
                 minHeight: 104, borderRadius: 12, padding: '7px 7px 8px',
                 background: vazio ? C.creamCard : C.white,
                 border: `1.5px solid ${ehHoje ? C.sageDark : vazio ? 'transparent' : C.sageLight}`,
                 display: 'flex', flexDirection: 'column', gap: 5,
+                cursor: vazio ? 'default' : 'pointer',
+                boxShadow: ativo ? '0 10px 26px rgba(61,53,48,0.16)' : 'none',
+                transform: ativo ? 'translateY(-2px)' : 'none',
+                transition: 'box-shadow 0.18s ease, transform 0.18s ease',
               }}>
               {/* topo: dia + total */}
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 4 }}>
@@ -473,6 +485,92 @@ function Agenda({ ref_, setRef, pagamentos }) {
       </div>
 
       {legenda}
+
+      {hover && <PopoverDia dia={hover.dia} entradas={hover.entradas} rect={hover.rect} mes={ref_.mes} ano={ref_.ano} />}
+    </div>
+  )
+}
+
+// ─── Mini-tela ao passar o mouse num dia ──────────────────────────────────────
+
+function PopoverDia({ dia, entradas, rect, mes, ano }) {
+  const W = 300
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1200
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800
+  const left = Math.min(Math.max(10, rect.left), vw - W - 10)
+  const abrirPraCima = rect.top > vh / 2
+  const pos = abrirPraCima ? { bottom: vh - rect.top + 8 } : { top: rect.bottom + 8 }
+  const total = entradas.reduce((s, e) => s + e.valor, 0)
+
+  return (
+    <div style={{
+      position: 'fixed', left, width: W, ...pos, zIndex: 60,
+      background: C.white, border: `1px solid ${C.sageLight}`, borderRadius: 14,
+      boxShadow: '0 18px 44px rgba(61,53,48,0.22)',
+      padding: '14px 15px', pointerEvents: 'none',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${C.creamDark}` }}>
+        <span style={{ fontFamily: F, fontWeight: 700, fontSize: 12, color: C.brown }}>
+          {dia} de {MESES[mes]} {ano}
+        </span>
+        <span style={{ fontFamily: F, fontWeight: 700, fontSize: 12, color: C.brownMid }}>{brl(total)}</span>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {entradas.map((e, i) => {
+          const ac = e.aluno ? calcAcesso(e.aluno) : null
+          const cor = e.pago ? C.sage : e.atrasado ? C.red : C.amber
+          const corAcesso = !ac ? C.brownLight : ac.expirado ? C.red : ac.expirandoBreve ? C.amber : C.sage
+
+          return (
+            <div key={i} style={{ borderTop: i > 0 ? `1px solid ${C.creamDark}` : 'none', paddingTop: i > 0 ? 12 : 0 }}>
+              {/* nome + status */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 3 }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: cor, flexShrink: 0 }} />
+                <span style={{ fontFamily: S, fontSize: 16, color: C.brown, lineHeight: 1.2 }}>{e.nome}</span>
+              </div>
+
+              {(e.aluno?.produto || e.aluno?.contato) && (
+                <div style={{ fontFamily: F, fontSize: 11.5, color: C.brownLight, marginBottom: 8, paddingLeft: 14 }}>
+                  {[e.aluno?.produto, e.aluno?.contato].filter(Boolean).join(' · ')}
+                </div>
+              )}
+
+              {/* acesso */}
+              {ac && (
+                <div style={{ paddingLeft: 14, marginBottom: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: F, fontSize: 11.5, marginBottom: 4 }}>
+                    <span style={{ color: C.brownLight }}>Acesso</span>
+                    <span style={{ color: corAcesso, fontWeight: 700 }}>{ac.decorridos}/{ac.total} meses</span>
+                  </div>
+                  <div style={{ height: 4, borderRadius: 100, background: C.creamDark, overflow: 'hidden' }}>
+                    <div style={{ width: `${ac.total ? Math.round((ac.decorridos / ac.total) * 100) : 0}%`, height: '100%', background: corAcesso }} />
+                  </div>
+                  <div style={{ fontFamily: F, fontSize: 10.5, color: C.brownLight, marginTop: 4 }}>
+                    {ac.expirado
+                      ? `expirou em ${ac.fim.toLocaleDateString('pt-BR')}`
+                      : `expira em ${ac.fim.toLocaleDateString('pt-BR')} · ${ac.diasRestantes} dia(s)`}
+                  </div>
+                </div>
+              )}
+
+              {/* parcelas deste dia */}
+              <div style={{ paddingLeft: 14, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {e.parcelas.map(p => (
+                  <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: F, fontSize: 11.5 }}>
+                    <span style={{ color: C.brownMid }}>
+                      Parcela {p.numero}/{e.aluno?.total_parcelas ?? '—'}
+                    </span>
+                    <span style={{ fontWeight: 700, color: p.pago ? C.sage : e.atrasado ? C.red : C.amber }}>
+                      {brl(p.valor)} · {p.pago ? 'pago' : e.atrasado ? 'atrasado' : 'a vencer'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -497,6 +595,9 @@ function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
   const ac = calcAcesso(aluno)
   const pc = calcParcelas(aluno)
   const pct = ac.total ? Math.round((ac.decorridos / ac.total) * 100) : 0
+
+  // pago à vista = parcela única e já quitada
+  const aVista = pc.total === 1 && pc.pagas === 1
 
   const corStatus = ac.expirado ? C.red : ac.expirandoBreve ? C.amber : C.sage
 
@@ -525,10 +626,20 @@ function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
 
         {/* parcelas */}
         <div style={{ flex: '0 0 auto', minWidth: 110 }}>
-          <div style={{ fontFamily: F, fontSize: 10, fontWeight: 700, letterSpacing: '1px', color: C.brownLight, textTransform: 'uppercase', marginBottom: 5 }}>Parcelas</div>
-          <div style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: pc.pagas === pc.total ? C.sage : C.brown }}>
-            {pc.pagas}/{pc.total}
+          <div style={{ fontFamily: F, fontSize: 10, fontWeight: 700, letterSpacing: '1px', color: C.brownLight, textTransform: 'uppercase', marginBottom: 5 }}>
+            {aVista ? 'Pagamento' : 'Parcelas'}
           </div>
+          {aVista ? (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              background: C.sagePale, borderRadius: 100, padding: '3px 10px',
+              fontFamily: F, fontSize: 12, fontWeight: 700, color: C.sageDark,
+            }}>✓ à vista</div>
+          ) : (
+            <div style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: pc.pagas === pc.total ? C.sage : C.brown }}>
+              {pc.pagas}/{pc.total}
+            </div>
+          )}
           <div style={{ fontFamily: F, fontSize: 11.5, color: C.brownLight, marginTop: 3 }}>{brl(aluno.valor_total)} total</div>
         </div>
 
@@ -592,6 +703,7 @@ function FormAluno({ secret, onCriado }) {
     nome: '', contato: '', produto: 'Programa Online',
     data_inicio: hojeISO(), meses_acesso: 12,
     valor_total: '', total_parcelas: 1, dia_vencimento: 10, observacoes: '',
+    pago_a_vista: false,
   })
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState('')
@@ -632,22 +744,50 @@ function FormAluno({ secret, onCriado }) {
 
         <div><label style={rotulo}>Início do acesso *</label><input required type="date" value={f.data_inicio} onChange={e => set('data_inicio', e.target.value)} style={campo} /></div>
         <div><label style={rotulo}>Meses de acesso</label><input type="number" min="1" value={f.meses_acesso} onChange={e => set('meses_acesso', e.target.value)} style={campo} /></div>
-        <div><label style={rotulo}>Dia do vencimento</label><input type="number" min="1" max="31" value={f.dia_vencimento} onChange={e => set('dia_vencimento', e.target.value)} style={campo} /></div>
-
         <div><label style={rotulo}>Valor total (R$)</label><input type="number" step="0.01" min="0" value={f.valor_total} onChange={e => set('valor_total', e.target.value)} style={campo} placeholder="0,00" /></div>
+      </div>
+
+      {/* pago à vista */}
+      <label style={{
+        display: 'flex', alignItems: 'flex-start', gap: 11, cursor: 'pointer',
+        background: f.pago_a_vista ? C.sagePale : C.creamCard,
+        border: `1px solid ${f.pago_a_vista ? C.sage : C.creamDark}`,
+        borderRadius: 12, padding: '13px 15px', marginBottom: 16,
+        transition: 'background 0.15s ease, border-color 0.15s ease',
+      }}>
+        <input type="checkbox" checked={f.pago_a_vista} onChange={e => set('pago_a_vista', e.target.checked)}
+          style={{ width: 17, height: 17, accentColor: C.sageDark, cursor: 'pointer', marginTop: 1, flexShrink: 0 }} />
         <div>
-          <label style={rotulo}>Nº de parcelas</label>
-          <input type="number" min="1" value={f.total_parcelas} onChange={e => set('total_parcelas', e.target.value)} style={campo} />
-          {parcelaAprox && <div style={{ fontFamily: F, fontSize: 11.5, color: C.sageDark, marginTop: 5 }}>≈ {parcelaAprox} por parcela</div>}
+          <div style={{ fontFamily: F, fontSize: 13.5, fontWeight: 700, color: C.brown, marginBottom: 2 }}>
+            Já pago à vista — só controle de acesso
+          </div>
+          <div style={{ fontFamily: F, fontSize: 12, color: C.brownMid, lineHeight: 1.5 }}>
+            Para quem pagou tudo de uma vez (ex.: cartão à vista). Não gera parcelas a cobrar — o valor já entra como recebido e você só acompanha o tempo de acesso.
+          </div>
         </div>
-        <div><label style={rotulo}>Observações</label><input value={f.observacoes} onChange={e => set('observacoes', e.target.value)} style={campo} /></div>
+      </label>
+
+      {!f.pago_a_vista && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 14, marginBottom: 16 }}>
+          <div>
+            <label style={rotulo}>Nº de parcelas</label>
+            <input type="number" min="1" value={f.total_parcelas} onChange={e => set('total_parcelas', e.target.value)} style={campo} />
+            {parcelaAprox && <div style={{ fontFamily: F, fontSize: 11.5, color: C.sageDark, marginTop: 5 }}>≈ {parcelaAprox} por parcela</div>}
+          </div>
+          <div><label style={rotulo}>Dia do vencimento</label><input type="number" min="1" max="31" value={f.dia_vencimento} onChange={e => set('dia_vencimento', e.target.value)} style={campo} /></div>
+        </div>
+      )}
+
+      <div style={{ marginBottom: 16 }}>
+        <label style={rotulo}>Observações</label>
+        <input value={f.observacoes} onChange={e => set('observacoes', e.target.value)} style={campo} />
       </div>
 
       <button type="submit" disabled={salvando} style={{
         padding: '13px 30px', borderRadius: 100, border: 'none',
         background: salvando ? C.brownLight : C.sage, color: C.white,
         fontSize: 14.5, fontWeight: 700, cursor: salvando ? 'default' : 'pointer',
-      }}>{salvando ? 'Salvando…' : 'Salvar aluno e gerar parcelas'}</button>
+      }}>{salvando ? 'Salvando…' : f.pago_a_vista ? 'Salvar aluno (pago à vista)' : 'Salvar aluno e gerar parcelas'}</button>
     </form>
   )
 }
