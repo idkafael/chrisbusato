@@ -36,13 +36,13 @@ function addMeses(date, n) {
   return new Date(alvo.getFullYear(), alvo.getMonth(), Math.min(date.getDate(), ultimo))
 }
 
-/** "6/12 meses" + alerta de expiração */
-function calcAcesso(aluno) {
-  const inicio = d(aluno.data_inicio)
+/** "6/12 meses" + alerta de expiração, a partir de uma data e uma duração */
+function calcAcessoDe(dataInicio, mesesTotal) {
+  const inicio = d(dataInicio)
   const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
   let meses = (hoje.getFullYear() - inicio.getFullYear()) * 12 + (hoje.getMonth() - inicio.getMonth())
   if (hoje.getDate() < inicio.getDate()) meses -= 1
-  const total = aluno.meses_acesso || 12
+  const total = mesesTotal || 12
   const fim = addMeses(inicio, total)
   const diasRestantes = Math.round((fim - hoje) / 86400000)
   return {
@@ -54,6 +54,8 @@ function calcAcesso(aluno) {
     expirandoBreve: diasRestantes >= 0 && diasRestantes <= 30,
   }
 }
+
+const calcAcesso = aluno => calcAcessoDe(aluno.data_inicio, aluno.meses_acesso)
 
 const calcParcelas = aluno => {
   const ps = aluno.pagamentos || []
@@ -72,6 +74,32 @@ const PRODUTOS = [
 const infoProduto = p =>
   PRODUTOS.find(x => x.valor === p) ||
   { valor: p, label: p || '—', cor: C.brownLight, fundo: C.creamCard, borda: C.creamDark }
+
+/** Regras fixas: Presencial = 6 meses · Online = 12 meses */
+const MESES_PRODUTO = { 'Programa Presencial': 6, 'Programa Online': 12 }
+/** Quem compra o Presencial ganha 12 meses de Online junto */
+const BONUS_ONLINE_MESES = 12
+
+/** Todos os acessos de um aluno (o do produto + o bônus de Online do presencial) */
+function acessosDoAluno(aluno) {
+  const i = infoProduto(aluno.produto)
+  const lista = [{
+    label: i.label,
+    cor: i.cor,
+    bonus: false,
+    ac: calcAcessoDe(aluno.data_inicio, aluno.meses_acesso),
+  }]
+  if (aluno.produto === 'Programa Presencial') {
+    const online = infoProduto('Programa Online')
+    lista.push({
+      label: 'Online (bônus)',
+      cor: online.cor,
+      bonus: true,
+      ac: calcAcessoDe(aluno.data_inicio, BONUS_ONLINE_MESES),
+    })
+  }
+  return lista
+}
 
 /** Selo colorido do produto */
 const SeloProduto = ({ produto, mini = false }) => {
@@ -160,7 +188,10 @@ export default function AdminLP() {
       recebido: soma(todas.filter(p => p.pago)),
       doMes: soma(doMes),
       atrasadas: pendentes.filter(p => d(p.vencimento) < hoje),
-      alertas: alunos.map(a => ({ a, ac: calcAcesso(a) })).filter(x => x.ac.expirado || x.ac.expirandoBreve),
+      alertas: alunos
+        .flatMap(a => acessosDoAluno(a).map(x => ({ a, ...x })))
+        .filter(x => x.ac.expirado || x.ac.expirandoBreve)
+        .sort((x, y) => x.ac.diasRestantes - y.ac.diasRestantes),
     }
   }, [alunos, ref])
 
@@ -234,9 +265,14 @@ export default function AdminLP() {
                 ⚠ Acessos expirando
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {m.alertas.map(({ a, ac }) => (
-                  <div key={a.id} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'baseline', fontFamily: F, fontSize: 14, color: C.brown }}>
+                {m.alertas.map(({ a, ac, label, cor }, i) => (
+                  <div key={`${a.id}-${i}`} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'baseline', fontFamily: F, fontSize: 14, color: C.brown }}>
                     <strong style={{ fontWeight: 600 }}>{a.nome}</strong>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase',
+                      color: cor, background: C.white, border: `1px solid ${cor}33`,
+                      borderRadius: 100, padding: '1px 8px',
+                    }}>{label}</span>
                     <span style={{ color: C.brownMid }}>
                       {ac.expirado
                         ? `expirou há ${Math.abs(ac.diasRestantes)} dia(s) (${ac.fim.toLocaleDateString('pt-BR')})`
@@ -546,9 +582,8 @@ function PopoverDia({ dia, entradas, rect, mes, ano }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {entradas.map((e, i) => {
-          const ac = e.aluno ? calcAcesso(e.aluno) : null
+          const acessos = e.aluno ? acessosDoAluno(e.aluno) : []
           const cor = e.pago ? C.sage : e.atrasado ? C.red : C.amber
-          const corAcesso = !ac ? C.brownLight : ac.expirado ? C.red : ac.expirandoBreve ? C.amber : C.sage
 
           return (
             <div key={i} style={{ borderTop: i > 0 ? `1px solid ${C.creamDark}` : 'none', paddingTop: i > 0 ? 12 : 0 }}>
@@ -567,21 +602,28 @@ function PopoverDia({ dia, entradas, rect, mes, ano }) {
                 </div>
               )}
 
-              {/* acesso */}
-              {ac && (
-                <div style={{ paddingLeft: 14, marginBottom: 8 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: F, fontSize: 11.5, marginBottom: 4 }}>
-                    <span style={{ color: C.brownLight }}>Acesso</span>
-                    <span style={{ color: corAcesso, fontWeight: 700 }}>{ac.decorridos}/{ac.total} meses</span>
-                  </div>
-                  <div style={{ height: 4, borderRadius: 100, background: C.creamDark, overflow: 'hidden' }}>
-                    <div style={{ width: `${ac.total ? Math.round((ac.decorridos / ac.total) * 100) : 0}%`, height: '100%', background: corAcesso }} />
-                  </div>
-                  <div style={{ fontFamily: F, fontSize: 10.5, color: C.brownLight, marginTop: 4 }}>
-                    {ac.expirado
-                      ? `expirou em ${ac.fim.toLocaleDateString('pt-BR')}`
-                      : `expira em ${ac.fim.toLocaleDateString('pt-BR')} · ${ac.diasRestantes} dia(s)`}
-                  </div>
+              {/* acessos */}
+              {acessos.length > 0 && (
+                <div style={{ paddingLeft: 14, marginBottom: 8, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {acessos.map((x, k) => {
+                    const corAc = x.ac.expirado ? C.red : x.ac.expirandoBreve ? C.amber : x.cor
+                    return (
+                      <div key={k}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: F, fontSize: 11.5, marginBottom: 4 }}>
+                          <span style={{ color: C.brownLight }}>{x.label}</span>
+                          <span style={{ color: corAc, fontWeight: 700 }}>{x.ac.decorridos}/{x.ac.total} meses</span>
+                        </div>
+                        <div style={{ height: 4, borderRadius: 100, background: C.creamDark, overflow: 'hidden' }}>
+                          <div style={{ width: `${x.ac.total ? Math.round((x.ac.decorridos / x.ac.total) * 100) : 0}%`, height: '100%', background: corAc }} />
+                        </div>
+                        <div style={{ fontFamily: F, fontSize: 10.5, color: C.brownLight, marginTop: 4 }}>
+                          {x.ac.expirado
+                            ? `expirou em ${x.ac.fim.toLocaleDateString('pt-BR')}`
+                            : `expira em ${x.ac.fim.toLocaleDateString('pt-BR')} · ${x.ac.diasRestantes} dia(s)`}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               )}
 
@@ -624,13 +666,11 @@ const Legenda = ({ cor, label }) => (
 
 function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
   const ac = calcAcesso(aluno)
+  const acessos = acessosDoAluno(aluno)
   const pc = calcParcelas(aluno)
-  const pct = ac.total ? Math.round((ac.decorridos / ac.total) * 100) : 0
 
   // pago à vista = parcela única e já quitada
   const aVista = pc.total === 1 && pc.pagas === 1
-
-  const corStatus = ac.expirado ? C.red : ac.expirandoBreve ? C.amber : C.sage
 
   return (
     <div style={{
@@ -652,14 +692,27 @@ function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
           </div>
         </div>
 
-        {/* acesso */}
-        <div style={{ flex: '0 0 auto', minWidth: 140 }}>
-          <div style={{ fontFamily: F, fontSize: 10, fontWeight: 700, letterSpacing: '1px', color: C.brownLight, textTransform: 'uppercase', marginBottom: 5 }}>Acesso</div>
-          <div style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: corStatus, marginBottom: 5 }}>
-            {ac.decorridos}/{ac.total} meses
-          </div>
-          <div style={{ height: 5, borderRadius: 100, background: C.creamDark, overflow: 'hidden' }}>
-            <div style={{ width: `${pct}%`, height: '100%', background: corStatus, borderRadius: 100 }} />
+        {/* acessos */}
+        <div style={{ flex: '0 0 auto', minWidth: 160 }}>
+          <div style={{ fontFamily: F, fontSize: 10, fontWeight: 700, letterSpacing: '1px', color: C.brownLight, textTransform: 'uppercase', marginBottom: 6 }}>Acesso</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {acessos.map((x, i) => {
+              const cor = x.ac.expirado ? C.red : x.ac.expirandoBreve ? C.amber : x.cor
+              const p = x.ac.total ? Math.round((x.ac.decorridos / x.ac.total) * 100) : 0
+              return (
+                <div key={i}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 3 }}>
+                    <span style={{ fontFamily: F, fontSize: 13.5, fontWeight: 700, color: cor }}>
+                      {x.ac.decorridos}/{x.ac.total}
+                    </span>
+                    <span style={{ fontFamily: F, fontSize: 10.5, color: C.brownLight }}>{x.label}</span>
+                  </div>
+                  <div style={{ height: 4, borderRadius: 100, background: C.creamDark, overflow: 'hidden' }}>
+                    <div style={{ width: `${p}%`, height: '100%', background: cor, borderRadius: 100 }} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -740,14 +793,19 @@ function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
 function FormAluno({ secret, onCriado }) {
   const [f, setF] = useState({
     nome: '', contato: '', produto: 'Programa Online',
-    data_inicio: hojeISO(), meses_acesso: 12,
+    data_inicio: hojeISO(), meses_acesso: MESES_PRODUTO['Programa Online'],
     valor_total: '', total_parcelas: 1, dia_vencimento: 10, observacoes: '',
     pago_a_vista: false,
   })
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState('')
 
-  const set = (k, v) => setF(p => ({ ...p, [k]: v }))
+  // trocar o produto ajusta os meses de acesso automaticamente
+  const set = (k, v) => setF(p => {
+    const next = { ...p, [k]: v }
+    if (k === 'produto' && MESES_PRODUTO[v]) next.meses_acesso = MESES_PRODUTO[v]
+    return next
+  })
 
   const parcelaAprox = useMemo(() => {
     const t = Number(f.valor_total || 0), n = Math.max(1, parseInt(f.total_parcelas, 10) || 1)
@@ -788,8 +846,19 @@ function FormAluno({ secret, onCriado }) {
         </div>
 
         <div><label style={rotulo}>Início do acesso *</label><input required type="date" value={f.data_inicio} onChange={e => set('data_inicio', e.target.value)} style={campo} /></div>
-        <div><label style={rotulo}>Meses de acesso</label><input type="number" min="1" value={f.meses_acesso} onChange={e => set('meses_acesso', e.target.value)} style={campo} /></div>
         <div><label style={rotulo}>Valor total (R$)</label><input type="number" step="0.01" min="0" value={f.valor_total} onChange={e => set('valor_total', e.target.value)} style={campo} placeholder="0,00" /></div>
+        <div>
+          <label style={rotulo}>Acesso (automático)</label>
+          <div style={{
+            padding: '11px 13px', borderRadius: 9, background: C.creamCard,
+            border: `1px dashed ${C.sageLight}`, fontFamily: F, fontSize: 13, color: C.brownMid, lineHeight: 1.45,
+          }}>
+            <strong style={{ color: C.brown }}>{f.meses_acesso} meses</strong> de {infoProduto(f.produto).label}
+            {f.produto === 'Programa Presencial' && (
+              <><br /><span style={{ color: infoProduto('Programa Online').cor, fontWeight: 600 }}>+ {BONUS_ONLINE_MESES} meses de Online (bônus)</span></>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* pago à vista */}
