@@ -63,6 +63,34 @@ const calcParcelas = aluno => {
 const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 const SEMANA = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
+/** Produtos com cor própria (não usam as cores de status de pagamento) */
+const PRODUTOS = [
+  { valor: 'Programa Online', label: 'Online', cor: '#4F7A6B', fundo: '#E4F0EA', borda: '#4F7A6B33' },
+  { valor: 'Programa Presencial', label: 'Presencial', cor: '#B0685C', fundo: '#F8EAE6', borda: '#B0685C33' },
+]
+
+const infoProduto = p =>
+  PRODUTOS.find(x => x.valor === p) ||
+  { valor: p, label: p || '—', cor: C.brownLight, fundo: C.creamCard, borda: C.creamDark }
+
+/** Selo colorido do produto */
+const SeloProduto = ({ produto, mini = false }) => {
+  if (!produto) return null
+  const i = infoProduto(produto)
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      background: i.fundo, border: `1px solid ${i.borda}`, color: i.cor,
+      borderRadius: 100, padding: mini ? '2px 8px' : '3px 10px',
+      fontFamily: F, fontWeight: 700, fontSize: mini ? 9.5 : 10.5,
+      letterSpacing: '0.5px', textTransform: 'uppercase', whiteSpace: 'nowrap',
+    }}>
+      <span style={{ width: 5, height: 5, borderRadius: '50%', background: i.cor, flexShrink: 0 }} />
+      {i.label}
+    </span>
+  )
+}
+
 // ─── Página ───────────────────────────────────────────────────────────────────
 
 export default function AdminLP() {
@@ -531,8 +559,11 @@ function PopoverDia({ dia, entradas, rect, mes, ano }) {
               </div>
 
               {(e.aluno?.produto || e.aluno?.contato) && (
-                <div style={{ fontFamily: F, fontSize: 11.5, color: C.brownLight, marginBottom: 8, paddingLeft: 14 }}>
-                  {[e.aluno?.produto, e.aluno?.contato].filter(Boolean).join(' · ')}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginBottom: 8, paddingLeft: 14 }}>
+                  <SeloProduto produto={e.aluno?.produto} mini />
+                  {e.aluno?.contato && (
+                    <span style={{ fontFamily: F, fontSize: 11.5, color: C.brownLight }}>{e.aluno.contato}</span>
+                  )}
                 </div>
               )}
 
@@ -602,14 +633,22 @@ function AlunoCard({ aluno, aberto, onToggle, onTogglePago, onRemover }) {
   const corStatus = ac.expirado ? C.red : ac.expirandoBreve ? C.amber : C.sage
 
   return (
-    <div style={{ background: C.white, border: `1px solid ${ac.expirado ? `${C.red}55` : C.sageLight}`, borderRadius: 16, overflow: 'hidden' }}>
+    <div style={{
+      background: C.white,
+      border: `1px solid ${ac.expirado ? `${C.red}55` : C.sageLight}`,
+      borderLeft: `4px solid ${infoProduto(aluno.produto).cor}`,
+      borderRadius: 16, overflow: 'hidden',
+    }}>
       <div style={{ padding: '18px 20px', display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
 
         {/* nome */}
         <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-          <div style={{ fontFamily: S, fontSize: 19, color: C.brown, marginBottom: 3 }}>{aluno.nome}</div>
-          <div style={{ fontFamily: F, fontSize: 12.5, color: C.brownLight }}>
-            {[aluno.produto, aluno.contato].filter(Boolean).join(' · ') || '—'}
+          <div style={{ fontFamily: S, fontSize: 19, color: C.brown, marginBottom: 6 }}>{aluno.nome}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <SeloProduto produto={aluno.produto} />
+            {aluno.contato && (
+              <span style={{ fontFamily: F, fontSize: 12.5, color: C.brownLight }}>{aluno.contato}</span>
+            )}
           </div>
         </div>
 
@@ -740,7 +779,13 @@ function FormAluno({ secret, onCriado }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 14, marginBottom: 16 }}>
         <div><label style={rotulo}>Nome *</label><input required value={f.nome} onChange={e => set('nome', e.target.value)} style={campo} placeholder="Ex.: Caio" /></div>
         <div><label style={rotulo}>Contato</label><input value={f.contato} onChange={e => set('contato', e.target.value)} style={campo} placeholder="WhatsApp / e-mail" /></div>
-        <div><label style={rotulo}>Produto</label><input value={f.produto} onChange={e => set('produto', e.target.value)} style={campo} /></div>
+        <div>
+          <label style={rotulo}>Produto</label>
+          <select value={f.produto} onChange={e => set('produto', e.target.value)} style={{ ...campo, cursor: 'pointer' }}>
+            {PRODUTOS.map(p => <option key={p.valor} value={p.valor}>{p.valor}</option>)}
+          </select>
+          <div style={{ marginTop: 7 }}><SeloProduto produto={f.produto} /></div>
+        </div>
 
         <div><label style={rotulo}>Início do acesso *</label><input required type="date" value={f.data_inicio} onChange={e => set('data_inicio', e.target.value)} style={campo} /></div>
         <div><label style={rotulo}>Meses de acesso</label><input type="number" min="1" value={f.meses_acesso} onChange={e => set('meses_acesso', e.target.value)} style={campo} /></div>
