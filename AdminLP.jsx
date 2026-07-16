@@ -270,91 +270,209 @@ function Kpi({ label, valor, sub, cor }) {
 
 // ─── Agenda (calendário do mês) ───────────────────────────────────────────────
 
+/** valor curto pra caber na célula: R$ 59.923 */
+const brlCurto = v => 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 })
+
+const primeiroNome = n => String(n || '').trim().split(/\s+/)[0] || '—'
+
+function useIsMobile(bp = 900) {
+  const [m, setM] = useState(typeof window !== 'undefined' ? window.innerWidth < bp : false)
+  useEffect(() => {
+    const h = () => setM(window.innerWidth < bp)
+    window.addEventListener('resize', h)
+    return () => window.removeEventListener('resize', h)
+  }, [bp])
+  return m
+}
+
 function Agenda({ ref_, setRef, pagamentos }) {
+  const mobile = useIsMobile()
   const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
   const primeiro = new Date(ref_.ano, ref_.mes, 1)
   const diasNoMes = new Date(ref_.ano, ref_.mes + 1, 0).getDate()
   const offset = primeiro.getDay()
 
+  /** dia -> [{ nome, valor, pago, atrasado }] — agrupa por aluno quando cai no mesmo dia */
   const porDia = useMemo(() => {
     const mapa = {}
     pagamentos.forEach(p => {
       const v = d(p.vencimento)
-      if (v.getFullYear() === ref_.ano && v.getMonth() === ref_.mes) {
-        (mapa[v.getDate()] = mapa[v.getDate()] || []).push(p)
-      }
+      if (v.getFullYear() !== ref_.ano || v.getMonth() !== ref_.mes) return
+      const dia = v.getDate()
+      const nome = p.aluno?.nome || '—'
+      mapa[dia] = mapa[dia] || {}
+      const e = mapa[dia][nome] || { nome, valor: 0, pago: true, atrasado: false, qtd: 0 }
+      e.valor += Number(p.valor || 0)
+      e.qtd += 1
+      if (!p.pago) { e.pago = false; if (v < hoje) e.atrasado = true }
+      mapa[dia][nome] = e
     })
-    return mapa
-  }, [pagamentos, ref_])
+    const out = {}
+    Object.entries(mapa).forEach(([dia, alunos]) => {
+      out[dia] = Object.values(alunos).sort((a, b) => b.valor - a.valor)
+    })
+    return out
+  }, [pagamentos, ref_]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const navegar = n => setRef(r => {
     const nd = new Date(r.ano, r.mes + n, 1)
     return { ano: nd.getFullYear(), mes: nd.getMonth() }
   })
 
+  const corDe = e => e.pago ? C.sage : e.atrasado ? C.red : C.amber
+  const fundoDe = e => e.pago ? C.sagePale : e.atrasado ? C.redPale : C.amberPale
+
+  const cabecalho = (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
+      <div>
+        <div style={{ fontFamily: F, fontWeight: 600, fontSize: 10.5, letterSpacing: '1.2px', color: C.brownLight, textTransform: 'uppercase', marginBottom: 4 }}>Agenda de pagamentos</div>
+        <div style={{ fontFamily: S, fontSize: 20, color: C.brown }}>{MESES[ref_.mes]} {ref_.ano}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <BotaoNav onClick={() => navegar(-1)}>←</BotaoNav>
+        <button onClick={() => { const h = new Date(); setRef({ ano: h.getFullYear(), mes: h.getMonth() }) }}
+          style={{ padding: '7px 14px', borderRadius: 100, border: `1px solid ${C.sageLight}`, background: C.creamCard, fontFamily: F, fontSize: 12.5, fontWeight: 600, color: C.brownMid, cursor: 'pointer' }}>
+          Hoje
+        </button>
+        <BotaoNav onClick={() => navegar(1)}>→</BotaoNav>
+      </div>
+    </div>
+  )
+
+  const legenda = (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 16 }}>
+      <Legenda cor={C.sage} label="Pago" />
+      <Legenda cor={C.amber} label="A vencer" />
+      <Legenda cor={C.red} label="Atrasado" />
+    </div>
+  )
+
+  // ── MOBILE: lista (nome não cabe numa grade de 7 colunas) ──
+  if (mobile) {
+    const dias = Object.keys(porDia).map(Number).sort((a, b) => a - b)
+    return (
+      <div style={{ background: C.white, border: `1px solid ${C.sageLight}`, borderRadius: 18, padding: '20px 18px 22px' }}>
+        {cabecalho}
+        {dias.length === 0 && (
+          <div style={{ fontFamily: F, fontSize: 13.5, color: C.brownLight, padding: '22px 0', textAlign: 'center' }}>
+            Nenhum pagamento em {MESES[ref_.mes]}.
+          </div>
+        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {dias.map(dia => {
+            const entradas = porDia[dia]
+            const data = new Date(ref_.ano, ref_.mes, dia)
+            const ehHoje = data.getTime() === hoje.getTime()
+            const total = entradas.reduce((s, e) => s + e.valor, 0)
+            return (
+              <div key={dia} style={{
+                border: `1px solid ${ehHoje ? C.sageDark : C.creamDark}`,
+                borderRadius: 12, padding: '12px 14px', background: C.creamCard,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+                  <div style={{ fontFamily: F, fontWeight: 700, fontSize: 13.5, color: ehHoje ? C.sageDark : C.brown }}>
+                    Dia {dia}{ehHoje ? ' · hoje' : ''}
+                  </div>
+                  <div style={{ fontFamily: F, fontWeight: 700, fontSize: 13, color: C.brownMid }}>{brlCurto(total)}</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {entradas.map((e, i) => (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      background: fundoDe(e), border: `1px solid ${corDe(e)}33`,
+                      borderRadius: 8, padding: '7px 10px',
+                    }}>
+                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: corDe(e), flexShrink: 0 }} />
+                      <span style={{ fontFamily: F, fontSize: 13, fontWeight: 600, color: C.brown, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {e.nome}{e.qtd > 1 ? ` (${e.qtd}×)` : ''}
+                      </span>
+                      <span style={{ fontFamily: F, fontSize: 12.5, fontWeight: 600, color: corDe(e) }}>{brlCurto(e.valor)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        {legenda}
+      </div>
+    )
+  }
+
+  // ── DESKTOP: grade com os nomes ──
   const celulas = [...Array(offset).fill(null), ...Array.from({ length: diasNoMes }, (_, i) => i + 1)]
+  const MAX_CHIPS = 3
 
   return (
     <div style={{ background: C.white, border: `1px solid ${C.sageLight}`, borderRadius: 18, padding: '20px 20px 24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <div style={{ fontFamily: S, fontSize: 20, color: C.brown }}>{MESES[ref_.mes]} {ref_.ano}</div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <BotaoNav onClick={() => navegar(-1)}>←</BotaoNav>
-          <button onClick={() => { const h = new Date(); setRef({ ano: h.getFullYear(), mes: h.getMonth() }) }}
-            style={{ padding: '7px 14px', borderRadius: 100, border: `1px solid ${C.sageLight}`, background: C.creamCard, fontFamily: F, fontSize: 12.5, fontWeight: 600, color: C.brownMid, cursor: 'pointer' }}>
-            Hoje
-          </button>
-          <BotaoNav onClick={() => navegar(1)}>→</BotaoNav>
-        </div>
-      </div>
+      {cabecalho}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 5 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
         {SEMANA.map((s, i) => (
           <div key={i} style={{ textAlign: 'center', fontFamily: F, fontWeight: 700, fontSize: 10, color: C.brownLight, padding: '4px 0' }}>{s}</div>
         ))}
         {celulas.map((dia, i) => {
           if (!dia) return <div key={`v${i}`} />
-          const lista = porDia[dia] || []
+          const entradas = porDia[dia] || []
           const data = new Date(ref_.ano, ref_.mes, dia)
           const ehHoje = data.getTime() === hoje.getTime()
-          const pendentes = lista.filter(p => !p.pago)
-          const atrasado = pendentes.length > 0 && data < hoje
-          const total = lista.reduce((s, p) => s + Number(p.valor || 0), 0)
-
-          const fundo = lista.length === 0 ? C.creamCard
-            : atrasado ? C.redPale
-              : pendentes.length > 0 ? C.amberPale
-                : C.sagePale
-          const borda = ehHoje ? C.sageDark : (lista.length ? (atrasado ? `${C.red}55` : `${C.sageLight}`) : 'transparent')
+          const vazio = entradas.length === 0
+          const total = entradas.reduce((s, e) => s + e.valor, 0)
+          const visiveis = entradas.slice(0, MAX_CHIPS)
+          const resto = entradas.length - visiveis.length
 
           return (
-            <div key={dia} title={lista.map(p => `${p.aluno?.nome || ''} — ${brl(p.valor)}${p.pago ? ' (pago)' : ''}`).join('\n')}
+            <div key={dia}
+              title={entradas.map(e => `${e.nome} — ${brl(e.valor)}${e.pago ? ' (pago)' : e.atrasado ? ' (atrasado)' : ''}`).join('\n')}
               style={{
-                minHeight: 62, borderRadius: 10, padding: '6px 7px',
-                background: fundo, border: `1.5px solid ${borda}`,
-                display: 'flex', flexDirection: 'column', gap: 3,
+                minHeight: 104, borderRadius: 12, padding: '7px 7px 8px',
+                background: vazio ? C.creamCard : C.white,
+                border: `1.5px solid ${ehHoje ? C.sageDark : vazio ? 'transparent' : C.sageLight}`,
+                display: 'flex', flexDirection: 'column', gap: 5,
               }}>
-              <div style={{ fontFamily: F, fontSize: 11, fontWeight: ehHoje ? 800 : 600, color: ehHoje ? C.sageDark : C.brownMid }}>{dia}</div>
-              {lista.length > 0 && (
-                <>
-                  <div style={{ fontFamily: F, fontSize: 10.5, fontWeight: 700, color: atrasado ? C.red : C.brown, lineHeight: 1.25 }}>
-                    {brl(total)}
-                  </div>
-                  <div style={{ fontFamily: F, fontSize: 9.5, color: C.brownLight }}>
-                    {pendentes.length === 0 ? '✓ pago' : `${lista.length} parc.`}
-                  </div>
-                </>
+              {/* topo: dia + total */}
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 4 }}>
+                <span style={{
+                  fontFamily: F, fontSize: 11.5, fontWeight: ehHoje ? 800 : 600,
+                  color: ehHoje ? C.sageDark : C.brownMid,
+                  ...(ehHoje ? { background: C.sagePale, borderRadius: 6, padding: '1px 6px' } : {}),
+                }}>{dia}</span>
+                {!vazio && (
+                  <span style={{ fontFamily: F, fontSize: 10, fontWeight: 700, color: C.brownLight, whiteSpace: 'nowrap' }}>
+                    {brlCurto(total)}
+                  </span>
+                )}
+              </div>
+
+              {/* nomes */}
+              {!vazio && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {visiveis.map((e, k) => (
+                    <div key={k} style={{
+                      display: 'flex', alignItems: 'center', gap: 5,
+                      background: fundoDe(e), borderRadius: 6,
+                      padding: '3px 6px', minWidth: 0,
+                    }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: corDe(e), flexShrink: 0 }} />
+                      <span style={{
+                        fontFamily: F, fontSize: 10.5, fontWeight: 600, color: C.brown,
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>{primeiroNome(e.nome)}</span>
+                    </div>
+                  ))}
+                  {resto > 0 && (
+                    <div style={{ fontFamily: F, fontSize: 9.5, fontWeight: 600, color: C.brownLight, paddingLeft: 6 }}>
+                      +{resto} {resto === 1 ? 'outro' : 'outros'}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )
         })}
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 16 }}>
-        <Legenda cor={C.sagePale} label="Pago" />
-        <Legenda cor={C.amberPale} label="A vencer" />
-        <Legenda cor={C.redPale} label="Atrasado" />
-      </div>
+      {legenda}
     </div>
   )
 }
