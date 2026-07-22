@@ -646,7 +646,7 @@ function InscricaoSection() {
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-1px',
           }}>
-            R$ 57
+            R$ 59
           </div>
 
           <div style={{
