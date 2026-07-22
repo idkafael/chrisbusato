@@ -646,7 +646,7 @@ function InscricaoSection() {
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-1px',
           }}>
-            R$ 157
+            R$ 57
           </div>
 
           <div style={{
@@ -679,7 +679,7 @@ function InscricaoSection() {
           </div>
 
           <a
-            href="https://pay.cakto.com.br/mpfwkpq"
+            href="https://pay.cakto.com.br/bkqgwvr"
             target="_blank" rel="noopener noreferrer"
             style={{
               display: 'block',
