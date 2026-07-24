@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 import vergonhaImg from './images/vergonha.jpg'
 import vergonhaOferta from './images/vergonha-oferta.jpg'
+import garantiaImg from './images/garantia.png'
 
 const C = {
   cream: '#EDEAE3',
@@ -795,38 +796,14 @@ function GarantiaBloco({ mobile }) {
       transform: inView ? 'translateY(0)' : 'translateY(24px)',
     }}>
       {/* selo: 7 DIAS DE RISCO ZERO */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        flexShrink: 0,
-      }}>
-        <span style={{
-          fontFamily: "'Playfair Display', serif", fontWeight: 700,
-          fontSize: mobile ? 74 : 88, lineHeight: 0.82,
-          background: `linear-gradient(160deg, ${C.goldLight} 0%, ${C.gold} 45%, #a8863d 100%)`,
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-        }}>7</span>
-
-        <div style={{ position: 'relative' }}>
-          {/* selo de verificação */}
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{
-            position: 'absolute', top: -9, right: -20,
-          }}>
-            <path d="M12 2.2l2.2 1.5 2.6-.5 1.2 2.4 2.4 1.2-.5 2.6 1.5 2.2-1.5 2.2.5 2.6-2.4 1.2-1.2 2.4-2.6-.5-2.2 1.5-2.2-1.5-2.6.5-1.2-2.4-2.4-1.2.5-2.6L2.2 12l1.5-2.2-.5-2.6 2.4-1.2 1.2-2.4 2.6.5L12 2.2z"
-              fill="rgba(196,169,107,0.16)" stroke={C.gold} strokeWidth="1.1" strokeLinejoin="round" />
-            <path d="M8.6 12.2l2.2 2.2 4.6-4.8" stroke={C.goldLight} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-
-          <div style={{
-            fontFamily: "'Playfair Display', serif", fontWeight: 700,
-            fontSize: mobile ? 19 : 22, lineHeight: 1.14,
-            color: C.cream, letterSpacing: '0.5px', textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-          }}>
-            Dias<br />de risco<br />zero
-          </div>
-        </div>
-      </div>
+      <img
+        src={garantiaImg}
+        alt="Garantia de 7 dias de risco zero"
+        style={{
+          width: mobile ? 'min(100%, 260px)' : 250,
+          height: 'auto', display: 'block', flexShrink: 0,
+        }}
+      />
 
       {/* divisor */}
       <div style={{
