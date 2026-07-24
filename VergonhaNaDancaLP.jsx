@@ -767,8 +767,6 @@ function InscricaoSection() {
         }}>
           Vagas limitadas · Pagamento 100% seguro
         </p>
-
-        <GarantiaBloco mobile={mobile} />
       </div>
     </section>
   )
@@ -776,54 +774,60 @@ function InscricaoSection() {
 
 // ─── Garantia ─────────────────────────────────────────────────────────────────
 
-function GarantiaBloco({ mobile }) {
+function GarantiaSection() {
   const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
 
   return (
-    <div ref={ref} style={{
-      marginTop: mobile ? 44 : 56,
-      background: 'rgba(196,169,107,0.05)',
-      border: '1px solid rgba(196,169,107,0.18)',
-      borderRadius: 20,
-      padding: mobile ? '30px 24px' : '34px 40px',
-      display: 'flex',
-      flexDirection: mobile ? 'column' : 'row',
-      alignItems: 'center',
-      gap: mobile ? 22 : 34,
-      textAlign: 'left',
-      transition: 'opacity 0.8s ease, transform 0.8s ease',
-      opacity: inView ? 1 : 0,
-      transform: inView ? 'translateY(0)' : 'translateY(24px)',
+    <section style={{
+      background: '#0F0D0B',
+      borderTop: '1px solid rgba(196,169,107,0.14)',
+      borderBottom: '1px solid rgba(196,169,107,0.14)',
+      padding: mobile ? '40px 24px' : '52px 40px',
     }}>
-      {/* selo: 7 DIAS DE RISCO ZERO */}
-      <img
-        src={garantiaImg}
-        alt="Garantia de 7 dias de risco zero"
-        style={{
-          width: mobile ? 'min(100%, 260px)' : 250,
-          height: 'auto', display: 'block', flexShrink: 0,
-        }}
-      />
-
-      {/* divisor */}
-      <div style={{
-        background: 'rgba(196,169,107,0.22)',
-        ...(mobile
-          ? { width: '100%', height: 1 }
-          : { width: 1, alignSelf: 'stretch' }),
-        flexShrink: 0,
-      }} />
-
-      {/* texto */}
-      <p style={{
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-        fontSize: mobile ? 14.5 : 15.5,
-        color: 'rgba(237,234,227,0.72)', lineHeight: 1.75,
-        textAlign: mobile ? 'center' : 'left',
+      <div ref={ref} style={{
+        maxWidth: 880, margin: '0 auto',
+        display: 'flex',
+        flexDirection: mobile ? 'column' : 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: mobile ? 24 : 44,
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(20px)',
       }}>
-        Você tem uma <strong style={{ fontWeight: 500, color: C.cream }}>garantia incondicional de 7 dias</strong>, protegida por lei. Caso você não goste do aulão por algum motivo, é só pedir o cancelamento e receber seu dinheiro de volta.
-      </p>
-    </div>
+        {/* selo: 7 DIAS DE RISCO ZERO */}
+        <img
+          src={garantiaImg}
+          alt="Garantia de 7 dias de risco zero"
+          style={{
+            width: mobile ? 'min(100%, 240px)' : 270,
+            height: 'auto', display: 'block', flexShrink: 0,
+          }}
+        />
+
+        {/* divisor */}
+        <div style={{
+          background: 'rgba(196,169,107,0.2)',
+          flexShrink: 0,
+          ...(mobile
+            ? { width: 72, height: 1 }
+            : { width: 1, alignSelf: 'stretch', minHeight: 92 }),
+        }} />
+
+        {/* texto */}
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+          fontSize: mobile ? 14.5 : 15.5,
+          color: 'rgba(237,234,227,0.72)', lineHeight: 1.8,
+          textAlign: mobile ? 'center' : 'left',
+          maxWidth: 420,
+        }}>
+          Você tem uma <strong style={{ fontWeight: 500, color: C.cream }}>garantia incondicional de 7 dias</strong>, protegida por lei. Caso você não goste do aulão por algum motivo, é só pedir o cancelamento e receber seu dinheiro de volta.
+        </p>
+      </div>
+    </section>
   )
 }
 
@@ -1081,6 +1085,7 @@ export default function VergonhaNaDancaLP() {
       <ParaQuemSection />
       <ChrisSection />
       <InscricaoSection />
+      <GarantiaSection />
       <UrgenciaSection />
       <FaqSection />
       <Footer />
