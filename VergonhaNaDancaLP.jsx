@@ -865,6 +865,14 @@ function UrgenciaSection() {
 
 const faqItems = [
   {
+    q: 'Como vou receber o acesso ao aulão?',
+    a: 'Assim que o pagamento é confirmado, você recebe o acesso ao aulão por e-mail. É só abrir e assistir, pelo computador ou pelo celular. Se não encontrar, confira a caixa de spam ou promoções.',
+  },
+  {
+    q: 'Por quanto tempo vou ter acesso?',
+    a: 'Para sempre. A gravação fica disponível de forma permanente, então você pode voltar e rever quantas vezes quiser, no seu ritmo.',
+  },
+  {
     q: 'Isso é para mim mesmo se eu me considero muito tímido?',
     a: 'Sim. Na verdade, esse aulão foi criado justamente para pessoas que sentem vergonha de dançar na frente de outras. Você não precisa chegar confiante. Você precisa apenas estar disposto a olhar para isso de um ângulo diferente.',
   },
