@@ -677,14 +677,14 @@ function InscricaoSection() {
           {/* preço em destaque */}
           <div style={{
             display: 'flex', alignItems: 'baseline', justifyContent: 'center',
-            gap: 8, marginBottom: 10,
+            gap: 8, marginBottom: 10, flexWrap: 'wrap',
           }}>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-              fontSize: mobile ? 'clamp(56px, 17vw, 76px)' : 92,
-              color: C.cream, lineHeight: 0.95, letterSpacing: '-3px',
+              fontSize: mobile ? 'clamp(42px, 13vw, 62px)' : 84,
+              color: C.cream, lineHeight: 0.95, letterSpacing: '-2.5px',
               textShadow: '0 4px 34px rgba(196,169,107,0.30)',
-            }}>R$&nbsp;59</span>
+            }}>R$59,90</span>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: mobile ? 14 : 16, color: 'rgba(237,234,227,0.55)',
