@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 import vergonhaImg from './images/vergonha.jpg'
+import vergonhaOferta from './images/vergonha-oferta.jpg'
 
 const C = {
   cream: '#EDEAE3',
@@ -621,16 +622,35 @@ function InscricaoSection() {
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(32px, 3.5vw, 50px)',
           color: C.cream, letterSpacing: '-0.5px',
-          lineHeight: 1.15, marginBottom: 48,
+          lineHeight: 1.15, marginBottom: mobile ? 28 : 36,
         }}>
           Uma vez.{' '}
           <em style={{ color: C.gold, fontStyle: 'italic' }}>Para sempre.</em>
         </h2>
 
+        {/* prova visual: a plataforma com o aulão liberado, sobreposta ao card */}
         <div style={{
+          position: 'relative', zIndex: 2,
+          marginBottom: mobile ? -34 : -56,
+          padding: '0 4px',
+        }}>
+          <img
+            src={vergonhaOferta}
+            alt="Plataforma Corpo Musical com o aulão A Vergonha na Dança liberado"
+            style={{
+              width: '100%', display: 'block', borderRadius: 14,
+              border: '1px solid rgba(196,169,107,0.28)',
+              boxShadow: '0 26px 60px rgba(0,0,0,0.55)',
+            }}
+          />
+        </div>
+
+        <div style={{
+          position: 'relative', zIndex: 1,
           background: 'rgba(196,169,107,0.06)',
           border: '1px solid rgba(196,169,107,0.2)',
-          borderRadius: 24, padding: mobile ? '36px 28px' : '48px 56px',
+          borderRadius: 24,
+          padding: mobile ? '56px 28px 36px' : '80px 56px 48px',
           marginBottom: 32,
         }}>
           <div style={{
