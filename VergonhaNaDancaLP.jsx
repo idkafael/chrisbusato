@@ -653,46 +653,78 @@ function InscricaoSection() {
           padding: mobile ? '56px 28px 36px' : '80px 56px 48px',
           marginBottom: 32,
         }}>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-            fontSize: 14, color: 'rgba(237,234,227,0.4)',
-            letterSpacing: '0.3px', marginBottom: 8,
-            textDecoration: 'line-through',
-          }}>de R$ 297</div>
+          {/* "Por apenas" com filetes laterais */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
+            <div style={{ flex: 1, height: 1, background: 'rgba(196,169,107,0.22)' }} />
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'rgba(196,169,107,0.10)',
+              border: '1px solid rgba(196,169,107,0.28)',
+              borderRadius: 100, padding: '7px 18px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 13, color: C.goldLight, whiteSpace: 'nowrap',
+            }}>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 12.5, color: 'rgba(237,234,227,0.45)',
+                textDecoration: 'line-through',
+              }}>R$ 297</span>
+              Por apenas
+            </div>
+            <div style={{ flex: 1, height: 1, background: 'rgba(196,169,107,0.22)' }} />
+          </div>
 
+          {/* preço em destaque */}
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-            fontSize: mobile ? 48 : 56,
-            color: C.cream, lineHeight: 1, marginBottom: 4,
-            letterSpacing: '-1px',
+            display: 'flex', alignItems: 'baseline', justifyContent: 'center',
+            gap: 8, marginBottom: 10,
           }}>
-            R$ 59
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+              fontSize: mobile ? 'clamp(56px, 17vw, 76px)' : 92,
+              color: C.cream, lineHeight: 0.95, letterSpacing: '-3px',
+              textShadow: '0 4px 34px rgba(196,169,107,0.30)',
+            }}>R$&nbsp;59</span>
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: mobile ? 14 : 16, color: 'rgba(237,234,227,0.55)',
+            }}>à vista</span>
           </div>
 
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: 14, color: 'rgba(237,234,227,0.45)',
-            marginBottom: 36,
+            marginBottom: 34,
           }}>pagamento único · acesso permanente à gravação</div>
 
-          <div style={{ textAlign: 'left', marginBottom: 36 }}>
+          {/* benefícios */}
+          <div style={{ textAlign: 'left', marginBottom: 34 }}>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 11, letterSpacing: '2px', color: C.gold,
+              textTransform: 'uppercase', marginBottom: 16,
+            }}>O que você vai levar</div>
+
             {[
-              'Aulão A Vergonha na Dança com Chris Busato',
-              'Gravação disponível para sempre',
-              'Material de apoio exclusivo',
-            ].map((item, i) => (
+              'Reconhecer como a vergonha aparece no seu corpo e trava a sua dança',
+              'Entender por que você pensa demais, se compara e se preocupa tanto com o olhar do outro',
+              'Sair do corpo racional e recuperar presença, leveza e espontaneidade',
+              'Se expressar com mais confiança, sem precisar esperar se sentir totalmente segura',
+              'Aplicar exercícios e práticas para continuar desenvolvendo isso no seu dia a dia',
+              'Gravação disponível para sempre + material de apoio',
+            ].map((item, i, arr) => (
               <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 0',
-                borderBottom: i < 2 ? '1px solid rgba(196,169,107,0.08)' : 'none',
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                padding: '11px 0',
+                borderBottom: i < arr.length - 1 ? '1px solid rgba(196,169,107,0.08)' : 'none',
               }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <svg width="15" height="15" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 3 }}>
                   <circle cx="7" cy="7" r="6" stroke="rgba(196,169,107,0.5)" strokeWidth="1"/>
                   <path d="M4.5 7l2 2 3-3" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                  fontSize: 15, color: 'rgba(237,234,227,0.7)',
+                  fontSize: 15, color: 'rgba(237,234,227,0.78)', lineHeight: 1.55,
                 }}>{item}</span>
               </div>
             ))}
