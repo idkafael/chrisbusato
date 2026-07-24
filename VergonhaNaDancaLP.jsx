@@ -766,8 +766,87 @@ function InscricaoSection() {
         }}>
           Vagas limitadas · Pagamento 100% seguro
         </p>
+
+        <GarantiaBloco mobile={mobile} />
       </div>
     </section>
+  )
+}
+
+// ─── Garantia ─────────────────────────────────────────────────────────────────
+
+function GarantiaBloco({ mobile }) {
+  const [ref, inView] = useInView()
+
+  return (
+    <div ref={ref} style={{
+      marginTop: mobile ? 44 : 56,
+      background: 'rgba(196,169,107,0.05)',
+      border: '1px solid rgba(196,169,107,0.18)',
+      borderRadius: 20,
+      padding: mobile ? '30px 24px' : '34px 40px',
+      display: 'flex',
+      flexDirection: mobile ? 'column' : 'row',
+      alignItems: 'center',
+      gap: mobile ? 22 : 34,
+      textAlign: 'left',
+      transition: 'opacity 0.8s ease, transform 0.8s ease',
+      opacity: inView ? 1 : 0,
+      transform: inView ? 'translateY(0)' : 'translateY(24px)',
+    }}>
+      {/* selo: 7 DIAS DE RISCO ZERO */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        flexShrink: 0,
+      }}>
+        <span style={{
+          fontFamily: "'Playfair Display', serif", fontWeight: 700,
+          fontSize: mobile ? 74 : 88, lineHeight: 0.82,
+          background: `linear-gradient(160deg, ${C.goldLight} 0%, ${C.gold} 45%, #a8863d 100%)`,
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}>7</span>
+
+        <div style={{ position: 'relative' }}>
+          {/* selo de verificação */}
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{
+            position: 'absolute', top: -9, right: -20,
+          }}>
+            <path d="M12 2.2l2.2 1.5 2.6-.5 1.2 2.4 2.4 1.2-.5 2.6 1.5 2.2-1.5 2.2.5 2.6-2.4 1.2-1.2 2.4-2.6-.5-2.2 1.5-2.2-1.5-2.6.5-1.2-2.4-2.4-1.2.5-2.6L2.2 12l1.5-2.2-.5-2.6 2.4-1.2 1.2-2.4 2.6.5L12 2.2z"
+              fill="rgba(196,169,107,0.16)" stroke={C.gold} strokeWidth="1.1" strokeLinejoin="round" />
+            <path d="M8.6 12.2l2.2 2.2 4.6-4.8" stroke={C.goldLight} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+
+          <div style={{
+            fontFamily: "'Playfair Display', serif", fontWeight: 700,
+            fontSize: mobile ? 19 : 22, lineHeight: 1.14,
+            color: C.cream, letterSpacing: '0.5px', textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+          }}>
+            Dias<br />de risco<br />zero
+          </div>
+        </div>
+      </div>
+
+      {/* divisor */}
+      <div style={{
+        background: 'rgba(196,169,107,0.22)',
+        ...(mobile
+          ? { width: '100%', height: 1 }
+          : { width: 1, alignSelf: 'stretch' }),
+        flexShrink: 0,
+      }} />
+
+      {/* texto */}
+      <p style={{
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+        fontSize: mobile ? 14.5 : 15.5,
+        color: 'rgba(237,234,227,0.72)', lineHeight: 1.75,
+        textAlign: mobile ? 'center' : 'left',
+      }}>
+        Você tem uma <strong style={{ fontWeight: 500, color: C.cream }}>garantia incondicional de 7 dias</strong>, protegida por lei. Caso você não goste do aulão por algum motivo, é só pedir o cancelamento e receber seu dinheiro de volta.
+      </p>
+    </div>
   )
 }
 
