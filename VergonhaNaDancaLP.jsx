@@ -169,7 +169,7 @@ function HeroSection() {
 
           <div style={{ animation: 'fadeUp 0.7s 0.3s ease both' }}>
             <a
-              href="#inscricao"
+              href="#vsl"
               style={{
                 display: 'inline-block',
                 background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
@@ -1089,9 +1089,10 @@ function VslSection() {
   }, [])
 
   return (
-    <section style={{
+    <section id="vsl" style={{
       background: `linear-gradient(180deg, ${C.ink} 0%, ${C.inkMid} 100%)`,
       padding: mobile ? '48px 24px 56px' : '64px 40px 72px',
+      scrollMarginTop: 70,
     }}>
       <div ref={ref} style={{
         maxWidth: 400, margin: '0 auto', textAlign: 'center',
