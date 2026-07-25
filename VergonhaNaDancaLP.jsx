@@ -555,33 +555,37 @@ function ChrisSection() {
               fontSize: mobile ? 28 : 36,
               color: C.cream, marginBottom: 20, lineHeight: 1.2,
             }}>Chris Busato</h3>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-              fontSize: mobile ? 15 : 17,
-              color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
-              marginBottom: 24,
-            }}>
-              Educadora de dança e criadora do método Corpo Musical. Há mais de dez anos, Chris acompanha corpos que querem se expressar com mais liberdade. Ela não ignora o que paralisa. Ela vai direto no que está embaixo e ensina você a atravessar isso.
-            </p>
+            {[
+              'Chris foi uma criança tímida, que encontrou na dança um caminho para sentir, se expressar e ocupar seu espaço. Mas, ao longo de mais de 17 anos ensinando, percebeu que aprender mais passos nem sempre torna alguém mais livre.',
+              'Foi então que passou a investigar o que existe antes do passo: a relação com a música, com o próprio corpo, com o outro e com tudo aquilo que pode bloquear a expressão.',
+              'Hoje, seu trabalho ajuda pessoas a saírem do excesso de pensamento e desenvolverem uma dança com mais presença, musicalidade, confiança e verdade.',
+            ].map((par, i) => (
+              <p key={i} style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+                fontSize: mobile ? 15 : 17,
+                color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
+                marginBottom: i < 2 ? 16 : 24,
+              }}>{par}</p>
+            ))}
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 10,
             }}>
               {[
-                '+10 anos como educadora de dança',
-                'Criadora do Corpo Musical',
-                'Referência em expressão e musicalidade corporal',
+                'Criadora do método Corpo Musical',
+                '+17 anos ajudando pessoas a destravarem o corpo e se sentirem livres ao dançar',
+                'Especialista em transformar excesso de pensamento em presença, musicalidade e expressão',
               ].map((item, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
+                  display: 'flex', alignItems: 'flex-start', gap: 10,
                 }}>
                   <div style={{
                     width: 5, height: 5, borderRadius: '50%',
-                    background: C.gold, flexShrink: 0,
+                    background: C.gold, flexShrink: 0, marginTop: 8,
                     boxShadow: `0 0 6px rgba(196,169,107,0.4)`,
                   }} />
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                    fontSize: 14, color: 'rgba(237,234,227,0.5)',
+                    fontSize: 14, color: 'rgba(237,234,227,0.5)', lineHeight: 1.5,
                   }}>{item}</span>
                 </div>
               ))}
