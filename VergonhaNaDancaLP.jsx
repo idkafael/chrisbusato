@@ -1073,12 +1073,60 @@ function Footer() {
   )
 }
 
+// ─── VSL ──────────────────────────────────────────────────────────────────────
+
+function VslSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  useEffect(() => {
+    if (document.querySelector('script[src*="6a642f16968749729f83b56c"]')) return
+    const s = document.createElement('script')
+    s.src = 'https://scripts.converteai.net/1c6e6f27-d6f0-4013-b98a-0067464a2b63/players/6a642f16968749729f83b56c/v4/player.js'
+    s.async = true
+    document.head.appendChild(s)
+  }, [])
+
+  return (
+    <section style={{
+      background: `linear-gradient(180deg, ${C.ink} 0%, ${C.inkMid} 100%)`,
+      padding: mobile ? '48px 24px 56px' : '64px 40px 72px',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 400, margin: '0 auto', textAlign: 'center',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+      }}>
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+          textTransform: 'uppercase', marginBottom: 20,
+        }}>Assista antes de começar</div>
+
+        <div style={{
+          borderRadius: 16, overflow: 'hidden',
+          border: '1px solid rgba(196,169,107,0.18)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        }}>
+          <vturb-smartplayer
+            id="vid-6a642f16968749729f83b56c"
+            style={{ display: 'block', margin: '0 auto', width: '100%' }}
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function VergonhaNaDancaLP() {
   return (
     <>
       <style>{globalStyles}</style>
       <Navbar />
       <HeroSection />
+      <VslSection />
       <StatementSection />
       <OQueESection />
       <AprendizadosSection />
