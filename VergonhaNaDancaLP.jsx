@@ -1073,9 +1073,9 @@ function Footer() {
   )
 }
 
-// ─── VSL ──────────────────────────────────────────────────────────────────────
+// ─── Hero com VSL (topo da página) ────────────────────────────────────────────
 
-function VslSection() {
+function HeroVsl() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
@@ -1091,31 +1091,72 @@ function VslSection() {
   return (
     <section id="vsl" style={{
       background: `linear-gradient(180deg, ${C.ink} 0%, ${C.inkMid} 100%)`,
-      padding: mobile ? '48px 24px 56px' : '64px 40px 72px',
-      scrollMarginTop: 70,
+      padding: mobile ? '96px 24px 56px' : '120px 40px 80px',
+      position: 'relative', overflow: 'hidden',
     }}>
+      {/* glow sutil de fundo */}
+      <div style={{
+        position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
+        width: mobile ? 360 : 620, height: mobile ? 360 : 620, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(196,169,107,0.10) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
       <div ref={ref} style={{
-        maxWidth: 400, margin: '0 auto', textAlign: 'center',
+        maxWidth: 460, margin: '0 auto', textAlign: 'center',
+        position: 'relative', zIndex: 1,
         transition: 'opacity 0.8s ease, transform 0.8s ease',
         opacity: inView ? 1 : 0,
         transform: inView ? 'translateY(0)' : 'translateY(24px)',
       }}>
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
-          textTransform: 'uppercase', marginBottom: 20,
-        }}>Assista antes de começar</div>
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: mobile ? 'clamp(36px, 11vw, 52px)' : 'clamp(46px, 5vw, 64px)',
+          lineHeight: 1.08, letterSpacing: '-1px',
+          color: C.cream, marginBottom: 18,
+        }}>
+          A Vergonha{' '}
+          <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>na Dança</em>
+        </h1>
 
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+          fontSize: mobile ? 15 : 17,
+          color: 'rgba(237,234,227,0.8)', lineHeight: 1.65,
+          maxWidth: 400, margin: '0 auto 32px',
+        }}>
+          Entenda o que acontece no seu corpo quando você sente vergonha de dançar e como sair disso.
+        </p>
+
+        {/* VSL */}
         <div style={{
           borderRadius: 16, overflow: 'hidden',
           border: '1px solid rgba(196,169,107,0.18)',
           boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          marginBottom: 32,
         }}>
           <vturb-smartplayer
             id="vid-6a642f16968749729f83b56c"
             style={{ display: 'block', margin: '0 auto', width: '100%' }}
           />
         </div>
+
+        <a href="#inscricao" style={{
+          display: 'inline-block',
+          background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
+          color: C.ink,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
+          padding: mobile ? '16px 40px' : '18px 52px',
+          borderRadius: 100, textDecoration: 'none',
+          boxShadow: '0 8px 32px rgba(196,169,107,0.35)',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(196,169,107,0.45)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(196,169,107,0.35)' }}
+        >
+          Quero Participar
+        </a>
       </div>
     </section>
   )
@@ -1126,8 +1167,9 @@ export default function VergonhaNaDancaLP() {
     <>
       <style>{globalStyles}</style>
       <Navbar />
-      <HeroSection />
-      <VslSection />
+      {/* Hero com imagem guardado por enquanto — restaurar trocando por <HeroSection /> */}
+      {/* <HeroSection /> */}
+      <HeroVsl />
       <StatementSection />
       <OQueESection />
       <AprendizadosSection />
