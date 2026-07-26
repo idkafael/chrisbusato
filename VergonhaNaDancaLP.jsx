@@ -159,7 +159,7 @@ function HeroSection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 15 : 17,
-            color: 'rgba(107,95,88,0.85)',
+            color: C.brownMid,
             lineHeight: 1.7, maxWidth: 400,
             marginBottom: 28,
             animation: 'fadeUp 0.7s 0.15s ease both',
@@ -286,7 +286,7 @@ function OQueESection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 16 : 18,
-            color: 'rgba(107,95,88,0.75)',
+            color: C.brownMid,
             lineHeight: 1.75,
           }}>
             A vergonha na dança não é frescura. É uma resposta real do sistema nervoso e ela trava o corpo antes mesmo de você perceber.
@@ -294,7 +294,7 @@ function OQueESection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 16 : 18,
-            color: 'rgba(107,95,88,0.75)',
+            color: C.brownMid,
             lineHeight: 1.75,
           }}>
             Tem gente que aprende os passos, sabe as músicas, mas na hora de dançar na frente de alguém, some. O corpo trava. A mente vai embora. E a experiência que deveria ser prazerosa vira um campo minado.
@@ -303,7 +303,7 @@ function OQueESection() {
             fontFamily: "'Playfair Display', serif",
             fontStyle: 'italic',
             fontSize: mobile ? 17 : 20,
-            color: 'rgba(107,95,88,0.65)',
+            color: C.brownMid,
             lineHeight: 1.65,
           }}>
             Quando você entender de onde vem essa vergonha, o corpo começa a responder diferente.
@@ -319,7 +319,7 @@ function OQueESection() {
             fontFamily: "'Playfair Display', serif",
             fontStyle: 'italic',
             fontSize: mobile ? 18 : 22,
-            color: 'rgba(107,95,88,0.8)',
+            color: C.brownMid,
             lineHeight: 1.65,
             marginBottom: 20,
           }}>
@@ -432,7 +432,7 @@ function AprendizadoItem({ item, index, mobile }) {
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
           fontSize: mobile ? 15 : 16,
-          color: 'rgba(107,95,88,0.8)', lineHeight: 1.65,
+          color: C.brownMid, lineHeight: 1.65,
         }}>{item.descricao}</p>
       </div>
     </div>
@@ -498,7 +498,7 @@ function ParaQuemSection() {
               <p style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: mobile ? 16 : 18,
-                color: 'rgba(107,95,88,0.92)', lineHeight: 1.55,
+                color: C.brownMid, lineHeight: 1.55,
               }}>{item}</p>
             </div>
           ))}
@@ -563,7 +563,7 @@ function ChrisSection() {
               <p key={i} style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
                 fontSize: mobile ? 15 : 17,
-                color: 'rgba(107,95,88,0.6)', lineHeight: 1.75,
+                color: C.brownMid, lineHeight: 1.75,
                 marginBottom: i < 2 ? 16 : 24,
               }}>{par}</p>
             ))}
@@ -585,7 +585,7 @@ function ChrisSection() {
                   }} />
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                    fontSize: 14, color: 'rgba(107,95,88,0.5)', lineHeight: 1.5,
+                    fontSize: 14, color: C.brownMid, lineHeight: 1.5,
                   }}>{item}</span>
                 </div>
               ))}
@@ -672,7 +672,7 @@ function InscricaoSection() {
             }}>
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 12.5, color: 'rgba(107,95,88,0.45)',
+                fontSize: 12.5, color: C.brownLight,
                 textDecoration: 'line-through',
               }}>R$ 297</span>
               Por apenas
@@ -693,13 +693,13 @@ function InscricaoSection() {
             }}>R$59,90</span>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: mobile ? 14 : 16, color: 'rgba(107,95,88,0.55)',
+              fontSize: mobile ? 14 : 16, color: C.brownMid,
             }}>à vista</span>
           </div>
 
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 14, color: 'rgba(107,95,88,0.45)',
+            fontSize: 14, color: C.brownMid,
             marginBottom: 34,
           }}>pagamento único · acesso permanente à gravação</div>
 
@@ -730,7 +730,7 @@ function InscricaoSection() {
                 </svg>
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                  fontSize: 15, color: 'rgba(107,95,88,0.78)', lineHeight: 1.55,
+                  fontSize: 15, color: C.brownMid, lineHeight: 1.55,
                 }}>{item}</span>
               </div>
             ))}
@@ -767,7 +767,7 @@ function InscricaoSection() {
 
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: 13, color: 'rgba(107,95,88,0.35)',
+          fontSize: 13, color: C.brownMid,
           lineHeight: 1.6,
         }}>
           Vagas limitadas · Pagamento 100% seguro
@@ -880,7 +880,7 @@ function UrgenciaSection() {
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
               fontSize: mobile ? 17 : 20,
-              color: i === 0 ? 'rgba(107,95,88,0.92)' : 'rgba(107,95,88,0.7)',
+              color: i === 0 ? C.brown : C.brownMid,
               lineHeight: 1.6,
               fontStyle: i > 0 ? 'italic' : 'normal',
               transition: `opacity 0.6s ease ${i * 80}ms, transform 0.6s ease ${i * 80}ms`,
@@ -901,7 +901,7 @@ function UrgenciaSection() {
           fontFamily: "'DM Sans', sans-serif",
           fontWeight: 400,
           fontSize: mobile ? 17 : 20,
-          color: 'rgba(107,95,88,0.92)',
+          color: C.brownMid,
           lineHeight: 1.7,
           marginBottom: 40,
         }}>
@@ -1006,7 +1006,7 @@ function FaqItem({ item, index }) {
           paddingBottom: 24,
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 15 : 16,
-          color: 'rgba(107,95,88,0.55)', lineHeight: 1.7,
+          color: C.brownMid, lineHeight: 1.7,
         }}>{item.a}</div>
       )}
     </div>
@@ -1127,7 +1127,7 @@ function HeroVsl() {
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 15 : 17,
-          color: 'rgba(107,95,88,0.8)', lineHeight: 1.6,
+          color: C.brownMid, lineHeight: 1.6,
           maxWidth: 400, margin: '0 auto 22px',
         }}>
           Entenda o que acontece no seu corpo quando você sente vergonha de dançar e como sair disso.
