@@ -183,7 +183,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero a vivência gravada
+            Quero ver a vivência gravada
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -215,7 +215,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero a vivência gravada
+            Quero ver a vivência gravada
           </a>}
         </div>
 
@@ -2132,6 +2132,22 @@ function InscricaoSection() {
 
 const faqs = [
   {
+    q: 'Como vou receber o acesso?',
+    a: 'Ao adquirir a Vivência Gravada, você recebe tudo por e-mail: além da vivência completa, ganha um módulo preparatório para chegar pronto e aproveitar ainda mais. Já na Vivência Presencial, você entra em um grupo exclusivo no WhatsApp, onde recebe todas as informações e orientações antes do encontro.',
+  },
+  {
+    q: 'Por quanto tempo vou ter acesso à gravação?',
+    a: 'Para sempre. A Vivência Gravada fica disponível de forma vitalícia, então você pode assistir e rever quando e quantas vezes quiser, no seu ritmo.',
+  },
+  {
+    q: 'E se eu não gostar? Tenho garantia?',
+    a: 'Tem sim. Você conta com uma garantia incondicional de 7 dias, protegida por lei. Se por qualquer motivo a experiência não for para você, é só pedir o reembolso dentro desse prazo e devolvemos 100% do valor, sem burocracia.',
+  },
+  {
+    q: 'Como funciona a inscrição?',
+    a: 'Após confirmar o pagamento, você recebe as informações completas sobre data, horário e local da vivência. Vagas são limitadas para garantir a qualidade da experiência.',
+  },
+  {
     q: 'Preciso ter experiência em dança?',
     a: 'Não necessariamente. Ter alguma experiência pode ajudar a compreender alguns conceitos mais rapidamente, mas não é um pré-requisito. A vivência foi pensada para acolher pessoas em diferentes momentos da sua jornada com a dança, desde quem está começando até quem já possui mais experiência.',
   },
@@ -2146,18 +2162,6 @@ const faqs = [
   {
     q: 'E se eu nunca tiver pensado sobre música antes?',
     a: 'Melhor ainda. Você vai construir o mapa sem precisar desfazer nada. A vivência foi feita para quem dança de forma intuitiva e quer entender o que já sente.',
-  },
-  {
-    q: 'Como funciona a inscrição?',
-    a: 'Após confirmar o pagamento, você recebe as informações completas sobre data, horário e local da vivência. Vagas são limitadas para garantir a qualidade da experiência.',
-  },
-  {
-    q: 'Como vou receber o acesso?',
-    a: 'Ao adquirir a Vivência Gravada, você recebe tudo por e-mail: além da vivência completa, ganha um módulo preparatório para chegar pronto e aproveitar ainda mais. Já na Vivência Presencial, você entra em um grupo exclusivo no WhatsApp, onde recebe todas as informações e orientações antes do encontro.',
-  },
-  {
-    q: 'Por quanto tempo vou ter acesso à gravação?',
-    a: 'Para sempre. A Vivência Gravada fica disponível de forma vitalícia, então você pode assistir e rever quando e quantas vezes quiser, no seu ritmo.',
   },
 ]
 
@@ -2241,6 +2245,50 @@ function FaqSection() {
         {faqs.map((faq, i) => (
           <FaqItem key={i} faq={faq} index={i} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
         ))}
+
+        {/* caixinha garantia — 7 dias de risco zero */}
+        <div style={{
+          marginTop: 48,
+          background: C.sagePale,
+          border: `1px solid rgba(138,158,140,0.28)`,
+          borderRadius: 20,
+          padding: mobile ? '28px 24px' : '32px 40px',
+          display: 'flex',
+          flexDirection: mobile ? 'column' : 'row',
+          alignItems: 'center',
+          textAlign: mobile ? 'center' : 'left',
+          gap: mobile ? 16 : 28,
+        }}>
+          {/* selo escudo */}
+          <div style={{
+            flexShrink: 0,
+            width: 72, height: 72, borderRadius: '50%',
+            background: C.white,
+            border: `1.5px solid ${C.sage}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 6px 18px rgba(138,158,140,0.22)',
+          }}>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2.5l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V5.5l7-3z"
+                stroke={C.sageDark} strokeWidth="1.6" strokeLinejoin="round"/>
+              <path d="M8.5 12l2.4 2.4L15.8 9.5" stroke={C.sageDark} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+
+          <div>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: mobile ? 20 : 22, color: C.brown,
+              marginBottom: 8, letterSpacing: '-0.3px',
+            }}>7 dias de risco zero</div>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 14.5, color: C.brownMid, lineHeight: 1.65,
+            }}>
+              Você tem uma <strong style={{ fontWeight: 600, color: C.brown }}>garantia incondicional de 7 dias</strong>, protegida por lei. Se por qualquer motivo a experiência não for para você, é só pedir o reembolso dentro do prazo e devolvemos 100% do seu valor, sem burocracia.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   )
