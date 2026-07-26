@@ -761,7 +761,7 @@ function InscricaoSection() {
               e.currentTarget.style.boxShadow = `0 8px 32px rgba(138,158,140,0.3)`
             }}
           >
-            Garantir minha vaga
+            Garantir essa experiência
           </a>
         </div>
 
