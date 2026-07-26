@@ -2151,6 +2151,14 @@ const faqs = [
     q: 'Como funciona a inscrição?',
     a: 'Após confirmar o pagamento, você recebe as informações completas sobre data, horário e local da vivência. Vagas são limitadas para garantir a qualidade da experiência.',
   },
+  {
+    q: 'Como vou receber o acesso?',
+    a: 'Ao adquirir a Vivência Gravada, você recebe tudo por e-mail: além da vivência completa, ganha um módulo preparatório para chegar pronto e aproveitar ainda mais. Já na Vivência Presencial, você entra em um grupo exclusivo no WhatsApp, onde recebe todas as informações e orientações antes do encontro.',
+  },
+  {
+    q: 'Por quanto tempo vou ter acesso à gravação?',
+    a: 'Para sempre. A Vivência Gravada fica disponível de forma vitalícia, então você pode assistir e rever quando e quantas vezes quiser, no seu ritmo.',
+  },
 ]
 
 function FaqItem({ faq, index, open, onToggle }) {
@@ -2183,7 +2191,7 @@ function FaqItem({ faq, index, open, onToggle }) {
         }}>+</span>
       </button>
       <div style={{
-        maxHeight: open ? 300 : 0,
+        maxHeight: open ? 480 : 0,
         overflow: 'hidden',
         transition: 'max-height 0.35s ease',
       }}>
