@@ -28,7 +28,7 @@ const globalStyles = `
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: ${C.ink}; }
+  body { background: ${C.cream}; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(32px); }
@@ -82,8 +82,8 @@ function Navbar() {
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-      background: scrolled ? 'rgba(28,25,22,0.92)' : 'rgba(28,25,22,0)',
-      borderBottom: scrolled ? '1px solid rgba(196,169,107,0.15)' : '1px solid transparent',
+      background: scrolled ? 'rgba(237,234,227,0.92)' : 'rgba(237,234,227,0)',
+      borderBottom: scrolled ? '1px solid rgba(138,158,140,0.15)' : '1px solid transparent',
       transition: 'background 0.4s ease, border-color 0.4s ease',
     }}>
       <div style={{
@@ -96,7 +96,7 @@ function Navbar() {
           fontFamily: "'Playfair Display', serif",
           fontStyle: 'italic',
           fontSize: mobile ? 15 : 17,
-          color: C.goldLight,
+          color: C.sageDark,
           letterSpacing: '0.5px',
         }}>
           Chris Busato
@@ -145,13 +145,13 @@ function HeroSection() {
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(36px, 10vw, 52px)' : 'clamp(44px, 4.5vw, 68px)',
             lineHeight: 1.1, letterSpacing: '-1px',
-            color: C.cream,
+            color: C.brown,
             animation: 'fadeUp 0.7s 0.1s ease both',
             maxWidth: 720,
             marginBottom: 20,
           }}>
             A Vergonha{' '}
-            <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>
+            <em style={{ color: C.sageDark, fontStyle: 'italic', display: 'block' }}>
               na Dança
             </em>
           </h1>
@@ -159,7 +159,7 @@ function HeroSection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 15 : 17,
-            color: 'rgba(237,234,227,0.85)',
+            color: 'rgba(107,95,88,0.85)',
             lineHeight: 1.7, maxWidth: 400,
             marginBottom: 28,
             animation: 'fadeUp 0.7s 0.15s ease both',
@@ -172,22 +172,22 @@ function HeroSection() {
               href="#vsl"
               style={{
                 display: 'inline-block',
-                background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-                color: C.ink,
+                background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+                color: C.white,
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
                 padding: mobile ? '16px 36px' : '18px 48px',
                 borderRadius: 100, textDecoration: 'none',
-                boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
+                boxShadow: `0 8px 32px rgba(138,158,140,0.35)`,
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
+                e.currentTarget.style.boxShadow = `0 12px 40px rgba(138,158,140,0.45)`
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.35)`
+                e.currentTarget.style.boxShadow = `0 8px 32px rgba(138,158,140,0.35)`
               }}
             >
               Quero Participar
@@ -206,9 +206,9 @@ function StatementSection() {
 
   return (
     <section style={{
-      background: 'linear-gradient(160deg, #2e2820 0%, #3a2f24 50%, #2e2820 100%)',
+      background: C.sagePale,
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.12)',
+      borderTop: '1px solid rgba(138,158,140,0.12)',
     }}>
       <div ref={ref} style={{
         maxWidth: 820, margin: '0 auto', textAlign: 'center',
@@ -219,18 +219,18 @@ function StatementSection() {
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(36px, 4vw, 56px)',
-          color: C.cream, lineHeight: 1.2,
+          color: C.brown, lineHeight: 1.2,
           letterSpacing: '-0.5px', marginBottom: 28,
         }}>
           A vergonha existe.{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic' }}>
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>
             Mas ela não precisa te parar.
           </em>
         </h2>
 
         <div style={{
           width: 40, height: 1,
-          background: `rgba(196,169,107,0.4)`,
+          background: `rgba(138,158,140,0.4)`,
           margin: '0 auto 32px',
         }} />
 
@@ -238,7 +238,7 @@ function StatementSection() {
           fontFamily: "'Playfair Display', serif",
           fontStyle: 'italic',
           fontSize: mobile ? 19 : 24,
-          color: C.cream,
+          color: C.brown,
           lineHeight: 1.6, maxWidth: 660, margin: '0 auto',
         }}>
           "O problema não é sentir vergonha. O problema é não saber o que fazer com ela quando ela aparece no meio da dança."
@@ -255,7 +255,7 @@ function OQueESection() {
 
   return (
     <section style={{
-      background: 'linear-gradient(160deg, #2e2820 0%, #3a2f24 50%, #2e2820 100%)',
+      background: C.white,
       padding: mobile ? '0 24px 80px' : '0 40px 112px',
     }}>
       <div ref={ref} style={{
@@ -266,18 +266,18 @@ function OQueESection() {
       }}>
         <div style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+          fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
           textTransform: 'uppercase', marginBottom: 20,
         }}>O que você vai aprender</div>
 
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(30px, 3vw, 44px)',
-          color: C.cream, lineHeight: 1.2,
+          color: C.brown, lineHeight: 1.2,
           letterSpacing: '-0.5px', marginBottom: 36,
         }}>
           O problema não é não saber dançar.{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic' }}>
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>
             É o que acontece dentro de você quando alguém olha.
           </em>
         </h2>
@@ -286,7 +286,7 @@ function OQueESection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 16 : 18,
-            color: 'rgba(237,234,227,0.75)',
+            color: 'rgba(107,95,88,0.75)',
             lineHeight: 1.75,
           }}>
             A vergonha na dança não é frescura. É uma resposta real do sistema nervoso e ela trava o corpo antes mesmo de você perceber.
@@ -294,7 +294,7 @@ function OQueESection() {
           <p style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
             fontSize: mobile ? 16 : 18,
-            color: 'rgba(237,234,227,0.75)',
+            color: 'rgba(107,95,88,0.75)',
             lineHeight: 1.75,
           }}>
             Tem gente que aprende os passos, sabe as músicas, mas na hora de dançar na frente de alguém, some. O corpo trava. A mente vai embora. E a experiência que deveria ser prazerosa vira um campo minado.
@@ -303,7 +303,7 @@ function OQueESection() {
             fontFamily: "'Playfair Display', serif",
             fontStyle: 'italic',
             fontSize: mobile ? 17 : 20,
-            color: 'rgba(237,234,227,0.65)',
+            color: 'rgba(107,95,88,0.65)',
             lineHeight: 1.65,
           }}>
             Quando você entender de onde vem essa vergonha, o corpo começa a responder diferente.
@@ -312,14 +312,14 @@ function OQueESection() {
 
         <div style={{
           marginTop: 48,
-          borderTop: '1px solid rgba(196,169,107,0.15)',
+          borderTop: '1px solid rgba(138,158,140,0.15)',
           paddingTop: 40,
         }}>
           <p style={{
             fontFamily: "'Playfair Display', serif",
             fontStyle: 'italic',
             fontSize: mobile ? 18 : 22,
-            color: 'rgba(237,234,227,0.8)',
+            color: 'rgba(107,95,88,0.8)',
             lineHeight: 1.65,
             marginBottom: 20,
           }}>
@@ -328,7 +328,7 @@ function OQueESection() {
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
             fontSize: 11, letterSpacing: '2.5px',
-            color: 'rgba(196,169,107,0.6)',
+            color: 'rgba(138,158,140,0.6)',
             textTransform: 'uppercase',
           }}>Chris Busato</div>
         </div>
@@ -367,7 +367,7 @@ function AprendizadosSection() {
 
   return (
     <section style={{
-      background: C.ink,
+      background: C.sagePale,
       padding: mobile ? '80px 24px' : '112px 40px',
     }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -379,16 +379,16 @@ function AprendizadosSection() {
         }}>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+            fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
             textTransform: 'uppercase', marginBottom: 16,
           }}>O que você vai levar</div>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(28px, 3vw, 44px)',
-            color: C.cream, letterSpacing: '-0.5px', lineHeight: 1.2,
+            color: C.brown, letterSpacing: '-0.5px', lineHeight: 1.2,
           }}>
             Quatro mudanças de{' '}
-            <em style={{ color: C.gold, fontStyle: 'italic' }}>perspectiva.</em>
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>perspectiva.</em>
           </h2>
         </div>
 
@@ -410,7 +410,7 @@ function AprendizadoItem({ item, index, mobile }) {
       gridTemplateColumns: mobile ? '1fr' : '80px 1fr',
       gap: mobile ? 12 : 40,
       padding: '32px 0',
-      borderTop: '1px solid rgba(196,169,107,0.12)',
+      borderTop: '1px solid rgba(138,158,140,0.12)',
       transition: 'opacity 0.6s ease, transform 0.6s ease',
       transitionDelay: `${index * 80}ms`,
       opacity: inView ? 1 : 0,
@@ -420,19 +420,19 @@ function AprendizadoItem({ item, index, mobile }) {
         fontFamily: "'Playfair Display', serif",
         fontStyle: 'italic',
         fontSize: mobile ? 18 : 22,
-        color: 'rgba(196,169,107,0.4)',
+        color: 'rgba(138,158,140,0.4)',
         paddingTop: 2,
       }}>{item.num}</div>
       <div>
         <h3 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 19 : 22,
-          color: C.cream, marginBottom: 10, lineHeight: 1.3,
+          color: C.brown, marginBottom: 10, lineHeight: 1.3,
         }}>{item.titulo}</h3>
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
           fontSize: mobile ? 15 : 16,
-          color: 'rgba(237,234,227,0.8)', lineHeight: 1.65,
+          color: 'rgba(107,95,88,0.8)', lineHeight: 1.65,
         }}>{item.descricao}</p>
       </div>
     </div>
@@ -455,9 +455,9 @@ function ParaQuemSection() {
 
   return (
     <section style={{
-      background: C.inkMid,
+      background: C.white,
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.1)',
+      borderTop: '1px solid rgba(138,158,140,0.1)',
     }}>
       <div ref={ref} style={{
         maxWidth: 780, margin: '0 auto',
@@ -467,18 +467,18 @@ function ParaQuemSection() {
       }}>
         <div style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+          fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
           textTransform: 'uppercase', marginBottom: 16,
         }}>Para quem é</div>
 
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(28px, 3vw, 44px)',
-          color: C.cream, letterSpacing: '-0.5px',
+          color: C.brown, letterSpacing: '-0.5px',
           lineHeight: 1.2, marginBottom: 48,
         }}>
           Esse aulão é pra você{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic' }}>se…</em>
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>se…</em>
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -486,19 +486,19 @@ function ParaQuemSection() {
             <div key={i} style={{
               display: 'flex', alignItems: 'flex-start', gap: 16,
               padding: '20px 0',
-              borderBottom: i < paraQuem.length - 1 ? '1px solid rgba(196,169,107,0.2)' : 'none',
+              borderBottom: i < paraQuem.length - 1 ? '1px solid rgba(138,158,140,0.2)' : 'none',
             }}>
               <div style={{
                 flexShrink: 0,
                 width: 6, height: 6, borderRadius: '50%',
-                background: C.gold,
+                background: C.sageDark,
                 marginTop: 9,
-                boxShadow: `0 0 8px rgba(196,169,107,0.5)`,
+                boxShadow: `0 0 8px rgba(138,158,140,0.5)`,
               }} />
               <p style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: mobile ? 16 : 18,
-                color: 'rgba(237,234,227,0.92)', lineHeight: 1.55,
+                color: 'rgba(107,95,88,0.92)', lineHeight: 1.55,
               }}>{item}</p>
             </div>
           ))}
@@ -515,9 +515,9 @@ function ChrisSection() {
 
   return (
     <section style={{
-      background: C.ink,
+      background: C.creamCard,
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.08)',
+      borderTop: '1px solid rgba(138,158,140,0.08)',
     }}>
       <div ref={ref} style={{
         maxWidth: 760, margin: '0 auto',
@@ -535,7 +535,7 @@ function ChrisSection() {
             aspectRatio: '4/5',
             borderRadius: 20,
             overflow: 'hidden',
-            boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
+            boxShadow: '0 24px 60px rgba(61,53,48,0.16)',
           }}>
             <img
               src={chrisSorrindo}
@@ -547,13 +547,13 @@ function ChrisSection() {
           <div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+              fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
               textTransform: 'uppercase', marginBottom: 16,
             }}>Quem ensina</div>
             <h3 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: mobile ? 28 : 36,
-              color: C.cream, marginBottom: 20, lineHeight: 1.2,
+              color: C.brown, marginBottom: 20, lineHeight: 1.2,
             }}>Chris Busato</h3>
             {[
               'Chris foi uma criança tímida, que encontrou na dança um caminho para sentir, se expressar e ocupar seu espaço. Mas, ao longo de mais de 17 anos ensinando, percebeu que aprender mais passos nem sempre torna alguém mais livre.',
@@ -563,7 +563,7 @@ function ChrisSection() {
               <p key={i} style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
                 fontSize: mobile ? 15 : 17,
-                color: 'rgba(237,234,227,0.6)', lineHeight: 1.75,
+                color: 'rgba(107,95,88,0.6)', lineHeight: 1.75,
                 marginBottom: i < 2 ? 16 : 24,
               }}>{par}</p>
             ))}
@@ -580,12 +580,12 @@ function ChrisSection() {
                 }}>
                   <div style={{
                     width: 5, height: 5, borderRadius: '50%',
-                    background: C.gold, flexShrink: 0, marginTop: 8,
-                    boxShadow: `0 0 6px rgba(196,169,107,0.4)`,
+                    background: C.sageDark, flexShrink: 0, marginTop: 8,
+                    boxShadow: `0 0 6px rgba(138,158,140,0.4)`,
                   }} />
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                    fontSize: 14, color: 'rgba(237,234,227,0.5)', lineHeight: 1.5,
+                    fontSize: 14, color: 'rgba(107,95,88,0.5)', lineHeight: 1.5,
                   }}>{item}</span>
                 </div>
               ))}
@@ -606,9 +606,9 @@ function InscricaoSection() {
     <section
       id="inscricao"
       style={{
-        background: `linear-gradient(160deg, ${C.inkMid} 0%, ${C.ink} 100%)`,
+        background: `linear-gradient(160deg, ${C.sagePale} 0%, ${C.cream} 100%)`,
         padding: mobile ? '80px 24px 100px' : '112px 40px 128px',
-        borderTop: '1px solid rgba(196,169,107,0.12)',
+        borderTop: '1px solid rgba(138,158,140,0.12)',
       }}
     >
       <div ref={ref} style={{
@@ -619,18 +619,18 @@ function InscricaoSection() {
       }}>
         <div style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+          fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
           textTransform: 'uppercase', marginBottom: 16,
         }}>Acesso ao aulão</div>
 
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(32px, 3.5vw, 50px)',
-          color: C.cream, letterSpacing: '-0.5px',
+          color: C.brown, letterSpacing: '-0.5px',
           lineHeight: 1.15, marginBottom: mobile ? 28 : 36,
         }}>
           Uma vez.{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic' }}>Para sempre.</em>
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Para sempre.</em>
         </h2>
 
         {/* prova visual: a plataforma com o aulão liberado, sobreposta ao card */}
@@ -644,39 +644,40 @@ function InscricaoSection() {
             alt="Plataforma Corpo Musical com o aulão A Vergonha na Dança liberado"
             style={{
               width: '100%', display: 'block', borderRadius: 14,
-              border: '1px solid rgba(196,169,107,0.28)',
-              boxShadow: '0 26px 60px rgba(0,0,0,0.55)',
+              border: '1px solid rgba(138,158,140,0.28)',
+              boxShadow: '0 26px 60px rgba(61,53,48,0.16)',
             }}
           />
         </div>
 
         <div style={{
           position: 'relative', zIndex: 1,
-          background: 'rgba(196,169,107,0.06)',
-          border: '1px solid rgba(196,169,107,0.2)',
+          background: C.white,
+          border: '1px solid rgba(138,158,140,0.22)',
           borderRadius: 24,
           padding: mobile ? '56px 28px 36px' : '80px 56px 48px',
           marginBottom: 32,
+          boxShadow: '0 20px 50px rgba(61,53,48,0.08)',
         }}>
           {/* "Por apenas" com filetes laterais */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(196,169,107,0.22)' }} />
+            <div style={{ flex: 1, height: 1, background: 'rgba(138,158,140,0.22)' }} />
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(196,169,107,0.10)',
-              border: '1px solid rgba(196,169,107,0.28)',
+              background: 'rgba(138,158,140,0.10)',
+              border: '1px solid rgba(138,158,140,0.28)',
               borderRadius: 100, padding: '7px 18px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 13, color: C.goldLight, whiteSpace: 'nowrap',
+              fontSize: 13, color: C.sageDark, whiteSpace: 'nowrap',
             }}>
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 12.5, color: 'rgba(237,234,227,0.45)',
+                fontSize: 12.5, color: 'rgba(107,95,88,0.45)',
                 textDecoration: 'line-through',
               }}>R$ 297</span>
               Por apenas
             </div>
-            <div style={{ flex: 1, height: 1, background: 'rgba(196,169,107,0.22)' }} />
+            <div style={{ flex: 1, height: 1, background: 'rgba(138,158,140,0.22)' }} />
           </div>
 
           {/* preço em destaque */}
@@ -687,18 +688,18 @@ function InscricaoSection() {
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
               fontSize: mobile ? 'clamp(42px, 13vw, 62px)' : 84,
-              color: C.cream, lineHeight: 0.95, letterSpacing: '-2.5px',
-              textShadow: '0 4px 34px rgba(196,169,107,0.30)',
+              color: C.brown, lineHeight: 0.95, letterSpacing: '-2.5px',
+              textShadow: '0 4px 34px rgba(138,158,140,0.30)',
             }}>R$59,90</span>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: mobile ? 14 : 16, color: 'rgba(237,234,227,0.55)',
+              fontSize: mobile ? 14 : 16, color: 'rgba(107,95,88,0.55)',
             }}>à vista</span>
           </div>
 
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 14, color: 'rgba(237,234,227,0.45)',
+            fontSize: 14, color: 'rgba(107,95,88,0.45)',
             marginBottom: 34,
           }}>pagamento único · acesso permanente à gravação</div>
 
@@ -706,7 +707,7 @@ function InscricaoSection() {
           <div style={{ textAlign: 'left', marginBottom: 34 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 11, letterSpacing: '2px', color: C.gold,
+              fontSize: 11, letterSpacing: '2px', color: C.sageDark,
               textTransform: 'uppercase', marginBottom: 16,
             }}>O que você vai levar</div>
 
@@ -721,15 +722,15 @@ function InscricaoSection() {
               <div key={i} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 12,
                 padding: '11px 0',
-                borderBottom: i < arr.length - 1 ? '1px solid rgba(196,169,107,0.08)' : 'none',
+                borderBottom: i < arr.length - 1 ? '1px solid rgba(138,158,140,0.08)' : 'none',
               }}>
                 <svg width="15" height="15" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 3 }}>
-                  <circle cx="7" cy="7" r="6" stroke="rgba(196,169,107,0.5)" strokeWidth="1"/>
-                  <path d="M4.5 7l2 2 3-3" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="7" cy="7" r="6" stroke="rgba(138,158,140,0.5)" strokeWidth="1"/>
+                  <path d="M4.5 7l2 2 3-3" stroke={C.sageDark} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-                  fontSize: 15, color: 'rgba(237,234,227,0.78)', lineHeight: 1.55,
+                  fontSize: 15, color: 'rgba(107,95,88,0.78)', lineHeight: 1.55,
                 }}>{item}</span>
               </div>
             ))}
@@ -740,24 +741,24 @@ function InscricaoSection() {
             target="_blank" rel="noopener noreferrer"
             style={{
               display: 'block',
-              background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-              color: C.ink,
+              background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+              color: C.white,
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 16, letterSpacing: '0.3px',
               padding: '18px 40px',
               borderRadius: 100,
               textDecoration: 'none',
               textAlign: 'center',
-              boxShadow: `0 8px 32px rgba(196,169,107,0.3)`,
+              boxShadow: `0 8px 32px rgba(138,158,140,0.3)`,
               transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'translateY(-2px)'
-              e.currentTarget.style.boxShadow = `0 12px 40px rgba(196,169,107,0.45)`
+              e.currentTarget.style.boxShadow = `0 12px 40px rgba(138,158,140,0.45)`
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = `0 8px 32px rgba(196,169,107,0.3)`
+              e.currentTarget.style.boxShadow = `0 8px 32px rgba(138,158,140,0.3)`
             }}
           >
             Garantir minha vaga
@@ -766,7 +767,7 @@ function InscricaoSection() {
 
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-          fontSize: 13, color: 'rgba(237,234,227,0.35)',
+          fontSize: 13, color: 'rgba(107,95,88,0.35)',
           lineHeight: 1.6,
         }}>
           Vagas limitadas · Pagamento 100% seguro
@@ -785,9 +786,9 @@ function GarantiaSection() {
 
   return (
     <section style={{
-      background: '#0F0D0B',
-      borderTop: '1px solid rgba(196,169,107,0.14)',
-      borderBottom: '1px solid rgba(196,169,107,0.14)',
+      background: C.brown,
+      borderTop: '1px solid rgba(138,158,140,0.25)',
+      borderBottom: '1px solid rgba(138,158,140,0.25)',
       padding: mobile ? '40px 24px' : '52px 40px',
     }}>
       <div ref={ref} style={{
@@ -813,7 +814,7 @@ function GarantiaSection() {
 
         {/* divisor */}
         <div style={{
-          background: 'rgba(196,169,107,0.2)',
+          background: 'rgba(138,158,140,0.2)',
           flexShrink: 0,
           ...(mobile
             ? { width: 72, height: 1 }
@@ -824,11 +825,11 @@ function GarantiaSection() {
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 14.5 : 15.5,
-          color: 'rgba(237,234,227,0.72)', lineHeight: 1.8,
+          color: 'rgba(237,234,227,0.75)', lineHeight: 1.8,
           textAlign: mobile ? 'center' : 'left',
           maxWidth: 420,
         }}>
-          Você tem uma <strong style={{ fontWeight: 500, color: C.cream }}>garantia incondicional de 7 dias</strong>, protegida por lei. Caso você não goste do aulão por algum motivo, é só pedir o cancelamento e receber seu dinheiro de volta.
+          Você tem uma <strong style={{ fontWeight: 500, color: C.white }}>garantia incondicional de 7 dias</strong>, protegida por lei. Caso você não goste do aulão por algum motivo, é só pedir o cancelamento e receber seu dinheiro de volta.
         </p>
       </div>
     </section>
@@ -849,7 +850,7 @@ function UrgenciaSection() {
 
   return (
     <section style={{
-      background: `linear-gradient(160deg, #1a1510 0%, #231c14 50%, #1a1510 100%)`,
+      background: C.creamCard,
       padding: mobile ? '80px 24px 88px' : '112px 40px 120px',
     }}>
       <div ref={ref} style={{
@@ -864,13 +865,13 @@ function UrgenciaSection() {
           fontFamily: "'Playfair Display', serif",
           fontWeight: 700,
           fontSize: mobile ? 26 : 34,
-          color: C.cream,
+          color: C.brown,
           lineHeight: 1.25,
           marginBottom: 40,
           letterSpacing: '-0.01em',
         }}>
           Por que você não pode sair daqui{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic' }}>sem tomar essa decisão?</em>
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>sem tomar essa decisão?</em>
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 48 }}>
@@ -879,7 +880,7 @@ function UrgenciaSection() {
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
               fontSize: mobile ? 17 : 20,
-              color: i === 0 ? 'rgba(237,234,227,0.92)' : 'rgba(237,234,227,0.7)',
+              color: i === 0 ? 'rgba(107,95,88,0.92)' : 'rgba(107,95,88,0.7)',
               lineHeight: 1.6,
               fontStyle: i > 0 ? 'italic' : 'normal',
               transition: `opacity 0.6s ease ${i * 80}ms, transform 0.6s ease ${i * 80}ms`,
@@ -892,7 +893,7 @@ function UrgenciaSection() {
         <div style={{
           width: 48,
           height: 1,
-          background: `rgba(196,169,107,0.4)`,
+          background: `rgba(138,158,140,0.4)`,
           margin: '0 auto 48px',
         }} />
 
@@ -900,7 +901,7 @@ function UrgenciaSection() {
           fontFamily: "'DM Sans', sans-serif",
           fontWeight: 400,
           fontSize: mobile ? 17 : 20,
-          color: 'rgba(237,234,227,0.92)',
+          color: 'rgba(107,95,88,0.92)',
           lineHeight: 1.7,
           marginBottom: 40,
         }}>
@@ -910,8 +911,8 @@ function UrgenciaSection() {
 
         <a href="#inscricao" style={{
           display: 'inline-block',
-          background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-          color: C.ink,
+          background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+          color: C.white,
           fontFamily: "'DM Sans', sans-serif",
           fontWeight: 700,
           fontSize: mobile ? 16 : 17,
@@ -920,7 +921,7 @@ function UrgenciaSection() {
           padding: mobile ? '16px 36px' : '18px 48px',
           borderRadius: 50,
           textDecoration: 'none',
-          boxShadow: `0 8px 32px rgba(196,169,107,0.35)`,
+          boxShadow: `0 8px 32px rgba(138,158,140,0.35)`,
         }}>Quero participar</a>
       </div>
     </section>
@@ -966,7 +967,7 @@ function FaqItem({ item, index }) {
 
   return (
     <div ref={ref} style={{
-      borderBottom: '1px solid rgba(196,169,107,0.12)',
+      borderBottom: '1px solid rgba(138,158,140,0.12)',
       transition: 'opacity 0.5s ease, transform 0.5s ease',
       transitionDelay: `${index * 70}ms`,
       opacity: inView ? 1 : 0,
@@ -984,19 +985,19 @@ function FaqItem({ item, index }) {
         <span style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
           fontSize: mobile ? 15 : 16,
-          color: open ? C.goldLight : C.cream,
+          color: open ? C.sageDark : C.brown,
           lineHeight: 1.4,
           transition: 'color 0.2s ease',
         }}>{item.q}</span>
         <div style={{
           flexShrink: 0, width: 28, height: 28, borderRadius: '50%',
-          border: `1px solid rgba(196,169,107,${open ? '0.5' : '0.2'})`,
+          border: `1px solid rgba(138,158,140,${open ? '0.5' : '0.2'})`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'border-color 0.2s ease, transform 0.3s ease',
           transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
         }}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path d="M5 1v8M1 5h8" stroke={open ? C.gold : 'rgba(196,169,107,0.6)'} strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M5 1v8M1 5h8" stroke={open ? C.sageDark : 'rgba(138,158,140,0.6)'} strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         </div>
       </button>
@@ -1005,7 +1006,7 @@ function FaqItem({ item, index }) {
           paddingBottom: 24,
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 15 : 16,
-          color: 'rgba(237,234,227,0.55)', lineHeight: 1.7,
+          color: 'rgba(107,95,88,0.55)', lineHeight: 1.7,
         }}>{item.a}</div>
       )}
     </div>
@@ -1019,9 +1020,9 @@ function FaqSection() {
 
   return (
     <section style={{
-      background: C.inkMid,
+      background: C.white,
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(196,169,107,0.1)',
+      borderTop: '1px solid rgba(138,158,140,0.1)',
     }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         <div ref={titleRef} style={{
@@ -1032,13 +1033,13 @@ function FaqSection() {
         }}>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 11, letterSpacing: '2.5px', color: C.gold,
+            fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
             textTransform: 'uppercase', marginBottom: 14,
           }}>Dúvidas</div>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(28px, 3vw, 42px)',
-            color: C.cream, letterSpacing: '-0.5px',
+            color: C.brown, letterSpacing: '-0.5px',
           }}>Perguntas frequentes</h2>
         </div>
         {faqItems.map((item, i) => (
@@ -1055,20 +1056,20 @@ function Footer() {
 
   return (
     <footer style={{
-      background: C.ink,
-      borderTop: '1px solid rgba(196,169,107,0.1)',
+      background: C.brown,
+      borderTop: '1px solid rgba(138,158,140,0.2)',
       padding: mobile ? '40px 24px' : '48px 40px',
       textAlign: 'center',
     }}>
       <div style={{
         fontFamily: "'Playfair Display', serif",
         fontStyle: 'italic', fontSize: 16,
-        color: 'rgba(196,169,107,0.5)',
+        color: 'rgba(196,209,197,0.65)',
         marginBottom: 12,
       }}>Chris Busato</div>
       <p style={{
         fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-        fontSize: 12, color: 'rgba(237,234,227,0.25)',
+        fontSize: 12, color: 'rgba(237,234,227,0.35)',
         letterSpacing: '0.3px',
       }}>
         © {new Date().getFullYear()} · Todos os direitos reservados
@@ -1094,7 +1095,7 @@ function HeroVsl() {
 
   return (
     <section id="vsl" style={{
-      background: `linear-gradient(180deg, ${C.ink} 0%, ${C.inkMid} 100%)`,
+      background: `linear-gradient(180deg, ${C.cream} 0%, ${C.creamDark} 100%)`,
       padding: mobile ? '96px 24px 56px' : '120px 40px 80px',
       position: 'relative', overflow: 'hidden',
     }}>
@@ -1102,7 +1103,7 @@ function HeroVsl() {
       <div style={{
         position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
         width: mobile ? 360 : 620, height: mobile ? 360 : 620, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(196,169,107,0.10) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(138,158,140,0.10) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -1117,16 +1118,16 @@ function HeroVsl() {
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(36px, 11vw, 52px)' : 'clamp(46px, 5vw, 64px)',
           lineHeight: 1.08, letterSpacing: '-1px',
-          color: C.cream, marginBottom: 18,
+          color: C.brown, marginBottom: 18,
         }}>
           A Vergonha{' '}
-          <em style={{ color: C.gold, fontStyle: 'italic', display: 'block' }}>na Dança</em>
+          <em style={{ color: C.sageDark, fontStyle: 'italic', display: 'block' }}>na Dança</em>
         </h1>
 
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 15 : 17,
-          color: 'rgba(237,234,227,0.8)', lineHeight: 1.65,
+          color: 'rgba(107,95,88,0.8)', lineHeight: 1.65,
           maxWidth: 400, margin: '0 auto 32px',
         }}>
           Entenda o que acontece no seu corpo quando você sente vergonha de dançar e como sair disso.
@@ -1135,8 +1136,8 @@ function HeroVsl() {
         {/* VSL */}
         <div style={{
           borderRadius: 16, overflow: 'hidden',
-          border: '1px solid rgba(196,169,107,0.18)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          border: '1px solid rgba(138,158,140,0.18)',
+          boxShadow: '0 20px 60px rgba(61,53,48,0.18)',
           marginBottom: 32,
         }}>
           <vturb-smartplayer
@@ -1147,17 +1148,17 @@ function HeroVsl() {
 
         <a href="#inscricao" style={{
           display: 'inline-block',
-          background: `linear-gradient(135deg, ${C.gold} 0%, #a8863d 100%)`,
-          color: C.ink,
+          background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+          color: C.white,
           fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
           fontSize: mobile ? 15 : 16, letterSpacing: '0.3px',
           padding: mobile ? '16px 40px' : '18px 52px',
           borderRadius: 100, textDecoration: 'none',
-          boxShadow: '0 8px 32px rgba(196,169,107,0.35)',
+          boxShadow: '0 8px 32px rgba(138,158,140,0.35)',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(196,169,107,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(196,169,107,0.35)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(138,158,140,0.45)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(138,158,140,0.35)' }}
         >
           Quero Participar
         </a>
