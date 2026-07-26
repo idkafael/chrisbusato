@@ -1096,7 +1096,7 @@ function HeroVsl() {
   return (
     <section id="vsl" style={{
       background: `linear-gradient(180deg, ${C.cream} 0%, ${C.creamDark} 100%)`,
-      padding: mobile ? '96px 24px 56px' : '120px 40px 80px',
+      padding: mobile ? '78px 24px 48px' : '92px 40px 72px',
       position: 'relative', overflow: 'hidden',
     }}>
       {/* glow sutil de fundo */}
@@ -1118,7 +1118,7 @@ function HeroVsl() {
           fontFamily: "'Playfair Display', serif",
           fontSize: mobile ? 'clamp(36px, 11vw, 52px)' : 'clamp(46px, 5vw, 64px)',
           lineHeight: 1.08, letterSpacing: '-1px',
-          color: C.brown, marginBottom: 18,
+          color: C.brown, marginBottom: 12,
         }}>
           A Vergonha{' '}
           <em style={{ color: C.sageDark, fontStyle: 'italic', display: 'block' }}>na Dança</em>
@@ -1127,8 +1127,8 @@ function HeroVsl() {
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
           fontSize: mobile ? 15 : 17,
-          color: 'rgba(107,95,88,0.8)', lineHeight: 1.65,
-          maxWidth: 400, margin: '0 auto 32px',
+          color: 'rgba(107,95,88,0.8)', lineHeight: 1.6,
+          maxWidth: 400, margin: '0 auto 22px',
         }}>
           Entenda o que acontece no seu corpo quando você sente vergonha de dançar e como sair disso.
         </p>
@@ -1136,9 +1136,8 @@ function HeroVsl() {
         {/* VSL */}
         <div style={{
           borderRadius: 16, overflow: 'hidden',
-          border: '1px solid rgba(138,158,140,0.18)',
-          boxShadow: '0 20px 60px rgba(61,53,48,0.18)',
-          marginBottom: 32,
+          boxShadow: '0 18px 50px rgba(61,53,48,0.16)',
+          marginBottom: 28,
         }}>
           <vturb-smartplayer
             id="vid-6a642f16968749729f83b56c"
