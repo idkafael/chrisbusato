@@ -183,7 +183,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero a gravação online
+            Quero a vivência gravada
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -215,7 +215,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero a gravação online
+            Quero a vivência gravada
           </a>}
         </div>
 
@@ -1867,63 +1867,39 @@ function InscricaoSection() {
 
           {/* ── CARD ONLINE ── */}
           <div id="ingresso-online" style={{
-            background: highlightOnline ? C.brown : C.creamCard,
-            border: highlightOnline ? 'none' : `1.5px solid ${C.sageLight}`,
+            background: true ? C.brown : C.creamCard,
+            border: true ? 'none' : `1.5px solid ${C.sageLight}`,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
             position: 'relative', overflow: 'hidden',
           }}>
-            {highlightOnline && <div style={{
+            {true && <div style={{
               position: 'absolute', top: '-15%', right: '-10%',
               width: 200, height: 200, background: C.sageDark,
               borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
               opacity: 0.2, pointerEvents: 'none',
             }} />}
 
-            {/* Ribbon ESGOTADO */}
-            <div style={{
-              position: 'absolute', top: 28, right: -36,
-              width: 148,
-              background: 'linear-gradient(135deg, #E8534A 0%, #c0392b 100%)',
-              color: '#fff',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-              fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
-              textAlign: 'center', padding: '7px 0',
-              transform: 'rotate(45deg)',
-              animation: 'ribbonSlideIn 0.6s 0.3s ease both, ribbonPulse 2.5s 1s ease-in-out infinite',
-              zIndex: 10, pointerEvents: 'none',
-              overflow: 'hidden',
-            }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>ESGOTADO</span>
-              <div style={{
-                position: 'absolute', top: 0, left: '-100%',
-                width: '60%', height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)',
-                animation: 'ribbonShimmer 2.2s 1s ease-in-out infinite',
-                zIndex: 3,
-              }} />
-            </div>
-
             <div style={{
               display: 'inline-block',
-              background: highlightOnline ? C.sage : C.sagePale,
-              color: highlightOnline ? C.white : C.sageDark,
+              background: true ? C.sage : C.sagePale,
+              color: true ? C.white : C.sageDark,
               borderRadius: 100, padding: '4px 14px',
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Online · Gravação</div>
+            }}>Online · Vivência Gravada</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 22, color: highlightOnline ? C.cream : C.brown,
+              fontSize: 22, color: true ? C.cream : C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
             }}>Brincando na Música</div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 18, color: highlightOnline ? 'rgba(196,180,160,0.5)' : C.brownLight,
+                fontSize: 18, color: true ? 'rgba(196,180,160,0.5)' : C.brownLight,
                 textDecoration: 'line-through', letterSpacing: '-0.3px',
               }}>R$ 167</div>
               <div style={{
@@ -1936,54 +1912,54 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 'clamp(48px, 5vw, 64px)',
-              color: highlightOnline ? C.cream : C.brown, lineHeight: 1, marginBottom: 4,
+              color: true ? C.cream : C.brown, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: highlightOnline ? C.sageLight : C.brownLight, marginBottom: 16,
-            }}>pagamento único · acesso imediato à gravação</div>
+              fontSize: 13, color: true ? C.sageLight : C.brownLight, marginBottom: 16,
+            }}>pagamento único · acesso imediato e vitalício</div>
 
             {/* nota gravação */}
             <div style={{
-              borderLeft: `2.5px solid ${highlightOnline ? C.sageLight : C.sage}`,
+              borderLeft: `2.5px solid ${true ? C.sageLight : C.sage}`,
               paddingLeft: 14,
               marginBottom: 24,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-                fontSize: 13, color: highlightOnline ? C.sageLight : C.sageDark, marginBottom: 4,
-              }}>🎥 Acesso à gravação completa</div>
+                fontSize: 13, color: true ? C.sageLight : C.sageDark, marginBottom: 4,
+              }}>🎥 A Vivência completa, gravada para você</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13, color: highlightOnline ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
-              }}>A vivência ao vivo esgotou. Você recebe a gravação completa e assiste quando e quantas vezes quiser.</div>
+                fontSize: 13, color: true ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
+              }}>A experiência Brincando na Música na íntegra, para você viver quando e quantas vezes quiser, no seu ritmo.</div>
             </div>
 
-            <div style={{ height: 1, background: highlightOnline ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
+            <div style={{ height: 1, background: true ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
 
             <div style={{ marginBottom: 32, position: 'relative', zIndex: 1 }}>
-              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={highlightOnline} />)}
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
             </div>
 
             <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: highlightOnline ? C.sage : C.sage,
+              background: true ? C.sage : C.sage,
               color: C.white,
               border: `2px solid ${C.sage}`,
               padding: '19px 24px', borderRadius: 100,
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 16, fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
-              boxShadow: highlightOnline ? '0 8px 28px rgba(107,127,109,0.5)' : '0 6px 20px rgba(107,127,109,0.3)',
+              boxShadow: true ? '0 8px 28px rgba(107,127,109,0.5)' : '0 6px 20px rgba(107,127,109,0.3)',
               transition: 'transform 0.2s, box-shadow 0.2s',
               position: 'relative', zIndex: 1,
             }}
               onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
               onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              Quero a gravação →
+              Quero a vivência gravada →
             </a>
           </div>
 
