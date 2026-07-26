@@ -1975,7 +1975,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
             >
-              Quero a vivência gravada →
+              Quero ver a vivência gravada →
             </a>
           </div>
 
