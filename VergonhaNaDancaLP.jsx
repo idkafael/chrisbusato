@@ -931,7 +931,7 @@ function UrgenciaSection() {
 const faqItems = [
   {
     q: 'Como vou receber o acesso ao aulão?',
-    a: 'Assim que o pagamento é confirmado, você recebe o acesso ao aulão por e-mail. É só abrir e assistir, pelo computador ou pelo celular. Se não encontrar, confira a caixa de spam ou promoções.',
+    a: 'Após a compra, você receberá o acesso via e-mail, e é por lá que poderá assistir de forma vitalícia, seja no seu computador ou celular.',
   },
   {
     q: 'Por quanto tempo vou ter acesso?',
@@ -967,8 +967,13 @@ function FaqItem({ item, index }) {
 
   return (
     <div ref={ref} style={{
-      borderBottom: '1px solid rgba(138,158,140,0.12)',
-      transition: 'opacity 0.5s ease, transform 0.5s ease',
+      background: C.white,
+      border: `1px solid rgba(138,158,140,${open ? '0.4' : '0.2'})`,
+      borderRadius: 16,
+      marginBottom: 14,
+      boxShadow: open ? '0 12px 32px rgba(61,53,48,0.08)' : '0 4px 14px rgba(61,53,48,0.04)',
+      overflow: 'hidden',
+      transition: 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease',
       transitionDelay: `${index * 70}ms`,
       opacity: inView ? 1 : 0,
       transform: inView ? 'translateY(0)' : 'translateY(16px)',
@@ -977,34 +982,34 @@ function FaqItem({ item, index }) {
         onClick={() => setOpen(o => !o)}
         style={{
           width: '100%', background: 'none', border: 'none',
-          cursor: 'pointer', padding: '24px 0',
+          cursor: 'pointer', padding: mobile ? '20px 20px' : '22px 26px',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           gap: 16, textAlign: 'left',
         }}
       >
         <span style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: mobile ? 15 : 16,
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+          fontSize: mobile ? 15 : 16.5,
           color: open ? C.sageDark : C.brown,
           lineHeight: 1.4,
           transition: 'color 0.2s ease',
         }}>{item.q}</span>
         <div style={{
-          flexShrink: 0, width: 28, height: 28, borderRadius: '50%',
-          border: `1px solid rgba(138,158,140,${open ? '0.5' : '0.2'})`,
+          flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
+          background: open ? C.sageDark : 'rgba(138,158,140,0.12)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'border-color 0.2s ease, transform 0.3s ease',
+          transition: 'background 0.2s ease, transform 0.3s ease',
           transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
         }}>
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <path d="M5 1v8M1 5h8" stroke={open ? C.sageDark : 'rgba(138,158,140,0.6)'} strokeWidth="1.5" strokeLinecap="round"/>
+          <svg width="11" height="11" viewBox="0 0 10 10" fill="none">
+            <path d="M5 1v8M1 5h8" stroke={open ? C.white : C.sageDark} strokeWidth="1.6" strokeLinecap="round"/>
           </svg>
         </div>
       </button>
       {open && (
         <div style={{
-          paddingBottom: 24,
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+          padding: mobile ? '0 20px 22px' : '0 26px 24px',
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
           fontSize: mobile ? 15 : 16,
           color: C.brownMid, lineHeight: 1.7,
         }}>{item.a}</div>
@@ -1020,25 +1025,25 @@ function FaqSection() {
 
   return (
     <section style={{
-      background: C.white,
+      background: C.sagePale,
       padding: mobile ? '80px 24px' : '112px 40px',
-      borderTop: '1px solid rgba(138,158,140,0.1)',
+      borderTop: '1px solid rgba(138,158,140,0.12)',
     }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         <div ref={titleRef} style={{
-          marginBottom: 48,
+          marginBottom: 40, textAlign: 'center',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: titleInView ? 1 : 0,
           transform: titleInView ? 'translateY(0)' : 'translateY(24px)',
         }}>
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
             fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
             textTransform: 'uppercase', marginBottom: 14,
           }}>Dúvidas</div>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: mobile ? 'clamp(26px, 7vw, 36px)' : 'clamp(28px, 3vw, 42px)',
+            fontSize: mobile ? 'clamp(28px, 8vw, 38px)' : 'clamp(32px, 3.4vw, 46px)',
             color: C.brown, letterSpacing: '-0.5px',
           }}>Perguntas frequentes</h2>
         </div>
