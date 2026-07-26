@@ -1865,99 +1865,115 @@ function InscricaoSection() {
           transform: inView ? 'translateY(0)' : 'translateY(28px)',
         }}>
 
-          {/* ── CARD ONLINE ── */}
+          {/* ── CARD ONLINE — Vivência Gravada (design claro premium estilo /vergonha) ── */}
           <div id="ingresso-online" style={{
-            background: true ? C.brown : C.creamCard,
-            border: true ? 'none' : `1.5px solid ${C.sageLight}`,
-            borderRadius: 20,
-            padding: mobile ? '36px 24px' : '44px 40px',
+            background: C.white,
+            border: `1px solid rgba(138,158,140,0.22)`,
+            borderRadius: 24,
+            padding: mobile ? '36px 26px 32px' : '44px 40px 40px',
             position: 'relative', overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(61,53,48,0.08)',
           }}>
-            {true && <div style={{
-              position: 'absolute', top: '-15%', right: '-10%',
-              width: 200, height: 200, background: C.sageDark,
-              borderRadius: '60% 40% 70% 30% / 50% 60% 40% 70%',
-              opacity: 0.2, pointerEvents: 'none',
-            }} />}
+            {/* blob sutil sage */}
+            <div style={{
+              position: 'absolute', top: '-20%', right: '-12%',
+              width: 220, height: 220,
+              background: 'radial-gradient(circle, rgba(138,158,140,0.14) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
 
             <div style={{
-              display: 'inline-block',
-              background: true ? C.sage : C.sagePale,
-              color: true ? C.white : C.sageDark,
-              borderRadius: 100, padding: '4px 14px',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 20,
+              display: 'inline-block', position: 'relative', zIndex: 1,
+              background: C.sagePale,
+              color: C.sageDark,
+              borderRadius: 100, padding: '5px 15px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
+              marginBottom: 18,
             }}>Online · Vivência Gravada</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 22, color: true ? C.cream : C.brown,
-              letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
-            }}>Brincando na Música</div>
+              fontSize: 24, color: C.brown,
+              letterSpacing: '-0.3px', marginBottom: 20, lineHeight: 1.2,
+              position: 'relative', zIndex: 1,
+            }}>
+              Brincando na Música{' '}
+              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Gravada</em>
+            </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            {/* preço */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, position: 'relative', zIndex: 1 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 18, color: true ? 'rgba(196,180,160,0.5)' : C.brownLight,
+                fontSize: 18, color: C.brownLight,
                 textDecoration: 'line-through', letterSpacing: '-0.3px',
               }}>R$ 167</div>
               <div style={{
-                background: '#E8534A', color: C.white,
+                background: C.sageDark, color: C.white,
                 borderRadius: 100, padding: '2px 10px',
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 11, letterSpacing: '0.5px',
               }}>60% OFF</div>
             </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 'clamp(48px, 5vw, 64px)',
-              color: true ? C.cream : C.brown, lineHeight: 1, marginBottom: 4,
-              letterSpacing: '-2px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+              fontSize: 'clamp(48px, 5vw, 66px)',
+              color: C.brown, lineHeight: 1, marginBottom: 6,
+              letterSpacing: '-2.5px', position: 'relative', zIndex: 1,
+              textShadow: '0 4px 30px rgba(138,158,140,0.25)',
             }}>R$ 67</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: true ? C.sageLight : C.brownLight, marginBottom: 16,
+              fontSize: 13, color: C.brownMid, marginBottom: 22, position: 'relative', zIndex: 1,
             }}>pagamento único · acesso imediato e vitalício</div>
 
-            {/* nota gravação */}
+            {/* nota vivência gravada — box de destaque */}
             <div style={{
-              borderLeft: `2.5px solid ${true ? C.sageLight : C.sage}`,
-              paddingLeft: 14,
-              marginBottom: 24,
+              background: C.sagePale,
+              border: `1px solid rgba(138,158,140,0.2)`,
+              borderRadius: 14,
+              padding: '16px 18px',
+              marginBottom: 26,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-                fontSize: 13, color: true ? C.sageLight : C.sageDark, marginBottom: 4,
-              }}>🎥 A Vivência completa, gravada para você</div>
+                display: 'flex', alignItems: 'center', gap: 8,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                fontSize: 13.5, color: C.sageDark, marginBottom: 6,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                  <rect x="2" y="5" width="15" height="14" rx="2.5" stroke={C.sageDark} strokeWidth="1.8"/>
+                  <path d="M17 10l5-3v10l-5-3z" stroke={C.sageDark} strokeWidth="1.8" strokeLinejoin="round"/>
+                </svg>
+                A Vivência completa, gravada para você
+              </div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13, color: true ? 'rgba(196,208,197,0.8)' : C.brownLight, lineHeight: 1.55,
+                fontSize: 13.5, color: C.brownMid, lineHeight: 1.6,
               }}>A experiência Brincando na Música na íntegra, para você viver quando e quantas vezes quiser, no seu ritmo.</div>
             </div>
 
-            <div style={{ height: 1, background: true ? 'rgba(255,255,255,0.1)' : C.sageLight, marginBottom: 24, position: 'relative', zIndex: 1 }} />
+            <div style={{ height: 1, background: 'rgba(138,158,140,0.2)', marginBottom: 24, position: 'relative', zIndex: 1 }} />
 
-            <div style={{ marginBottom: 32, position: 'relative', zIndex: 1 }}>
-              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={true} />)}
+            <div style={{ marginBottom: 30, position: 'relative', zIndex: 1 }}>
+              {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
             </div>
 
             <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
-              background: true ? C.sage : C.sage,
+              background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
               color: C.white,
-              border: `2px solid ${C.sage}`,
               padding: '19px 24px', borderRadius: 100,
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 16, fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
-              boxShadow: true ? '0 8px 28px rgba(107,127,109,0.5)' : '0 6px 20px rgba(107,127,109,0.3)',
+              boxShadow: '0 8px 28px rgba(138,158,140,0.35)',
               transition: 'transform 0.2s, box-shadow 0.2s',
               position: 'relative', zIndex: 1,
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(107,127,109,0.4)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
             >
               Quero a vivência gravada →
             </a>
