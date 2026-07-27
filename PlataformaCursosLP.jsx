@@ -9,6 +9,7 @@ import capaVergonha from './images/Capa-Vergonha.png'
 import capaReplay from './images/Capa-Replay.png'
 import fundoHero from './images/fundo-primeira-dobra.jpg'
 import bannerPlataforma from './images/banner-plataforma.jpg'
+import encontrosAoVivo from './images/encontrosaovivo.png'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -46,6 +47,11 @@ const globalStyles = `
   @keyframes shimmerSlide {
     0%   { background-position: -200% center; }
     100% { background-position: 200% center; }
+  }
+  @keyframes livePulse {
+    0%   { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(232,83,74,0.5); }
+    70%  { transform: scale(1.1); opacity: 0.7; box-shadow: 0 0 0 7px rgba(232,83,74,0); }
+    100% { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(232,83,74,0); }
   }
 `
 
@@ -542,6 +548,154 @@ function ModuloCard({ m, delay, mobile }) {
 
 // ─── Encontros gravados / Replays (destaque) ──────────────────────────────────
 
+function EncontrosAoVivoSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+
+  const horarios = [
+    {
+      dia: 'Segunda-feira',
+      hora: '20h',
+      nota: 'Encontro ao vivo à noite, no fim do dia.',
+      icon: (
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"
+          stroke={C.sageDark} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      ),
+    },
+    {
+      dia: 'Quarta-feira',
+      hora: '8h30',
+      nota: 'Encontro ao vivo pela manhã, para começar o dia.',
+      icon: (
+        <>
+          <circle cx="12" cy="12" r="4.2" stroke={C.sageDark} strokeWidth="1.7" />
+          <path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"
+            stroke={C.sageDark} strokeWidth="1.7" strokeLinecap="round" />
+        </>
+      ),
+    },
+  ]
+
+  return (
+    <section id="encontros-ao-vivo" style={{
+      background: C.white,
+      padding: mobile ? '72px 24px' : '100px 40px',
+    }}>
+      <div ref={ref} style={{
+        maxWidth: 1000, margin: '0 auto',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(28px)',
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 18,
+          }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', background: '#E8534A',
+              display: 'block', animation: 'livePulse 2s ease-out infinite',
+            }} />
+            Ao vivo, toda semana
+          </div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(32px, 3.6vw, 48px)',
+            color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px', marginBottom: 16,
+          }}>
+            Você dança junto com a Chris:{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>2 encontros ao vivo por semana.</em>
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17, color: C.brownMid, maxWidth: 580,
+            margin: '0 auto', lineHeight: 1.65,
+          }}>
+            Dentro da plataforma você participa dos <strong style={{ fontWeight: 600, color: C.brown }}>encontros ao vivo com a Chris</strong>, com prática guiada e espaço para tirar dúvidas. Escolha o horário que melhor cabe na sua rotina.
+          </p>
+        </div>
+
+        {/* imagem dos encontros */}
+        <div style={{
+          borderRadius: 18, overflow: 'hidden',
+          boxShadow: '0 24px 60px rgba(61,53,48,0.18)',
+          marginBottom: 32,
+        }}>
+          <img
+            src={encontrosAoVivo}
+            alt="Encontros ao vivo da plataforma com a Chris"
+            style={{ width: '100%', display: 'block' }}
+          />
+        </div>
+
+        {/* horários */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: mobile ? 14 : 20,
+          marginBottom: 24,
+        }}>
+          {horarios.map((h, i) => (
+            <div key={i} style={{
+              background: C.creamCard,
+              border: `1px solid ${C.sageLight}`,
+              borderRadius: 16,
+              padding: mobile ? '22px 22px' : '26px 28px',
+              display: 'flex', gap: 16, alignItems: 'flex-start',
+            }}>
+              <div style={{
+                flexShrink: 0,
+                width: 44, height: 44, borderRadius: 12,
+                background: C.sagePale,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">{h.icon}</svg>
+              </div>
+              <div>
+                <div style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 20, color: C.brown, marginBottom: 4, lineHeight: 1.2,
+                }}>{h.dia}</div>
+                <div style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 15, color: C.sageDark, marginBottom: 8,
+                }}>{h.hora}</div>
+                <div style={{
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                  fontSize: 13.5, color: C.brownMid, lineHeight: 1.5,
+                }}>{h.nota}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* reforço: fica gravado */}
+        <div style={{
+          background: C.sagePale,
+          border: `1px solid ${C.sageLight}`,
+          borderRadius: 16,
+          padding: mobile ? '20px 22px' : '22px 28px',
+          display: 'flex', gap: 14, alignItems: 'center',
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+            <rect x="2" y="5" width="15" height="14" rx="2.5" stroke={C.sageDark} strokeWidth="1.7"/>
+            <path d="M17 10l5-3v10l-5-3z" stroke={C.sageDark} strokeWidth="1.7" strokeLinejoin="round"/>
+          </svg>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: mobile ? 14 : 15, color: C.brownMid, lineHeight: 1.6,
+          }}>
+            <strong style={{ fontWeight: 600, color: C.brown }}>Não pode ao vivo? Sem problema.</strong> Todos os encontros ficam gravados dentro da plataforma para você assistir quando e quantas vezes quiser, no seu ritmo.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function EncontrosSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
@@ -1035,7 +1189,7 @@ function OfertaSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
             fontSize: 14, color: C.brownLight, marginBottom: 6,
             textDecoration: 'line-through',
-          }}>de R$ 997</div>
+          }}>de R$ 2.600</div>
 
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
@@ -1045,11 +1199,11 @@ function OfertaSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
             fontSize: mobile ? 48 : 58, color: C.brown, lineHeight: 1,
             letterSpacing: '-1px', marginBottom: 6,
-          }}>R$ 48,32</div>
+          }}>R$ 126,39</div>
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
             fontSize: 15, color: C.brownMid, marginBottom: 32,
-          }}>ou <strong style={{ fontWeight: 700, color: C.brown }}>R$ 497</strong> à vista</div>
+          }}>ou <strong style={{ fontWeight: 700, color: C.brown }}>R$ 1.300</strong> à vista</div>
 
           <div style={{ textAlign: 'left', marginBottom: 32 }}>
             {incluso.map((item, i) => (
@@ -1300,6 +1454,7 @@ export default function PlataformaCursosLP() {
         <PublicoSection />
         <SobreSection />
         <ModulosSection />
+        <EncontrosAoVivoSection />
         <EncontrosSection />
         <AntesDepoisSection />
         {/* TODO: reativar quando os feedbacks reais forem adicionados */}
