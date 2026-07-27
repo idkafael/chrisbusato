@@ -24,6 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/global" element={<BrincandoNaMusicaGlobalLP />} />
         <Route path="/casais" element={<DateForaDoComumLP />} />
         <Route path="/vergonha" element={<VergonhaNaDancaLP />} />
+        <Route path="/vergonha37" element={<VergonhaNaDancaLP preco="R$37" checkoutUrl="https://pay.cakto.com.br/oviafav" />} />
         <Route path="/online" element={<PlataformaCursosLP />} />
         <Route path="/admin" element={<AdminLP />} />
       </Routes>

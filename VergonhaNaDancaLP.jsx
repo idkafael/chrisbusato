@@ -597,7 +597,7 @@ function ChrisSection() {
   )
 }
 
-function InscricaoSection() {
+function InscricaoSection({ preco = 'R$59,90', checkoutUrl = 'https://pay.cakto.com.br/bkqgwvr' }) {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
@@ -690,7 +690,7 @@ function InscricaoSection() {
               fontSize: mobile ? 'clamp(42px, 13vw, 62px)' : 84,
               color: C.brown, lineHeight: 0.95, letterSpacing: '-2.5px',
               textShadow: '0 4px 34px rgba(138,158,140,0.30)',
-            }}>R$59,90</span>
+            }}>{preco}</span>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: mobile ? 14 : 16, color: C.brownMid,
@@ -737,7 +737,7 @@ function InscricaoSection() {
           </div>
 
           <a
-            href="https://pay.cakto.com.br/bkqgwvr"
+            href={checkoutUrl}
             target="_blank" rel="noopener noreferrer"
             style={{
               display: 'block',
@@ -1171,7 +1171,7 @@ function HeroVsl() {
   )
 }
 
-export default function VergonhaNaDancaLP() {
+export default function VergonhaNaDancaLP({ preco = 'R$59,90', checkoutUrl = 'https://pay.cakto.com.br/bkqgwvr' }) {
   return (
     <>
       <style>{globalStyles}</style>
@@ -1184,7 +1184,7 @@ export default function VergonhaNaDancaLP() {
       <AprendizadosSection />
       <ParaQuemSection />
       <ChrisSection />
-      <InscricaoSection />
+      <InscricaoSection preco={preco} checkoutUrl={checkoutUrl} />
       <GarantiaSection />
       <UrgenciaSection />
       <FaqSection />
