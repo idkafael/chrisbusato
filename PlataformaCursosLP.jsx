@@ -213,7 +213,7 @@ function Hero() {
           </h1>
 
           <div style={{ marginTop: 32 }}>
-            <CtaButton mobile={mobile} href="#para-quem">Quero conhecer a plataforma →</CtaButton>
+            <CtaButton mobile={mobile} href="#para-quem">Quero Conhecer Melhor →</CtaButton>
           </div>
         </div>
       </div>
