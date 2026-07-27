@@ -27,7 +27,7 @@ const C = {
   white: '#FAFAF8',
 }
 
-const CHECKOUT_URL = 'https://pay.cakto.com.br/ayag5xm' // Checkout da plataforma (Cakto R$ 497)
+const CHECKOUT_URL = 'https://pay.cakto.com.br/zgyehxp' // Checkout da plataforma (Cakto R$ 1.300)
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
