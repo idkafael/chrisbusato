@@ -10,6 +10,7 @@ import capaReplay from './images/Capa-Replay.png'
 import fundoHero from './images/fundo-primeira-dobra.jpg'
 import bannerPlataforma from './images/banner-plataforma.jpg'
 import encontrosAoVivo from './images/encontrosaovivo.png'
+import ofertaImg from './images/oferta.jpg'
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -1166,23 +1167,26 @@ function OfertaSection() {
         opacity: inView ? 1 : 0,
         transform: inView ? 'translateY(0)' : 'translateY(28px)',
       }}>
+        {/* imagem da oferta sobreposta ao topo do card */}
         <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          fontSize: 12, letterSpacing: '2.5px', color: C.sage,
-          textTransform: 'uppercase', marginBottom: 18,
-        }}>Acesso completo</div>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(32px, 3.6vw, 50px)',
-          color: C.brown, lineHeight: 1.15, letterSpacing: '-0.5px', marginBottom: 44,
+          position: 'relative', zIndex: 2,
+          marginBottom: mobile ? -40 : -64,
+          padding: '0 4px',
         }}>
-          Uma plataforma.{' '}
-          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Todos os cursos.</em>
-        </h2>
+          <img
+            src={ofertaImg}
+            alt="Plataforma Corpo Musical"
+            style={{
+              width: '100%', display: 'block', borderRadius: 16,
+              boxShadow: '0 22px 55px rgba(61,53,48,0.16)',
+            }}
+          />
+        </div>
 
         <div style={{
+          position: 'relative', zIndex: 1,
           background: C.white, border: `1.5px solid ${C.sageLight}`,
-          borderRadius: 24, padding: mobile ? '36px 26px' : '48px 52px',
+          borderRadius: 24, padding: mobile ? '60px 26px 36px' : '88px 52px 48px',
           boxShadow: '0 16px 50px rgba(61,53,48,0.08)',
         }}>
           <div style={{
