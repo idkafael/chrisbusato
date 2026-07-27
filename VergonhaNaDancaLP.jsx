@@ -674,7 +674,7 @@ function InscricaoSection({ preco = 'R$59,90', checkoutUrl = 'https://pay.cakto.
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 12.5, color: C.brownLight,
                 textDecoration: 'line-through',
-              }}>R$ 297</span>
+              }}>R$ 97</span>
               Por apenas
             </div>
             <div style={{ flex: 1, height: 1, background: 'rgba(138,158,140,0.22)' }} />
