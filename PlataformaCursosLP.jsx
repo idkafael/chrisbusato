@@ -1224,7 +1224,7 @@ function OfertaSection() {
             ))}
           </div>
 
-          <CtaButton mobile={mobile} full>Quero acesso à plataforma →</CtaButton>
+          <CtaButton mobile={mobile} full>Quero Conhecer o Corpo Musical →</CtaButton>
         </div>
 
         <p style={{
@@ -1410,7 +1410,7 @@ function FaqSection() {
         {faqItems.map((item, i) => <FaqItem key={i} item={item} index={i} />)}
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <CtaButton mobile={mobile} href="#oferta">Quero acesso à plataforma →</CtaButton>
+          <CtaButton mobile={mobile} href="#oferta">Quero Conhecer o Corpo Musical →</CtaButton>
         </div>
       </div>
     </section>
