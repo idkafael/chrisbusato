@@ -23,14 +23,14 @@ const PLANOS = [
   {
     id: 'mensal',
     nome: 'Mensal',
-    preco: 'R$ 129,90',
+    preco: 'R$ 126,39',
     sufixo: '/mês',
     desc: 'Acesso à comunidade e a todos os cursos por 30 dias, renovado automaticamente.',
   },
   {
     id: 'trimestral',
     nome: 'Trimestral',
-    preco: 'R$ 349,90',
+    preco: 'R$ 379,17',
     sufixo: '/trimestre',
     desc: 'Três meses de acesso completo, com renovação automática a cada trimestre.',
     selo: 'Mais popular',
@@ -38,7 +38,7 @@ const PLANOS = [
   {
     id: 'anual',
     nome: 'Anual',
-    preco: 'R$ 1.197',
+    preco: 'R$ 1.300',
     sufixo: '/ano',
     desc: 'Um ano inteiro de comunidade e plataforma — o melhor custo por mês.',
     selo: 'Melhor valor',
