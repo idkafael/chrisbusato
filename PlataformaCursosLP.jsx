@@ -24,7 +24,19 @@ import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
 import mark1 from './images/mark1.jpg'
 
-const feedbacks = [feedbac1, feedbac2, feedbac3, feedbac4, feedback10, feedback11, carol1, carol2, carol3, mark1]
+// Cada coluna tem a mesma altura. Prints baixos entram empilhados (2 por coluna)
+// para fechar a altura de um print alto — a largura sai da proporção da imagem.
+const feedbackColumns = [
+  [{ src: feedbac1, r: 945 / 1600 }],
+  [{ src: feedbac2, r: 944 / 1600 }],
+  [{ src: feedbac3, r: 1170 / 1512 }],
+  [{ src: feedbac4, r: 943 / 1600 }],
+  [{ src: feedback10, r: 1179 / 1003 }, { src: feedback11, r: 1125 / 971 }],
+  [{ src: carol1, r: 738 / 1600 }],
+  [{ src: carol2, r: 738 / 1600 }],
+  [{ src: carol3, r: 738 / 1600 }],
+  [{ src: mark1, r: 1179 / 2556 }],
+]
 
 // ─── Tokens (paleta da marca) ─────────────────────────────────────────────────
 
@@ -1252,27 +1264,42 @@ function FeedbackSection() {
             scrollbarWidth: 'none',
           }}
         >
-          {feedbacks.map((src, i) => (
-            <div key={i} style={{
-              flex: '0 0 auto',
-              width: mobile ? '72vw' : (i % 3 === 1 ? 300 : 330),
-              maxWidth: 340,
-              marginTop: i % 2 === 1 ? (mobile ? 22 : 34) : 0,
-              scrollSnapAlign: 'center',
-              borderRadius: 16, overflow: 'hidden',
-              border: `1px solid ${C.sageLight}`,
-              boxShadow: '0 12px 34px rgba(61,53,48,0.10)',
-              background: C.white,
-            }}>
-              <img
-                src={src}
-                alt={`Depoimento ${i + 1}`}
-                draggable={false}
-                onDragStart={(e) => e.preventDefault()}
-                style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }}
-              />
-            </div>
-          ))}
+          {feedbackColumns.map((col, i) => {
+            const alturaCol = mobile ? 460 : 540
+            const gapInterno = mobile ? 10 : 14
+            const somaInversa = col.reduce((s, item) => s + 1 / item.r, 0)
+            const larguraCol = (alturaCol - gapInterno * (col.length - 1)) / somaInversa
+
+            return (
+              <div key={i} style={{
+                flex: '0 0 auto',
+                width: larguraCol, height: alturaCol,
+                display: 'flex', flexDirection: 'column', gap: gapInterno,
+                scrollSnapAlign: 'center',
+              }}>
+                {col.map((item, j) => (
+                  <div key={j} style={{
+                    height: larguraCol / item.r,
+                    borderRadius: 14, overflow: 'hidden',
+                    border: `1px solid ${C.sageLight}`,
+                    boxShadow: '0 12px 34px rgba(61,53,48,0.10)',
+                    background: C.white,
+                  }}>
+                    <img
+                      src={item.src}
+                      alt={`Depoimento ${i + 1}${col.length > 1 ? `.${j + 1}` : ''}`}
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      style={{
+                        width: '100%', height: '100%', display: 'block',
+                        objectFit: 'cover', pointerEvents: 'none',
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>
