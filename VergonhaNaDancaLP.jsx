@@ -4,6 +4,20 @@ import vergonhaImg from './images/vergonha.jpg'
 import vergonhaOferta from './images/vergonha-oferta.jpg'
 import garantiaImg from './images/garantia.png'
 
+// ─── Feedbacks (prints de depoimentos) ───────────────────────────────────────
+import feedbac1 from './images/feedbac1.jpeg'
+import feedbac2 from './images/feedbac2.jpeg'
+import feedbac3 from './images/feedbac3.jpeg'
+import feedbac4 from './images/feedbac4.jpeg'
+import feedback10 from './images/feedback10.jpeg'
+import feedback11 from './images/feedback11.jpeg'
+import carol1 from './images/carol1.jpeg'
+import carol2 from './images/carol2.jpeg'
+import carol3 from './images/carol3.jpeg'
+import mark1 from './images/mark1.jpg'
+
+const feedbacks = [feedbac1, feedbac2, feedbac3, feedbac4, feedback10, feedback11, carol1, carol2, carol3, mark1]
+
 const C = {
   cream: '#EDEAE3',
   creamDark: '#E4E0D7',
@@ -42,6 +56,7 @@ const globalStyles = `
     0%   { background-position: -200% center; }
     100% { background-position:  200% center; }
   }
+  .fb-scroller::-webkit-scrollbar { display: none; }
 `
 
 function useInView(options = {}) {
@@ -591,6 +606,118 @@ function ChrisSection() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FeedbackSection() {
+  const [ref, inView] = useInView()
+  const w = useWindowWidth()
+  const mobile = w < 768
+  const scrollerRef = useRef(null)
+  const drag = useRef({ down: false, moved: false, startX: 0, scrollLeft: 0 })
+
+  const onDown = (e) => {
+    const el = scrollerRef.current
+    if (!el) return
+    drag.current = { down: true, moved: false, startX: e.pageX, scrollLeft: el.scrollLeft }
+    el.style.cursor = 'grabbing'
+  }
+  const onMove = (e) => {
+    const el = scrollerRef.current
+    if (!el || !drag.current.down) return
+    e.preventDefault()
+    const walk = e.pageX - drag.current.startX
+    if (Math.abs(walk) > 4) drag.current.moved = true
+    el.scrollLeft = drag.current.scrollLeft - walk
+  }
+  const onUp = () => {
+    const el = scrollerRef.current
+    drag.current.down = false
+    if (el) el.style.cursor = 'grab'
+  }
+
+  return (
+    <section style={{
+      background: C.creamCard,
+      padding: mobile ? '72px 0 80px' : '100px 0 110px',
+      overflow: 'hidden',
+      borderTop: '1px solid rgba(138,158,140,0.12)',
+    }}>
+      <div ref={ref} style={{
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(28px)',
+      }}>
+        <div style={{
+          maxWidth: 720, margin: '0 auto', textAlign: 'center',
+          padding: mobile ? '0 24px' : '0 40px', marginBottom: 40,
+        }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 11, letterSpacing: '2.5px', color: C.sageDark,
+            textTransform: 'uppercase', marginBottom: 16,
+          }}>Depoimentos</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(32px, 3.5vw, 48px)',
+            color: C.brown, lineHeight: 1.15, letterSpacing: '-0.5px', marginBottom: 16,
+          }}>
+            Quem já atravessou{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>a vergonha.</em>
+          </h2>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+            fontSize: 14, color: C.brownMid,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke={C.sage} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Arraste para ler mais
+          </div>
+        </div>
+
+        <div
+          ref={scrollerRef}
+          className="fb-scroller"
+          onMouseDown={onDown}
+          onMouseMove={onMove}
+          onMouseUp={onUp}
+          onMouseLeave={onUp}
+          style={{
+            display: 'flex',
+            gap: mobile ? 14 : 20,
+            overflowX: 'auto',
+            padding: mobile ? '4px 24px 20px' : '4px 40px 24px',
+            scrollSnapType: 'x proximity',
+            cursor: 'grab',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+          }}
+        >
+          {feedbacks.map((src, i) => (
+            <div key={i} style={{
+              flex: '0 0 auto',
+              width: mobile ? '76vw' : 320,
+              maxWidth: 340,
+              scrollSnapAlign: 'center',
+              borderRadius: 16, overflow: 'hidden',
+              border: '1px solid rgba(138,158,140,0.25)',
+              boxShadow: '0 12px 34px rgba(61,53,48,0.10)',
+              background: C.white,
+            }}>
+              <img
+                src={src}
+                alt={`Depoimento ${i + 1}`}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+                style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -1185,6 +1312,7 @@ export default function VergonhaNaDancaLP({ preco = 'R$59,90', checkoutUrl = 'ht
       <ParaQuemSection />
       <ChrisSection />
       <InscricaoSection preco={preco} checkoutUrl={checkoutUrl} />
+      <FeedbackSection />
       <GarantiaSection />
       <UrgenciaSection />
       <FaqSection />
