@@ -6,6 +6,8 @@
 //   CAKTO_CLIENT_ID, CAKTO_CLIENT_SECRET
 //   CAKTO_OFFER_MENSAL, CAKTO_OFFER_TRIMESTRAL, CAKTO_OFFER_ANUAL  (offerIds dos 3 planos)
 
+import { randomUUID } from 'crypto'
+
 const CAKTO_API = 'https://api.cakto.com.br'
 
 let tokenCache = { token: null, expiresAt: 0 }
@@ -82,13 +84,25 @@ export default async function handler(req, res) {
 
     const resp = await fetch(`${CAKTO_API}/public_api/payments/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'X-Idempotency-Key': randomUUID(),
+      },
       body: JSON.stringify(body),
     })
     const data = await resp.json().catch(() => ({}))
 
     if (!resp.ok) {
-      return res.status(resp.status).json({ error: 'Cakto recusou a cobrança', detalhe: data })
+      // Extrai a primeira mensagem legível do corpo de erro da Cakto
+      const extrair = (v) => {
+        if (typeof v === 'string') return v
+        if (Array.isArray(v)) return extrair(v[0])
+        if (v && typeof v === 'object') return extrair(Object.values(v)[0])
+        return null
+      }
+      const motivo = extrair(data) || 'Erro desconhecido'
+      return res.status(resp.status).json({ error: `Cakto recusou a cobrança: ${motivo}`, detalhe: data })
     }
 
     // Devolve só o necessário ao front

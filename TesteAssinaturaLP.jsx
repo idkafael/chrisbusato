@@ -182,7 +182,7 @@ export default function TesteAssinaturaLP() {
   const [dados, setDados] = useState({ nome: '', email: '', telefone: '', cpf: '' })
   const [erros, setErros] = useState({})
   const [plano, setPlano] = useState('trimestral')
-  const [metodo, setMetodo] = useState('pix')
+  const [metodo, setMetodo] = useState('credit_card')
   const [cartao, setCartao] = useState({ numero: '', nome: '', validade: '', cvv: '' })
   const [processando, setProcessando] = useState(false)
   const [resultado, setResultado] = useState(null) // { demo?, pix?, status?, error? }
