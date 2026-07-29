@@ -1242,6 +1242,7 @@ function FeedbackSection() {
           onMouseLeave={onUp}
           style={{
             display: 'flex',
+            alignItems: 'flex-start',
             gap: mobile ? 14 : 20,
             overflowX: 'auto',
             padding: mobile ? '4px 24px 20px' : '4px 40px 24px',
@@ -1254,8 +1255,9 @@ function FeedbackSection() {
           {feedbacks.map((src, i) => (
             <div key={i} style={{
               flex: '0 0 auto',
-              width: mobile ? '76vw' : 320,
+              width: mobile ? '72vw' : (i % 3 === 1 ? 300 : 330),
               maxWidth: 340,
+              marginTop: i % 2 === 1 ? (mobile ? 22 : 34) : 0,
               scrollSnapAlign: 'center',
               borderRadius: 16, overflow: 'hidden',
               border: `1px solid ${C.sageLight}`,
