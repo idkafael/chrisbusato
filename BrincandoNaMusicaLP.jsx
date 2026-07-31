@@ -18,6 +18,10 @@ import jul1 from './images/jul1.png'
 import mire1 from './images/mire1.png'
 import feedback10 from './images/feedback10.jpeg'
 import feedback11 from './images/feedback11.jpeg'
+import feedbac1 from './images/feedbac1.jpeg'
+import feedbac2 from './images/feedbac2.jpeg'
+import feedbac3 from './images/feedbac3.jpeg'
+import feedbac4 from './images/feedbac4.jpeg'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
@@ -183,7 +187,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero ver a vivência gravada
+            Quero participar Online sábado dia 15 de Agosto
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -215,7 +219,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ver a vivência gravada
+            Quero participar Online sábado dia 15 de Agosto
           </a>}
         </div>
 
@@ -1334,6 +1338,10 @@ function ParaQuemItem({ item, index }) {
 // ─── Testemunhos (Carrossel) ──────────────────────────────────────────────────
 
 const feedbackItems = [
+  { src: feedbac1, name: 'Aluna' },
+  { src: feedbac2, name: 'Aluna' },
+  { src: feedbac3, name: 'Aluna' },
+  { src: feedbac4, name: 'Aluna' },
   { src: carol1, name: 'Carol' },
   { src: carol2, name: 'Carol' },
   { src: carol3, name: 'Carol' },
@@ -1890,16 +1898,35 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
               marginBottom: 18,
-            }}>Online · Vivência Gravada</div>
+            }}>Online · Ao Vivo</div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 24, color: C.brown,
-              letterSpacing: '-0.3px', marginBottom: 20, lineHeight: 1.2,
+              letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Gravada</em>
+              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Online</em>
+            </div>
+
+            {/* data em destaque */}
+            <div style={{
+              background: C.sageDark,
+              borderRadius: 12,
+              padding: '14px 18px',
+              marginBottom: 20,
+              position: 'relative', zIndex: 1,
+            }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+                fontSize: 19, color: C.white,
+                letterSpacing: '-0.3px', marginBottom: 4,
+              }}>📅 15 de Agosto · sábado</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.9)',
+              }}>🕙 das 10h às 12h · ao vivo pela internet</div>
             </div>
 
             {/* preço */}
@@ -1926,9 +1953,9 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: C.brownMid, marginBottom: 22, position: 'relative', zIndex: 1,
-            }}>pagamento único · acesso imediato e vitalício</div>
+            }}>pagamento único · participe ao vivo de onde estiver</div>
 
-            {/* nota vivência gravada — box de destaque */}
+            {/* nota replay — box de destaque */}
             <div style={{
               background: C.sagePale,
               border: `1px solid rgba(138,158,140,0.2)`,
@@ -1946,12 +1973,12 @@ function InscricaoSection() {
                   <rect x="2" y="5" width="15" height="14" rx="2.5" stroke={C.sageDark} strokeWidth="1.8"/>
                   <path d="M17 10l5-3v10l-5-3z" stroke={C.sageDark} strokeWidth="1.8" strokeLinejoin="round"/>
                 </svg>
-                A Vivência completa, gravada para você
+                E fica gravado para você
               </div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13.5, color: C.brownMid, lineHeight: 1.6,
-              }}>A experiência Brincando na Música na íntegra, para você viver quando e quantas vezes quiser, no seu ritmo.</div>
+              }}>Não pode no horário? Sem problema. A vivência fica gravada e você assiste quando e quantas vezes quiser, no seu ritmo.</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(138,158,140,0.2)', marginBottom: 24, position: 'relative', zIndex: 1 }} />
@@ -1975,7 +2002,7 @@ function InscricaoSection() {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
             >
-              Quero ver a vivência gravada →
+              Quero participar Online →
             </a>
           </div>
 
@@ -2398,7 +2425,7 @@ export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnlin
         }
         @keyframes carouselScroll {
           from { transform: translateX(0); }
-          to   { transform: translateX(calc(-1 * (320px + 20px) * 5)); }
+          to   { transform: translateX(calc(-1 * (320px + 20px) * 9)); }
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
