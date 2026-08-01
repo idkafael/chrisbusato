@@ -1591,7 +1591,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · Consolação, São Paulo</span>
+              }}>📍 Presencial · Campo Belo, São Paulo</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -2058,7 +2058,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
-              }}>📍 <a href="https://share.google/ZBCvc3rRsOkFefARa" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP</a></div>
+              }}>📍 <a href="https://share.google/zKizDmLJze8rxaDBL" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP</a></div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2124,10 +2124,10 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP</div>
+          }}>📍 Local — R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP · 04606-050</div>
           <div style={{ textAlign: 'center', marginBottom: 12 }}>
             <a
-              href="https://share.google/ZBCvc3rRsOkFefARa"
+              href="https://share.google/zKizDmLJze8rxaDBL"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -2143,7 +2143,7 @@ function InscricaoSection() {
           }}>
             <iframe
               title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=Rua+da+Consolação,+93+-+Centro,+São+Paulo&output=embed&hl=pt-BR"
+              src="https://maps.google.com/maps?q=R.+Domingos+Lopes,+61+-+Campo+Belo,+São+Paulo,+04606-050&output=embed&hl=pt-BR"
               width="100%"
               height="340"
               style={{ border: 0, display: 'block' }}

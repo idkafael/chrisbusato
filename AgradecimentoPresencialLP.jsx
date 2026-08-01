@@ -102,7 +102,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 16 de agosto (domingo)</strong> na Rua da Consolação, 93 — 2º andar, Centro, São Paulo-SP.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 16 de agosto (domingo)</strong> na R. Domingos Lopes, 61 — Campo Belo, São Paulo-SP, 04606-050.
           </p>
 
           <p style={{
@@ -144,7 +144,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 16 de agosto (domingo) · Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP
+            📍 16 de agosto (domingo) · R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP · 04606-050
           </p>
         </div>
       </section>
