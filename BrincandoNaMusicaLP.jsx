@@ -2053,6 +2053,10 @@ function InscricaoSection() {
               }}>📅 16 de Agosto · domingo</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.9)', marginBottom: 4,
+              }}>🕙 das 10h às 14h</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
               }}>📍 <a href="https://share.google/ZBCvc3rRsOkFefARa" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>Rua da Consolação, 93 · 2º andar · Centro, São Paulo-SP</a></div>
             </div>
