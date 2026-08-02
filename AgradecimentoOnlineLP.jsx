@@ -10,7 +10,7 @@ const C = {
 const WA_NUMBER = '5511967068271'
 const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso online')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
-const GROUP_LINK = 'https://chat.whatsapp.com/D3GOqNDnBhB0c3RSHR4OnB?mode=gi_t'
+const GROUP_LINK = 'https://chat.whatsapp.com/D08Ybt8TGRs31zaSqrWBLW?mode=gi_t'
 
 export default function AgradecimentoOnlineLP() {
   useEffect(() => {
