@@ -102,7 +102,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 16 de agosto (domingo)</strong> na R. Domingos Lopes, 61 — Campo Belo, São Paulo-SP, 04606-050.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 16 de agosto (domingo)</strong> na <strong style={{ fontWeight: 500, color: C.brown }}>Yandê Dança e Movimento</strong> — R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050.
           </p>
 
           <p style={{
@@ -144,7 +144,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 16 de agosto (domingo) · R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP · 04606-050
+            📍 16 de agosto (domingo) · Yandê Dança e Movimento · R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050
           </p>
         </div>
       </section>

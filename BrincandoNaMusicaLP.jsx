@@ -2058,7 +2058,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
-              }}>📍 <a href="https://share.google/zKizDmLJze8rxaDBL" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP</a></div>
+              }}>📍 <a href="https://share.google/zKizDmLJze8rxaDBL" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>Yandê Dança e Movimento<br />R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050</a></div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2124,7 +2124,7 @@ function InscricaoSection() {
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             fontSize: 12, letterSpacing: '2px', color: C.sage,
             textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — R. Domingos Lopes, 61 · Campo Belo, São Paulo-SP · 04606-050</div>
+          }}>📍 Local — Yandê Dança e Movimento<br />R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050</div>
           <div style={{ textAlign: 'center', marginBottom: 12 }}>
             <a
               href="https://share.google/zKizDmLJze8rxaDBL"
@@ -2143,7 +2143,7 @@ function InscricaoSection() {
           }}>
             <iframe
               title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=R.+Domingos+Lopes,+61+-+Campo+Belo,+São+Paulo,+04606-050&output=embed&hl=pt-BR"
+              src="https://maps.google.com/maps?q=Yandê+Dança+e+Movimento,+R.+Domingos+Lopes,+61+-+Campo+Belo,+São+Paulo,+04606-050&output=embed&hl=pt-BR"
               width="100%"
               height="340"
               style={{ border: 0, display: 'block' }}
