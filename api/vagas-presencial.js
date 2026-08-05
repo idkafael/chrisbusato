@@ -64,10 +64,9 @@ export default async function handler(req, res) {
     const data = await resp.json()
     const vendidas = Number(data.count) || 0
 
+    // Só a porcentagem sai daqui — quantidade vendida e capacidade são dados
+    // internos e não devem ficar públicos no endpoint.
     const dados = {
-      vendidas: Math.min(vendidas, total),
-      total,
-      restantes: Math.max(total - vendidas, 0),
       percentual: Math.min(Math.round((vendidas / total) * 100), 100),
       esgotado: vendidas >= total,
     }

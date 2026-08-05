@@ -1875,14 +1875,14 @@ function BarraVagas({ escuro = true }) {
         }}>
           {dados.esgotado
             ? 'Vagas esgotadas'
-            : `${dados.vendidas} de ${dados.total} vagas preenchidas`}
+            : `${dados.percentual}% das vagas preenchidas`}
         </span>
-        {!dados.esgotado && (
+        {!dados.esgotado && quaseCheio && (
           <span style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            fontSize: 12, color: quaseCheio ? '#E8845A' : corSuave, whiteSpace: 'nowrap',
+            fontSize: 12, color: '#E8845A', whiteSpace: 'nowrap',
           }}>
-            {dados.restantes === 1 ? 'resta 1 vaga' : `restam ${dados.restantes}`}
+            últimas vagas
           </span>
         )}
       </div>
@@ -1892,7 +1892,7 @@ function BarraVagas({ escuro = true }) {
         aria-valuenow={dados.percentual}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${dados.vendidas} de ${dados.total} vagas preenchidas`}
+        aria-label={`${dados.percentual}% das vagas preenchidas`}
         style={{
           height: 9, borderRadius: 100,
           background: trilha, overflow: 'hidden',
