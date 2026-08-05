@@ -1831,6 +1831,84 @@ function CheckItem({ text, light }) {
   )
 }
 
+// Barra de vagas — alimentada por pedidos PAGOS na Cakto (/api/vagas-presencial).
+// Se a API não responder ou a capacidade não estiver configurada, não renderiza nada:
+// é melhor não mostrar barra do que mostrar um número que não é real.
+function BarraVagas({ escuro = true }) {
+  const [dados, setDados] = useState(null)
+  const [animou, setAnimou] = useState(false)
+
+  useEffect(() => {
+    let ativo = true
+    fetch('/api/vagas-presencial')
+      .then(r => r.json())
+      .then(d => { if (ativo && d && !d.indisponivel) setDados(d) })
+      .catch(() => {})
+    return () => { ativo = false }
+  }, [])
+
+  useEffect(() => {
+    if (!dados) return
+    const t = setTimeout(() => setAnimou(true), 120)
+    return () => clearTimeout(t)
+  }, [dados])
+
+  if (!dados) return null
+
+  const quaseCheio = dados.percentual >= 80
+  const corTexto = escuro ? C.cream : C.brown
+  const corSuave = escuro ? 'rgba(237,234,227,0.72)' : C.brownMid
+  const trilha = escuro ? 'rgba(255,255,255,0.14)' : 'rgba(61,53,48,0.10)'
+  const preenchimento = quaseCheio
+    ? 'linear-gradient(90deg, #E8845A 0%, #E8534A 100%)'
+    : `linear-gradient(90deg, ${C.sageLight} 0%, ${C.sage} 100%)`
+
+  return (
+    <div style={{ marginBottom: 22, position: 'relative', zIndex: 1 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+        gap: 10, marginBottom: 8,
+      }}>
+        <span style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: 13, color: corTexto,
+        }}>
+          {dados.esgotado
+            ? 'Vagas esgotadas'
+            : `${dados.vendidas} de ${dados.total} vagas preenchidas`}
+        </span>
+        {!dados.esgotado && (
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+            fontSize: 12, color: quaseCheio ? '#E8845A' : corSuave, whiteSpace: 'nowrap',
+          }}>
+            {dados.restantes === 1 ? 'resta 1 vaga' : `restam ${dados.restantes}`}
+          </span>
+        )}
+      </div>
+
+      <div
+        role="progressbar"
+        aria-valuenow={dados.percentual}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${dados.vendidas} de ${dados.total} vagas preenchidas`}
+        style={{
+          height: 9, borderRadius: 100,
+          background: trilha, overflow: 'hidden',
+        }}
+      >
+        <div style={{
+          width: animou ? `${dados.percentual}%` : '0%',
+          height: '100%', borderRadius: 100,
+          background: preenchimento,
+          transition: 'width 1.1s cubic-bezier(0.22, 1, 0.36, 1)',
+        }} />
+      </div>
+    </div>
+  )
+}
+
 function InscricaoSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
@@ -2084,6 +2162,8 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>pagamento único · vagas limitadas</div>
+
+            <BarraVagas escuro={!highlightOnline} />
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
