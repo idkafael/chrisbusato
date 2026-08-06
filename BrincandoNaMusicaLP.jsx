@@ -1833,6 +1833,116 @@ function CheckItem({ text, light }) {
   )
 }
 
+// Faixa de status no topo dos cards — mantém os dois com a mesma altura,
+// para que preço e botão fiquem alinhados entre as colunas.
+function FaixaStatus({ tipo, texto }) {
+  const esgotado = tipo === 'esgotado'
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 8,
+      marginBottom: 16, position: 'relative', zIndex: 1,
+      fontFamily: "'DM Sans', sans-serif",
+    }}>
+      <span style={{
+        width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
+        background: esgotado ? '#E8534A' : '#3FA96B',
+        boxShadow: `0 0 0 3px ${esgotado ? 'rgba(232,83,74,0.22)' : 'rgba(63,169,107,0.22)'}`,
+      }} />
+      <span style={{
+        fontWeight: 700, fontSize: 11.5, letterSpacing: '0.6px',
+        textTransform: 'uppercase',
+        color: esgotado ? '#E8845A' : '#3FA96B',
+      }}>{texto}</span>
+    </div>
+  )
+}
+
+// Bloco "no escuro": os dados já definidos aparecem; os que ainda não existem
+// aparecem tarjados, deixando explícito o que o comprador ainda não sabe.
+function BlocoNoEscuro({ escuro = true }) {
+  const linhas = [
+    { rotulo: 'Mês', valor: 'Setembro' },
+    { rotulo: 'Cidade', valor: 'São Paulo' },
+    { rotulo: 'Data', tarjado: 68 },
+    { rotulo: 'Local', tarjado: 104 },
+  ]
+
+  const corRotulo = escuro ? 'rgba(196,208,197,0.65)' : C.brownLight
+  const corValor = escuro ? C.cream : C.brown
+  const tarja = escuro
+    ? 'repeating-linear-gradient(115deg, #14110f 0px, #14110f 6px, #1d1917 6px, #1d1917 12px)'
+    : 'repeating-linear-gradient(115deg, #3D3530 0px, #3D3530 6px, #4a4039 6px, #4a4039 12px)'
+
+  return (
+    <div style={{
+      border: `1px solid ${escuro ? 'rgba(196,208,197,0.28)' : C.sageLight}`,
+      borderRadius: 12,
+      padding: '16px 18px',
+      marginBottom: 26,
+      position: 'relative', zIndex: 1,
+      background: escuro ? 'rgba(0,0,0,0.18)' : C.sagePale,
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14,
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+        fontSize: 11, letterSpacing: '1.6px', textTransform: 'uppercase',
+        color: escuro ? C.sageLight : C.sageDark,
+      }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+          <rect x="4" y="10.5" width="16" height="10" rx="2.2" stroke="currentColor" strokeWidth="1.9"/>
+          <path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"/>
+        </svg>
+        Lote no escuro
+      </div>
+
+      {linhas.map((l, i) => (
+        <div key={i} style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          marginBottom: i < linhas.length - 1 ? 10 : 0,
+        }}>
+          <span style={{
+            width: 52, flexShrink: 0,
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+            fontSize: 10.5, letterSpacing: '1px', textTransform: 'uppercase',
+            color: corRotulo,
+          }}>{l.rotulo}</span>
+
+          {l.tarjado ? (
+            <span style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <span style={{
+                display: 'block', width: l.tarjado, height: 12, borderRadius: 2,
+                background: tarja,
+              }} />
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 11.5, fontStyle: 'italic',
+                color: escuro ? 'rgba(232,132,90,0.95)' : '#B4633F',
+              }}>a anunciar</span>
+            </span>
+          ) : (
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+              fontSize: 14, color: corValor, letterSpacing: '-0.2px',
+            }}>{l.valor}</span>
+          )}
+        </div>
+      ))}
+
+      <p style={{
+        marginTop: 14, paddingTop: 13,
+        borderTop: `1px solid ${escuro ? 'rgba(196,208,197,0.2)' : 'rgba(138,158,140,0.3)'}`,
+        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+        fontSize: 12.5, lineHeight: 1.6,
+        color: escuro ? 'rgba(237,234,227,0.78)' : C.brownMid,
+      }}>
+        Você compra sem saber data e local — por isso o nome. Em troca, garante a vaga
+        antes do anúncio e paga o preço do primeiro lote. Tudo será enviado por e-mail
+        e no grupo de WhatsApp assim que fecharmos o espaço.
+      </p>
+    </div>
+  )
+}
+
 // Barra de vagas — alimentada por pedidos PAGOS na Cakto (/api/vagas-presencial).
 // Se a API não responder ou a capacidade não estiver configurada, não renderiza nada:
 // é melhor não mostrar barra do que mostrar um número que não é real.
@@ -1947,7 +2057,7 @@ function InscricaoSection() {
           gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
           gap: 24,
           maxWidth: 900, margin: '0 auto',
-          alignItems: 'start',
+          alignItems: 'stretch',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: inView ? 1 : 0,
           transform: inView ? 'translateY(0)' : 'translateY(28px)',
@@ -1961,6 +2071,7 @@ function InscricaoSection() {
             padding: mobile ? '36px 26px 32px' : '44px 40px 40px',
             position: 'relative', overflow: 'hidden',
             boxShadow: '0 20px 50px rgba(61,53,48,0.08)',
+            display: 'flex', flexDirection: 'column',
           }}>
             {/* blob sutil sage */}
             <div style={{
@@ -1980,10 +2091,13 @@ function InscricaoSection() {
               marginBottom: 18,
             }}>Online · Ao Vivo</div>
 
+            <FaixaStatus tipo="aberto" texto="Inscrições abertas" />
+
             <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 24, color: C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
+              minHeight: mobile ? undefined : 29,
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
@@ -1996,6 +2110,7 @@ function InscricaoSection() {
               borderRadius: 12,
               padding: '14px 18px',
               marginBottom: 20,
+              minHeight: mobile ? undefined : 84,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
@@ -2067,23 +2182,33 @@ function InscricaoSection() {
               {inclusosOnline.map((item, i) => <CheckItem key={i} text={item} light={false} />)}
             </div>
 
+            <div style={{ marginTop: 'auto' }}>
             <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
               display: 'block', width: '100%',
               background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
               color: C.white,
-              padding: '19px 24px', borderRadius: 100,
+              padding: '18px 24px', borderRadius: 100,
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 16, fontWeight: 700,
               textDecoration: 'none', textAlign: 'center',
               boxShadow: '0 8px 28px rgba(138,158,140,0.35)',
               transition: 'transform 0.2s, box-shadow 0.2s',
               position: 'relative', zIndex: 1,
+              marginBottom: 14,
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
             >
               Quero participar Online →
             </a>
+
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12,
+              color: C.brownLight, textAlign: 'center',
+            }}>
+              Confirmação imediata após pagamento · Pagamento seguro
+            </div>
+            </div>
           </div>
 
           {/* ── CARD PRESENCIAL ── */}
@@ -2093,6 +2218,7 @@ function InscricaoSection() {
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
             position: 'relative', overflow: 'hidden',
+            display: 'flex', flexDirection: 'column',
           }}>
             {/* blob */}
             <div style={{
@@ -2112,88 +2238,38 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · Lote no escuro</div>
 
-            {/* agosto esgotou */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              background: 'rgba(232,83,74,0.14)',
-              border: '1px solid rgba(232,83,74,0.45)',
-              borderRadius: 12, padding: '12px 14px',
-              marginBottom: 18, position: 'relative', zIndex: 1,
-            }}>
-              <span style={{
-                background: '#E8534A', color: C.white, flexShrink: 0,
-                borderRadius: 6, padding: '3px 8px',
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-                fontSize: 10, letterSpacing: '1px',
-              }}>ESGOTADO</span>
-              <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.9)', lineHeight: 1.45,
-              }}>Os ingressos de <strong>16 de agosto</strong> se esgotaram.</span>
-            </div>
+            <FaixaStatus tipo="esgotado" texto="16 de agosto esgotado" />
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 22, color: highlightOnline ? C.brown : C.cream,
+              fontSize: 24, color: highlightOnline ? C.brown : C.cream,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
+              minHeight: mobile ? undefined : 29,
+              position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>· Setembro</em>
+              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>Setembro</em>
             </div>
 
-            {/* LOTE NO ESCURO — o que se sabe e o que ainda não se sabe */}
+            {/* faixa equivalente à data do card online */}
             <div style={{
-              background: highlightOnline ? C.sagePale : 'rgba(0,0,0,0.22)',
-              border: `1px solid ${highlightOnline ? C.sageLight : 'rgba(196,208,197,0.3)'}`,
+              background: highlightOnline ? C.sage : 'rgba(0,0,0,0.28)',
+              border: highlightOnline ? 'none' : '1px solid rgba(196,208,197,0.22)',
               borderRadius: 12,
-              padding: '16px 18px',
+              padding: '14px 18px',
               marginBottom: 20,
+              minHeight: mobile ? undefined : 84,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-                fontSize: 13, letterSpacing: '1px', textTransform: 'uppercase',
-                color: highlightOnline ? C.sageDark : C.sageLight,
-              }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                  <path d="M12 3a9 9 0 1 0 9 9" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"/>
-                  <path d="M12 7.5v5l3 2" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Lote no escuro
-              </div>
-
-              {[
-                { ok: true, texto: 'Acontece em setembro, na cidade de São Paulo' },
-                { ok: true, texto: 'A vivência é a mesma: 4 horas presenciais com a Chris' },
-                { ok: false, texto: 'Data exata e horário ainda não definidos' },
-                { ok: false, texto: 'Local ainda não definido' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 9, marginBottom: 8,
-                }}>
-                  <span style={{
-                    flexShrink: 0, marginTop: 1,
-                    fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 13,
-                    color: item.ok ? (highlightOnline ? C.sageDark : C.sageLight) : '#E8845A',
-                  }}>{item.ok ? '✓' : '✗'}</span>
-                  <span style={{
-                    fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                    fontSize: 13.5, lineHeight: 1.5,
-                    color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.85)',
-                  }}>{item.texto}</span>
-                </div>
-              ))}
-
-              <p style={{
-                marginTop: 12, paddingTop: 12,
-                borderTop: `1px solid ${highlightOnline ? 'rgba(138,158,140,0.3)' : 'rgba(196,208,197,0.22)'}`,
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13, lineHeight: 1.6,
-                color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.8)',
-              }}>
-                Ao comprar agora, você <strong style={{ fontWeight: 600, color: highlightOnline ? C.brown : C.cream }}>garante sua vaga antes do anúncio</strong> e paga o preço do primeiro lote. Data, horário e endereço serão enviados por e-mail e no grupo de WhatsApp assim que fecharmos o espaço.
-              </p>
+                fontSize: 19, color: C.white,
+                letterSpacing: '-0.3px', marginBottom: 4,
+              }}>🗓️ Setembro · data a anunciar</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.9)',
+              }}>📍 São Paulo · local a anunciar</div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2220,6 +2296,8 @@ function InscricaoSection() {
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>pagamento único · lote no escuro de setembro</div>
 
+            <BlocoNoEscuro escuro={!highlightOnline} />
+
             <BarraVagas escuro={!highlightOnline} />
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -2228,11 +2306,12 @@ function InscricaoSection() {
               {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
+            <div style={{ marginTop: 'auto' }}>
             {PRESENCIAL_URL ? (
               <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
                 display: 'block', width: '100%',
                 background: C.white, color: C.brown,
-                padding: '17px 24px', borderRadius: 100,
+                padding: '18px 24px', borderRadius: 100,
                 fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
                 textDecoration: 'none', textAlign: 'center',
                 boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
@@ -2265,6 +2344,7 @@ function InscricaoSection() {
               color: 'rgba(255,255,255,0.4)', textAlign: 'center',
             }}>
               Confirmação imediata após pagamento · Pagamento seguro
+            </div>
             </div>
           </div>}
 
