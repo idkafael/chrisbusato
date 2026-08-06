@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/396txdn' })
 
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/33j8q2y'
+// Lote no escuro de setembro. Vazio = botão vira "Vendas abrem em breve".
+// O link de agosto (33j8q2y) saiu de propósito: aquele lote esgotou.
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/txdk86g'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -204,7 +206,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente domingo dia 16 de Agosto
+            Quero o lote no escuro de Setembro
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -1591,7 +1593,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · Campo Belo, São Paulo</span>
+              }}>📍 Presencial · São Paulo</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -2108,35 +2110,90 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Presencial · Recomendado</div>
+            }}>Presencial · Lote no escuro</div>
+
+            {/* agosto esgotou */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              background: 'rgba(232,83,74,0.14)',
+              border: '1px solid rgba(232,83,74,0.45)',
+              borderRadius: 12, padding: '12px 14px',
+              marginBottom: 18, position: 'relative', zIndex: 1,
+            }}>
+              <span style={{
+                background: '#E8534A', color: C.white, flexShrink: 0,
+                borderRadius: 6, padding: '3px 8px',
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+                fontSize: 10, letterSpacing: '1px',
+              }}>ESGOTADO</span>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.9)', lineHeight: 1.45,
+              }}>Os ingressos de <strong>16 de agosto</strong> se esgotaram.</span>
+            </div>
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 22, color: highlightOnline ? C.brown : C.cream,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
-            }}>Brincando na Música</div>
+            }}>
+              Brincando na Música{' '}
+              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>· Setembro</em>
+            </div>
 
-            {/* data em destaque */}
+            {/* LOTE NO ESCURO — o que se sabe e o que ainda não se sabe */}
             <div style={{
-              background: C.sage,
+              background: highlightOnline ? C.sagePale : 'rgba(0,0,0,0.22)',
+              border: `1px solid ${highlightOnline ? C.sageLight : 'rgba(196,208,197,0.3)'}`,
               borderRadius: 12,
-              padding: '14px 18px',
+              padding: '16px 18px',
               marginBottom: 20,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-                fontSize: 20, color: C.white,
-                letterSpacing: '-0.3px', marginBottom: 4,
-              }}>📅 16 de Agosto · domingo</div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.9)', marginBottom: 4,
-              }}>🕙 das 10h às 14h</div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 13, color: 'rgba(255,255,255,0.9)',
-              }}>📍 <a href="https://share.google/zKizDmLJze8rxaDBL" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>Yandê Dança e Movimento<br />R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050</a></div>
+                fontSize: 13, letterSpacing: '1px', textTransform: 'uppercase',
+                color: highlightOnline ? C.sageDark : C.sageLight,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                  <path d="M12 3a9 9 0 1 0 9 9" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"/>
+                  <path d="M12 7.5v5l3 2" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Lote no escuro
+              </div>
+
+              {[
+                { ok: true, texto: 'Acontece em setembro, na cidade de São Paulo' },
+                { ok: true, texto: 'A vivência é a mesma: 4 horas presenciais com a Chris' },
+                { ok: false, texto: 'Data exata e horário ainda não definidos' },
+                { ok: false, texto: 'Local ainda não definido' },
+              ].map((item, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 9, marginBottom: 8,
+                }}>
+                  <span style={{
+                    flexShrink: 0, marginTop: 1,
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 13,
+                    color: item.ok ? (highlightOnline ? C.sageDark : C.sageLight) : '#E8845A',
+                  }}>{item.ok ? '✓' : '✗'}</span>
+                  <span style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                    fontSize: 13.5, lineHeight: 1.5,
+                    color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.85)',
+                  }}>{item.texto}</span>
+                </div>
+              ))}
+
+              <p style={{
+                marginTop: 12, paddingTop: 12,
+                borderTop: `1px solid ${highlightOnline ? 'rgba(138,158,140,0.3)' : 'rgba(196,208,197,0.22)'}`,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 13, lineHeight: 1.6,
+                color: highlightOnline ? C.brownMid : 'rgba(237,234,227,0.8)',
+              }}>
+                Ao comprar agora, você <strong style={{ fontWeight: 600, color: highlightOnline ? C.brown : C.cream }}>garante sua vaga antes do anúncio</strong> e paga o preço do primeiro lote. Data, horário e endereço serão enviados por e-mail e no grupo de WhatsApp assim que fecharmos o espaço.
+              </p>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2161,7 +2218,7 @@ function InscricaoSection() {
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>pagamento único · vagas limitadas</div>
+            }}>pagamento único · lote no escuro de setembro</div>
 
             <BarraVagas escuro={!highlightOnline} />
 
@@ -2171,22 +2228,37 @@ function InscricaoSection() {
               {inclusosPresencial.map((item, i) => <CheckItem key={i} text={item} light={!highlightOnline} />)}
             </div>
 
-            <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
-              display: 'block', width: '100%',
-              background: C.white, color: C.brown,
-              padding: '17px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
-              textDecoration: 'none', textAlign: 'center',
-              boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
-              transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
-              marginBottom: 14,
-              position: 'relative', zIndex: 1,
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
-            >
-              Quero participar presencialmente →
-            </a>
+            {PRESENCIAL_URL ? (
+              <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', width: '100%',
+                background: C.white, color: C.brown,
+                padding: '17px 24px', borderRadius: 100,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700,
+                textDecoration: 'none', textAlign: 'center',
+                boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
+                transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+                marginBottom: 14,
+                position: 'relative', zIndex: 1,
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
+              >
+                Garantir minha vaga no escuro →
+              </a>
+            ) : (
+              <div style={{
+                width: '100%',
+                background: 'rgba(255,255,255,0.12)',
+                border: '1px dashed rgba(255,255,255,0.35)',
+                color: 'rgba(237,234,227,0.75)',
+                padding: '17px 24px', borderRadius: 100,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
+                textAlign: 'center', marginBottom: 14,
+                position: 'relative', zIndex: 1,
+              }}>
+                Vendas abrem em breve
+              </div>
+            )}
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
@@ -2197,42 +2269,6 @@ function InscricaoSection() {
           </div>}
 
         </div>
-
-        {/* mapa presencial */}
-        {!globalMode && <div style={{ maxWidth: 900, margin: '48px auto 0' }}>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            fontSize: 12, letterSpacing: '2px', color: C.sage,
-            textTransform: 'uppercase', textAlign: 'center', marginBottom: 16,
-          }}>📍 Local — Yandê Dança e Movimento<br />R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050</div>
-          <div style={{ textAlign: 'center', marginBottom: 12 }}>
-            <a
-              href="https://share.google/zKizDmLJze8rxaDBL"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: C.sageDark,
-                textDecoration: 'underline', fontWeight: 500,
-              }}
-            >Ver no Google Maps →</a>
-          </div>
-          <div style={{
-            borderRadius: 16, overflow: 'hidden',
-            border: `1px solid ${C.sageLight}`,
-            boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
-          }}>
-            <iframe
-              title="Local da vivência presencial"
-              src="https://maps.google.com/maps?q=Yandê+Dança+e+Movimento,+R.+Domingos+Lopes,+61+-+Campo+Belo,+São+Paulo,+04606-050&output=embed&hl=pt-BR"
-              width="100%"
-              height="340"
-              style={{ border: 0, display: 'block' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>}
 
       </div>
     </section>

@@ -8,7 +8,6 @@
 //   CAKTO_PRODUTO_PRESENCIAL               (opcional — id do produto; já tem padrão)
 
 const CAKTO_API = 'https://api.cakto.com.br'
-const PRODUTO_PADRAO = '0048685e-8057-4688-899f-a6c2abed82dc' // Brincando na Musica I Presencial 16 de Agosto
 
 let tokenCache = { token: null, expiresAt: 0 }
 let vagasCache = { dados: null, expiresAt: 0 }
@@ -37,10 +36,14 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Método não permitido' })
 
   const total = Number(process.env.VAGAS_PRESENCIAL_TOTAL)
+  const produto = process.env.CAKTO_PRODUTO_PRESENCIAL
 
-  // Sem capacidade configurada não dá para mostrar barra honesta — o front esconde.
+  // Sem capacidade ou sem produto configurado não dá para mostrar barra honesta — o front esconde.
   if (!total || total <= 0) {
     return res.status(200).json({ indisponivel: true, motivo: 'VAGAS_PRESENCIAL_TOTAL não configurada' })
+  }
+  if (!produto) {
+    return res.status(200).json({ indisponivel: true, motivo: 'CAKTO_PRODUTO_PRESENCIAL não configurado' })
   }
   if (!process.env.CAKTO_CLIENT_ID || !process.env.CAKTO_CLIENT_SECRET) {
     return res.status(200).json({ indisponivel: true, motivo: 'Credenciais Cakto não configuradas' })
@@ -54,7 +57,6 @@ export default async function handler(req, res) {
 
   try {
     const token = await obterToken()
-    const produto = process.env.CAKTO_PRODUTO_PRESENCIAL || PRODUTO_PADRAO
 
     // limit=1 porque só interessa o "count" — resposta mínima
     const url = `${CAKTO_API}/public_api/orders/?product=${produto}&status=paid&limit=1`
