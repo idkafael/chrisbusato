@@ -157,8 +157,8 @@ function Hero() {
           marginBottom: mobile ? 28 : 40, letterSpacing: '-0.5px',
           maxWidth: 640, marginLeft: 'auto', marginRight: 'auto',
         }}>
-          Para brincar mais na dança, você não precisa de{' '}
-          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>mais passos.</em>
+          Para brincar mais na dança, você não precisa{' '}
+          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>aprender mais passos.</em>
         </h1>
 
         {/* VSL */}
@@ -1835,23 +1835,29 @@ function CheckItem({ text, light }) {
 
 // Faixa de status no topo dos cards — mantém os dois com a mesma altura,
 // para que preço e botão fiquem alinhados entre as colunas.
-function FaixaStatus({ tipo, texto }) {
+function FaixaStatus({ tipo, selo, texto }) {
   const esgotado = tipo === 'esgotado'
+  const cor = esgotado ? '#E8534A' : '#3FA96B'
+
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 8,
-      marginBottom: 16, position: 'relative', zIndex: 1,
+      display: 'flex', alignItems: 'center', gap: 10,
+      minHeight: 44, padding: '0 13px',
+      marginBottom: 16, borderRadius: 10,
+      background: esgotado ? 'rgba(232,83,74,0.16)' : 'rgba(63,169,107,0.13)',
+      border: `1.5px solid ${esgotado ? 'rgba(232,83,74,0.55)' : 'rgba(63,169,107,0.4)'}`,
+      position: 'relative', zIndex: 1,
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <span style={{
-        width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
-        background: esgotado ? '#E8534A' : '#3FA96B',
-        boxShadow: `0 0 0 3px ${esgotado ? 'rgba(232,83,74,0.22)' : 'rgba(63,169,107,0.22)'}`,
-      }} />
+        flexShrink: 0, background: cor, color: '#FFFFFF',
+        borderRadius: 5, padding: '4px 8px',
+        fontWeight: 800, fontSize: 10, letterSpacing: '1.1px',
+        lineHeight: 1,
+      }}>{selo}</span>
       <span style={{
-        fontWeight: 700, fontSize: 11.5, letterSpacing: '0.6px',
-        textTransform: 'uppercase',
-        color: esgotado ? '#E8845A' : '#3FA96B',
+        fontWeight: 700, fontSize: 13, lineHeight: 1.3,
+        color: esgotado ? '#F0A08A' : '#5BC98A',
       }}>{texto}</span>
     </div>
   )
@@ -2091,7 +2097,7 @@ function InscricaoSection() {
               marginBottom: 18,
             }}>Online · Ao Vivo</div>
 
-            <FaixaStatus tipo="aberto" texto="Inscrições abertas" />
+            <FaixaStatus tipo="aberto" selo="ABERTO" texto="Inscrições abertas" />
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
@@ -2238,7 +2244,7 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · Lote no escuro</div>
 
-            <FaixaStatus tipo="esgotado" texto="16 de agosto esgotado" />
+            <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="Vivência de 16 de agosto lotada" />
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
