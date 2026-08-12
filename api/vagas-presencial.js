@@ -9,6 +9,11 @@
 
 const CAKTO_API = 'https://api.cakto.com.br'
 
+// Padrões do lote atual (13 de setembro). As env vars abaixo continuam valendo
+// como override — ao trocar de evento, basta atualizar aqui ou na Vercel.
+const PRODUTO_PADRAO = '751ef21d-edda-4dff-a3c4-83a855d8d545' // Presencial 13 de Setembro
+const TOTAL_PADRAO = 70
+
 let tokenCache = { token: null, expiresAt: 0 }
 let vagasCache = { dados: null, expiresAt: 0 }
 
@@ -35,15 +40,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method !== 'GET') return res.status(405).json({ error: 'Método não permitido' })
 
-  const total = Number(process.env.VAGAS_PRESENCIAL_TOTAL)
-  const produto = process.env.CAKTO_PRODUTO_PRESENCIAL
+  const total = Number(process.env.VAGAS_PRESENCIAL_TOTAL) || TOTAL_PADRAO
+  const produto = process.env.CAKTO_PRODUTO_PRESENCIAL || PRODUTO_PADRAO
 
-  // Sem capacidade ou sem produto configurado não dá para mostrar barra honesta — o front esconde.
   if (!total || total <= 0) {
-    return res.status(200).json({ indisponivel: true, motivo: 'VAGAS_PRESENCIAL_TOTAL não configurada' })
-  }
-  if (!produto) {
-    return res.status(200).json({ indisponivel: true, motivo: 'CAKTO_PRODUTO_PRESENCIAL não configurado' })
+    return res.status(200).json({ indisponivel: true, motivo: 'Capacidade inválida' })
   }
   if (!process.env.CAKTO_CLIENT_ID || !process.env.CAKTO_CLIENT_SECRET) {
     return res.status(200).json({ indisponivel: true, motivo: 'Credenciais Cakto não configuradas' })

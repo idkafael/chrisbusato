@@ -2004,7 +2004,12 @@ function InscricaoSection() {
         <div ref={ref} style={{
           display: 'grid',
           gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-          gap: 24,
+          // No desktop os cards viram subgrid: cada bloco (título, data, preço,
+          // barra, botão) cai na mesma linha nos dois, mesmo com textos de
+          // alturas diferentes.
+          gridTemplateRows: mobile ? undefined : 'repeat(11, auto)',
+          columnGap: 24,
+          rowGap: mobile ? 24 : 0,
           maxWidth: 900, margin: '0 auto',
           alignItems: 'stretch',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
@@ -2020,7 +2025,9 @@ function InscricaoSection() {
             padding: mobile ? '36px 26px 32px' : '44px 40px 40px',
             position: 'relative', overflow: 'hidden',
             boxShadow: '0 20px 50px rgba(61,53,48,0.08)',
-            display: 'flex', flexDirection: 'column',
+            ...(mobile
+              ? { display: 'flex', flexDirection: 'column' }
+              : { display: 'grid', gridTemplateRows: 'subgrid', gridRow: 'span 11' }),
           }}>
             {/* blob sutil sage */}
             <div style={{
@@ -2167,7 +2174,9 @@ function InscricaoSection() {
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
             position: 'relative', overflow: 'hidden',
-            display: 'flex', flexDirection: 'column',
+            ...(mobile
+              ? { display: 'flex', flexDirection: 'column' }
+              : { display: 'grid', gridTemplateRows: 'subgrid', gridRow: 'span 11' }),
           }}>
             {/* blob */}
             <div style={{
@@ -2249,7 +2258,11 @@ function InscricaoSection() {
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
             }}>pagamento único · 1º lote</div>
 
-            <BarraVagas escuro={!highlightOnline} />
+            {/* wrapper sempre presente: mantém a contagem de linhas do subgrid
+                estável mesmo quando a barra não tem dados para exibir */}
+            <div>
+              <BarraVagas escuro={!highlightOnline} />
+            </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
 
