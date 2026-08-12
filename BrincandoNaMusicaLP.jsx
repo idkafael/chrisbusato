@@ -2,9 +2,9 @@ import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/396txdn' })
 
-// Lote no escuro de setembro. Vazio = botão vira "Vendas abrem em breve".
-// O link de agosto (33j8q2y) saiu de propósito: aquele lote esgotou.
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/o9gpvzk'
+// Checkout do lote atual do presencial (13 de setembro).
+// Vazio = botão vira "Vendas abrem em breve".
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/cqmaji2'
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -206,7 +206,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero o lote no escuro de Setembro
+            Quero ir Presencialmente domingo 13 de Setembro
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -1593,7 +1593,7 @@ function VivenciasSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
                 fontSize: 10, letterSpacing: '2.5px', color: C.sageDark,
                 textTransform: 'uppercase',
-              }}>📍 Presencial · São Paulo</span>
+              }}>📍 Presencial · Campo Belo, São Paulo</span>
               <div style={{ height: 1, flex: 1, background: C.sageLight }} />
             </div>
 
@@ -1863,92 +1863,6 @@ function FaixaStatus({ tipo, selo, texto }) {
   )
 }
 
-// Bloco "no escuro": os dados já definidos aparecem; os que ainda não existem
-// aparecem tarjados, deixando explícito o que o comprador ainda não sabe.
-function BlocoNoEscuro({ escuro = true }) {
-  const linhas = [
-    { rotulo: 'Mês', valor: 'Setembro' },
-    { rotulo: 'Cidade', valor: 'São Paulo' },
-    { rotulo: 'Data', tarjado: 68 },
-    { rotulo: 'Local', tarjado: 104 },
-  ]
-
-  const corRotulo = escuro ? 'rgba(196,208,197,0.65)' : C.brownLight
-  const corValor = escuro ? C.cream : C.brown
-  const tarja = escuro
-    ? 'repeating-linear-gradient(115deg, #14110f 0px, #14110f 6px, #1d1917 6px, #1d1917 12px)'
-    : 'repeating-linear-gradient(115deg, #3D3530 0px, #3D3530 6px, #4a4039 6px, #4a4039 12px)'
-
-  return (
-    <div style={{
-      border: `1px solid ${escuro ? 'rgba(196,208,197,0.28)' : C.sageLight}`,
-      borderRadius: 12,
-      padding: '16px 18px',
-      marginBottom: 26,
-      position: 'relative', zIndex: 1,
-      background: escuro ? 'rgba(0,0,0,0.18)' : C.sagePale,
-    }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14,
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
-        fontSize: 11, letterSpacing: '1.6px', textTransform: 'uppercase',
-        color: escuro ? C.sageLight : C.sageDark,
-      }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-          <rect x="4" y="10.5" width="16" height="10" rx="2.2" stroke="currentColor" strokeWidth="1.9"/>
-          <path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"/>
-        </svg>
-        Lote no escuro
-      </div>
-
-      {linhas.map((l, i) => (
-        <div key={i} style={{
-          display: 'flex', alignItems: 'center', gap: 12,
-          marginBottom: i < linhas.length - 1 ? 10 : 0,
-        }}>
-          <span style={{
-            width: 52, flexShrink: 0,
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            fontSize: 10.5, letterSpacing: '1px', textTransform: 'uppercase',
-            color: corRotulo,
-          }}>{l.rotulo}</span>
-
-          {l.tarjado ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-              <span style={{
-                display: 'block', width: l.tarjado, height: 12, borderRadius: 2,
-                background: tarja,
-              }} />
-              <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-                fontSize: 11.5, fontStyle: 'italic',
-                color: escuro ? 'rgba(232,132,90,0.95)' : '#B4633F',
-              }}>a anunciar</span>
-            </span>
-          ) : (
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-              fontSize: 14, color: corValor, letterSpacing: '-0.2px',
-            }}>{l.valor}</span>
-          )}
-        </div>
-      ))}
-
-      <p style={{
-        marginTop: 14, paddingTop: 13,
-        borderTop: `1px solid ${escuro ? 'rgba(196,208,197,0.2)' : 'rgba(138,158,140,0.3)'}`,
-        fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-        fontSize: 12.5, lineHeight: 1.6,
-        color: escuro ? 'rgba(237,234,227,0.78)' : C.brownMid,
-      }}>
-        Você compra sem saber data e local — por isso o nome. Em troca, garante a vaga
-        antes do anúncio e paga o preço do primeiro lote. Tudo será enviado por e-mail
-        e no grupo de WhatsApp assim que fecharmos o espaço.
-      </p>
-    </div>
-  )
-}
-
 // Barra de vagas — alimentada por pedidos PAGOS na Cakto (/api/vagas-presencial).
 // Se a API não responder ou a capacidade não estiver configurada, não renderiza nada:
 // é melhor não mostrar barra do que mostrar um número que não é real.
@@ -1973,6 +1887,7 @@ function BarraVagas({ escuro = true }) {
 
   if (!dados) return null
 
+  const marcos = dados.marcos || []
   const quaseCheio = dados.percentual >= 80
   const corTexto = escuro ? C.cream : C.brown
   const corSuave = escuro ? 'rgba(237,234,227,0.72)' : C.brownMid
@@ -2013,7 +1928,7 @@ function BarraVagas({ escuro = true }) {
         aria-label={`${dados.percentual}% das vagas preenchidas`}
         style={{
           height: 9, borderRadius: 100,
-          background: trilha, overflow: 'hidden',
+          background: trilha, position: 'relative',
         }}
       >
         <div style={{
@@ -2022,7 +1937,35 @@ function BarraVagas({ escuro = true }) {
           background: preenchimento,
           transition: 'width 1.1s cubic-bezier(0.22, 1, 0.36, 1)',
         }} />
+
+        {/* marcos de virada de lote */}
+        {!dados.esgotado && marcos.map((m, i) => (
+          <span key={i} style={{
+            position: 'absolute', left: `${m.pct}%`, top: -3, bottom: -3,
+            width: 2, borderRadius: 2, transform: 'translateX(-1px)',
+            background: m.atingido
+              ? (escuro ? 'rgba(237,234,227,0.35)' : 'rgba(61,53,48,0.25)')
+              : (escuro ? C.cream : C.brown),
+            opacity: m.atingido ? 0.5 : 0.9,
+          }} />
+        ))}
       </div>
+
+      {/* rótulos dos marcos */}
+      {!dados.esgotado && marcos.length > 0 && (
+        <div style={{ position: 'relative', height: 15, marginTop: 6 }}>
+          {marcos.map((m, i) => (
+            <span key={i} style={{
+              position: 'absolute', left: `${m.pct}%`, transform: 'translateX(-50%)',
+              whiteSpace: 'nowrap',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 9.5, letterSpacing: '0.4px', textTransform: 'uppercase',
+              color: m.atingido ? corSuave : (escuro ? 'rgba(237,234,227,0.6)' : C.brownLight),
+              textDecoration: m.atingido ? 'line-through' : 'none',
+            }}>{m.rotulo}</span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -2242,7 +2185,7 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
               marginBottom: 20,
-            }}>Presencial · Lote no escuro</div>
+            }}>Presencial · 1º lote</div>
 
             <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="Vivência de 16 de agosto lotada" />
 
@@ -2254,10 +2197,10 @@ function InscricaoSection() {
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>Setembro</em>
+              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>Presencial</em>
             </div>
 
-            {/* faixa equivalente à data do card online */}
+            {/* data e local */}
             <div style={{
               background: highlightOnline ? C.sage : 'rgba(0,0,0,0.28)',
               border: highlightOnline ? 'none' : '1px solid rgba(196,208,197,0.22)',
@@ -2271,11 +2214,15 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
                 fontSize: 19, color: C.white,
                 letterSpacing: '-0.3px', marginBottom: 4,
-              }}>🗓️ Setembro · data a anunciar</div>
+              }}>📅 13 de Setembro · domingo</div>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                fontSize: 13, color: 'rgba(255,255,255,0.9)', marginBottom: 4,
+              }}>🕙 das 10h às 14h</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
-              }}>📍 São Paulo · local a anunciar</div>
+              }}>📍 <a href="https://maps.app.goo.gl/7NKahGksD8JxVjoKA" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}>R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050</a></div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -2289,20 +2236,18 @@ function InscricaoSection() {
                 borderRadius: 100, padding: '2px 10px',
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 11, letterSpacing: '0.5px',
-              }}>51% OFF</div>
+              }}>39% OFF</div>
             </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 'clamp(48px, 5vw, 64px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
-            }}>R$ 97</div>
+            }}>R$ 120</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>pagamento único · lote no escuro de setembro</div>
-
-            <BlocoNoEscuro escuro={!highlightOnline} />
+            }}>pagamento único · 1º lote</div>
 
             <BarraVagas escuro={!highlightOnline} />
 
@@ -2328,7 +2273,7 @@ function InscricaoSection() {
                 onMouseEnter={e => { e.currentTarget.style.background = C.cream; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(0,0,0,0.25)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = C.white; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.18)' }}
               >
-                Garantir minha vaga no escuro →
+                Quero participar presencialmente →
               </a>
             ) : (
               <div style={{

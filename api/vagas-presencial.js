@@ -66,11 +66,25 @@ export default async function handler(req, res) {
     const data = await resp.json()
     const vendidas = Number(data.count) || 0
 
+    // Marcos de virada de lote, posicionados por vagas restantes.
+    // Só a posição relativa sai daqui — a capacidade em si continua privada.
+    const marcos = [
+      { restantes: 20, rotulo: '2º lote' },
+      { restantes: 10, rotulo: '3º lote' },
+    ]
+      .filter(m => total > m.restantes)
+      .map(m => ({
+        rotulo: m.rotulo,
+        pct: Math.round(((total - m.restantes) / total) * 1000) / 10,
+        atingido: vendidas >= total - m.restantes,
+      }))
+
     // Só a porcentagem sai daqui — quantidade vendida e capacidade são dados
     // internos e não devem ficar públicos no endpoint.
     const dados = {
       percentual: Math.min(Math.round((vendidas / total) * 100), 100),
       esgotado: vendidas >= total,
+      marcos,
     }
 
     vagasCache = { dados, expiresAt: Date.now() + CACHE_MS }
