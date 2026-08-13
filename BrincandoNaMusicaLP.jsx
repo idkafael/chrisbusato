@@ -1887,11 +1887,6 @@ function BarraVagas({ escuro = true }) {
 
   if (!dados) return null
 
-  // Abaixo deste ponto a barra não aparece: uma barra quase vazia comunica o
-  // oposto do que se quer. Ela entra em cena quando já tem número real a mostrar.
-  const LIMIAR_EXIBICAO = 15
-  if (!dados.esgotado && dados.percentual < LIMIAR_EXIBICAO) return null
-
   const marcos = dados.marcos || []
   const quaseCheio = dados.percentual >= 80
   const corTexto = escuro ? C.cream : C.brown
