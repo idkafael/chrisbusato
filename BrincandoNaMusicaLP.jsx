@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/396txdn' })
+const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: '' })
 
 // Checkout do lote atual do presencial (13 de setembro).
 // Vazio = botão vira "Vendas abrem em breve".
@@ -189,7 +189,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero participar Online sábado dia 15 de Agosto
+            Quero ver a transmissão dia 13 de Setembro
           </a>}
           {/* Botão presencial */}
           {!globalMode && <a href="#ingresso-presencial" style={{
@@ -221,7 +221,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero participar Online sábado dia 15 de Agosto
+            Quero ver a transmissão dia 13 de Setembro
           </a>}
         </div>
 
@@ -1836,28 +1836,32 @@ function CheckItem({ text, light }) {
 // Faixa de status no topo dos cards — mantém os dois com a mesma altura,
 // para que preço e botão fiquem alinhados entre as colunas.
 function FaixaStatus({ tipo, selo, texto }) {
-  const esgotado = tipo === 'esgotado'
-  const cor = esgotado ? '#E8534A' : '#3FA96B'
+  const paleta = {
+    esgotado: { selo: '#E8534A', fundo: 'rgba(232,83,74,0.16)', borda: 'rgba(232,83,74,0.55)', texto: '#F0A08A' },
+    aberto:   { selo: '#3FA96B', fundo: 'rgba(63,169,107,0.13)', borda: 'rgba(63,169,107,0.4)', texto: '#3FA96B' },
+    breve:    { selo: C.sageDark, fundo: 'rgba(138,158,140,0.14)', borda: 'rgba(138,158,140,0.45)', texto: C.sageDark },
+  }
+  const c = paleta[tipo] || paleta.aberto
 
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 10,
       minHeight: 44, padding: '0 13px',
       marginBottom: 16, borderRadius: 10,
-      background: esgotado ? 'rgba(232,83,74,0.16)' : 'rgba(63,169,107,0.13)',
-      border: `1.5px solid ${esgotado ? 'rgba(232,83,74,0.55)' : 'rgba(63,169,107,0.4)'}`,
+      background: c.fundo,
+      border: `1.5px solid ${c.borda}`,
       position: 'relative', zIndex: 1,
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <span style={{
-        flexShrink: 0, background: cor, color: '#FFFFFF',
+        flexShrink: 0, background: c.selo, color: '#FFFFFF',
         borderRadius: 5, padding: '4px 8px',
         fontWeight: 800, fontSize: 10, letterSpacing: '1.1px',
         lineHeight: 1,
       }}>{selo}</span>
       <span style={{
         fontWeight: 700, fontSize: 13, lineHeight: 1.3,
-        color: esgotado ? '#F0A08A' : '#5BC98A',
+        color: c.texto,
       }}>{texto}</span>
     </div>
   )
@@ -2045,9 +2049,11 @@ function InscricaoSection() {
               fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
               fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
               marginBottom: 18,
-            }}>Online · Ao Vivo</div>
+            }}>Online · Transmissão ao vivo</div>
 
-            <FaixaStatus tipo="aberto" selo="ABERTO" texto="Inscrições abertas" />
+            {onlineUrl
+              ? <FaixaStatus tipo="aberto" selo="ABERTO" texto="Inscrições abertas" />
+              : <FaixaStatus tipo="breve" selo="EM BREVE" texto="Inscrições abrem em instantes" />}
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
@@ -2057,7 +2063,7 @@ function InscricaoSection() {
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>Online</em>
+              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>ao vivo</em>
             </div>
 
             {/* data em destaque */}
@@ -2073,11 +2079,11 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
                 fontSize: 19, color: C.white,
                 letterSpacing: '-0.3px', marginBottom: 4,
-              }}>📅 15 de Agosto · sábado</div>
+              }}>📅 13 de Setembro · domingo</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
-              }}>🕙 das 10h às 12h · ao vivo pela internet</div>
+              }}>🕙 das 10h às 14h · transmissão ao vivo</div>
             </div>
 
             {/* preço */}
@@ -2139,24 +2145,39 @@ function InscricaoSection() {
             </div>
 
             <div style={{ marginTop: 'auto' }}>
-            <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
-              display: 'block', width: '100%',
-              background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
-              color: C.white,
-              padding: '18px 24px', borderRadius: 100,
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 16, fontWeight: 700,
-              textDecoration: 'none', textAlign: 'center',
-              boxShadow: '0 8px 28px rgba(138,158,140,0.35)',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              position: 'relative', zIndex: 1,
-              marginBottom: 14,
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
-            >
-              Quero participar Online →
-            </a>
+            {onlineUrl ? (
+              <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', width: '100%',
+                background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+                color: C.white,
+                padding: '18px 24px', borderRadius: 100,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 16, fontWeight: 700,
+                textDecoration: 'none', textAlign: 'center',
+                boxShadow: '0 8px 28px rgba(138,158,140,0.35)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                position: 'relative', zIndex: 1,
+                marginBottom: 14,
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
+              >
+                Quero ver a transmissão dia 13 de Setembro →
+              </a>
+            ) : (
+              <div style={{
+                width: '100%',
+                background: 'rgba(138,158,140,0.12)',
+                border: `1px dashed ${C.sage}`,
+                color: C.sageDark,
+                padding: '18px 24px', borderRadius: 100,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
+                textAlign: 'center', marginBottom: 14,
+                position: 'relative', zIndex: 1,
+              }}>
+                Vendas abrem em breve
+              </div>
+            )}
 
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 12,
@@ -2196,7 +2217,7 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · 1º lote</div>
 
-            <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="Vivência de 16 de agosto lotada" />
+            <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="A edição de 16 de agosto lotou" />
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
@@ -2534,7 +2555,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/396txdn' }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = '' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'
