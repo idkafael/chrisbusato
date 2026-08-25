@@ -16,10 +16,7 @@ import online3 from './images/online (3).mp4'
 import online4 from './images/online (4).mp4'
 import onlineImg1 from './images/online (1).jpeg'
 import eve1 from './images/eve1.png'
-import jul1 from './images/jul1.png'
 import mire1 from './images/mire1.png'
-import feedback10 from './images/feedback10.jpeg'
-import feedback11 from './images/feedback11.jpeg'
 import feedbac1 from './images/feedbac1.jpeg'
 import feedbac2 from './images/feedbac2.jpeg'
 import feedbac3 from './images/feedbac3.jpeg'
@@ -839,36 +836,6 @@ function ConscienciaRow({ item, index, mobile }) {
   )
 }
 
-function MiniPolaroid({ src, caption, rotate = 0, tapeColor = C.sage, offsetY = 0 }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: 'relative',
-        background: C.white,
-        padding: '8px 8px 10px',
-        borderRadius: 8,
-        boxShadow: hovered ? '0 20px 44px rgba(61,53,48,0.28)' : '0 12px 30px rgba(61,53,48,0.18)',
-        transform: `translateY(${offsetY}px) rotate(${hovered ? 0 : rotate}deg) scale(${hovered ? 1.04 : 1})`,
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        width: 168,
-      }}>
-      <WashiTape color={tapeColor} rotate={rotate <= 0 ? 8 : -8} top={-14} left="50%" width={48} />
-      <div style={{ borderRadius: 4, overflow: 'hidden', aspectRatio: '4/5' }}>
-        <img src={src} alt={caption}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
-      </div>
-      <div style={{
-        textAlign: 'center', padding: '8px 6px 0',
-        fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
-        fontSize: 11.5, color: C.brownMid, lineHeight: 1.25,
-      }}>{caption}</div>
-    </div>
-  )
-}
-
 function ConscienciaSection() {
   const [titleRef, titleInView] = useInView()
   const [quoteRef, quoteInView] = useInView()
@@ -940,16 +907,6 @@ function ConscienciaSection() {
             A dança melhora quando o corpo deixa de só executar movimentos e passa a{' '}
             <em style={{ color: C.sageDark, fontStyle: 'italic' }}>perceber: a si mesmo, a música, o outro e o espaço.</em>
           </p>
-
-          {/* mural de fotos reais: quem já viveu essa mudança */}
-          <div style={{
-            display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
-            gap: mobile ? 24 : 28, marginTop: mobile ? 44 : 56,
-          }}>
-            <MiniPolaroid src={jul1} caption="Juliana, sobre dançar a dois" rotate={-3} tapeColor={C.sage} offsetY={0} />
-            <MiniPolaroid src={feedback11} caption="Aluna, sobre consciência corporal" rotate={2.2} tapeColor={C.brownLight} offsetY={mobile ? 0 : 16} />
-            <MiniPolaroid src={feedback10} caption="Ana, sobre anos dançando no automático" rotate={-1.5} tapeColor={C.sageDark} offsetY={mobile ? 0 : -12} />
-          </div>
         </div>
       </div>
     </section>
