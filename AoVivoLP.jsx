@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 
 // ─── Encontro diário ao vivo ──────────────────────────────────────────────────
 // A data se recalcula sozinha: até as 20h mostra HOJE; a partir das 20h passa a
 // mostrar AMANHÃ. Depois da meia-noite volta a ser HOJE, já do novo dia.
 
-const CHECKOUT_URL = '' // vazio = botão vira "Inscrições abrem em breve"
-const PRECO = 'R$ 27'
-const PRECO_ANCORA = 'R$ 97'
+const CHECKOUT_URL = 'https://pay.cakto.com.br/c92d9kw'
+const PRECO = 'R$ 37'
 const HORA_ENCONTRO = 20 // 20h no horário de Brasília
 const FUSO = 'America/Sao_Paulo'
 
@@ -107,6 +106,82 @@ function useProximoEncontro() {
   }, [])
 
   return estado
+}
+
+// Observa se um elemento está na tela (ao contrário do "uma vez só", aqui
+// o estado alterna conforme o visitante rola a página).
+function useEstaVisivel(ref) {
+  const [visivel, setVisivel] = useState(true)
+
+  useEffect(() => {
+    const alvo = ref.current
+    if (!alvo) return
+    const obs = new IntersectionObserver(([e]) => setVisivel(e.isIntersecting), { threshold: 0 })
+    obs.observe(alvo)
+    return () => obs.disconnect()
+  }, [ref])
+
+  return visivel
+}
+
+// Barra fixa: entra quando a contagem principal sai de tela.
+function BarraFixa({ encontro, visivel, mobile }) {
+  const tempo = `${String(encontro.horas).padStart(2, '0')}h ${String(encontro.minutos).padStart(2, '0')}m ${String(encontro.segundos).padStart(2, '0')}s`
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+      background: C.brown,
+      borderBottom: '1px solid rgba(196,208,197,0.18)',
+      boxShadow: visivel ? '0 6px 24px rgba(61,53,48,0.28)' : 'none',
+      transform: visivel ? 'translateY(0)' : 'translateY(-100%)',
+      transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+    }}>
+      <div style={{
+        maxWidth: 900, margin: '0 auto',
+        padding: mobile ? '10px 16px' : '12px 24px',
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between', gap: mobile ? 10 : 18,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 12, minWidth: 0 }}>
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%', background: C.vivo, flexShrink: 0,
+            animation: 'pulsoVivo 2s ease-out infinite',
+          }} />
+          <span style={{
+            fontFamily: fonteTexto, fontWeight: 800,
+            fontSize: mobile ? 11 : 12, letterSpacing: '1px', textTransform: 'uppercase',
+            color: C.white, whiteSpace: 'nowrap',
+          }}>{encontro.rotulo} · 20h</span>
+
+          <span style={{
+            fontFamily: fonteTexto, fontWeight: 700,
+            fontSize: mobile ? 13.5 : 15, color: C.sageLight,
+            fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
+          }}>{tempo}</span>
+        </div>
+
+        {CHECKOUT_URL && (
+          <a
+            href={CHECKOUT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flexShrink: 0,
+              background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+              color: C.white, textDecoration: 'none',
+              padding: mobile ? '9px 16px' : '11px 22px',
+              borderRadius: 100,
+              fontFamily: fonteTexto, fontWeight: 700,
+              fontSize: mobile ? 12.5 : 14, whiteSpace: 'nowrap',
+            }}
+          >
+            {mobile ? 'Participar' : 'Quero participar →'}
+          </a>
+        )}
+      </div>
+    </div>
+  )
 }
 
 function SeloAoVivo() {
@@ -223,9 +298,14 @@ export default function AoVivoLP() {
   const w = useWindowWidth()
   const mobile = w < 768
 
+  const refContagem = useRef(null)
+  const contagemNaTela = useEstaVisivel(refContagem)
+
   return (
     <>
       <style>{globalStyles}</style>
+
+      <BarraFixa encontro={encontro} visivel={!contagemNaTela} mobile={mobile} />
 
       <div style={{
         minHeight: '100vh',
@@ -272,8 +352,8 @@ export default function AoVivoLP() {
             color: C.brown, lineHeight: 1.14, letterSpacing: '-0.8px',
             marginBottom: 18, animation: 'subir 0.6s 0.1s ease both',
           }}>
-            Todo dia, um encontro para{' '}
-            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>soltar o corpo na música.</em>
+            Você não precisa de mais passos. Precisa de{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>um encontro por dia com a música.</em>
           </h1>
 
           <p style={{
@@ -287,7 +367,7 @@ export default function AoVivoLP() {
             responder com naturalidade.
           </p>
 
-          <div style={{ marginBottom: 32, animation: 'subir 0.6s 0.2s ease both' }}>
+          <div ref={refContagem} style={{ marginBottom: 32, animation: 'subir 0.6s 0.2s ease both' }}>
             <Contagem encontro={encontro} mobile={mobile} />
           </div>
 
@@ -302,11 +382,6 @@ export default function AoVivoLP() {
             animation: 'subir 0.6s 0.25s ease both',
           }}>
             <div style={{
-              fontFamily: fonteTexto, fontWeight: 400, fontSize: 17,
-              color: C.brownLight, textDecoration: 'line-through',
-              marginBottom: 6,
-            }}>{PRECO_ANCORA}</div>
-            <div style={{
               fontFamily: fonteTexto, fontWeight: 800,
               fontSize: mobile ? 46 : 58, color: C.brown,
               lineHeight: 1, letterSpacing: '-2px', marginBottom: 6,
@@ -314,9 +389,13 @@ export default function AoVivoLP() {
             <div style={{
               fontFamily: fonteTexto, fontWeight: 400, fontSize: 13.5,
               color: C.brownMid, marginBottom: 26,
-            }}>acesso ao encontro de hoje · link enviado por e-mail</div>
+            }}>
+              acesso ao encontro {encontro.ehHoje ? 'de hoje' : 'de amanhã'} · link enviado por e-mail
+            </div>
 
-            <BotaoInscricao mobile={mobile}>Quero participar hoje às 20h →</BotaoInscricao>
+            <BotaoInscricao mobile={mobile}>
+              {encontro.ehHoje ? 'Quero participar hoje às 20h →' : 'Quero participar amanhã às 20h →'}
+            </BotaoInscricao>
 
             <div style={{
               fontFamily: fonteTexto, fontSize: 12,
