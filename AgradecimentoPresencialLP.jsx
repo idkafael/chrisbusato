@@ -11,7 +11,7 @@ const C = {
 const WA_NUMBER = '5511967068271'
 const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso presencial')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
-const GROUP_LINK = 'https://chat.whatsapp.com/ITR51rxt8QyHN7kqjKLaDj'
+const GROUP_LINK = 'https://chat.whatsapp.com/KxItUrKDiKbBapOyS7wt4b'
 
 function useWindowWidth() {
   const [w, setW] = [typeof window !== 'undefined' ? window.innerWidth : 1200, null]
