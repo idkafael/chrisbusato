@@ -247,6 +247,85 @@ function Contagem({ encontro, mobile }) {
   )
 }
 
+// Vagas do encontro atual, vindas de /api/vagas-aovivo (pedidos pagos na
+// janela de hoje). Sem dados, não renderiza nada — melhor nenhuma barra do
+// que um número que não corresponde à realidade.
+function BarraVagas({ encontro }) {
+  const [dados, setDados] = useState(null)
+  const [animou, setAnimou] = useState(false)
+
+  useEffect(() => {
+    let ativo = true
+    const buscar = () => fetch('/api/vagas-aovivo')
+      .then(r => r.json())
+      .then(d => { if (ativo && d && !d.indisponivel) setDados(d) })
+      .catch(() => {})
+
+    buscar()
+    // reconsulta de tempos em tempos: a página costuma ficar aberta
+    const t = setInterval(buscar, 60_000)
+    return () => { ativo = false; clearInterval(t) }
+  }, [])
+
+  useEffect(() => {
+    if (!dados) return
+    const t = setTimeout(() => setAnimou(true), 150)
+    return () => clearTimeout(t)
+  }, [dados])
+
+  if (!dados) return null
+
+  const quaseCheio = dados.restantes <= 3
+  const preenchimento = quaseCheio
+    ? `linear-gradient(90deg, #E8845A 0%, ${C.vivo} 100%)`
+    : `linear-gradient(90deg, ${C.sageLight} 0%, ${C.sage} 100%)`
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+        gap: 10, marginBottom: 8,
+      }}>
+        <span style={{
+          fontFamily: fonteTexto, fontWeight: 700,
+          fontSize: 13, color: C.brown,
+        }}>
+          {dados.esgotado
+            ? `Vagas esgotadas ${encontro.ehHoje ? 'para hoje' : 'para amanhã'}`
+            : `Vagas ${encontro.ehHoje ? 'de hoje' : 'de amanhã'}`}
+        </span>
+
+        {!dados.esgotado && (
+          <span style={{
+            fontFamily: fonteTexto, fontWeight: 700, fontSize: 12.5,
+            color: quaseCheio ? C.vivo : C.brownMid, whiteSpace: 'nowrap',
+          }}>
+            {dados.restantes === 1
+              ? 'resta 1 de 10'
+              : `restam ${dados.restantes} de ${dados.total}`}
+          </span>
+        )}
+      </div>
+
+      <div
+        role="progressbar"
+        aria-valuenow={dados.percentual}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${dados.vendidas} de ${dados.total} vagas preenchidas`}
+        style={{ height: 9, borderRadius: 100, background: 'rgba(61,53,48,0.10)', overflow: 'hidden' }}
+      >
+        <div style={{
+          width: animou ? `${dados.percentual}%` : '0%',
+          height: '100%', borderRadius: 100,
+          background: preenchimento,
+          transition: 'width 1.1s cubic-bezier(0.22, 1, 0.36, 1)',
+        }} />
+      </div>
+    </div>
+  )
+}
+
 function BotaoInscricao({ mobile, children }) {
   if (!CHECKOUT_URL) {
     return (
@@ -392,6 +471,8 @@ export default function AoVivoLP() {
             }}>
               acesso ao encontro {encontro.ehHoje ? 'de hoje' : 'de amanhã'} · link enviado por e-mail
             </div>
+
+            <BarraVagas encontro={encontro} />
 
             <BotaoInscricao mobile={mobile}>
               {encontro.ehHoje ? 'Quero participar hoje às 20h →' : 'Quero participar amanhã às 20h →'}
