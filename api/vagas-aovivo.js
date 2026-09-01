@@ -1,17 +1,14 @@
 // GET /api/vagas-aovivo
-// Vagas do encontro diário. Como o evento se repete todo dia, aqui só contam
-// as vendas da JANELA do encontro que a página está vendendo agora:
-//   - antes das 20h  → vendas de hoje desde 00:00 (encontro de hoje)
-//   - depois das 20h → vendas desde as 20h de hoje (encontro de amanhã)
+// Vagas do encontro diário: conta apenas os pedidos pagos no DIA CORRENTE
+// (00:00 às 23:59, horário de Brasília). A contagem zera à meia-noite.
 //
 // Env opcionais: CAKTO_PRODUTO_AOVIVO, VAGAS_AOVIVO_TOTAL
 
 const CAKTO_API = 'https://api.cakto.com.br'
 const PRODUTO_PADRAO = '228ffdb8-31d8-455f-8f84-e030a049a8cb' // Brincando na Musica | HOJE AS 20H
 const TOTAL_PADRAO = 10
-const HORA_ENCONTRO = 20
 const FUSO = 'America/Sao_Paulo'
-const MAX_PAGINAS = 5 // teto de segurança: 50 pedidos na janela
+const MAX_PAGINAS = 5 // teto de segurança: 50 pedidos no dia
 
 let tokenCache = { token: null, expiresAt: 0 }
 let cache = { dados: null, expiresAt: 0 }
@@ -34,8 +31,8 @@ async function obterToken() {
   return tokenCache.token
 }
 
-// Instante em que começou a janela de venda do encontro atual, em ms epoch.
-function inicioDaJanela() {
+// Meia-noite do dia corrente em Brasília, em ms epoch.
+function inicioDoDia() {
   const partes = new Intl.DateTimeFormat('pt-BR', {
     timeZone: FUSO,
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -45,19 +42,13 @@ function inicioDaJanela() {
   const p = {}
   for (const parte of partes) if (parte.type !== 'literal') p[parte.type] = Number(parte.value)
   const hora = p.hour % 24
-  const antesDoEncontro = hora < HORA_ENCONTRO
 
   // "agora" em Brasília expresso como UTC, para achar o deslocamento do fuso
   const agoraBRTComoUTC = Date.UTC(p.year, p.month - 1, p.day, hora, p.minute, p.second)
   const deslocamento = agoraBRTComoUTC - Date.now()
 
-  // 00:00 de hoje (antes das 20h) ou 20:00 de hoje (depois)
-  const inicioBRTComoUTC = Date.UTC(
-    p.year, p.month - 1, p.day,
-    antesDoEncontro ? 0 : HORA_ENCONTRO, 0, 0,
-  )
-
-  return { inicioMs: inicioBRTComoUTC - deslocamento, antesDoEncontro }
+  const meiaNoiteBRTComoUTC = Date.UTC(p.year, p.month - 1, p.day, 0, 0, 0)
+  return meiaNoiteBRTComoUTC - deslocamento
 }
 
 export default async function handler(req, res) {
@@ -78,10 +69,10 @@ export default async function handler(req, res) {
 
   try {
     const token = await obterToken()
-    const { inicioMs } = inicioDaJanela()
+    const inicioMs = inicioDoDia()
 
     // Os pedidos vêm do mais novo para o mais antigo: paginamos só enquanto
-    // todos os itens da página ainda estiverem dentro da janela.
+    // todos os itens da página ainda forem do dia corrente.
     let vendidas = 0
     for (let pagina = 1; pagina <= MAX_PAGINAS; pagina++) {
       const url = `${CAKTO_API}/public_api/orders/?product=${produto}&status=paid&page=${pagina}`
@@ -92,14 +83,14 @@ export default async function handler(req, res) {
       const pedidos = data.results || []
       if (pedidos.length === 0) break
 
-      const naJanela = pedidos.filter(o => {
+      const deHoje = pedidos.filter(o => {
         const quando = Date.parse(o.paidAt || o.createdAt || '')
         return Number.isFinite(quando) && quando >= inicioMs
       })
-      vendidas += naJanela.length
+      vendidas += deHoje.length
 
-      // Achou pedido fora da janela ou acabou a lista → não precisa paginar mais
-      if (naJanela.length < pedidos.length || !data.next) break
+      // Achou pedido de outro dia ou acabou a lista → não precisa paginar mais
+      if (deHoje.length < pedidos.length || !data.next) break
     }
 
     const restantes = Math.max(total - vendidas, 0)

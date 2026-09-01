@@ -250,7 +250,7 @@ function Contagem({ encontro, mobile }) {
 // Vagas do encontro atual, vindas de /api/vagas-aovivo (pedidos pagos na
 // janela de hoje). Sem dados, não renderiza nada — melhor nenhuma barra do
 // que um número que não corresponde à realidade.
-function BarraVagas({ encontro }) {
+function BarraVagas() {
   const [dados, setDados] = useState(null)
   const [animou, setAnimou] = useState(false)
 
@@ -290,9 +290,7 @@ function BarraVagas({ encontro }) {
           fontFamily: fonteTexto, fontWeight: 700,
           fontSize: 13, color: C.brown,
         }}>
-          {dados.esgotado
-            ? `Vagas esgotadas ${encontro.ehHoje ? 'para hoje' : 'para amanhã'}`
-            : `Vagas ${encontro.ehHoje ? 'de hoje' : 'de amanhã'}`}
+          {dados.esgotado ? 'Vagas esgotadas hoje' : 'Vagas preenchidas hoje'}
         </span>
 
         {!dados.esgotado && (
@@ -472,7 +470,7 @@ export default function AoVivoLP() {
               acesso ao encontro {encontro.ehHoje ? 'de hoje' : 'de amanhã'} · link enviado por e-mail
             </div>
 
-            <BarraVagas encontro={encontro} />
+            <BarraVagas />
 
             <BotaoInscricao mobile={mobile}>
               {encontro.ehHoje ? 'Quero participar hoje às 20h →' : 'Quero participar amanhã às 20h →'}
