@@ -19,6 +19,23 @@
     async
     defer
   ></script>
+  <!-- LowTrack Pixel — só na home (/) e no encontro diário (/aovivo).
+       O index.html é único para todas as rotas, por isso o filtro de caminho. -->
+  <script>
+    (function () {
+      var rotasComPixel = ['/', '/aovivo'];
+      var caminho = location.pathname.replace(/\/+$/, '') || '/';
+      if (rotasComPixel.indexOf(caminho) === -1) return;
+
+      window.pixelId = "lt_px_28a68b97c3c4";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://lowtrack.com.br/pixel.js");
+      document.head.appendChild(a);
+    })();
+  </script>
+
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
