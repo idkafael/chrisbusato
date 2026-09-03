@@ -328,6 +328,34 @@ const globalStyles = `
     from { transform: translateY(-40px) rotate(0deg); opacity: 1; }
     to   { transform: translateY(340px) rotate(360deg); opacity: 0; }
   }
+
+  /* ── bolhas de chat estilo WhatsApp (Tela5WhatsApp) ── */
+  .wa-fundo {
+    background-color: #E4DDD3;
+    background-image:
+      radial-gradient(rgba(61,53,48,0.05) 1px, transparent 1px),
+      radial-gradient(rgba(61,53,48,0.05) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-position: 0 0, 13px 13px;
+  }
+  .wa-bolha {
+    max-width: 82%; position: relative;
+    padding: 7px 8px 6px 12px;
+    box-shadow: 0 1px 1.5px rgba(0,0,0,0.13);
+    animation: fadeUp 0.3s ease both;
+  }
+  .wa-recebida { align-self: flex-start; background: #FFFFFF; border-radius: 2px 10px 10px 10px; margin-top: 8px; }
+  .wa-enviada  { align-self: flex-end;   background: #DCF8C6; border-radius: 10px 2px 10px 10px; margin-top: 8px; }
+  .wa-seguida.wa-recebida { border-radius: 10px; margin-top: 2px; }
+  .wa-seguida.wa-enviada  { border-radius: 10px; margin-top: 2px; }
+  .wa-recebida:not(.wa-seguida)::before {
+    content: ''; position: absolute; top: 0; left: -7px; width: 0; height: 0;
+    border-style: solid; border-width: 0 8px 10px 0; border-color: transparent #FFFFFF transparent transparent;
+  }
+  .wa-enviada:not(.wa-seguida)::before {
+    content: ''; position: absolute; top: 0; right: -7px; width: 0; height: 0;
+    border-style: solid; border-width: 0 0 10px 8px; border-color: transparent transparent #DCF8C6 transparent;
+  }
 `
 
 function useWindowWidth() {
@@ -742,6 +770,10 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
 // ela vira uma bolha verde à direita, como se a pessoa tivesse mandado
 // aquilo mesmo, simulando uma conversa real (não só clique em botão).
 
+function horaAgora() {
+  return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+}
+
 function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   const eventos = useMemo(() => construirEventosConversa(gerarDiagnostico(respostas)), [respostas])
 
@@ -759,7 +791,7 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
     const atraso = indice === 0 ? 700 : 1300
     const t = setTimeout(() => {
       setDigitando(false)
-      setMensagensVisiveis(v => [...v, eventoAtual])
+      setMensagensVisiveis(v => [...v, { ...eventoAtual, origem: 'chris', hora: horaAgora() }])
       setIndice(i => i + 1)
     }, atraso)
     return () => clearTimeout(t)
@@ -770,10 +802,10 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   }, [mensagensVisiveis, digitando, aguardandoBotoes])
 
   const escolherBotao = opcao => {
-    // A opção escolhida vira uma bolha à direita, como se a pessoa tivesse
-    // realmente mandado essa mensagem — é isso que faz a conversa parecer
-    // de verdade, e não só um clique em botão de formulário.
-    setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: opcao.texto, origem: 'usuario' }])
+    // A opção escolhida vira uma bolha verde à direita, com hora e tique de
+    // lida — como se a pessoa tivesse realmente mandado essa mensagem — em
+    // vez de só sumir o botão e a conversa seguir sozinha.
+    setMensagensVisiveis(v => [...v, { texto: opcao.texto, origem: 'usuario', hora: horaAgora() }])
 
     if (aguardandoBotoes.campo) onResponder(aguardandoBotoes.campo, opcao.valor)
 
@@ -784,7 +816,7 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
       setDigitando(true)
       setTimeout(() => {
         setDigitando(false)
-        setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: respostaFinal }])
+        setMensagensVisiveis(v => [...v, { texto: respostaFinal, origem: 'chris', hora: horaAgora() }])
         setTimeout(avancar, 1400)
       }, 1100)
     } else {
@@ -793,7 +825,7 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   }
 
   return (
-    <TelaBase fundo="#E5DDD5" semPadding mobile={mobile}>
+    <TelaBase fundo="#E4DDD3" semPadding mobile={mobile}>
       {/* cabeçalho estilo WhatsApp */}
       <div style={{
         background: C.sageDark, padding: mobile ? '46px 16px 14px' : '52px 24px 16px',
@@ -812,31 +844,31 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
       </div>
 
       {/* conversa */}
-      <div style={{
-        flex: 1, overflowY: 'auto', padding: mobile ? '18px 16px' : '24px 24px',
-        display: 'flex', flexDirection: 'column', gap: 8,
+      <div className="wa-fundo" style={{
+        flex: 1, overflowY: 'auto', padding: mobile ? '14px 12px' : '20px 22px',
+        display: 'flex', flexDirection: 'column',
       }}>
         {mensagensVisiveis.map((m, i) => {
           const minha = m.origem === 'usuario'
+          const seguida = i > 0 && mensagensVisiveis[i - 1].origem === m.origem
           return (
-            <div key={i} style={{
-              alignSelf: minha ? 'flex-end' : 'flex-start', maxWidth: '82%',
-              background: minha ? '#DCF8C6' : C.white,
-              borderRadius: minha ? '14px 4px 14px 14px' : '4px 14px 14px 14px',
-              padding: '10px 14px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-              animation: 'fadeUp 0.3s ease both',
-            }}>
+            <div key={i} className={`wa-bolha ${minha ? 'wa-enviada' : 'wa-recebida'} ${seguida ? 'wa-seguida' : ''}`}>
               <span style={{ fontFamily: fonteTexto, fontSize: 14.5, color: C.brown, lineHeight: 1.5 }}>{m.texto}</span>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 3, marginTop: 2, marginLeft: 10 }}>
+                <span style={{ fontFamily: fonteTexto, fontSize: 10.5, color: 'rgba(61,53,48,0.45)' }}>{m.hora}</span>
+                {minha && (
+                  <svg width="14" height="10" viewBox="0 0 16 11" fill="none">
+                    <path d="M1 5.5L4.5 9L11 1.5" stroke="#53BDEB" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5.5 5.5L9 9L15.5 1.5" stroke="#53BDEB" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
             </div>
           )
         })}
 
         {digitando && (
-          <div style={{
-            alignSelf: 'flex-start', background: C.white, borderRadius: '4px 14px 14px 14px',
-            padding: '12px 16px', display: 'flex', gap: 4,
-          }}>
+          <div className="wa-bolha wa-recebida" style={{ display: 'flex', gap: 4, padding: '11px 14px' }}>
             {[0, 1, 2].map(i => (
               <span key={i} style={{
                 width: 6, height: 6, borderRadius: '50%', background: C.brownLight,
@@ -848,10 +880,10 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
 
         {/* quick-replies — pausam a conversa até a pessoa tocar numa opção */}
         {aguardandoBotoes && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 6, animation: 'fadeUp 0.3s ease both' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14, animation: 'fadeUp 0.3s ease both' }}>
             {aguardandoBotoes.opcoes.map(opcao => (
               <button key={opcao.valor} onClick={() => escolherBotao(opcao)} style={{
-                background: C.white, border: `1.5px solid ${C.sageDark}`, borderRadius: 100,
+                background: '#fff', border: `1.5px solid ${C.sageDark}`, borderRadius: 100,
                 padding: '10px 18px', cursor: 'pointer',
                 fontFamily: fonteTexto, fontWeight: 600, fontSize: 13.5, color: C.sageDark,
               }}>{opcao.texto}</button>
@@ -859,6 +891,28 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
           </div>
         )}
         <div ref={fimRef} />
+      </div>
+
+      {/* barra de digitação — só decorativa, dá o clima de app de verdade */}
+      <div style={{
+        background: '#F0EDE8', padding: mobile ? '8px 12px' : '10px 22px',
+        display: 'flex', alignItems: 'center', gap: 10,
+      }}>
+        <div style={{
+          flex: 1, background: '#fff', borderRadius: 22, padding: '10px 16px',
+          display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <span style={{ fontSize: 16, opacity: 0.55 }}>🙂</span>
+          <span style={{ fontFamily: fonteTexto, fontSize: 14, color: C.brownLight }}>Mensagem</span>
+        </div>
+        <div style={{
+          width: 38, height: 38, borderRadius: '50%', background: C.sageDark,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M3 11l18-8-8 18-2-8-8-2z" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
+          </svg>
+        </div>
       </div>
     </TelaBase>
   )
