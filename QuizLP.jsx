@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, useMotionValue, useTransform, animate } from 'motion/react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 import feedbac1 from './images/feedbac1.jpeg'
 import feedbac2 from './images/feedbac2.jpeg'
@@ -59,10 +60,6 @@ const globalStyles = `
     0%   { box-shadow: 0 0 0 0 rgba(232,83,74,0.5); }
     70%  { box-shadow: 0 0 0 8px rgba(232,83,74,0); }
     100% { box-shadow: 0 0 0 0 rgba(232,83,74,0); }
-  }
-  @keyframes desliza {
-    0%, 100% { transform: translateY(0); opacity: 0.5; }
-    50%      { transform: translateY(8px); opacity: 1; }
   }
   @keyframes piscaDigitando {
     0%, 60%, 100% { opacity: 0.3; }
@@ -153,19 +150,92 @@ function BotaoContinuar({ onClick, children = 'Continuar →', desabilitado = fa
 // mas a promessa é a mesma linha da headline principal do site, numa versão
 // mais direta — ela precisa validar sozinha o resto do funil.
 
-function Tela1Promessa({ avancar, mobile }) {
-  const [arrastando, setArrastando] = useState(false)
-  const inicioY = useRef(null)
+// Barra "arraste para o lado" com física de mola de verdade (motion), no
+// conceito do print de referência: um manípulo que a pessoa arrasta até o
+// fim da trilha para avançar. Solta antes do fim → volta com efeito elástico.
+function ArrastarParaComecar({ onCompletar }) {
+  const trilhaRef = useRef(null)
+  const [larguraTrilha, setLarguraTrilha] = useState(0)
+  const x = useMotionValue(0)
+  const [disparado, setDisparado] = useState(false)
 
-  const onTouchStart = e => { inicioY.current = e.touches[0].clientY; setArrastando(true) }
-  const onTouchEnd = e => {
-    setArrastando(false)
-    if (inicioY.current == null) return
-    const delta = inicioY.current - e.changedTouches[0].clientY
-    if (delta > 60) avancar()
-    inicioY.current = null
+  useEffect(() => {
+    const medir = () => setLarguraTrilha(trilhaRef.current?.offsetWidth || 0)
+    medir()
+    window.addEventListener('resize', medir)
+    return () => window.removeEventListener('resize', medir)
+  }, [])
+
+  const TAMANHO_ALCA = 48
+  const MARGEM = 4
+  const maxArrasto = Math.max(larguraTrilha - TAMANHO_ALCA - MARGEM * 2, 1)
+
+  const preenchimento = useTransform(x, [0, maxArrasto], ['0%', '100%'])
+  const opacidadeTexto = useTransform(x, [0, maxArrasto * 0.55], [1, 0])
+
+  const handleDragEnd = () => {
+    if (disparado) return
+    if (x.get() >= maxArrasto * 0.8) {
+      setDisparado(true)
+      animate(x, maxArrasto, { type: 'spring', stiffness: 380, damping: 32 })
+      setTimeout(onCompletar, 320)
+    } else {
+      animate(x, 0, { type: 'spring', stiffness: 420, damping: 28 })
+    }
   }
 
+  return (
+    <div
+      ref={trilhaRef}
+      style={{
+        position: 'relative', height: 56, borderRadius: 100,
+        background: C.white, border: `1.5px solid ${C.sageLight}`,
+        overflow: 'hidden', marginBottom: 18,
+        boxShadow: '0 4px 16px rgba(61,53,48,0.06)',
+      }}
+    >
+      <motion.div style={{
+        position: 'absolute', inset: 0, borderRadius: 100,
+        background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
+        width: preenchimento,
+      }} />
+
+      <motion.div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        opacity: opacidadeTexto, pointerEvents: 'none',
+      }}>
+        <span style={{
+          fontFamily: fonteTexto, fontWeight: 600, fontSize: 13.5,
+          letterSpacing: '0.4px', color: C.brownLight,
+        }}>Arraste para começar →</span>
+      </motion.div>
+
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: maxArrasto }}
+        dragElastic={0.04}
+        dragMomentum={false}
+        onDragEnd={handleDragEnd}
+        style={{
+          x,
+          position: 'absolute', top: MARGEM, left: MARGEM,
+          width: TAMANHO_ALCA, height: TAMANHO_ALCA, borderRadius: '50%',
+          background: C.brown, cursor: disparado ? 'default' : 'grab',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          touchAction: 'none', boxShadow: '0 4px 12px rgba(61,53,48,0.3)',
+        }}
+        whileTap={{ scale: 1.08 }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M9 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </motion.div>
+    </div>
+  )
+}
+
+function Tela1Promessa({ avancar, mobile }) {
   return (
     <TelaBase fundo={`linear-gradient(160deg, ${C.cream} 0%, ${C.creamDark} 100%)`} mobile={mobile}>
       <div style={{
@@ -210,24 +280,7 @@ function Tela1Promessa({ avancar, mobile }) {
       </div>
 
       <div style={{ maxWidth: 440, margin: '0 auto', width: '100%' }}>
-        <div
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-            gap: 6, marginBottom: 18, cursor: 'grab', userSelect: 'none',
-            opacity: arrastando ? 0.6 : 1, transition: 'opacity 0.2s',
-          }}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ animation: 'desliza 1.6s ease-in-out infinite' }}>
-            <path d="M12 4v16M12 20l-5-5M12 20l5-5" stroke={C.brownLight} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span style={{
-            fontFamily: fonteTexto, fontWeight: 500, fontSize: 12.5,
-            letterSpacing: '0.6px', textTransform: 'uppercase', color: C.brownLight,
-          }}>Deslize para começar</span>
-        </div>
-
+        <ArrastarParaComecar onCompletar={avancar} />
         <BotaoContinuar onClick={avancar}>Iniciar Agora →</BotaoContinuar>
       </div>
     </TelaBase>
