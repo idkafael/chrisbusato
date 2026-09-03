@@ -101,24 +101,8 @@ function TelaBase({ children, fundo = C.cream, semPadding = false, mobile }) {
   )
 }
 
-function BarraProgresso({ etapa, mobile }) {
-  return (
-    <div style={{
-      display: 'flex', gap: 5,
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 300,
-      padding: mobile ? '12px 16px' : '16px 24px',
-      background: 'linear-gradient(180deg, rgba(61,53,48,0.35) 0%, transparent 100%)',
-    }}>
-      {Array.from({ length: TOTAL_TELAS }).map((_, i) => (
-        <div key={i} style={{
-          flex: 1, height: 3, borderRadius: 100,
-          background: i < etapa ? C.white : 'rgba(255,255,255,0.28)',
-          transition: 'background 0.3s ease',
-        }} />
-      ))}
-    </div>
-  )
-}
+// Removida de propósito: não revelamos quantas etapas o funil tem — a
+// experiência precisa continuar sendo surpresa a cada tela.
 
 function BotaoVoltar({ onClick }) {
   return (
@@ -270,35 +254,55 @@ function Tela2VSL({ avancar, mobile }) {
   }, [])
 
   return (
-    <TelaBase fundo="#000" semPadding mobile={mobile}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div style={{
+      position: 'relative', height: '100dvh', width: '100vw',
+      overflow: 'hidden', background: '#000',
+      animation: 'fadeUp 0.45s ease both',
+    }}>
+      {/* vídeo em "cover": preenche a tela toda cortando as laterais, em vez
+          de ficar centralizado com sobra preta em cima/embaixo. A largura é
+          calculada para que a caixa 16:9 sempre cubra tanto a largura quanto
+          a altura da viewport — o mesmo cálculo do object-fit: cover. */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
         <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', padding: '80px 0 16px',
+          width: 'max(100vw, calc(100dvh * 16 / 9))',
+          flexShrink: 0,
         }}>
-          <div style={{ width: '100%', maxWidth: 480 }}>
-            <vturb-smartplayer
-              id="vid-6a120f7fc9941c35508e9807"
-              style={{ display: 'block', margin: '0 auto', width: '100%' }}
-            />
-          </div>
-          <p style={{
-            fontFamily: fonteTexto, fontWeight: 400, fontSize: 13,
-            color: 'rgba(255,255,255,0.5)', marginTop: 20, textAlign: 'center',
-            padding: '0 24px',
-          }}>Assista até o final — o que vem depois só faz sentido com isso.</p>
-        </div>
-
-        <div style={{ padding: '0 22px 28px', maxWidth: 480, margin: '0 auto', width: '100%' }}>
-          <div style={{
-            maxHeight: podeAvancar ? 80 : 0, overflow: 'hidden',
-            transition: 'max-height 0.5s ease',
-          }}>
-            <BotaoContinuar onClick={avancar} cor="white">Continuar →</BotaoContinuar>
-          </div>
+          <vturb-smartplayer
+            id="vid-6a120f7fc9941c35508e9807"
+            style={{ display: 'block', width: '100%' }}
+          />
         </div>
       </div>
-    </TelaBase>
+
+      {/* legenda, com gradiente escuro por trás pra ficar legível sobre o vídeo */}
+      <div style={{
+        position: 'absolute', left: 0, right: 0, bottom: podeAvancar ? 108 : 28,
+        padding: '40px 24px 0',
+        background: 'linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%)',
+        transition: 'bottom 0.5s ease',
+        pointerEvents: 'none',
+      }}>
+        <p style={{
+          fontFamily: fonteTexto, fontWeight: 400, fontSize: 13,
+          color: 'rgba(255,255,255,0.85)', textAlign: 'center', paddingBottom: 16,
+        }}>Assista até o final — o que vem depois só faz sentido com isso.</p>
+      </div>
+
+      {/* botão, sobreposto ao vídeo, só aparece depois do delay */}
+      <div style={{
+        position: 'absolute', left: 0, right: 0, bottom: 0,
+        padding: '24px 22px 28px', maxWidth: 480, margin: '0 auto',
+        opacity: podeAvancar ? 1 : 0,
+        pointerEvents: podeAvancar ? 'auto' : 'none',
+        transition: 'opacity 0.5s ease',
+      }}>
+        <BotaoContinuar onClick={avancar} cor="white">Continuar →</BotaoContinuar>
+      </div>
+    </div>
   )
 }
 
@@ -977,7 +981,6 @@ export default function QuizLP() {
   return (
     <>
       <style>{globalStyles}</style>
-      <BarraProgresso etapa={etapa} mobile={mobile} />
       {telas[etapa]}
     </>
   )
