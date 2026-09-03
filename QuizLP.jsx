@@ -1194,8 +1194,22 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
   const min = String(Math.floor(restamSeg / 60)).padStart(2, '0')
   const seg = String(restamSeg % 60).padStart(2, '0')
 
+  // Fundo liso (em vez do gradiente de antes) de propósito: as reentrâncias
+  // do "bilhete" só enganam o olho se a cor da reentrância bater exatamente
+  // com o que está atrás do card — com gradiente, a cor varia por posição.
+  const FUNDO_TELA = '#332B26'
+  const ALTURA_TALAO = 92 // faixa do código de barras, destacada por uma linha picotada
+
+  const barraCodigo = (
+    <div style={{
+      width: '100%', height: 34, borderRadius: 3,
+      backgroundImage: 'repeating-linear-gradient(90deg, currentColor 0px, currentColor 2px, transparent 2px, transparent 4px, currentColor 4px, currentColor 5px, transparent 5px, transparent 8px, currentColor 8px, currentColor 9px, transparent 9px, transparent 10px, currentColor 10px, currentColor 13px, transparent 13px, transparent 15px)',
+      backgroundSize: '46px 100%', backgroundRepeat: 'repeat-x',
+    }} />
+  )
+
   return (
-    <TelaBase fundo={`linear-gradient(160deg, ${C.brown} 0%, #2A2420 100%)`} mobile={mobile}>
+    <TelaBase fundo={FUNDO_TELA} mobile={mobile}>
       <BotaoVoltar onClick={voltar} />
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
@@ -1213,11 +1227,13 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
           </p>
         )}
 
-        {/* card do voucher */}
+        {/* card do voucher — formato de bilhete/ingresso: reentrâncias
+            circulares nas laterais + linha picotada separando o talão do
+            código de barras, igual um ingresso físico de verdade. */}
         <div
           onClick={() => !resgatado && setResgatado(true)}
           style={{
-            position: 'relative', width: '100%', maxWidth: 280, height: 300,
+            position: 'relative', width: '100%', maxWidth: 280, height: 336,
             perspective: 1000, cursor: resgatado ? 'default' : 'pointer', marginBottom: 26,
           }}
         >
@@ -1230,38 +1246,70 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
             <div style={{
               position: 'absolute', inset: 0, backfaceVisibility: 'hidden',
               background: C.sagePale, borderRadius: 20,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14,
-              border: `2px dashed ${C.sage}`,
+              display: 'flex', flexDirection: 'column', overflow: 'hidden',
+              border: `2px solid ${C.sage}`,
             }}>
               <div style={{
-                width: 60, height: 60, borderRadius: '50%', background: C.sage,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                animation: resgatado ? 'none' : 'pulso 2s ease-out infinite',
+                flex: 1, display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center', gap: 14, padding: '10px 20px',
               }}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                  <path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1v-7M2 7h20v5H2V7zM12 22V7M12 7c-1.5 0-4-1-4-3.2C8 2 9 1 10.2 1 12 1 12 4 12 7zM12 7c1.5 0 4-1 4-3.2C16 2 15 1 13.8 1 12 1 12 4 12 7z" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <div style={{
+                  width: 60, height: 60, borderRadius: '50%', background: C.sage,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  animation: resgatado ? 'none' : 'pulso 2s ease-out infinite',
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1v-7M2 7h20v5H2V7zM12 22V7M12 7c-1.5 0-4-1-4-3.2C8 2 9 1 10.2 1 12 1 12 4 12 7zM12 7c1.5 0 4-1 4-3.2C16 2 15 1 13.8 1 12 1 12 4 12 7z" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 15, color: C.brown }}>Toque para resgatar seu voucher</span>
               </div>
-              <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 15, color: C.brown }}>Toque para resgatar seu voucher</span>
+
+              {/* talão inferior — código de barras já insinuado, meio apagado */}
+              <div style={{
+                position: 'relative', height: ALTURA_TALAO, flexShrink: 0,
+                borderTop: `2px dashed ${C.sage}`, display: 'flex', alignItems: 'center',
+                padding: '0 26px', color: C.sage, opacity: 0.45,
+              }}>
+                {barraCodigo}
+                <span style={{ position: 'absolute', left: 0, top: -11, width: 22, height: 22, borderRadius: '50%', background: FUNDO_TELA }} />
+                <span style={{ position: 'absolute', right: 0, top: -11, width: 22, height: 22, borderRadius: '50%', background: FUNDO_TELA }} />
+              </div>
             </div>
 
             {/* verso */}
             <div style={{
               position: 'absolute', inset: 0, backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)', background: C.white, borderRadius: 20,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6,
-              border: `2px solid ${C.sage}`, padding: '20px 18px', overflow: 'hidden',
+              display: 'flex', flexDirection: 'column', overflow: 'hidden',
+              border: `2px solid ${C.sage}`,
             }}>
-              {resgatado && Array.from({ length: 14 }).map((_, i) => (
-                <span key={i} style={{
-                  position: 'absolute', top: 0, left: `${(i * 37) % 100}%`,
-                  width: 6, height: 10, background: [C.sage, C.vivo, C.brownLight][i % 3],
-                  animation: `confeteCai ${1.4 + (i % 5) * 0.2}s ${i * 0.06}s ease-in both`,
-                }} />
-              ))}
-              <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 13, color: C.sageDark }}>Voucher resgatado! 🎉</span>
-              <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · preço de 1º lote</span>
-              <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 30, color: C.brown }}>{precoOferta}</span>
+              <div style={{
+                position: 'relative', flex: 1, display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px 18px', overflow: 'hidden',
+              }}>
+                {resgatado && Array.from({ length: 14 }).map((_, i) => (
+                  <span key={i} style={{
+                    position: 'absolute', top: 0, left: `${(i * 37) % 100}%`,
+                    width: 6, height: 10, background: [C.sage, C.vivo, C.brownLight][i % 3],
+                    animation: `confeteCai ${1.4 + (i % 5) * 0.2}s ${i * 0.06}s ease-in both`,
+                  }} />
+                ))}
+                <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 13, color: C.sageDark }}>Voucher resgatado! 🎉</span>
+                <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · preço de 1º lote</span>
+                <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 30, color: C.brown }}>{precoOferta}</span>
+              </div>
+
+              {/* talão inferior — código de barras nítido, é o "ingresso" em si */}
+              <div style={{
+                position: 'relative', height: ALTURA_TALAO, flexShrink: 0,
+                borderTop: `2px dashed ${C.sageLight}`, display: 'flex', alignItems: 'center',
+                padding: '0 26px', color: C.brown,
+              }}>
+                {barraCodigo}
+                <span style={{ position: 'absolute', left: 0, top: -11, width: 22, height: 22, borderRadius: '50%', background: FUNDO_TELA }} />
+                <span style={{ position: 'absolute', right: 0, top: -11, width: 22, height: 22, borderRadius: '50%', background: FUNDO_TELA }} />
+              </div>
             </div>
           </div>
         </div>
