@@ -738,8 +738,9 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
 // A conversa não é mais um roteiro fixo: é montada a partir das respostas do
 // quiz (gerarDiagnostico + construirEventosConversa, definidos mais acima).
 // Continua parecendo WhatsApp: mensagens da Chris chegando com "digitando...",
-// intercaladas com quick-replies (como o "Percebi 👀") que a própria pessoa
-// toca — sem bolhas de resposta do usuário, no mesmo estilo já existente.
+// intercaladas com quick-replies (como o "Percebi 👀") — ao tocar numa opção,
+// ela vira uma bolha verde à direita, como se a pessoa tivesse mandado
+// aquilo mesmo, simulando uma conversa real (não só clique em botão).
 
 function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   const eventos = useMemo(() => construirEventosConversa(gerarDiagnostico(respostas)), [respostas])
@@ -769,14 +770,23 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   }, [mensagensVisiveis, digitando, aguardandoBotoes])
 
   const escolherBotao = opcao => {
+    // A opção escolhida vira uma bolha à direita, como se a pessoa tivesse
+    // realmente mandado essa mensagem — é isso que faz a conversa parecer
+    // de verdade, e não só um clique em botão de formulário.
+    setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: opcao.texto, origem: 'usuario' }])
+
     if (aguardandoBotoes.campo) onResponder(aguardandoBotoes.campo, opcao.valor)
 
     if (aguardandoBotoes.final) {
       const respostaFinal = opcao.valor === 'entender_melhor'
         ? 'Então bora entender direitinho como isso funciona.'
         : (opcao.valor === 'muito' ? 'Que bom! 🙂' : 'Faz muito sentido, viu?')
-      setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: respostaFinal }])
-      setTimeout(avancar, 1400)
+      setDigitando(true)
+      setTimeout(() => {
+        setDigitando(false)
+        setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: respostaFinal }])
+        setTimeout(avancar, 1400)
+      }, 1100)
     } else {
       setIndice(i => i + 1)
     }
@@ -806,17 +816,21 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
         flex: 1, overflowY: 'auto', padding: mobile ? '18px 16px' : '24px 24px',
         display: 'flex', flexDirection: 'column', gap: 8,
       }}>
-        {mensagensVisiveis.map((m, i) => (
-          <div key={i} style={{
-            alignSelf: 'flex-start', maxWidth: '82%',
-            background: C.white, borderRadius: '4px 14px 14px 14px',
-            padding: '10px 14px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-            animation: 'fadeUp 0.3s ease both',
-          }}>
-            <span style={{ fontFamily: fonteTexto, fontSize: 14.5, color: C.brown, lineHeight: 1.5 }}>{m.texto}</span>
-          </div>
-        ))}
+        {mensagensVisiveis.map((m, i) => {
+          const minha = m.origem === 'usuario'
+          return (
+            <div key={i} style={{
+              alignSelf: minha ? 'flex-end' : 'flex-start', maxWidth: '82%',
+              background: minha ? '#DCF8C6' : C.white,
+              borderRadius: minha ? '14px 4px 14px 14px' : '4px 14px 14px 14px',
+              padding: '10px 14px',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+              animation: 'fadeUp 0.3s ease both',
+            }}>
+              <span style={{ fontFamily: fonteTexto, fontSize: 14.5, color: C.brown, lineHeight: 1.5 }}>{m.texto}</span>
+            </div>
+          )
+        })}
 
         {digitando && (
           <div style={{
