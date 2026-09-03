@@ -88,10 +88,10 @@ function proximoId(atualId, respostas) {
 const perguntasQuiz = {
   'q-attendance': {
     campo: 'attendance',
-    pergunta: 'Você consegue estar em São Paulo no dia 13 de setembro?',
+    pergunta: 'Você vai estar em São Paulo no dia 13 de setembro?',
     opcoes: [
-      { valor: 'presencial', texto: 'Sim, quero viver presencialmente' },
-      { valor: 'online', texto: 'Não, quero participar online' },
+      { valor: 'presencial', texto: 'Sim, quero ir presencialmente' },
+      { valor: 'online', texto: 'Não, mas quero ver a transmissão ao vivo' },
     ],
   },
   'q-experience': {
@@ -716,9 +716,9 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
         paddingTop: 60,
       }}>
         <h2 style={{
-          fontFamily: fonteTitulo,
-          fontSize: mobile ? 'clamp(22px, 6.5vw, 27px)' : 28,
-          color: C.brown, lineHeight: 1.32, marginBottom: 26, textAlign: 'center',
+          fontFamily: fonteTexto, fontWeight: 700,
+          fontSize: mobile ? 'clamp(20px, 6vw, 24px)' : 25,
+          color: C.brown, lineHeight: 1.38, marginBottom: 26, textAlign: 'center',
         }}>{cfg.pergunta}</h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
