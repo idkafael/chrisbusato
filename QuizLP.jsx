@@ -373,7 +373,13 @@ function useWindowWidth() {
 function TelaBase({ children, fundo = C.cream, semPadding = false, mobile }) {
   return (
     <div style={{
-      minHeight: '100dvh',
+      // semPadding hoje só é usado pela tela de WhatsApp: ali a altura
+      // precisa ser fixa (não só um mínimo), senão um item flex com
+      // overflow:auto ainda cresce pra caber o conteúdo em vez de conter a
+      // rolagem, e é a página toda que rola — empurrando o cabeçalho do
+      // "chat" pra fora da tela numa conversa mais longa.
+      height: semPadding ? '100dvh' : undefined,
+      minHeight: semPadding ? undefined : '100dvh',
       background: fundo,
       display: 'flex', flexDirection: 'column',
       padding: semPadding ? 0 : (mobile ? '20px 22px 28px' : '28px 32px 36px'),
@@ -780,10 +786,18 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
   const [indice, setIndice] = useState(0)
   const [mensagensVisiveis, setMensagensVisiveis] = useState([])
   const [digitando, setDigitando] = useState(false)
+  const [finalizando, setFinalizando] = useState(false)
+  const [mostrarCTA, setMostrarCTA] = useState(false)
   const fimRef = useRef(null)
 
   const eventoAtual = eventos[indice]
-  const aguardandoBotoes = eventoAtual && eventoAtual.tipo === 'botoes' ? eventoAtual : null
+  const aguardandoBotoes = !finalizando && eventoAtual && eventoAtual.tipo === 'botoes' ? eventoAtual : null
+
+  const ehPresencial = respostas.attendance === 'presencial'
+  const textoCTA = ehPresencial
+    ? 'Já vou deixar tudo certinho pra você viver isso presencialmente com a gente, dia 13.'
+    : 'Já vou deixar tudo certinho pra você viver isso ao vivo, pela transmissão, dia 13.'
+  const textoBotaoCTA = ehPresencial ? 'Quero viver isso presencialmente →' : 'Quero viver isso na transmissão →'
 
   useEffect(() => {
     if (!eventoAtual || eventoAtual.tipo === 'botoes') return
@@ -810,6 +824,11 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
     if (aguardandoBotoes.campo) onResponder(aguardandoBotoes.campo, opcao.valor)
 
     if (aguardandoBotoes.final) {
+      // Fecha em 3 tempos (resposta → respiro → CTA) em vez de já sumir a
+      // tela na resposta seguinte — a conversa "desacelera" até parar, com
+      // um convite direto pra vivência (no formato que a pessoa escolheu)
+      // no lugar de cortar seco pro próximo bloco do funil.
+      setFinalizando(true)
       const respostaFinal = opcao.valor === 'entender_melhor'
         ? 'Então bora entender direitinho como isso funciona.'
         : (opcao.valor === 'muito' ? 'Que bom! 🙂' : 'Faz muito sentido, viu?')
@@ -817,7 +836,14 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
       setTimeout(() => {
         setDigitando(false)
         setMensagensVisiveis(v => [...v, { texto: respostaFinal, origem: 'chris', hora: horaAgora() }])
-        setTimeout(avancar, 1400)
+        setTimeout(() => {
+          setDigitando(true)
+          setTimeout(() => {
+            setDigitando(false)
+            setMensagensVisiveis(v => [...v, { texto: textoCTA, origem: 'chris', hora: horaAgora() }])
+            setMostrarCTA(true)
+          }, 1200)
+        }, 900)
       }, 1100)
     } else {
       setIndice(i => i + 1)
@@ -843,9 +869,12 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
         </div>
       </div>
 
-      {/* conversa */}
+      {/* conversa — minHeight:0 é essencial aqui: sem isso, um item flex com
+          overflow:auto ainda cresce pra caber todo o conteúdo (em vez de
+          conter a rolagem internamente), e é a página toda que rola,
+          empurrando o cabeçalho pra fora da tela numa conversa longa. */}
       <div className="wa-fundo" style={{
-        flex: 1, overflowY: 'auto', padding: mobile ? '14px 12px' : '20px 22px',
+        flex: 1, minHeight: 0, overflowY: 'auto', padding: mobile ? '14px 12px' : '20px 22px',
         display: 'flex', flexDirection: 'column',
       }}>
         {mensagensVisiveis.map((m, i) => {
@@ -889,6 +918,19 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
               }}>{opcao.texto}</button>
             ))}
           </div>
+        )}
+
+        {/* CTA de fechamento — convite pra vivência, no formato que a pessoa
+            já escolheu, em vez de simplesmente sumir a tela na sequência. */}
+        {mostrarCTA && (
+          <button onClick={avancar} style={{
+            marginTop: 16, alignSelf: 'stretch',
+            background: C.sageDark, border: 'none', borderRadius: 100,
+            padding: '15px 20px', cursor: 'pointer',
+            fontFamily: fonteTexto, fontWeight: 700, fontSize: 14.5, color: '#fff',
+            boxShadow: '0 6px 18px rgba(107,127,109,0.35)',
+            animation: 'fadeUp 0.4s ease both',
+          }}>{textoBotaoCTA}</button>
         )}
         <div ref={fimRef} />
       </div>
@@ -987,24 +1029,11 @@ function Tela6Metodo({ avancar, voltar, mobile }) {
         <p style={{
           fontFamily: fonteTitulo, fontStyle: 'italic',
           fontSize: mobile ? 16 : 17.5, color: C.brown, lineHeight: 1.5,
-          textAlign: 'center', marginBottom: 22,
+          textAlign: 'center', marginBottom: 0,
         }}>
           Você continua tendo passos.{' '}
           <span style={{ color: C.sageDark }}>Só deixa de depender deles para conseguir dançar.</span>
         </p>
-
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          background: C.brown, borderRadius: 12, padding: '13px 16px',
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-            <rect x="3" y="5" width="18" height="16" rx="2.2" stroke={C.sageLight} strokeWidth="1.8" />
-            <path d="M3 9.5h18M8 3v4M16 3v4" stroke={C.sageLight} strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
-          <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 13, color: C.cream }}>
-            {DATA_EVENTO} · {HORARIO_EVENTO} · São Paulo
-          </span>
-        </div>
       </div>
 
       <div style={{ maxWidth: 460, margin: '0 auto', width: '100%' }}>
