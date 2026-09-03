@@ -12,6 +12,7 @@ import VergonhaNaDancaLP from '../VergonhaNaDancaLP.jsx'
 import PlataformaCursosLP from '../PlataformaCursosLP.jsx'
 import TesteAssinaturaLP from '../TesteAssinaturaLP.jsx'
 import AoVivoLP from '../AoVivoLP.jsx'
+import QuizLP from '../QuizLP.jsx'
 import AdminLP from '../AdminLP.jsx'
 import BotaoWhatsApp from '../BotaoWhatsApp.jsx'
 
@@ -31,6 +32,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/online" element={<PlataformaCursosLP />} />
         <Route path="/teste" element={<TesteAssinaturaLP />} />
         <Route path="/aovivo" element={<AoVivoLP />} />
+        <Route path="/quiz" element={<QuizLP />} />
         <Route path="/admin" element={<AdminLP />} />
       </Routes>
       <BotaoWhatsApp />

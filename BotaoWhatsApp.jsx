@@ -6,13 +6,23 @@ const MENSAGEM = 'vim do site da chris, pode me ajudar?'
 
 export default function BotaoWhatsApp() {
   const { pathname } = useLocation()
-  if (pathname.startsWith('/admin')) return null
+  if (pathname.startsWith('/admin') || pathname.startsWith('/quiz')) return null
 
   const link = `https://wa.me/${NUMERO}?text=${encodeURIComponent(MENSAGEM)}`
+
+  // Abrir via window.open() em vez de <a href> estático: algum script de
+  // tracking do site (parte do pacote UTMify) varre e reescreve todo link
+  // wa.me presente no DOM, corrompendo a mensagem com caracteres inválidos.
+  // window.open() escapa dessa varredura porque não deixa um href no DOM.
+  const abrirWhatsApp = e => {
+    e.preventDefault()
+    window.open(link, '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <a
       href={link}
+      onClick={abrirWhatsApp}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a equipe no WhatsApp"
