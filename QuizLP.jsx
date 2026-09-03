@@ -628,11 +628,13 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
   const cfg = perguntasQuiz[id]
   const [selecionado, setSelecionado] = useState(respostas[cfg.campo] || null)
   const [reacao, setReacao] = useState(null)
+  const [pensando, setPensando] = useState(false)
   const timerRef = useRef(null)
 
   useEffect(() => {
     setSelecionado(respostas[cfg.campo] || null)
     setReacao(null)
+    setPensando(false)
     return () => clearTimeout(timerRef.current)
   }, [id])
 
@@ -640,10 +642,24 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
     setSelecionado(opcao.valor)
     onResponder(cfg.campo, opcao.valor)
     clearTimeout(timerRef.current)
+    setReacao(null)
 
     const textoReacao = cfg.reacoes?.[opcao.valor] ?? cfg.reacoes?._padrao ?? null
-    setReacao(textoReacao)
-    timerRef.current = setTimeout(avancar, textoReacao ? 1700 : 450)
+    if (!textoReacao) {
+      setPensando(false)
+      timerRef.current = setTimeout(avancar, 450)
+      return
+    }
+
+    // Em vez de estampar a respostinha verde na hora (ficava abrupto), uma
+    // pausa curta com os pontinhos de "pensando" antes dela aparecer — o
+    // mesmo respiro que a tela de WhatsApp já usa pro "digitando...".
+    setPensando(true)
+    timerRef.current = setTimeout(() => {
+      setPensando(false)
+      setReacao(textoReacao)
+      timerRef.current = setTimeout(avancar, 1500)
+    }, 600)
   }
 
   return (
@@ -688,6 +704,21 @@ function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, ind
             )
           })}
         </div>
+
+        {pensando && (
+          <div style={{
+            marginTop: 20, padding: '14px 16px',
+            background: C.sagePale, border: `1px solid ${C.sageLight}`, borderRadius: 12,
+            display: 'flex', gap: 4, animation: 'fadeUp 0.3s ease both',
+          }}>
+            {[0, 1, 2].map(i => (
+              <span key={i} style={{
+                width: 6, height: 6, borderRadius: '50%', background: C.sageDark,
+                animation: `piscaDigitando 1.2s ${i * 0.2}s ease-in-out infinite`,
+              }} />
+            ))}
+          </div>
+        )}
 
         {reacao && (
           <div style={{
