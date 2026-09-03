@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, useMotionValue, useTransform, animate } from 'motion/react'
 import chrisSorrindo from './images/chris-sorrindo.jpg'
 import feedbac1 from './images/feedbac1.jpeg'
@@ -9,9 +9,16 @@ import feedback10 from './images/feedback10.jpeg'
 import feedback11 from './images/feedback11.jpeg'
 
 // ─── Funil de Quiz — teste de oferta (tráfego pago, público frio) ─────────────
-// 9 telas em sequência, estilo app/quiz interativo. Rascunho de copy nas telas
-// 4 e 5 (inimigo comum + simulação de WhatsApp) — sinalizado nos comentários
-// para validação da Chris antes de ir ao ar de verdade.
+// Fluxo navegado por HISTÓRICO de ids (não mais números fixos de tela), porque
+// o quiz tem ramificação real: quem "ainda não começou" pula a pergunta de
+// estilo de dança, e quem escolhe presencial/online no início pode mudar de
+// ideia na confirmação — o que muda a oferta final (preço e voucher).
+//
+// ORDEM_TELAS define a sequência linear; deveExibir() pula condicionalmente
+// o que não se aplica; proximoId() anda pela ordem respeitando esses pulos.
+// `respostas` guarda tudo que a pessoa respondeu (ver estrutura mais abaixo),
+// usado para: personalizar o diagnóstico do WhatsApp, decidir presencial vs
+// transmissão, e mostrar o preço certo no voucher.
 //
 // Ofertas: mesmo evento de 13/09, 10h às 14h — os MESMOS checkouts já usados
 // no site principal (nenhuma oferta nova criada na Cakto):
@@ -20,7 +27,11 @@ import feedback11 from './images/feedback11.jpeg'
 
 const CHECKOUT_PRESENCIAL = 'https://pay.cakto.com.br/cqmaji2'
 const CHECKOUT_TRANSMISSAO = 'https://pay.cakto.com.br/khbx2vk'
-const TOTAL_TELAS = 9
+
+const LOCAL_PRESENCIAL_NOME = 'Yandê Dança e Movimento'
+const LOCAL_PRESENCIAL_ENDERECO = 'R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050'
+const DATA_EVENTO = '13 de setembro'
+const HORARIO_EVENTO = '10h às 14h'
 
 // Sem acento de propósito: o script de UTMs do site decora todo link <a> e
 // corrompe caracteres acentuados dentro de query string já url-encoded
@@ -46,6 +57,254 @@ const C = {
 
 const fonteTexto = "'DM Sans', sans-serif"
 const fonteTitulo = "'Playfair Display', serif"
+
+// ─── Estrutura do quiz ─────────────────────────────────────────────────────────
+// Sequência linear de telas. Perguntas do quiz usam o prefixo "q-" — para
+// adicionar/remover uma pergunta no futuro, basta editar esta lista e o
+// objeto `perguntasQuiz` logo abaixo; nada mais precisa mudar.
+const ORDEM_TELAS = [
+  'promessa', 'vsl',
+  'q-attendance', 'q-experience', 'q-danceStyle', 'q-pain', 'q-reaction',
+  'q-belief', 'q-playfulness', 'q-desire',
+  'whatsapp', 'metodo', 'confirmacao', 'voucher', 'prova', 'oferta',
+]
+
+// Pulos condicionais: quem ainda não começou a dançar não recebe a pergunta
+// de estilo (não faria sentido pra ela).
+function deveExibir(id, respostas) {
+  if (id === 'q-danceStyle') return respostas.experience !== 'nao_comecei'
+  return true
+}
+
+function proximoId(atualId, respostas) {
+  let i = ORDEM_TELAS.indexOf(atualId) + 1
+  while (i < ORDEM_TELAS.length && !deveExibir(ORDEM_TELAS[i], respostas)) i++
+  return ORDEM_TELAS[i] ?? atualId
+}
+
+// Cada pergunta: campo onde a resposta é salva, o texto da pergunta, as
+// opções (curtas, 2-5 alternativas) e, opcionalmente, uma reação curta que
+// aparece antes de avançar (por valor de resposta, ou `_padrao` pra todas).
+const perguntasQuiz = {
+  'q-attendance': {
+    campo: 'attendance',
+    pergunta: 'Você consegue estar em São Paulo no dia 13 de setembro?',
+    opcoes: [
+      { valor: 'presencial', texto: 'Sim, quero viver presencialmente' },
+      { valor: 'online', texto: 'Não, quero participar online' },
+    ],
+  },
+  'q-experience': {
+    campo: 'experience',
+    pergunta: 'E qual é a sua relação com a dança hoje?',
+    opcoes: [
+      { valor: 'nao_comecei', texto: 'Ainda não comecei' },
+      { valor: 'comecando', texto: 'Estou começando' },
+      { valor: 'algum_tempo', texto: 'Já danço há algum tempo' },
+      { valor: 'muitos_anos', texto: 'Danço há muitos anos' },
+    ],
+    reacoes: {
+      nao_comecei: 'Ótimo. Você não precisa chegar sabendo um monte de passos para viver essa experiência.',
+      comecando: 'Que bom. É um ótimo momento pra já começar com a base certa.',
+      algum_tempo: 'Legal. Então você já sente na pele algumas dessas travas — vamos ver quais.',
+      muitos_anos: 'Perfeito. A proposta aqui não é simplesmente aumentar seu repertório.',
+    },
+  },
+  'q-danceStyle': {
+    campo: 'danceStyle',
+    pergunta: 'Qual dança está mais presente na sua vida hoje?',
+    opcoes: [
+      { valor: 'gafieira', texto: 'Samba de Gafieira' },
+      { valor: 'forro', texto: 'Forró' },
+      { valor: 'bolero', texto: 'Bolero' },
+      { valor: 'sertanejo', texto: 'Sertanejo ou outra' },
+      { valor: 'varios', texto: 'Danço vários estilos' },
+    ],
+    reacoes: {
+      _padrao: 'Perfeito. Porque o que vamos trabalhar não fica preso a um único estilo.',
+    },
+  },
+  'q-pain': {
+    campo: 'pain',
+    pergunta: 'Quando você está dançando, qual dessas cenas mais parece com você?',
+    opcoes: [
+      { valor: 'pensa_demais', texto: 'Penso demais para acertar' },
+      { valor: 'trava', texto: 'Travo quando algo muda' },
+      { valor: 'repete', texto: 'Sei passos, mas repito sempre os mesmos' },
+      { valor: 'dificuldade_soltar', texto: 'Tenho dificuldade de me soltar e brincar' },
+    ],
+  },
+  'q-reaction': {
+    campo: 'reaction',
+    pergunta: 'E quando você fica sem saber o que fazer?',
+    opcoes: [
+      { valor: 'lembrar_passo', texto: 'Tento lembrar algum passo' },
+      { valor: 'repetir_conhecido', texto: 'Repito algo que já conheço' },
+      { valor: 'esperar_outro', texto: 'Espero o outro resolver' },
+      { valor: 'ouvir_musica', texto: 'Tento ouvir a música e me adaptar' },
+    ],
+  },
+  'q-belief': {
+    campo: 'belief',
+    pergunta: 'Hoje, o que você sente que mais faria sua dança evoluir?',
+    opcoes: [
+      { valor: 'mais_passos', texto: 'Aprender mais passos' },
+      { valor: 'tecnica', texto: 'Melhorar minha técnica' },
+      { valor: 'entender_musica', texto: 'Entender melhor a música' },
+      { valor: 'confianca', texto: 'Ter mais confiança para me soltar' },
+    ],
+    reacoes: {
+      mais_passos: 'Interessante… guarda essa resposta 👀',
+    },
+  },
+  'q-playfulness': {
+    campo: 'playfulness',
+    pergunta: 'Você sente que consegue realmente brincar quando dança?',
+    opcoes: [
+      { valor: 'sim_bastante', texto: 'Sim, bastante' },
+      { valor: 'as_vezes', texto: 'Às vezes' },
+      { valor: 'muito_pouco', texto: 'Muito pouco' },
+      { valor: 'nao_sei', texto: 'Nem sei como fazer isso' },
+    ],
+  },
+  'q-desire': {
+    campo: 'desire',
+    pergunta: 'Se pudesse sentir UMA coisa diferente na sua dança, qual escolheria?',
+    opcoes: [
+      { valor: 'liberdade', texto: 'Mais liberdade' },
+      { valor: 'seguranca', texto: 'Mais segurança' },
+      { valor: 'musicalidade', texto: 'Mais musicalidade' },
+      { valor: 'conexao', texto: 'Mais conexão' },
+      { valor: 'autenticidade', texto: 'Mais autenticidade' },
+    ],
+  },
+}
+
+// Lista de ids de pergunta aplicáveis para as respostas atuais — usada só
+// para calcular a barrinha de progresso discreta dentro do quiz.
+function perguntasAplicaveis(respostas) {
+  return ORDEM_TELAS.filter(id => id.startsWith('q-') && deveExibir(id, respostas))
+}
+
+// ─── Gerador do diagnóstico no WhatsApp ────────────────────────────────────────
+// Em vez de centenas de combinações escritas à mão, o texto é montado a
+// partir de mapas "valor da resposta → frase" + uma ramificação para o caso
+// em que a pessoa já reage de forma saudável (ouve a música e se adapta) —
+// nesse caso não faz sentido apontar uma "contradição".
+
+const textoExperiencia = {
+  nao_comecei: 'você ainda não começou a dançar',
+  comecando: 'você está começando agora na dança',
+  algum_tempo: 'você já dança há algum tempo',
+  muitos_anos: 'você já dança há bastante tempo',
+}
+
+const textoDor = {
+  pensa_demais: 'ainda sente que pensa demais na hora de dançar',
+  trava: 'ainda trava quando alguma coisa foge do combinado',
+  repete: 'sente que repete sempre os mesmos movimentos',
+  dificuldade_soltar: 'sente dificuldade de se soltar e brincar',
+}
+
+// Variante para quem ainda não começou a dançar: as frases de textoDor usam
+// "ainda" e presente contínuo, o que presume experiência real de dança —
+// incoerente para quem nunca dançou. Aqui a mesma dor vira uma antecipação.
+const textoDorAntecipada = {
+  pensa_demais: 'já imagina que vai pensar demais na hora de dançar',
+  trava: 'já imagina que vai travar quando alguma coisa fugir do combinado',
+  repete: 'já tem medo de ficar repetindo sempre os mesmos poucos movimentos',
+  dificuldade_soltar: 'já sente que vai ter dificuldade de se soltar e brincar',
+}
+
+const textoReacaoFrase = {
+  lembrar_passo: 'você tenta lembrar algum passo conhecido',
+  repetir_conhecido: 'você repete algo que já conhece',
+  esperar_outro: 'você espera o outro resolver',
+  ouvir_musica: 'você tenta ouvir a música e se adaptar',
+}
+
+const textoReacaoDependencia = {
+  lembrar_passo: 'lembrar o passo certo',
+  repetir_conhecido: 'repetir o que já sabe',
+  esperar_outro: 'esperar o outro decidir',
+}
+
+const textoDesejo = {
+  liberdade: 'liberdade',
+  seguranca: 'segurança',
+  musicalidade: 'musicalidade',
+  conexao: 'conexão',
+  autenticidade: 'autenticidade',
+}
+
+function gerarDiagnostico(r) {
+  const aindaNaoComecou = r.experience === 'nao_comecei'
+  const exp = textoExperiencia[r.experience] || 'você já tem uma relação com a dança'
+  const dor = (aindaNaoComecou ? textoDorAntecipada[r.pain] : textoDor[r.pain])
+    || 'sente que falta alguma coisa na sua dança'
+  const desejo = textoDesejo[r.desire] || 'mais liberdade'
+  const respostaSaudavel = r.reaction === 'ouvir_musica'
+
+  const conector = aindaNaoComecou ? 'e' : 'mas'
+
+  const bloco1 = []
+  bloco1.push('Vi uma coisa interessante nas suas respostas…')
+  bloco1.push(`Pelo que você me contou, ${exp}, ${conector} ${dor}.`)
+
+  if (r.belief === 'mais_passos') {
+    bloco1.push('Você até me disse que acha que precisa aprender mais passos pra evoluir.')
+  }
+
+  if (respostaSaudavel) {
+    bloco1.push('E o legal é que, quando fica sem saber o que fazer, você já tenta ouvir a música e se adaptar — isso já é meio caminho andado.')
+    bloco1.push(`Só que o que você mais quer sentir é ${desejo}, e sinto que isso ainda não vem por completo.`)
+    bloco1.push('Sabe por quê?')
+  } else {
+    const reacaoFrase = textoReacaoFrase[r.reaction] || 'você tenta se virar do jeito que dá'
+    bloco1.push(`E quando fica sem saber o que fazer, ${reacaoFrase}.`)
+    bloco1.push(`Só que, ao mesmo tempo, o que você mais quer sentir é ${desejo}.`)
+    bloco1.push('Percebe a contradição?')
+  }
+
+  const botaoPercepcao = respostaSaudavel ? 'Por quê?' : 'Percebi 👀'
+
+  const bloco2 = respostaSaudavel
+    ? [
+        'Porque ouvir a música é só o primeiro passo — sem uma base, isso também tem limite.',
+        'Por isso talvez você não precise simplesmente aprender mais passos.',
+        'Você precisa desenvolver uma base que continue existindo mesmo quando o passo acaba.',
+        'É exatamente aí que entra a Base Musical.',
+      ]
+    : [
+        `Quanto mais a sua dança depende de ${textoReacaoDependencia[r.reaction] || 'repetir o que já sabe'}, mais difícil fica se sentir livre para responder ao que está acontecendo.`,
+        'Por isso talvez você não precise simplesmente aprender mais passos.',
+        'Você precisa desenvolver uma base que continue existindo mesmo quando o passo acaba.',
+        'É exatamente aí que entra a Base Musical.',
+      ]
+
+  return { bloco1, botaoPercepcao, bloco2 }
+}
+
+// Monta a fila de "eventos" da conversa: mensagens de texto intercaladas com
+// pontos de escolha (quick-replies). O evento marcado `final: true` decide o
+// que acontece depois (mensagem de fechamento + avança pro método).
+function construirEventosConversa(diagnostico) {
+  const eventos = []
+  diagnostico.bloco1.forEach(texto => eventos.push({ tipo: 'texto', texto }))
+  eventos.push({ tipo: 'botoes', opcoes: [{ valor: 'ok', texto: diagnostico.botaoPercepcao }] })
+  diagnostico.bloco2.forEach(texto => eventos.push({ tipo: 'texto', texto }))
+  eventos.push({
+    tipo: 'botoes',
+    final: true,
+    campo: 'diagnosticoFeedback',
+    opcoes: [
+      { valor: 'muito', texto: 'Muito' },
+      { valor: 'reconheci', texto: 'Sim, me reconheci' },
+      { valor: 'entender_melhor', texto: 'Quero entender melhor' },
+    ],
+  })
+  return eventos
+}
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -359,179 +618,138 @@ function Tela2VSL({ avancar, mobile }) {
   )
 }
 
-// ─── Tela 3 — Quebra de crença ─────────────────────────────────────────────────
-// Copy idêntica à ViradaSection do site principal.
+// ─── Telas 3+4 (substituídas) — Quiz interativo ────────────────────────────────
+// No lugar das duas telas estáticas de quebra de crença / inimigo comum: uma
+// pequena jornada de perguntas. Cada resposta empurra a pessoa a perceber
+// sozinha a dependência do passo — sem nunca dizer isso de forma direta.
+// Uma única tela genérica renderiza qualquer pergunta de `perguntasQuiz`.
 
-function Tela3Crenca({ avancar, voltar, mobile }) {
-  return (
-    <TelaBase fundo={C.brown} mobile={mobile}>
-      <BotaoVoltar onClick={voltar} />
-      <div style={{
-        flex: 1, display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', maxWidth: 460, margin: '0 auto', width: '100%',
-        paddingTop: 56,
-      }}>
-        <div style={{
-          fontFamily: fonteTitulo, fontSize: 90, color: 'rgba(196,208,197,0.28)',
-          lineHeight: 0.6, marginBottom: 12, userSelect: 'none',
-        }}>"</div>
-
-        <blockquote style={{
-          fontFamily: fonteTitulo, fontStyle: 'italic',
-          fontSize: mobile ? 'clamp(22px, 6.5vw, 28px)' : 30,
-          color: C.cream, lineHeight: 1.4, marginBottom: 28,
-        }}>
-          Não é sobre repertório de passos predeterminados.{' '}
-          <span style={{ color: C.sageLight }}>É sobre repertório musical.</span>
-        </blockquote>
-
-        <div style={{ height: 1, background: 'rgba(196,208,197,0.2)', marginBottom: 24 }} />
-
-        <p style={{
-          fontFamily: fonteTexto, fontWeight: 400, fontSize: mobile ? 15 : 16.5,
-          color: 'rgba(237,234,227,0.82)', lineHeight: 1.75,
-        }}>
-          A maioria das pessoas aprende movimentos. Poucas aprendem a enxergar
-          possibilidades dentro da música. Quando você entende a base musical
-          do que já faz, o passo deixa de ser uma obrigação e passa a ser uma
-          escolha.
-        </p>
-      </div>
-
-      <div style={{ maxWidth: 460, margin: '0 auto', width: '100%' }}>
-        <BotaoContinuar onClick={avancar} />
-      </div>
-    </TelaBase>
-  )
-}
-
-// ─── Tela 4 — Inimigo comum ────────────────────────────────────────────────────
-// RASCUNHO — copy escrita a partir do posicionamento já usado no site
-// (musicalidade > acúmulo de passos). Precisa de validação da Chris antes de
-// ir para tráfego de verdade.
-
-const inimigos = [
-  'Aulas que empilham coreografia nova toda semana, sem te ensinar a ouvir a música',
-  'Conteúdo de "resultado rápido" que te deixa dependente de decorar sequência',
-  'Cursos genéricos que ignoram que cada corpo — e cada música — pede uma resposta diferente',
-]
-
-function Tela4Inimigo({ avancar, voltar, mobile }) {
-  return (
-    <TelaBase fundo={C.creamDark} mobile={mobile}>
-      <BotaoVoltar onClick={voltar} />
-      <div style={{
-        flex: 1, display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', maxWidth: 460, margin: '0 auto', width: '100%',
-        paddingTop: 56,
-      }}>
-        <div style={{
-          fontFamily: fonteTexto, fontWeight: 600, fontSize: 11.5,
-          letterSpacing: '2px', textTransform: 'uppercase', color: C.vivo,
-          marginBottom: 16,
-        }}>O problema não é você</div>
-
-        <h2 style={{
-          fontFamily: fonteTitulo, fontSize: mobile ? 'clamp(24px, 7vw, 30px)' : 32,
-          color: C.brown, lineHeight: 1.25, marginBottom: 28,
-        }}>
-          É o jeito como{' '}
-          <em style={{ color: C.sageDark, fontStyle: 'italic' }}>te ensinaram a dançar.</em>
-        </h2>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {inimigos.map((texto, i) => (
-            <div key={i} style={{
-              display: 'flex', gap: 14, alignItems: 'flex-start',
-              background: C.white, border: `1px solid ${C.sageLight}`,
-              borderRadius: 14, padding: '16px 18px',
-            }}>
-              <span style={{
-                flexShrink: 0, width: 24, height: 24, borderRadius: '50%',
-                background: 'rgba(232,83,74,0.12)', color: C.vivo,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: fonteTexto, fontWeight: 800, fontSize: 13,
-              }}>✕</span>
-              <span style={{
-                fontFamily: fonteTexto, fontWeight: 400, fontSize: 14.5,
-                color: C.brownMid, lineHeight: 1.55,
-              }}>{texto}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 460, margin: '0 auto', width: '100%' }}>
-        <BotaoContinuar onClick={avancar} />
-      </div>
-    </TelaBase>
-  )
-}
-
-// ─── Tela 5 — Simulação animada de WhatsApp (estilo Typebot) ──────────────────
-// RASCUNHO de script — mensagens de texto genéricas de transição, e uma bolha
-// de "áudio" só visual (sem arquivo real ainda: precisa da Chris gravar e nos
-// mandar o áudio pra tocar de verdade aqui).
-
-const mensagensWhatsApp = [
-  { tipo: 'texto', texto: 'Oi! 👋' },
-  { tipo: 'texto', texto: 'Vi que você chegou até aqui porque sente que falta alguma coisa na sua dança, né?' },
-  { tipo: 'texto', texto: 'Isso não é falta de talento. É falta de um caminho certo.' },
-  { tipo: 'audio', duracao: '0:47' },
-]
-
-function BolhaAudio({ tocando, aoClicar }) {
-  const barras = [6, 14, 9, 18, 11, 16, 8, 20, 10, 15, 7, 13]
-  return (
-    <button onClick={aoClicar} style={{
-      display: 'flex', alignItems: 'center', gap: 10,
-      background: 'none', border: 'none', cursor: 'pointer', padding: 0, width: '100%',
-    }}>
-      <div style={{
-        flexShrink: 0, width: 34, height: 34, borderRadius: '50%',
-        background: C.sageDark, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {tocando ? (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="#fff"><rect x="1" y="1" width="4" height="10" rx="1" /><rect x="7" y="1" width="4" height="10" rx="1" /></svg>
-        ) : (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="#fff"><path d="M2 1l9 5-9 5V1z" /></svg>
-        )}
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, height: 20 }}>
-        {barras.map((h, i) => (
-          <span key={i} style={{
-            width: 2.5, height: h, borderRadius: 2,
-            background: tocando ? C.sageDark : 'rgba(107,127,109,0.4)',
-          }} />
-        ))}
-      </div>
-      <span style={{ fontFamily: fonteTexto, fontSize: 11, color: C.brownLight, flexShrink: 0 }}>0:47</span>
-    </button>
-  )
-}
-
-function Tela5WhatsApp({ avancar, voltar, mobile }) {
-  const [visiveis, setVisiveis] = useState(0)
-  const [digitando, setDigitando] = useState(false)
-  const [audioTocando, setAudioTocando] = useState(false)
-  const fimRef = useRef(null)
+function TelaPergunta({ id, respostas, onResponder, avancar, voltar, mobile, indiceQuiz, totalQuiz }) {
+  const cfg = perguntasQuiz[id]
+  const [selecionado, setSelecionado] = useState(respostas[cfg.campo] || null)
+  const [reacao, setReacao] = useState(null)
+  const timerRef = useRef(null)
 
   useEffect(() => {
-    if (visiveis >= mensagensWhatsApp.length) return
+    setSelecionado(respostas[cfg.campo] || null)
+    setReacao(null)
+    return () => clearTimeout(timerRef.current)
+  }, [id])
+
+  const escolher = opcao => {
+    setSelecionado(opcao.valor)
+    onResponder(cfg.campo, opcao.valor)
+    clearTimeout(timerRef.current)
+
+    const textoReacao = cfg.reacoes?.[opcao.valor] ?? cfg.reacoes?._padrao ?? null
+    setReacao(textoReacao)
+    timerRef.current = setTimeout(avancar, textoReacao ? 1700 : 450)
+  }
+
+  return (
+    <TelaBase fundo={C.cream} mobile={mobile}>
+      <BotaoVoltar onClick={voltar} />
+
+      {/* barra discreta só do trecho de perguntas — não revela o funil todo,
+          só o andamento dentro do quiz, que aqui é esperado como um quiz. */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 3, background: 'rgba(138,158,140,0.15)', zIndex: 299 }}>
+        <div style={{
+          height: '100%', borderRadius: '0 3px 3px 0',
+          width: `${(indiceQuiz / totalQuiz) * 100}%`,
+          background: C.sage, transition: 'width 0.4s ease',
+        }} />
+      </div>
+
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', maxWidth: 460, margin: '0 auto', width: '100%',
+        paddingTop: 60,
+      }}>
+        <h2 style={{
+          fontFamily: fonteTitulo,
+          fontSize: mobile ? 'clamp(22px, 6.5vw, 27px)' : 28,
+          color: C.brown, lineHeight: 1.32, marginBottom: 26, textAlign: 'center',
+        }}>{cfg.pergunta}</h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {cfg.opcoes.map(opcao => {
+            const ativo = selecionado === opcao.valor
+            return (
+              <button key={opcao.valor} onClick={() => escolher(opcao)} style={{
+                textAlign: 'left', cursor: 'pointer', width: '100%',
+                background: ativo ? C.sageDark : C.white,
+                border: `1.5px solid ${ativo ? C.sageDark : C.sageLight}`,
+                borderRadius: 14, padding: '16px 18px',
+                fontFamily: fonteTexto, fontWeight: 600, fontSize: 15,
+                color: ativo ? C.white : C.brown,
+                transition: 'background 0.2s ease, border-color 0.2s ease, transform 0.15s ease',
+                transform: ativo ? 'scale(0.98)' : 'scale(1)',
+              }}>{opcao.texto}</button>
+            )
+          })}
+        </div>
+
+        {reacao && (
+          <div style={{
+            marginTop: 20, padding: '14px 16px',
+            background: C.sagePale, border: `1px solid ${C.sageLight}`, borderRadius: 12,
+            animation: 'fadeUp 0.35s ease both',
+          }}>
+            <span style={{ fontFamily: fonteTexto, fontSize: 13.5, color: C.sageDark, lineHeight: 1.55 }}>{reacao}</span>
+          </div>
+        )}
+      </div>
+    </TelaBase>
+  )
+}
+
+// ─── Tela 5 — Simulação animada de WhatsApp (diagnóstico personalizado) ──────
+// A conversa não é mais um roteiro fixo: é montada a partir das respostas do
+// quiz (gerarDiagnostico + construirEventosConversa, definidos mais acima).
+// Continua parecendo WhatsApp: mensagens da Chris chegando com "digitando...",
+// intercaladas com quick-replies (como o "Percebi 👀") que a própria pessoa
+// toca — sem bolhas de resposta do usuário, no mesmo estilo já existente.
+
+function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
+  const eventos = useMemo(() => construirEventosConversa(gerarDiagnostico(respostas)), [respostas])
+
+  const [indice, setIndice] = useState(0)
+  const [mensagensVisiveis, setMensagensVisiveis] = useState([])
+  const [digitando, setDigitando] = useState(false)
+  const fimRef = useRef(null)
+
+  const eventoAtual = eventos[indice]
+  const aguardandoBotoes = eventoAtual && eventoAtual.tipo === 'botoes' ? eventoAtual : null
+
+  useEffect(() => {
+    if (!eventoAtual || eventoAtual.tipo === 'botoes') return
     setDigitando(true)
-    const atraso = visiveis === 0 ? 700 : 1300
+    const atraso = indice === 0 ? 700 : 1300
     const t = setTimeout(() => {
       setDigitando(false)
-      setVisiveis(v => v + 1)
+      setMensagensVisiveis(v => [...v, eventoAtual])
+      setIndice(i => i + 1)
     }, atraso)
     return () => clearTimeout(t)
-  }, [visiveis])
+  }, [indice, eventoAtual])
 
   useEffect(() => {
     fimRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [visiveis, digitando])
+  }, [mensagensVisiveis, digitando, aguardandoBotoes])
 
-  const terminou = visiveis >= mensagensWhatsApp.length
+  const escolherBotao = opcao => {
+    if (aguardandoBotoes.campo) onResponder(aguardandoBotoes.campo, opcao.valor)
+
+    if (aguardandoBotoes.final) {
+      const respostaFinal = opcao.valor === 'entender_melhor'
+        ? 'Então bora entender direitinho como isso funciona.'
+        : (opcao.valor === 'muito' ? 'Que bom! 🙂' : 'Faz muito sentido, viu?')
+      setMensagensVisiveis(v => [...v, { tipo: 'texto', texto: respostaFinal }])
+      setTimeout(avancar, 1400)
+    } else {
+      setIndice(i => i + 1)
+    }
+  }
 
   return (
     <TelaBase fundo="#E5DDD5" semPadding mobile={mobile}>
@@ -557,19 +775,15 @@ function Tela5WhatsApp({ avancar, voltar, mobile }) {
         flex: 1, overflowY: 'auto', padding: mobile ? '18px 16px' : '24px 24px',
         display: 'flex', flexDirection: 'column', gap: 8,
       }}>
-        {mensagensWhatsApp.slice(0, visiveis).map((m, i) => (
+        {mensagensVisiveis.map((m, i) => (
           <div key={i} style={{
-            alignSelf: 'flex-start', maxWidth: '78%',
+            alignSelf: 'flex-start', maxWidth: '82%',
             background: C.white, borderRadius: '4px 14px 14px 14px',
-            padding: m.tipo === 'audio' ? '10px 14px' : '10px 14px',
+            padding: '10px 14px',
             boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
             animation: 'fadeUp 0.3s ease both',
           }}>
-            {m.tipo === 'texto' ? (
-              <span style={{ fontFamily: fonteTexto, fontSize: 14.5, color: C.brown, lineHeight: 1.5 }}>{m.texto}</span>
-            ) : (
-              <BolhaAudio tocando={audioTocando} aoClicar={() => setAudioTocando(v => !v)} />
-            )}
+            <span style={{ fontFamily: fonteTexto, fontSize: 14.5, color: C.brown, lineHeight: 1.5 }}>{m.texto}</span>
           </div>
         ))}
 
@@ -586,14 +800,20 @@ function Tela5WhatsApp({ avancar, voltar, mobile }) {
             ))}
           </div>
         )}
-        <div ref={fimRef} />
-      </div>
 
-      <div style={{
-        maxHeight: terminou ? 90 : 0, overflow: 'hidden', transition: 'max-height 0.5s ease',
-        padding: '0 20px 24px',
-      }}>
-        <BotaoContinuar onClick={avancar} />
+        {/* quick-replies — pausam a conversa até a pessoa tocar numa opção */}
+        {aguardandoBotoes && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 6, animation: 'fadeUp 0.3s ease both' }}>
+            {aguardandoBotoes.opcoes.map(opcao => (
+              <button key={opcao.valor} onClick={() => escolherBotao(opcao)} style={{
+                background: C.white, border: `1.5px solid ${C.sageDark}`, borderRadius: 100,
+                padding: '10px 18px', cursor: 'pointer',
+                fontFamily: fonteTexto, fontWeight: 600, fontSize: 13.5, color: C.sageDark,
+              }}>{opcao.texto}</button>
+            ))}
+          </div>
+        )}
+        <div ref={fimRef} />
       </div>
     </TelaBase>
   )
@@ -625,18 +845,24 @@ function Tela6Metodo({ avancar, voltar, mobile }) {
           <em style={{ color: C.sageDark, fontStyle: 'italic' }}>É outra base.</em>
         </h2>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 26 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
           <div style={{
             background: 'rgba(232,83,74,0.06)', border: '1px solid rgba(232,83,74,0.25)',
             borderRadius: 16, padding: '18px 20px',
           }}>
             <div style={{
               fontFamily: fonteTexto, fontWeight: 800, fontSize: 11.5,
-              letterSpacing: '1px', color: C.vivo, marginBottom: 10,
-            }}>SEM O MÉTODO</div>
-            {['Decora passo por passo', 'Trava quando a música muda', 'Depende de aula nova toda semana'].map((t, i) => (
-              <div key={i} style={{ fontFamily: fonteTexto, fontSize: 14, color: C.brownMid, lineHeight: 1.8 }}>— {t}</div>
-            ))}
+              letterSpacing: '1px', color: C.vivo, marginBottom: 12,
+            }}>SEM UMA BASE MUSICAL</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {['Decora', 'Lembra', 'Executa', 'Repete', 'Trava quando algo muda'].map((t, i) => (
+                <span key={i} style={{
+                  fontFamily: fonteTexto, fontWeight: 500, fontSize: 13.5, color: C.brownMid,
+                  background: C.white, border: '1px solid rgba(232,83,74,0.2)',
+                  borderRadius: 100, padding: '6px 13px',
+                }}>{t}</span>
+              ))}
+            </div>
           </div>
 
           <div style={{
@@ -645,13 +871,28 @@ function Tela6Metodo({ avancar, voltar, mobile }) {
           }}>
             <div style={{
               fontFamily: fonteTexto, fontWeight: 800, fontSize: 11.5,
-              letterSpacing: '1px', color: C.sageDark, marginBottom: 10,
-            }}>COM O MÉTODO</div>
-            {['Entende a estrutura musical', 'Adapta a qualquer passo, em qualquer música', 'Dança com liberdade mesmo sem saber "o passo certo"'].map((t, i) => (
-              <div key={i} style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 14, color: C.brown, lineHeight: 1.8 }}>✓ {t}</div>
-            ))}
+              letterSpacing: '1px', color: C.sageDark, marginBottom: 12,
+            }}>COM UMA BASE MUSICAL</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {['Escuta', 'Percebe', 'Escolhe', 'Adapta', 'Combina', 'Brinca'].map((t, i) => (
+                <span key={i} style={{
+                  fontFamily: fonteTexto, fontWeight: 600, fontSize: 13.5, color: C.brown,
+                  background: C.white, border: `1px solid ${C.sage}`,
+                  borderRadius: 100, padding: '6px 13px',
+                }}>{t}</span>
+              ))}
+            </div>
           </div>
         </div>
+
+        <p style={{
+          fontFamily: fonteTitulo, fontStyle: 'italic',
+          fontSize: mobile ? 16 : 17.5, color: C.brown, lineHeight: 1.5,
+          textAlign: 'center', marginBottom: 22,
+        }}>
+          Você continua tendo passos.{' '}
+          <span style={{ color: C.sageDark }}>Só deixa de depender deles para conseguir dançar.</span>
+        </p>
 
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
@@ -662,13 +903,127 @@ function Tela6Metodo({ avancar, voltar, mobile }) {
             <path d="M3 9.5h18M8 3v4M16 3v4" stroke={C.sageLight} strokeWidth="1.8" strokeLinecap="round" />
           </svg>
           <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 13, color: C.cream }}>
-            13 de setembro · 10h às 14h · São Paulo
+            {DATA_EVENTO} · {HORARIO_EVENTO} · São Paulo
           </span>
         </div>
       </div>
 
       <div style={{ maxWidth: 460, margin: '0 auto', width: '100%' }}>
         <BotaoContinuar onClick={avancar} />
+      </div>
+    </TelaBase>
+  )
+}
+
+// ─── Tela — Confirmação (define a oferta final antes do voucher) ─────────────
+// Quem escolheu presencial no início confirma endereço/horário aqui — e pode
+// mudar pra transmissão nesse momento (last-minute). Quem escolheu online já
+// vem direto pra transmissão, sem repetir perguntas de logística.
+
+function TelaConfirmacao({ respostas, onResponder, avancar, voltar, mobile }) {
+  const ehPresencial = respostas.attendance === 'presencial'
+
+  // Quem veio como "online" não tem pergunta aqui — a oferta já é a
+  // transmissão. Define isso assim que a tela monta.
+  useEffect(() => {
+    if (!ehPresencial) onResponder('ofertaFinal', 'transmissao')
+  }, [ehPresencial])
+
+  const confirmar = valor => {
+    onResponder('ofertaFinal', valor)
+    avancar()
+  }
+
+  return (
+    <TelaBase fundo={C.cream} mobile={mobile}>
+      <BotaoVoltar onClick={voltar} />
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', maxWidth: 460, margin: '0 auto', width: '100%',
+        paddingTop: 60,
+      }}>
+        {ehPresencial ? (
+          <>
+            <h2 style={{
+              fontFamily: fonteTitulo, fontSize: mobile ? 'clamp(21px, 6vw, 25px)' : 26,
+              color: C.brown, lineHeight: 1.3, marginBottom: 22, textAlign: 'center',
+            }}>
+              Vamos confirmar uma coisa importante antes de liberar seu voucher:
+            </h2>
+
+            <div style={{
+              background: C.white, border: `1px solid ${C.sageLight}`,
+              borderRadius: 16, padding: '18px 20px', marginBottom: 24,
+            }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 14 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+                  <path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z" stroke={C.sageDark} strokeWidth="1.7" strokeLinejoin="round" />
+                  <circle cx="12" cy="9.5" r="2.4" stroke={C.sageDark} strokeWidth="1.7" />
+                </svg>
+                <div>
+                  <div style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 14.5, color: C.brown, marginBottom: 2 }}>{LOCAL_PRESENCIAL_NOME}</div>
+                  <div style={{ fontFamily: fonteTexto, fontSize: 13, color: C.brownMid, lineHeight: 1.5 }}>{LOCAL_PRESENCIAL_ENDERECO}</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                  <rect x="3" y="5" width="18" height="16" rx="2.2" stroke={C.sageDark} strokeWidth="1.7" />
+                  <path d="M3 9.5h18M8 3v4M16 3v4" stroke={C.sageDark} strokeWidth="1.7" strokeLinecap="round" />
+                </svg>
+                <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 14, color: C.brown }}>
+                  {DATA_EVENTO} · {HORARIO_EVENTO}
+                </span>
+              </div>
+            </div>
+
+            <p style={{
+              fontFamily: fonteTexto, fontWeight: 600, fontSize: 15.5, color: C.brown,
+              textAlign: 'center', marginBottom: 18,
+            }}>Você consegue estar com a gente nesse local e horário?</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button onClick={() => confirmar('presencial')} style={{
+                textAlign: 'left', cursor: 'pointer', width: '100%',
+                background: C.sageDark, border: `1.5px solid ${C.sageDark}`,
+                borderRadius: 14, padding: '16px 18px',
+                fontFamily: fonteTexto, fontWeight: 700, fontSize: 15, color: C.white,
+              }}>Sim, confirmado</button>
+              <button onClick={() => confirmar('transmissao')} style={{
+                textAlign: 'left', cursor: 'pointer', width: '100%',
+                background: C.white, border: `1.5px solid ${C.sageLight}`,
+                borderRadius: 14, padding: '16px 18px',
+                fontFamily: fonteTexto, fontWeight: 600, fontSize: 15, color: C.brown,
+              }}>Prefiro participar pela transmissão</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 style={{
+              fontFamily: fonteTitulo, fontSize: mobile ? 'clamp(22px, 6.5vw, 26px)' : 27,
+              color: C.brown, lineHeight: 1.3, marginBottom: 20, textAlign: 'center',
+            }}>
+              Sua participação será pela{' '}
+              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>transmissão ao vivo</em>{' '}
+              da própria vivência.
+            </h2>
+
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              background: C.brown, borderRadius: 12, padding: '13px 16px', marginBottom: 26,
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                <rect x="3" y="5" width="18" height="16" rx="2.2" stroke={C.sageLight} strokeWidth="1.8" />
+                <path d="M3 9.5h18M8 3v4M16 3v4" stroke={C.sageLight} strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 13, color: C.cream }}>
+                {DATA_EVENTO} · {HORARIO_EVENTO}
+              </span>
+            </div>
+
+            <BotaoContinuar onClick={avancar} />
+          </>
+        )}
       </div>
     </TelaBase>
   )
@@ -693,10 +1048,14 @@ function useVagasPresencial() {
   return dados
 }
 
-function Tela7Voucher({ avancar, voltar, mobile }) {
+function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
   const [resgatado, setResgatado] = useState(false)
   const [restamSeg, setRestamSeg] = useState(15 * 60)
   const vagas = useVagasPresencial()
+
+  const ehPresencial = oferta === 'presencial'
+  const nomeOferta = ehPresencial ? 'Presencial' : 'Transmissão ao vivo'
+  const precoOferta = ehPresencial ? 'R$120' : 'R$67'
 
   useEffect(() => {
     if (resgatado) return
@@ -773,10 +1132,8 @@ function Tela7Voucher({ avancar, voltar, mobile }) {
                 }} />
               ))}
               <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 13, color: C.sageDark }}>Voucher resgatado! 🎉</span>
-              <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 22, color: C.brown, marginTop: 4 }}>Preço de 1º lote</span>
-              <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, textAlign: 'center', lineHeight: 1.5, marginTop: 4 }}>
-                Presencial <strong style={{ color: C.brown }}>R$120</strong> · Transmissão <strong style={{ color: C.brown }}>R$67</strong>
-              </span>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · preço de 1º lote</span>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 30, color: C.brown }}>{precoOferta}</span>
             </div>
           </div>
         </div>
@@ -907,8 +1264,10 @@ function FaqItemQuiz({ item }) {
   )
 }
 
-function Tela9Oferta({ voltar, mobile }) {
-  const [escolha, setEscolha] = useState('presencial')
+function Tela9Oferta({ ofertaInicial, voltar, mobile }) {
+  // Já vem pré-selecionada com o que a pessoa decidiu no quiz — mas continua
+  // trocável aqui, caso ela mude de ideia na última hora.
+  const [escolha, setEscolha] = useState(ofertaInicial || 'presencial')
   const url = escolha === 'presencial' ? CHECKOUT_PRESENCIAL : CHECKOUT_TRANSMISSAO
 
   return (
@@ -1006,35 +1365,88 @@ function Tela9Oferta({ voltar, mobile }) {
   )
 }
 
-// ─── Componente raiz — máquina de estados das 9 telas ──────────────────────────
+// ─── Componente raiz — navegação por histórico + respostas do quiz ───────────
+// Estrutura de respostas guardada (pedida explicitamente): attendance,
+// experience, danceStyle, pain, reaction, belief, playfulness, desire — mais
+// diagnosticoFeedback (reação ao diagnóstico do WhatsApp) e ofertaFinal
+// (presencial/transmissao, decidida no início e confirmável depois).
 
 export default function QuizLP() {
-  const [etapa, setEtapa] = useState(1)
   const mobile = useWindowWidth() < 768
 
-  const avancar = () => setEtapa(e => Math.min(e + 1, TOTAL_TELAS))
-  const voltar = () => setEtapa(e => Math.max(e - 1, 1))
+  const [respostas, setRespostas] = useState({
+    attendance: null,
+    experience: null,
+    danceStyle: null,
+    pain: null,
+    reaction: null,
+    belief: null,
+    playfulness: null,
+    desire: null,
+    diagnosticoFeedback: null,
+    ofertaFinal: null,
+  })
+
+  const [historico, setHistorico] = useState(['promessa'])
+  const passoAtual = historico[historico.length - 1]
+
+  // respostasRef sempre reflete o valor mais recente de `respostas`, mesmo
+  // dentro de um setTimeout já agendado antes de um onResponder() ser
+  // processado. Sem isso, `avancar` capturado no clique via closure usa o
+  // `respostas` de ANTES da resposta atual ser salva (setState é assíncrono),
+  // e proximoId() decide um pulo (ex.: q-danceStyle) com dado desatualizado.
+  const respostasRef = useRef(respostas)
+  respostasRef.current = respostas
+
+  const onResponder = (campo, valor) => setRespostas(r => ({ ...r, [campo]: valor }))
+
+  const avancar = () => {
+    const proximo = proximoId(passoAtual, respostasRef.current)
+    setHistorico(h => [...h, proximo])
+  }
+  const voltar = () => setHistorico(h => (h.length > 1 ? h.slice(0, -1) : h))
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [etapa])
+  }, [passoAtual])
 
-  const telas = {
-    1: <Tela1Promessa avancar={avancar} mobile={mobile} />,
-    2: <Tela2VSL avancar={avancar} mobile={mobile} />,
-    3: <Tela3Crenca avancar={avancar} voltar={voltar} mobile={mobile} />,
-    4: <Tela4Inimigo avancar={avancar} voltar={voltar} mobile={mobile} />,
-    5: <Tela5WhatsApp avancar={avancar} voltar={voltar} mobile={mobile} />,
-    6: <Tela6Metodo avancar={avancar} voltar={voltar} mobile={mobile} />,
-    7: <Tela7Voucher avancar={avancar} voltar={voltar} mobile={mobile} />,
-    8: <Tela8Prova avancar={avancar} voltar={voltar} mobile={mobile} />,
-    9: <Tela9Oferta voltar={voltar} mobile={mobile} />,
+  const propsComuns = { avancar, voltar, mobile }
+
+  let tela
+  if (passoAtual === 'promessa') {
+    tela = <Tela1Promessa avancar={avancar} mobile={mobile} />
+  } else if (passoAtual === 'vsl') {
+    tela = <Tela2VSL avancar={avancar} mobile={mobile} />
+  } else if (passoAtual.startsWith('q-')) {
+    const aplicaveis = perguntasAplicaveis(respostas)
+    tela = (
+      <TelaPergunta
+        id={passoAtual}
+        respostas={respostas}
+        onResponder={onResponder}
+        indiceQuiz={aplicaveis.indexOf(passoAtual) + 1}
+        totalQuiz={aplicaveis.length}
+        {...propsComuns}
+      />
+    )
+  } else if (passoAtual === 'whatsapp') {
+    tela = <Tela5WhatsApp respostas={respostas} onResponder={onResponder} {...propsComuns} />
+  } else if (passoAtual === 'metodo') {
+    tela = <Tela6Metodo {...propsComuns} />
+  } else if (passoAtual === 'confirmacao') {
+    tela = <TelaConfirmacao respostas={respostas} onResponder={onResponder} {...propsComuns} />
+  } else if (passoAtual === 'voucher') {
+    tela = <Tela7Voucher oferta={respostas.ofertaFinal} {...propsComuns} />
+  } else if (passoAtual === 'prova') {
+    tela = <Tela8Prova {...propsComuns} />
+  } else if (passoAtual === 'oferta') {
+    tela = <Tela9Oferta ofertaInicial={respostas.ofertaFinal} voltar={voltar} mobile={mobile} />
   }
 
   return (
     <>
       <style>{globalStyles}</style>
-      {telas[etapa]}
+      {tela}
     </>
   )
 }
