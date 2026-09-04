@@ -1184,6 +1184,7 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
   const ehPresencial = oferta === 'presencial'
   const nomeOferta = ehPresencial ? 'Presencial' : 'Transmissão ao vivo'
   const precoOferta = ehPresencial ? 'R$120' : 'R$67'
+  const precoDe = ehPresencial ? 'R$480' : 'R$268' // âncora: preço "de" = preço atual ÷ 0,25 (75% off)
 
   useEffect(() => {
     if (resgatado) return
@@ -1297,6 +1298,13 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
                 ))}
                 <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 13, color: C.sageDark }}>Voucher resgatado! 🎉</span>
                 <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · preço de 1º lote</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 2 }}>
+                  <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 14.5, color: C.brownLight, textDecoration: 'line-through' }}>{precoDe}</span>
+                  <span style={{
+                    fontFamily: fonteTexto, fontWeight: 800, fontSize: 10.5, letterSpacing: '0.3px',
+                    color: '#fff', background: C.vivo, borderRadius: 100, padding: '2px 8px',
+                  }}>-75%</span>
+                </div>
                 <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 30, color: C.brown }}>{precoOferta}</span>
               </div>
 
