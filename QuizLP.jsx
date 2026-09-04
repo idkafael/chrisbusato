@@ -33,6 +33,12 @@ const LOCAL_PRESENCIAL_ENDERECO = 'R. Domingos Lopes, 61 - Campo Belo, São Paul
 const DATA_EVENTO = '13 de setembro'
 const HORARIO_EVENTO = '10h às 14h'
 
+// Desconto-âncora: o voucher (Tela7) libera o "-35%" sem mostrar valor, só
+// a Tela9 (oferta final) revela o preço com desconto de fato — a mesma
+// porcentagem alimenta as duas telas, pra nunca ficarem incoerentes entre si.
+const DESCONTO_PERCENTUAL = 35
+const precoOriginal = valorComDesconto => Math.round(valorComDesconto / (1 - DESCONTO_PERCENTUAL / 100))
+
 // Sem acento de propósito: o script de UTMs do site decora todo link <a> e
 // corrompe caracteres acentuados dentro de query string já url-encoded
 // (mesmo cuidado já tomado em BotaoWhatsApp.jsx e nas páginas de agradecimento).
@@ -930,9 +936,14 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
           </div>
         )}
 
-        {/* quick-replies — pausam a conversa até a pessoa tocar numa opção */}
+        {/* quick-replies — pausam a conversa até a pessoa tocar numa opção.
+            Ficam do lado direito, como as próprias respostas da pessoa,
+            não do lado da Chris. */}
         {aguardandoBotoes && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14, animation: 'fadeUp 0.3s ease both' }}>
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 8,
+            marginTop: 14, animation: 'fadeUp 0.3s ease both',
+          }}>
             {aguardandoBotoes.opcoes.map(opcao => (
               <button key={opcao.valor} onClick={() => escolherBotao(opcao)} style={{
                 background: '#fff', border: `1.5px solid ${C.sageDark}`, borderRadius: 100,
@@ -1206,8 +1217,6 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
 
   const ehPresencial = oferta === 'presencial'
   const nomeOferta = ehPresencial ? 'Presencial' : 'Transmissão ao vivo'
-  const precoOferta = ehPresencial ? 'R$120' : 'R$67'
-  const precoDe = ehPresencial ? 'R$480' : 'R$268' // âncora: preço "de" = preço atual ÷ 0,25 (75% off)
 
   useEffect(() => {
     if (resgatado) return
@@ -1320,15 +1329,18 @@ function Tela7Voucher({ oferta, avancar, voltar, mobile }) {
                   }} />
                 ))}
                 <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 13, color: C.sageDark }}>Voucher resgatado! 🎉</span>
-                <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · preço de 1º lote</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 2 }}>
-                  <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 14.5, color: C.brownLight, textDecoration: 'line-through' }}>{precoDe}</span>
-                  <span style={{
-                    fontFamily: fonteTexto, fontWeight: 800, fontSize: 10.5, letterSpacing: '0.3px',
-                    color: '#fff', background: C.vivo, borderRadius: 100, padding: '2px 8px',
-                  }}>-75%</span>
-                </div>
-                <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 30, color: C.brown }}>{precoOferta}</span>
+                <span style={{ fontFamily: fonteTexto, fontWeight: 500, fontSize: 13, color: C.brownMid, marginTop: 4 }}>{nomeOferta} · 1º lote</span>
+                {/* de propósito sem preço aqui — só o desconto desbloqueado.
+                    O valor exato só aparece na tela de oferta, na sequência. */}
+                <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 46, color: C.vivo, lineHeight: 1, marginTop: 6 }}>
+                  -{DESCONTO_PERCENTUAL}%
+                </span>
+                <span style={{
+                  fontFamily: fonteTexto, fontWeight: 600, fontSize: 12.5, color: C.brownMid,
+                  textAlign: 'center', lineHeight: 1.45, maxWidth: 190, marginTop: 6,
+                }}>
+                  Desconto garantido. O valor com desconto aparece na próxima etapa.
+                </span>
               </div>
 
               {/* talão inferior — código de barras nítido, é o "ingresso" em si */}
@@ -1489,6 +1501,13 @@ function Tela9Oferta({ ofertaInicial, voltar, mobile }) {
           13 de setembro · 10h às 14h
         </p>
 
+        <p style={{
+          fontFamily: fonteTexto, fontWeight: 700, fontSize: 12.5, color: C.vivo,
+          textAlign: 'center', marginBottom: 16, letterSpacing: '0.2px',
+        }}>
+          🎉 Seus {DESCONTO_PERCENTUAL}% de desconto do voucher já estão aplicados abaixo
+        </p>
+
         {/* opção presencial */}
         <button onClick={() => setEscolha('presencial')} style={{
           width: '100%', textAlign: 'left', cursor: 'pointer', marginBottom: 12,
@@ -1498,7 +1517,12 @@ function Tela9Oferta({ ofertaInicial, voltar, mobile }) {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
             <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 15, color: C.brown }}>Presencial</span>
-            <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 19, color: C.brown }}>R$120</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 13, color: C.brownLight, textDecoration: 'line-through' }}>
+                R${precoOriginal(120)}
+              </span>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 19, color: C.brown }}>R$120</span>
+            </div>
           </div>
           <span style={{ fontFamily: fonteTexto, fontSize: 13, color: C.brownMid, lineHeight: 1.5 }}>
             Vivência ao vivo com a Chris, em São Paulo.
@@ -1514,7 +1538,12 @@ function Tela9Oferta({ ofertaInicial, voltar, mobile }) {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
             <span style={{ fontFamily: fonteTexto, fontWeight: 700, fontSize: 15, color: C.brown }}>Transmissão ao vivo</span>
-            <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 19, color: C.brown }}>R$67</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 13, color: C.brownLight, textDecoration: 'line-through' }}>
+                R${precoOriginal(67)}
+              </span>
+              <span style={{ fontFamily: fonteTexto, fontWeight: 800, fontSize: 19, color: C.brown }}>R$67</span>
+            </div>
           </div>
           <span style={{ fontFamily: fonteTexto, fontSize: 13, color: C.brownMid, lineHeight: 1.5 }}>
             Participe de onde estiver, ao vivo pela internet.
