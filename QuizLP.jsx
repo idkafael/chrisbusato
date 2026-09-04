@@ -573,7 +573,7 @@ function Tela1Promessa({ avancar, mobile }) {
       </div>
 
       <div style={{ maxWidth: 440, margin: '0 auto', width: '100%' }}>
-        <ArrastarParaComecar onCompletar={avancar} />
+        {/* ArrastarParaComecar tirado por pedido — só o botão por enquanto */}
         <BotaoContinuar onClick={avancar}>Iniciar Agora →</BotaoContinuar>
       </div>
     </TelaBase>
