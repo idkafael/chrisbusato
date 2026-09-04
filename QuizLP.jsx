@@ -1615,6 +1615,11 @@ export default function QuizLP() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    // O /quiz inteiro vive numa única URL — o Clarity sozinho não distingue
+    // em qual tela a pessoa está. Um evento por troca de tela permite depois
+    // filtrar/contar sessões no painel do Clarity por "quiz_<id-da-tela>"
+    // e enxergar exatamente onde as pessoas param no funil.
+    if (typeof window.clarity === 'function') window.clarity('event', `quiz_${passoAtual}`)
   }, [passoAtual])
 
   const propsComuns = { avancar, voltar, mobile }
