@@ -106,7 +106,7 @@ const perguntasQuiz = {
     reacoes: {
       nao_comecei: 'Ótimo. Você não precisa chegar sabendo um monte de passos para viver essa experiência.',
       comecando: 'Que bom. É um ótimo momento pra já começar com a base certa.',
-      algum_tempo: 'Legal. Então você já sente na pele algumas dessas travas — vamos ver quais.',
+      algum_tempo: 'Legal. Então você já sente na pele algumas dessas travas, vamos ver quais.',
       muitos_anos: 'Perfeito. A proposta aqui não é simplesmente aumentar seu repertório.',
     },
   },
@@ -256,7 +256,7 @@ function gerarDiagnostico(r) {
   }
 
   if (respostaSaudavel) {
-    bloco1.push('E o legal é que, quando fica sem saber o que fazer, você já tenta ouvir a música e se adaptar — isso já é meio caminho andado.')
+    bloco1.push('E o legal é que, quando fica sem saber o que fazer, você já tenta ouvir a música e se adaptar. Isso já é meio caminho andado.')
     bloco1.push(`Só que o que você mais quer sentir é ${desejo}, e sinto que isso ainda não vem por completo.`)
     bloco1.push('Sabe por quê?')
   } else {
@@ -270,7 +270,7 @@ function gerarDiagnostico(r) {
 
   const bloco2 = respostaSaudavel
     ? [
-        'Porque ouvir a música é só o primeiro passo — sem uma base, isso também tem limite.',
+        'Porque ouvir a música é só o primeiro passo. Sem uma base, isso também tem limite.',
         'Por isso talvez você não precise simplesmente aprender mais passos.',
         'Você precisa desenvolver uma base que continue existindo mesmo quando o passo acaba.',
         'É exatamente aí que entra a Base Musical.',
@@ -568,7 +568,7 @@ function Tela1Promessa({ avancar, mobile }) {
           marginBottom: 8,
         }}>
           Em menos de 2 minutos eu vou te mostrar exatamente o que está te
-          travando na pista — e por que decorar mais passos não vai resolver.
+          travando na pista, e por que decorar mais passos não vai resolver.
         </p>
       </div>
 
@@ -587,6 +587,9 @@ function Tela1Promessa({ avancar, mobile }) {
 
 function Tela2VSL({ avancar, mobile }) {
   const [podeAvancar, setPodeAvancar] = useState(false)
+  // Sorteado uma vez só, ao montar — não é pra ficar mudando de número toda
+  // hora, só varia de pessoa pra pessoa (prova social, não contador ao vivo).
+  const [assistindo] = useState(() => 20 + Math.floor(Math.random() * 31))
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) { setPodeAvancar(false) }
@@ -624,18 +627,38 @@ function Tela2VSL({ avancar, mobile }) {
         </div>
       </div>
 
-      {/* legenda, com gradiente escuro por trás pra ficar legível sobre o vídeo */}
+      {/* prova social — número de pessoas assistindo, no topo central */}
+      <div style={{
+        position: 'absolute', top: mobile ? 18 : 24, left: 0, right: 0,
+        display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 2,
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 7,
+          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
+          borderRadius: 100, padding: '7px 14px',
+        }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: '50%', background: C.vivo, flexShrink: 0,
+            animation: 'pulso 1.8s ease-out infinite',
+          }} />
+          <span style={{ fontFamily: fonteTexto, fontWeight: 600, fontSize: 12.5, color: '#fff' }}>
+            {assistindo} pessoas estão assistindo ao vivo
+          </span>
+        </div>
+      </div>
+
+      {/* legenda, sem painel escuro atrás (tirado por pedido — parecia uma
+          sombra em cima do texto) */}
       <div style={{
         position: 'absolute', left: 0, right: 0, bottom: podeAvancar ? 108 : 28,
         padding: '40px 24px 0',
-        background: 'linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%)',
         transition: 'bottom 0.5s ease',
         pointerEvents: 'none',
       }}>
         <p style={{
           fontFamily: fonteTexto, fontWeight: 400, fontSize: 13,
           color: 'rgba(255,255,255,0.85)', textAlign: 'center', paddingBottom: 16,
-        }}>Assista até o final — o que vem depois só faz sentido com isso.</p>
+        }}>Assista até o final. O que vem depois só faz sentido com isso.</p>
       </div>
 
       {/* botão, sobreposto ao vídeo, só aparece depois do delay */}
