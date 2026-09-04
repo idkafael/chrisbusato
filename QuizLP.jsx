@@ -830,14 +830,21 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
 
   useEffect(() => {
     if (!eventoAtual || eventoAtual.tipo === 'botoes') return
-    setDigitando(true)
-    const atraso = indice === 0 ? 700 : 1300
-    const t = setTimeout(() => {
-      setDigitando(false)
-      setMensagensVisiveis(v => [...v, { ...eventoAtual, origem: 'chris', hora: horaAgora() }])
-      setIndice(i => i + 1)
-    }, atraso)
-    return () => clearTimeout(t)
+    setDigitando(false)
+    // Pausa "silenciosa" antes do indicador de digitando aparecer — sem
+    // isso, o "digitando..." surge colado na mensagem anterior, sem aquele
+    // respiro de quem acabou de ler e só depois começa a escrever.
+    let t2
+    const pausaAntes = indice === 0 ? 400 : 2000
+    const t1 = setTimeout(() => {
+      setDigitando(true)
+      t2 = setTimeout(() => {
+        setDigitando(false)
+        setMensagensVisiveis(v => [...v, { ...eventoAtual, origem: 'chris', hora: horaAgora() }])
+        setIndice(i => i + 1)
+      }, 1300)
+    }, pausaAntes)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [indice, eventoAtual])
 
   useEffect(() => {
@@ -979,7 +986,7 @@ function Tela5WhatsApp({ respostas, onResponder, avancar, voltar, mobile }) {
           display: 'flex', alignItems: 'center', gap: 10,
         }}>
           <span style={{ fontSize: 16, opacity: 0.55 }}>🙂</span>
-          <span style={{ fontFamily: fonteTexto, fontSize: 14, color: C.brownLight }}>Mensagem</span>
+          <span style={{ fontFamily: fonteTexto, fontSize: 14, color: C.brownLight }}>Clique nos botões acima</span>
         </div>
         <div style={{
           width: 38, height: 38, borderRadius: '50%', background: C.sageDark,
