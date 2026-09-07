@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.hotmart.com/T106256106A?bid=1788803552618' })
+const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/khbx2vk' })
 
 // Checkout do lote atual do presencial (13 de setembro).
 // Vazio = botão vira "Vendas abrem em breve".
@@ -2512,7 +2512,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.hotmart.com/T106256106A?bid=1788803552618' }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/khbx2vk' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'

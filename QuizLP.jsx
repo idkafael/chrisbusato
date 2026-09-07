@@ -21,12 +21,12 @@ import feedback11 from './images/feedback11.jpeg'
 // transmissão, e mostrar o preço certo no voucher.
 //
 // Ofertas: mesmo evento de 13/09, 10h às 14h — os MESMOS checkouts já usados
-// no site principal:
-//   Presencial   → R$120 → Cakto: https://pay.cakto.com.br/cqmaji2
-//   Transmissão  → R$67  → Hotmart: https://pay.hotmart.com/T106256106A?bid=1788803552618
+// no site principal (nenhuma oferta nova criada na Cakto):
+//   Presencial   → R$120 → https://pay.cakto.com.br/cqmaji2
+//   Transmissão  → R$67  → https://pay.cakto.com.br/khbx2vk
 
 const CHECKOUT_PRESENCIAL = 'https://pay.cakto.com.br/cqmaji2'
-const CHECKOUT_TRANSMISSAO = 'https://pay.hotmart.com/T106256106A?bid=1788803552618'
+const CHECKOUT_TRANSMISSAO = 'https://pay.cakto.com.br/khbx2vk'
 
 const LOCAL_PRESENCIAL_NOME = 'Yandê Dança e Movimento'
 const LOCAL_PRESENCIAL_ENDERECO = 'R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050'
