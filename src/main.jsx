@@ -14,6 +14,7 @@ import TesteAssinaturaLP from '../TesteAssinaturaLP.jsx'
 import AoVivoLP from '../AoVivoLP.jsx'
 import QuizLP from '../QuizLP.jsx'
 import AdminLP from '../AdminLP.jsx'
+import PropostaLP from '../PropostaLP.jsx'
 import BotaoWhatsApp from '../BotaoWhatsApp.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/aovivo" element={<AoVivoLP />} />
         <Route path="/quiz" element={<QuizLP />} />
         <Route path="/admin" element={<AdminLP />} />
+        <Route path="/proposta" element={<PropostaLP />} />
       </Routes>
       <BotaoWhatsApp />
     </BrowserRouter>
