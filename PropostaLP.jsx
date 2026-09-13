@@ -14,6 +14,10 @@ import encontrosAoVivo from './images/encontrosaovivo.png'
 const CHECKOUT_ONLINE = 'https://pay.cakto.com.br/iewzemj'      // Programa Online — 12x R$97 / R$997 à vista
 const CHECKOUT_MASTERMOVE = 'https://pay.cakto.com.br/93w4xfe'  // Master Move — 12x R$145 / R$1497 à vista
 
+// A barra fixa leva para a seção do Master Move, não direto pro checkout:
+// quem ainda está rolando a página precisa ver a oferta antes de decidir.
+const DESTINO_BARRA_FIXA = '#mastermove'
+
 // ─── Tokens (paleta da marca) ────────────────────────────────────────────────
 
 const C = {
@@ -608,18 +612,76 @@ function ModulosGravados({ isMobile }) {
   )
 }
 
+// Recapitulação do pacote na hora da decisão. Tudo aqui sai do próprio material
+// do Master Move — nada de número inventado nem de escassez sem lastro.
+const VANTAGENS_MASTERMOVE = [
+  'Tudo do Programa Online, incluso',
+  '1 encontro presencial por mês, em São Paulo',
+  '2h de conteúdo + 1h de prática guiada por encontro',
+  'Exploração e prática junto com os colegas',
+  'Acompanhamento no corpo, ao vivo',
+  '12 meses de acesso a todo o conteúdo gravado',
+]
+
+function VantagensMasterMove({ isMobile }) {
+  return (
+    <div style={{
+      marginTop: isMobile ? 26 : 32,
+      paddingTop: isMobile ? 24 : 28,
+      borderTop: '1px solid rgba(198,168,122,0.24)',
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+      gap: isMobile ? 13 : '14px 28px',
+      textAlign: 'left',
+      maxWidth: isMobile ? 340 : 680,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    }}>
+      {VANTAGENS_MASTERMOVE.map((v) => (
+        <div key={v} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
+          <span style={{
+            flexShrink: 0,
+            width: 22,
+            height: 22,
+            marginTop: 1,
+            borderRadius: '50%',
+            background: 'rgba(198,168,122,0.18)',
+            border: '1px solid rgba(198,168,122,0.45)',
+            color: C.goldLight,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12.5l5.5 5.5L20 6.5" />
+            </svg>
+          </span>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: isMobile ? 14.5 : 15,
+            fontWeight: 400,
+            lineHeight: 1.45,
+            color: 'rgba(255,253,250,0.86)',
+          }}>
+            {v}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Seções ──────────────────────────────────────────────────────────────────
 
 function Hero({ isMobile }) {
   return (
     <section style={{
       position: 'relative',
-      minHeight: isMobile ? '88vh' : '92vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
-      padding: isMobile ? '90px 22px 70px' : '110px 40px',
+      padding: isMobile ? '68px 22px 78px' : '104px 40px 116px',
     }}>
       <div style={{
         position: 'absolute',
@@ -646,26 +708,26 @@ function Hero({ isMobile }) {
         <Reveal delay={0.1}>
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: isMobile ? 44 : 78,
+            fontSize: isMobile ? 32 : 52,
             fontWeight: 500,
-            lineHeight: 1.02,
+            lineHeight: 1.16,
             letterSpacing: '-0.02em',
             color: C.brown,
           }}>
-            Sua proposta
+            Conheça Programa O Corpo Musical:{' '}
+            <span style={{ fontStyle: 'italic', fontWeight: 400, color: C.goldDark }}>
+              uma nova base para dançar com mais musicalidade, fluidez e liberdade
+            </span>
           </h1>
         </Reveal>
 
         <Reveal delay={0.22}>
           <div style={{
             display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: 14,
             justifyContent: 'center',
             marginTop: isMobile ? 38 : 48,
           }}>
-            <CtaButton href="#mastermove" full={isMobile}>Ver a proposta completa</CtaButton>
-            <CtaButton href="#online" variant="ghost" full={isMobile}>Começar pelo online</CtaButton>
+            <CtaButton href="#online" full={isMobile}>Conhecer o programa online</CtaButton>
           </div>
         </Reveal>
       </div>
@@ -1222,38 +1284,39 @@ function OfertaMasterMove({ isMobile }) {
         {/* Investimento */}
         <Reveal delay={0.1}>
           <div style={{
+            position: 'relative',
             marginTop: isMobile ? 40 : 56,
-            background: 'linear-gradient(160deg, rgba(198,168,122,0.2) 0%, rgba(138,106,59,0.1) 55%, rgba(198,168,122,0.06) 100%)',
-            border: '1px solid rgba(198,168,122,0.4)',
+            // Antes: um véu dourado a 20% sobre o marrom, que resultava numa
+            // lavada bege sem profundidade. Agora a cor vem do próprio marrom,
+            // escurecendo para baixo, com o dourado só como luz no topo.
+            backgroundColor: '#2E2016',
+            backgroundImage: [
+              'radial-gradient(120% 85% at 50% -10%, rgba(198,168,122,0.15) 0%, transparent 62%)',
+              'linear-gradient(172deg, rgba(255,253,250,0.05) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.34) 100%)',
+            ].join(', '),
+            border: '1px solid rgba(198,168,122,0.42)',
             borderRadius: 26,
-            padding: isMobile ? '36px 22px' : '52px',
+            padding: isMobile ? '40px 22px 36px' : '56px 52px 52px',
             textAlign: 'center',
-            boxShadow: 'inset 0 1px 0 rgba(255,253,250,0.1), 0 24px 60px rgba(0,0,0,0.28)',
+            overflow: 'hidden',
+            boxShadow: 'inset 0 1px 0 rgba(255,253,250,0.09), 0 32px 72px rgba(0,0,0,0.45)',
           }}>
+            {/* Fio dourado no topo: marca o card como o destino da página. */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: '14%',
+              right: '14%',
+              height: 2,
+              background: 'linear-gradient(90deg, transparent, rgba(198,168,122,0.9), transparent)',
+            }} />
+
             <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
             <div style={{ marginTop: isMobile ? 22 : 26 }}>
               <Preco parcela="145" avista="1.497" dark isMobile={isMobile} />
             </div>
 
-            <p style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 9,
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 13.5 : 14.5,
-              fontWeight: 500,
-              color: C.goldLight,
-              marginTop: isMobile ? 20 : 24,
-              padding: '9px 18px',
-              borderRadius: 999,
-              background: 'rgba(198,168,122,0.14)',
-              border: '1px solid rgba(198,168,122,0.28)',
-            }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12.5l5.5 5.5L20 6.5" />
-              </svg>
-              Programa Online completo incluso, sem custo adicional
-            </p>
+            <VantagensMasterMove isMobile={isMobile} />
 
             <div style={{ marginTop: 28, maxWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
               <CtaButton href={CHECKOUT_MASTERMOVE} full>Quero fazer parte</CtaButton>
@@ -1498,7 +1561,7 @@ function BarraFixa({ isMobile }) {
 
   if (!visivel) return null
 
-  const isAnchor = CHECKOUT_MASTERMOVE.charAt(0) === '#'
+  const isAnchor = DESTINO_BARRA_FIXA.charAt(0) === '#'
 
   return (
     <div style={{
@@ -1576,7 +1639,7 @@ function BarraFixa({ isMobile }) {
         </div>
 
         <a
-          href={CHECKOUT_MASTERMOVE}
+          href={DESTINO_BARRA_FIXA}
           {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
           style={{
             flexShrink: 0,

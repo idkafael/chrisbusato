@@ -4,11 +4,20 @@ import { useLocation } from 'react-router-dom'
 const NUMERO = '5548999960701' // +55 48 99996-0701
 const MENSAGEM = 'vim do site da chris, pode me ajudar?'
 
+// Rotas que atendem por um número próprio. A chave é o pathname em minúsculas,
+// sem barra final; qualquer rota fora daqui continua no NUMERO padrão.
+const NUMERO_POR_ROTA = {
+  '/corpomusical': '5571981959330', // +55 71 98195-9330
+}
+
 export default function BotaoWhatsApp() {
   const { pathname } = useLocation()
   if (pathname.startsWith('/admin') || pathname.startsWith('/quiz')) return null
 
-  const link = `https://wa.me/${NUMERO}?text=${encodeURIComponent(MENSAGEM)}`
+  const rota = pathname.replace(/\/+$/, '').toLowerCase() || '/'
+  const numero = NUMERO_POR_ROTA[rota] || NUMERO
+
+  const link = `https://wa.me/${numero}?text=${encodeURIComponent(MENSAGEM)}`
 
   // Abrir via window.open() em vez de <a href> estático: algum script de
   // tracking do site (parte do pacote UTMify) varre e reescreve todo link

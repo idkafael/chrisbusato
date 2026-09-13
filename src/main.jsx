@@ -35,7 +35,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/aovivo" element={<AoVivoLP />} />
         <Route path="/quiz" element={<QuizLP />} />
         <Route path="/admin" element={<AdminLP />} />
-        <Route path="/proposta" element={<PropostaLP />} />
+        <Route path="/corpomusical" element={<PropostaLP />} />
       </Routes>
       <BotaoWhatsApp />
     </BrowserRouter>
