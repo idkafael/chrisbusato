@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
+import { numeroDaRota, linkWhatsApp, abrirWhatsApp } from './whatsapp.js'
 import fundoHero from './images/fundo-primeira-dobra.jpg'
 
 // Capas dos módulos e arte dos encontros — os mesmos assets usados no
@@ -17,6 +19,22 @@ const CHECKOUT_MASTERMOVE = 'https://pay.cakto.com.br/93w4xfe'  // Master Move �
 // A barra fixa leva para a seção do Master Move, não direto pro checkout:
 // quem ainda está rolando a página precisa ver a oferta antes de decidir.
 const DESTINO_BARRA_FIXA = '#mastermove'
+
+// Na /corpomusical1 (sem preços) os botões finais abrem o WhatsApp da rota em
+// vez do checkout, já dizendo de qual programa a pessoa quer saber.
+const MENSAGEM_ONLINE = 'Oi! Vim da página do Corpo Musical e quero saber mais sobre o Programa Online.'
+const MENSAGEM_MASTERMOVE = 'Oi! Vim da página do Corpo Musical e quero saber mais sobre o Master Move.'
+
+// ─── VSL (VTurb) ─────────────────────────────────────────────────────────────
+// Id do player de cada página: o trecho depois de "vid-" no embed da VTurb.
+// Enquanto for null o vídeo não aparece no site; em desenvolvimento aparece só
+// um espaço reservado, para mostrar onde ele entra. A conta é a mesma dos
+// players que o site já usa (BrincandoNaMusicaLP, Agradecimento*).
+const VTURB_CONTA = '1c6e6f27-d6f0-4013-b98a-0067464a2b63'
+const VSL_PLAYER = {
+  comPrecos: '6aa688c988eefad5d8eee478', // /corpomusical
+  semPrecos: '6aa688c988eefad5d8eee478', // /corpomusical1 — mesmo vídeo
+}
 
 // ─── Tokens (paleta da marca) ────────────────────────────────────────────────
 
@@ -119,7 +137,7 @@ function Eyebrow({ children, color = C.gold, align = 'center' }) {
   )
 }
 
-function CtaButton({ children, href, variant = 'gold', full = false }) {
+function CtaButton({ children, href, onClick, whatsapp = false, variant = 'gold', full = false }) {
   const [hover, setHover] = useState(false)
   const isAnchor = href.charAt(0) === '#'
   const isGhost = variant === 'ghost'
@@ -127,6 +145,7 @@ function CtaButton({ children, href, variant = 'gold', full = false }) {
   return (
     <a
       href={href}
+      onClick={onClick}
       {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -162,13 +181,35 @@ function CtaButton({ children, href, variant = 'gold', full = false }) {
       }}
     >
       {children}
-      <span style={{
-        display: 'inline-block',
-        transform: hover ? 'translateX(4px)' : 'none',
-        transition: 'transform 0.3s ease',
-      }}>→</span>
+      {whatsapp ? (
+        <IconeWhatsApp size={18} />
+      ) : (
+        <span style={{
+          display: 'inline-block',
+          transform: hover ? 'translateX(4px)' : 'none',
+          transition: 'transform 0.3s ease',
+        }}>→</span>
+      )}
     </a>
   )
+}
+
+function IconeWhatsApp({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+    </svg>
+  )
+}
+
+// Botão de conversão das ofertas. Com preços vai para o checkout; sem preços
+// abre o WhatsApp da rota com a mensagem do programa escolhido.
+function CtaFinal({ semPrecos, checkout, mensagem, ...props }) {
+  const { pathname } = useLocation()
+  if (!semPrecos) return <CtaButton href={checkout} {...props} />
+
+  const link = linkWhatsApp(numeroDaRota(pathname), mensagem)
+  return <CtaButton href={link} onClick={(e) => abrirWhatsApp(e, link)} whatsapp {...props} />
 }
 
 function Tag({ children, tone = 'gold' }) {
@@ -623,12 +664,13 @@ const VANTAGENS_MASTERMOVE = [
   '12 meses de acesso a todo o conteúdo gravado',
 ]
 
-function VantagensMasterMove({ isMobile }) {
+// semDivisor: sem preço acima, o filete e o respiro de separação ficam sobrando.
+function VantagensMasterMove({ isMobile, semDivisor = false }) {
   return (
     <div style={{
-      marginTop: isMobile ? 26 : 32,
-      paddingTop: isMobile ? 24 : 28,
-      borderTop: '1px solid rgba(198,168,122,0.24)',
+      marginTop: semDivisor ? 0 : (isMobile ? 26 : 32),
+      paddingTop: semDivisor ? 0 : (isMobile ? 24 : 28),
+      borderTop: semDivisor ? 'none' : '1px solid rgba(198,168,122,0.24)',
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? 13 : '14px 28px',
@@ -673,7 +715,7 @@ function VantagensMasterMove({ isMobile }) {
 
 // ─── Seções ──────────────────────────────────────────────────────────────────
 
-function Hero({ isMobile }) {
+function Hero({ isMobile, vslPlayerId }) {
   return (
     <section style={{
       position: 'relative',
@@ -721,6 +763,10 @@ function Hero({ isMobile }) {
           </h1>
         </Reveal>
 
+        <Reveal delay={0.16}>
+          <Vsl playerId={vslPlayerId} isMobile={isMobile} />
+        </Reveal>
+
         <Reveal delay={0.22}>
           <div style={{
             display: 'flex',
@@ -732,6 +778,81 @@ function Hero({ isMobile }) {
         </Reveal>
       </div>
     </section>
+  )
+}
+
+// Mesmo padrão das páginas que já usam VTurb (AgradecimentoOnlineLP etc.):
+// carrega o player.js uma única vez e o <vturb-smartplayer> se monta sozinho.
+function Vsl({ playerId, isMobile }) {
+  useEffect(() => {
+    if (!playerId) return
+    if (document.querySelector(`script[src*="${playerId}"]`)) return
+    const s = document.createElement('script')
+    s.src = `https://scripts.converteai.net/${VTURB_CONTA}/players/${playerId}/v4/player.js`
+    s.async = true
+    document.head.appendChild(s)
+  }, [playerId])
+
+  // O VSL é vertical (9:16): o embed da VTurb limita a 400px de largura.
+  const moldura = {
+    width: '100%',
+    maxWidth: 400,
+    margin: isMobile ? '30px auto 0' : '38px auto 0',
+    borderRadius: 16,
+    overflow: 'hidden',
+  }
+
+  if (!playerId) {
+    if (!import.meta.env.DEV) return null
+    return (
+      <div style={{
+        ...moldura,
+        aspectRatio: '9 / 16',
+        border: '1.5px dashed rgba(138,106,59,0.45)',
+        background: 'rgba(255,253,250,0.55)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        padding: 20,
+      }}>
+        <span style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 12,
+          fontWeight: 600,
+          letterSpacing: '0.16em',
+          textTransform: 'uppercase',
+          color: C.goldDark,
+        }}>
+          VSL · VTurb
+        </span>
+        <span style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          fontWeight: 300,
+          color: C.brownLight,
+        }}>
+          Espaço reservado — só aparece em desenvolvimento
+        </span>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ ...moldura, boxShadow: '0 18px 44px rgba(42,29,20,0.18)' }}>
+      {/* O placeholder preto 9:16 vem do próprio embed: segura a altura antes do
+          player carregar, para o hero não pular. Vai por innerHTML porque o
+          player substitui esse filho — se fosse um nó do React, o React tentaria
+          reconciliar um elemento que já não existe mais. */}
+      <vturb-smartplayer
+        id={`vid-${playerId}`}
+        style={{ display: 'block', margin: '0 auto', width: '100%' }}
+        dangerouslySetInnerHTML={{
+          __html: '<div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 177.77777777777777% 0 0; z-index: 0; background-color: black;"></div>',
+        }}
+      />
+    </div>
   )
 }
 
@@ -774,7 +895,7 @@ function Ponte({ isMobile }) {
   )
 }
 
-function OfertaOnline({ isMobile }) {
+function OfertaOnline({ isMobile, semPrecos }) {
   return (
     <section id="online" style={{
       background: C.creamDeep,
@@ -977,25 +1098,31 @@ function OfertaOnline({ isMobile }) {
           ))}
         </div>
 
-        {/* Investimento */}
+        {/* Investimento — sem preços, sobra só o botão (que abre o WhatsApp) */}
         <Reveal delay={0.1}>
-          <div style={{
-            marginTop: 28,
-            background: C.card,
-            border: '1px solid rgba(42,29,20,0.09)',
-            borderRadius: 24,
-            padding: isMobile ? '34px 22px' : '48px',
-            textAlign: 'center',
-            boxShadow: '0 2px 3px rgba(42,29,20,0.03), 0 18px 44px rgba(42,29,20,0.09)',
-          }}>
-            <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
-            <div style={{ marginTop: isMobile ? 20 : 24 }}>
-              <Preco parcela="97" avista="997" isMobile={isMobile} />
+          {semPrecos ? (
+            <div style={{ marginTop: 32, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+              <CtaFinal semPrecos mensagem={MENSAGEM_ONLINE} full>Quero o programa online</CtaFinal>
             </div>
-            <div style={{ marginTop: 30, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
-              <CtaButton href={CHECKOUT_ONLINE} full>Quero o programa online</CtaButton>
+          ) : (
+            <div style={{
+              marginTop: 28,
+              background: C.card,
+              border: '1px solid rgba(42,29,20,0.09)',
+              borderRadius: 24,
+              padding: isMobile ? '34px 22px' : '48px',
+              textAlign: 'center',
+              boxShadow: '0 2px 3px rgba(42,29,20,0.03), 0 18px 44px rgba(42,29,20,0.09)',
+            }}>
+              <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
+              <div style={{ marginTop: isMobile ? 20 : 24 }}>
+                <Preco parcela="97" avista="997" isMobile={isMobile} />
+              </div>
+              <div style={{ marginTop: 30, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+                <CtaButton href={CHECKOUT_ONLINE} full>Quero o programa online</CtaButton>
+              </div>
             </div>
-          </div>
+          )}
         </Reveal>
 
       </div>
@@ -1003,7 +1130,7 @@ function OfertaOnline({ isMobile }) {
   )
 }
 
-function OfertaMasterMove({ isMobile }) {
+function OfertaMasterMove({ isMobile, semPrecos }) {
   return (
     <section id="mastermove" style={{
       background: `linear-gradient(180deg, ${C.brown} 0%, #3A291D 55%, #241A12 100%)`,
@@ -1311,15 +1438,21 @@ function OfertaMasterMove({ isMobile }) {
               background: 'linear-gradient(90deg, transparent, rgba(198,168,122,0.9), transparent)',
             }} />
 
-            <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
-            <div style={{ marginTop: isMobile ? 22 : 26 }}>
-              <Preco parcela="145" avista="1.497" dark isMobile={isMobile} />
-            </div>
+            {!semPrecos && (
+              <>
+                <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
+                <div style={{ marginTop: isMobile ? 22 : 26 }}>
+                  <Preco parcela="145" avista="1.497" dark isMobile={isMobile} />
+                </div>
+              </>
+            )}
 
-            <VantagensMasterMove isMobile={isMobile} />
+            <VantagensMasterMove isMobile={isMobile} semDivisor={semPrecos} />
 
             <div style={{ marginTop: 28, maxWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
-              <CtaButton href={CHECKOUT_MASTERMOVE} full>Quero fazer parte</CtaButton>
+              <CtaFinal semPrecos={semPrecos} checkout={CHECKOUT_MASTERMOVE} mensagem={MENSAGEM_MASTERMOVE} full>
+                Quero fazer parte
+              </CtaFinal>
             </div>
 
             <p style={{
@@ -1362,7 +1495,7 @@ function Check({ on }) {
   )
 }
 
-function Comparativo({ isMobile }) {
+function Comparativo({ isMobile, semPrecos }) {
   const cols = isMobile ? '1fr 62px 62px' : '1fr 150px 170px'
 
   return (
@@ -1434,7 +1567,8 @@ function Comparativo({ isMobile }) {
                 alignItems: 'center',
                 gap: 8,
                 padding: isMobile ? '15px 16px' : '18px 28px',
-                borderBottom: `1px solid ${C.line}`,
+                // Sem a linha de preços embaixo, a última linha fecha o card sem filete.
+                borderBottom: semPrecos && i === COMPARATIVO.length - 1 ? 'none' : `1px solid ${C.line}`,
                 background: row.master && !row.online ? 'rgba(198,168,122,0.08)' : 'transparent',
               }}>
                 <div style={{
@@ -1451,18 +1585,20 @@ function Comparativo({ isMobile }) {
               </div>
             ))}
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr 1fr' : cols,
-              alignItems: 'center',
-              gap: isMobile ? 10 : 8,
-              padding: isMobile ? '20px 16px' : '22px 28px',
-              background: C.cardAlt,
-            }}>
-              {!isMobile && <div />}
-              <PrecoMini parcela="97" avista="997" label="Online" isMobile={isMobile} />
-              <PrecoMini parcela="145" avista="1.497" label="Master Move" destaque isMobile={isMobile} />
-            </div>
+            {!semPrecos && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr 1fr' : cols,
+                alignItems: 'center',
+                gap: isMobile ? 10 : 8,
+                padding: isMobile ? '20px 16px' : '22px 28px',
+                background: C.cardAlt,
+              }}>
+                {!isMobile && <div />}
+                <PrecoMini parcela="97" avista="997" label="Online" isMobile={isMobile} />
+                <PrecoMini parcela="145" avista="1.497" label="Master Move" destaque isMobile={isMobile} />
+              </div>
+            )}
           </div>
         </Reveal>
 
@@ -1474,8 +1610,12 @@ function Comparativo({ isMobile }) {
             justifyContent: 'center',
             marginTop: 30,
           }}>
-            <CtaButton href={CHECKOUT_MASTERMOVE} full={isMobile}>Quero o Master Move</CtaButton>
-            <CtaButton href={CHECKOUT_ONLINE} variant="ghost" full={isMobile}>Quero só o online</CtaButton>
+            <CtaFinal semPrecos={semPrecos} checkout={CHECKOUT_MASTERMOVE} mensagem={MENSAGEM_MASTERMOVE} full={isMobile}>
+              Quero o Master Move
+            </CtaFinal>
+            <CtaFinal semPrecos={semPrecos} checkout={CHECKOUT_ONLINE} mensagem={MENSAGEM_ONLINE} variant="ghost" full={isMobile}>
+              Quero só o online
+            </CtaFinal>
           </div>
         </Reveal>
       </div>
@@ -1549,7 +1689,7 @@ function Fechamento({ isMobile }) {
   )
 }
 
-function BarraFixa({ isMobile }) {
+function BarraFixa({ isMobile, semPrecos }) {
   const [visivel, setVisivel] = useState(false)
 
   useEffect(() => {
@@ -1595,6 +1735,18 @@ function BarraFixa({ isMobile }) {
           }}>
             Master Move
           </div>
+          {semPrecos ? (
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: isMobile ? 17 : 20,
+              fontWeight: 500,
+              color: C.white,
+              marginTop: 2,
+              lineHeight: 1.2,
+            }}>
+              Programa Online incluso
+            </div>
+          ) : (
           <div style={{
             display: 'flex',
             alignItems: 'baseline',
@@ -1636,6 +1788,7 @@ function BarraFixa({ isMobile }) {
               · online incluso
             </span>
           </div>
+          )}
         </div>
 
         <a
@@ -1665,7 +1818,7 @@ function BarraFixa({ isMobile }) {
 
 // ─── Página ──────────────────────────────────────────────────────────────────
 
-export default function PropostaLP() {
+export default function PropostaLP({ semPrecos = false }) {
   const width = useWindowWidth()
   const isMobile = width < 768
 
@@ -1677,13 +1830,13 @@ export default function PropostaLP() {
     <>
       <style>{globalStyles}</style>
       <main style={{ background: C.cream }}>
-        <Hero isMobile={isMobile} />
+        <Hero isMobile={isMobile} vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
         <Ponte isMobile={isMobile} />
-        <OfertaOnline isMobile={isMobile} />
-        <OfertaMasterMove isMobile={isMobile} />
-        <Comparativo isMobile={isMobile} />
+        <OfertaOnline isMobile={isMobile} semPrecos={semPrecos} />
+        <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} />
+        <Comparativo isMobile={isMobile} semPrecos={semPrecos} />
         <Fechamento isMobile={isMobile} />
-        <BarraFixa isMobile={isMobile} />
+        <BarraFixa isMobile={isMobile} semPrecos={semPrecos} />
       </main>
     </>
   )

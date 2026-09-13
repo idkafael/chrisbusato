@@ -1,37 +1,19 @@
 import { useLocation } from 'react-router-dom'
+import { numeroDaRota, linkWhatsApp, abrirWhatsApp } from './whatsapp.js'
 
 // Botão flutuante de contato. Fica fora das páginas de uso interno (/admin).
-const NUMERO = '5548999960701' // +55 48 99996-0701
 const MENSAGEM = 'vim do site da chris, pode me ajudar?'
-
-// Rotas que atendem por um número próprio. A chave é o pathname em minúsculas,
-// sem barra final; qualquer rota fora daqui continua no NUMERO padrão.
-const NUMERO_POR_ROTA = {
-  '/corpomusical': '5571981959330', // +55 71 98195-9330
-}
 
 export default function BotaoWhatsApp() {
   const { pathname } = useLocation()
   if (pathname.startsWith('/admin') || pathname.startsWith('/quiz')) return null
 
-  const rota = pathname.replace(/\/+$/, '').toLowerCase() || '/'
-  const numero = NUMERO_POR_ROTA[rota] || NUMERO
-
-  const link = `https://wa.me/${numero}?text=${encodeURIComponent(MENSAGEM)}`
-
-  // Abrir via window.open() em vez de <a href> estático: algum script de
-  // tracking do site (parte do pacote UTMify) varre e reescreve todo link
-  // wa.me presente no DOM, corrompendo a mensagem com caracteres inválidos.
-  // window.open() escapa dessa varredura porque não deixa um href no DOM.
-  const abrirWhatsApp = e => {
-    e.preventDefault()
-    window.open(link, '_blank', 'noopener,noreferrer')
-  }
+  const link = linkWhatsApp(numeroDaRota(pathname), MENSAGEM)
 
   return (
     <a
       href={link}
-      onClick={abrirWhatsApp}
+      onClick={e => abrirWhatsApp(e, link)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a equipe no WhatsApp"
