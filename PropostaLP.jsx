@@ -676,6 +676,17 @@ function ModulosGravados({ isMobile }) {
 
 // Recapitulação do pacote na hora da decisão. Tudo aqui sai do próprio material
 // do Master Move — nada de número inventado nem de escassez sem lastro.
+// O que o Programa Online entrega — os mesmos itens das seções de cima, resumidos
+// junto do preço.
+const VANTAGENS_ONLINE = [
+  'Todas as fases do Mapa da Dança, em aulas gravadas',
+  'Acesso imediato para estudar no seu tempo',
+  '2 encontros ao vivo por semana',
+  'Transmissão ao vivo do Master Move, 1x por mês',
+  'Comunidade no WhatsApp',
+  '12 meses de acesso',
+]
+
 const VANTAGENS_MASTERMOVE = [
   'Tudo do Programa Online, incluso',
   '1 encontro presencial por mês, em São Paulo',
@@ -686,12 +697,13 @@ const VANTAGENS_MASTERMOVE = [
 ]
 
 // semDivisor: sem preço acima, o filete e o respiro de separação ficam sobrando.
-function VantagensMasterMove({ isMobile, semDivisor = false }) {
+// claro: versão para o card creme do online; sem ele, a versão escura do Master Move.
+function ListaVantagens({ itens, isMobile, semDivisor = false, claro = false }) {
   return (
     <div style={{
       marginTop: semDivisor ? 0 : (isMobile ? 26 : 32),
       paddingTop: semDivisor ? 0 : (isMobile ? 24 : 28),
-      borderTop: semDivisor ? 'none' : '1px solid rgba(198,168,122,0.24)',
+      borderTop: semDivisor ? 'none' : `1px solid ${claro ? C.line : 'rgba(198,168,122,0.24)'}`,
       display: 'grid',
       gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? 13 : '14px 28px',
@@ -700,7 +712,7 @@ function VantagensMasterMove({ isMobile, semDivisor = false }) {
       marginLeft: 'auto',
       marginRight: 'auto',
     }}>
-      {VANTAGENS_MASTERMOVE.map((v) => (
+      {itens.map((v) => (
         <div key={v} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
           <span style={{
             flexShrink: 0,
@@ -708,9 +720,9 @@ function VantagensMasterMove({ isMobile, semDivisor = false }) {
             height: 22,
             marginTop: 1,
             borderRadius: '50%',
-            background: 'rgba(198,168,122,0.18)',
-            border: '1px solid rgba(198,168,122,0.45)',
-            color: C.goldLight,
+            background: claro ? C.goldPale : 'rgba(198,168,122,0.18)',
+            border: `1px solid ${claro ? 'rgba(138,106,59,0.3)' : 'rgba(198,168,122,0.45)'}`,
+            color: claro ? C.goldDark : C.goldLight,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -724,7 +736,7 @@ function VantagensMasterMove({ isMobile, semDivisor = false }) {
             fontSize: isMobile ? 14.5 : 15,
             fontWeight: 400,
             lineHeight: 1.45,
-            color: 'rgba(255,253,250,0.86)',
+            color: claro ? C.brownMid : 'rgba(255,253,250,0.86)',
           }}>
             {v}
           </span>
@@ -1119,31 +1131,34 @@ function OfertaOnline({ isMobile, semPrecos }) {
           ))}
         </div>
 
-        {/* Investimento — sem preços, sobra só o botão (que abre o WhatsApp) */}
+        {/* Investimento — sem preços fica só a lista e o botão (que abre o WhatsApp) */}
         <Reveal delay={0.1}>
-          {semPrecos ? (
-            <div style={{ marginTop: 32, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
-              <CtaFinal semPrecos mensagem={MENSAGEM_ONLINE} full>Quero o programa online</CtaFinal>
+          <div style={{
+            marginTop: 28,
+            background: C.card,
+            border: '1px solid rgba(42,29,20,0.09)',
+            borderRadius: 24,
+            padding: isMobile ? '34px 22px' : '48px',
+            textAlign: 'center',
+            boxShadow: '0 2px 3px rgba(42,29,20,0.03), 0 18px 44px rgba(42,29,20,0.09)',
+          }}>
+            {!semPrecos && (
+              <>
+                <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
+                <div style={{ marginTop: isMobile ? 20 : 24 }}>
+                  <Preco parcela="97" avista="997" isMobile={isMobile} />
+                </div>
+              </>
+            )}
+
+            <ListaVantagens itens={VANTAGENS_ONLINE} isMobile={isMobile} semDivisor={semPrecos} claro />
+
+            <div style={{ marginTop: 30, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+              <CtaFinal semPrecos={semPrecos} checkout={CHECKOUT_ONLINE} mensagem={MENSAGEM_ONLINE} full>
+                Quero o programa online
+              </CtaFinal>
             </div>
-          ) : (
-            <div style={{
-              marginTop: 28,
-              background: C.card,
-              border: '1px solid rgba(42,29,20,0.09)',
-              borderRadius: 24,
-              padding: isMobile ? '34px 22px' : '48px',
-              textAlign: 'center',
-              boxShadow: '0 2px 3px rgba(42,29,20,0.03), 0 18px 44px rgba(42,29,20,0.09)',
-            }}>
-              <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
-              <div style={{ marginTop: isMobile ? 20 : 24 }}>
-                <Preco parcela="97" avista="997" isMobile={isMobile} />
-              </div>
-              <div style={{ marginTop: 30, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
-                <CtaButton href={CHECKOUT_ONLINE} full>Quero o programa online</CtaButton>
-              </div>
-            </div>
-          )}
+          </div>
         </Reveal>
 
       </div>
@@ -1480,7 +1495,7 @@ function OfertaMasterMove({ isMobile, semPrecos }) {
               </>
             )}
 
-            <VantagensMasterMove isMobile={isMobile} semDivisor={semPrecos} />
+            <ListaVantagens itens={VANTAGENS_MASTERMOVE} isMobile={isMobile} semDivisor={semPrecos} />
 
             <div style={{ marginTop: 28, maxWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
               <CtaFinal semPrecos={semPrecos} checkout={CHECKOUT_MASTERMOVE} mensagem={MENSAGEM_MASTERMOVE} full>
