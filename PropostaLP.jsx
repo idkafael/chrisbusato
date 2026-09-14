@@ -231,6 +231,34 @@ function Tag({ children, tone = 'gold' }) {
   )
 }
 
+// O Master Move é presencial em São Paulo — quem é de fora precisa ver isso
+// antes de decidir, não só no meio dos bullets.
+function SeloSaoPaulo({ children = 'Presencial em São Paulo', dark = false, isMobile }) {
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 7,
+      padding: isMobile ? '7px 14px' : '8px 17px',
+      borderRadius: 999,
+      background: dark ? 'rgba(198,168,122,0.14)' : C.goldPale,
+      border: dark ? '1px solid rgba(198,168,122,0.42)' : '1px solid rgba(138,106,59,0.28)',
+      color: dark ? C.goldLight : C.goldDark,
+      fontFamily: "'DM Sans', sans-serif",
+      fontSize: isMobile ? 12.5 : 13.5,
+      fontWeight: 600,
+      letterSpacing: '0.03em',
+      lineHeight: 1.3,
+    }}>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z" />
+        <circle cx="12" cy="10" r="2.6" />
+      </svg>
+      {children}
+    </span>
+  )
+}
+
 function NumberBadge({ n, size = 46 }) {
   return (
     <div style={{
@@ -1179,6 +1207,14 @@ function OfertaMasterMove({ isMobile, semPrecos }) {
               Programa presencial do Corpo Musical
             </div>
 
+            <div style={{ marginTop: isMobile ? 18 : 22 }}>
+              {/* "Presencial" já está no subtítulo logo acima; no celular sai do
+                  selo para ele caber numa linha. */}
+              <SeloSaoPaulo dark isMobile={isMobile}>
+                {isMobile ? 'São Paulo · Domingos, 9h às 12h' : 'Presencial em São Paulo · Domingos, 9h às 12h'}
+              </SeloSaoPaulo>
+            </div>
+
             <p style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: isMobile ? 21 : 29,
@@ -1438,6 +1474,10 @@ function OfertaMasterMove({ isMobile, semPrecos }) {
               background: 'linear-gradient(90deg, transparent, rgba(198,168,122,0.9), transparent)',
             }} />
 
+            <div style={{ marginBottom: semPrecos ? (isMobile ? 26 : 30) : (isMobile ? 22 : 26) }}>
+              <SeloSaoPaulo dark isMobile={isMobile} />
+            </div>
+
             {!semPrecos && (
               <>
                 <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
@@ -1557,6 +1597,14 @@ function Comparativo({ isMobile, semPrecos }) {
                 lineHeight: 1.25,
               }}>
                 Master<br />Move
+                <div style={{
+                  fontSize: isMobile ? 9.5 : 11.5,
+                  fontWeight: 500,
+                  color: C.gold,
+                  marginTop: 3,
+                }}>
+                  São Paulo
+                </div>
               </div>
             </div>
 
@@ -1689,7 +1737,7 @@ function Fechamento({ isMobile }) {
   )
 }
 
-function BarraFixa({ isMobile, semPrecos }) {
+function BarraFixa({ isMobile }) {
   const [visivel, setVisivel] = useState(false)
 
   useEffect(() => {
@@ -1733,62 +1781,21 @@ function BarraFixa({ isMobile, semPrecos }) {
             textTransform: 'uppercase',
             color: C.goldLight,
           }}>
-            Master Move
+            {/* No celular "São Paulo" quebraria a linha ao lado do botão. */}
+            {isMobile ? 'Master Move · SP' : 'Master Move · São Paulo'}
           </div>
-          {semPrecos ? (
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: isMobile ? 17 : 20,
-              fontWeight: 500,
-              color: C.white,
-              marginTop: 2,
-              lineHeight: 1.2,
-            }}>
-              Programa Online incluso
-            </div>
-          ) : (
+          {/* Sem preço nas duas páginas: a barra só lembra o que vem junto e
+              leva para a seção do Master Move. */}
           <div style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 5,
+            fontFamily: "'Playfair Display', serif",
+            fontSize: isMobile ? 17 : 20,
+            fontWeight: 500,
+            color: C.white,
             marginTop: 2,
-            lineHeight: 1.15,
+            lineHeight: 1.2,
           }}>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 12.5 : 14,
-              fontWeight: 500,
-              color: 'rgba(255,253,250,0.72)',
-            }}>
-              12x
-            </span>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 13 : 14.5,
-              fontWeight: 600,
-              color: C.white,
-            }}>
-              R$
-            </span>
-            <span style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: isMobile ? 22 : 26,
-              fontWeight: 600,
-              letterSpacing: '-0.01em',
-              color: C.white,
-            }}>
-              145
-            </span>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: isMobile ? 11.5 : 13.5,
-              fontWeight: 300,
-              color: 'rgba(255,253,250,0.58)',
-            }}>
-              · online incluso
-            </span>
+            Programa Online incluso
           </div>
-          )}
         </div>
 
         <a
@@ -1836,7 +1843,7 @@ export default function PropostaLP({ semPrecos = false }) {
         <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} />
         <Comparativo isMobile={isMobile} semPrecos={semPrecos} />
         <Fechamento isMobile={isMobile} />
-        <BarraFixa isMobile={isMobile} semPrecos={semPrecos} />
+        <BarraFixa isMobile={isMobile} />
       </main>
     </>
   )

@@ -10,7 +10,6 @@ import capaReplay from './images/Capa-Replay.png'
 import fundoHero from './images/fundo-primeira-dobra.jpg'
 import bannerPlataforma from './images/banner-plataforma.jpg'
 import encontrosAoVivo from './images/encontrosaovivo.png'
-import ofertaImg from './images/oferta.jpg'
 
 // ─── Feedbacks (prints de depoimentos) ───────────────────────────────────────
 import feedbac1 from './images/feedbac1.jpeg'
@@ -54,7 +53,18 @@ const C = {
   white: '#FAFAF8',
 }
 
-const CHECKOUT_URL = 'https://pay.cakto.com.br/zgyehxp' // Checkout da plataforma (Cakto R$ 1.300)
+// ─── Planos da assinatura ────────────────────────────────────────────────────
+// TODO: o valor do mensal e os links da Cakto ainda são ilustrativos — trocar
+// antes de publicar. O anual segue o Programa Online da /corpomusical.
+const PLANOS = {
+  mensal: { preco: 127, checkout: '#' },
+  anual: { parcelas: 12, parcela: 97, avista: 997, checkout: '#' },
+}
+
+// A economia é calculada contra o anual à vista, que é o que o card promete.
+const ECONOMIA_ANUAL = PLANOS.mensal.preco * 12 - PLANOS.anual.avista
+
+const reais = (n) => n.toLocaleString('pt-BR')
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -66,19 +76,6 @@ const globalStyles = `
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(32px); }
     to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes floatY {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
-  }
-  @keyframes shimmerSlide {
-    0%   { background-position: -200% center; }
-    100% { background-position: 200% center; }
-  }
-  @keyframes livePulse {
-    0%   { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(232,83,74,0.5); }
-    70%  { transform: scale(1.1); opacity: 0.7; box-shadow: 0 0 0 7px rgba(232,83,74,0); }
-    100% { transform: scale(1);   opacity: 1; box-shadow: 0 0 0 0 rgba(232,83,74,0); }
   }
   .fb-scroller::-webkit-scrollbar { display: none; }
 `
@@ -110,8 +107,12 @@ function useWindowWidth() {
 
 // ─── CTA reutilizável ───────────────────────────────────────────────────────
 
-function CtaButton({ children, mobile, full = false, href = CHECKOUT_URL }) {
+// No hover só a cor muda — o botão não sobe nem ganha sombra.
+function CtaButton({ children, mobile, full = false, href = '#planos', variant = 'solid' }) {
   const isAnchor = href.charAt(0) === '#'
+  const ghost = variant === 'ghost'
+  const fundo = ghost ? 'transparent' : C.sage
+  const fundoHover = ghost ? C.sagePale : C.sageDark
   return (
     <a
       href={href}
@@ -119,16 +120,17 @@ function CtaButton({ children, mobile, full = false, href = CHECKOUT_URL }) {
       style={{
         display: full ? 'block' : 'inline-block',
         width: full ? '100%' : 'auto',
-        background: C.sage, color: C.white,
+        background: fundo, color: ghost ? C.sageDark : C.white,
+        border: ghost ? `1.5px solid ${C.sage}` : '1.5px solid transparent',
         fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
         fontSize: mobile ? 16 : 17, letterSpacing: '0.2px',
         padding: mobile ? '17px 36px' : '19px 48px',
         borderRadius: 100, textDecoration: 'none', textAlign: 'center',
-        boxShadow: '0 8px 28px rgba(107,127,109,0.35)',
-        transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+        boxShadow: ghost ? 'none' : '0 8px 28px rgba(107,127,109,0.35)',
+        transition: 'background 0.2s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(107,127,109,0.45)' }}
-      onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(107,127,109,0.35)' }}
+      onMouseEnter={e => { e.currentTarget.style.background = fundoHover }}
+      onMouseLeave={e => { e.currentTarget.style.background = fundo }}
     >
       {children}
     </a>
@@ -151,8 +153,8 @@ function Navbar() {
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-      background: 'rgba(237,234,227,0.85)',
+      // Sem desfoque de fundo: a barra fica quase opaca para o texto seguir legível.
+      background: 'rgba(237,234,227,0.97)',
       boxShadow: scrolled ? '0 1px 24px rgba(61,53,48,0.08)' : 'none',
       transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
       borderBottom: scrolled ? `1px solid ${C.sageLight}` : '1px solid transparent',
@@ -171,7 +173,7 @@ function Navbar() {
           Programa Caminho Musical
         </span>
         {!mobile && (
-          <a href="#oferta" style={{
+          <a href="#planos" style={{
             position: 'absolute', right: 40,
             background: C.sage, color: C.white,
             padding: '10px 22px', borderRadius: 100,
@@ -181,7 +183,7 @@ function Navbar() {
             onMouseEnter={e => e.currentTarget.style.background = C.sageDark}
             onMouseLeave={e => e.currentTarget.style.background = C.sage}
           >
-            Quero acesso
+            Ver planos
           </a>
         )}
       </div>
@@ -524,32 +526,25 @@ function ModulosSection() {
 
 function ModuloCard({ m, delay, mobile }) {
   const [ref, inView] = useInView()
-  const [hovered, setHovered] = useState(false)
   return (
     <div ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         borderRadius: 16, overflow: 'hidden',
         background: C.creamCard,
         border: `1px solid ${C.sageLight}`,
         cursor: 'default',
         display: 'flex', flexDirection: 'column',
-        transition: 'opacity 0.7s ease, transform 0.45s ease, box-shadow 0.3s ease',
+        transition: 'opacity 0.7s ease, transform 0.7s ease',
         transitionDelay: `${delay}ms`,
         opacity: inView ? 1 : 0,
-        transform: inView ? (hovered ? 'translateY(-6px)' : 'translateY(0)') : 'translateY(24px)',
-        boxShadow: hovered ? '0 22px 48px rgba(61,53,48,0.18)' : '0 4px 16px rgba(61,53,48,0.06)',
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+        boxShadow: '0 4px 16px rgba(61,53,48,0.06)',
       }}>
       <div style={{ overflow: 'hidden' }}>
         <img
           src={m.cover}
           alt={m.titulo}
-          style={{
-            width: '100%', display: 'block',
-            transition: 'transform 0.5s ease',
-            transform: hovered ? 'scale(1.05)' : 'scale(1)',
-          }}
+          style={{ width: '100%', display: 'block' }}
         />
       </div>
       <div style={{ padding: mobile ? '14px 14px 18px' : '18px 20px 22px' }}>
@@ -625,7 +620,7 @@ function EncontrosAoVivoSection() {
           }}>
             <span style={{
               width: 8, height: 8, borderRadius: '50%', background: '#E8534A',
-              display: 'block', animation: 'livePulse 2s ease-out infinite',
+              display: 'block',
             }} />
             Ao vivo, toda semana
           </div>
@@ -874,21 +869,18 @@ function AntesDepoisSection() {
 
 function TransformRow({ t, index, mobile }) {
   const [ref, inView] = useInView()
-  const [hovered, setHovered] = useState(false)
   return (
     <div ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative',
         borderRadius: 18, overflow: 'hidden',
         background: C.white,
         border: `1px solid ${C.sageLight}`,
-        boxShadow: hovered ? '0 18px 40px rgba(61,53,48,0.12)' : '0 3px 14px rgba(61,53,48,0.05)',
-        transition: 'opacity 0.7s ease, transform 0.6s ease, box-shadow 0.3s ease',
+        boxShadow: '0 3px 14px rgba(61,53,48,0.05)',
+        transition: 'opacity 0.7s ease, transform 0.6s ease',
         transitionDelay: `${index * 90}ms`,
         opacity: inView ? 1 : 0,
-        transform: inView ? (hovered ? 'translateY(-3px)' : 'translateY(0)') : 'translateY(22px)',
+        transform: inView ? 'translateY(0)' : 'translateY(22px)',
       }}>
       {/* numeral de fundo */}
       <div style={{
@@ -1169,13 +1161,14 @@ function PorDentroSection() {
 
 // ─── Oferta / Preço ───────────────────────────────────────────────────────────
 
+// O mesmo conteúdo nos dois planos — alinhado com o Programa Online da /corpomusical.
 const incluso = [
-  'Curso completo de Musicalidade',
-  'Curso completo de Musicalização',
-  'Curso completo de Consciência Corporal',
-  'Encontros gravados (replays das aulas ao vivo)',
-  'Novos módulos adicionados ao longo do tempo',
-  'Acesso para sempre, no seu ritmo',
+  'Cursos de Musicalidade, Musicalização e Consciência Corporal',
+  'Aulão A Vergonha na Dança',
+  '2 encontros ao vivo por semana com a Chris',
+  'Replays de todos os encontros ao vivo',
+  'Transmissão ao vivo do Master Move, 1x por mês',
+  'Comunidade no WhatsApp',
 ]
 
 function FeedbackSection() {
@@ -1306,89 +1299,191 @@ function FeedbackSection() {
   )
 }
 
-function OfertaSection() {
+function PlanosSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
+  const { mensal, anual } = PLANOS
+
+  const rotulo = {
+    fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+    fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
+  }
+  const cifrao = {
+    fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+    fontSize: 18, color: C.brownMid,
+  }
+  const valor = {
+    fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+    fontSize: mobile ? 48 : 56, color: C.brown, lineHeight: 1, letterSpacing: '-1px',
+  }
+  // No 2 colunas a última linha tem 2 itens se a lista for par — nenhum deles leva filete.
+  const semFilete = mobile ? 1 : (incluso.length % 2 === 0 ? 2 : 1)
 
   return (
-    <section id="oferta" style={{
+    <section id="planos" style={{
       background: C.cream,
       padding: mobile ? '72px 24px 88px' : '100px 40px 120px',
     }}>
       <div ref={ref} style={{
-        maxWidth: 560, margin: '0 auto', textAlign: 'center',
+        maxWidth: 880, margin: '0 auto',
         transition: 'opacity 0.8s ease, transform 0.8s ease',
         opacity: inView ? 1 : 0,
         transform: inView ? 'translateY(0)' : 'translateY(28px)',
       }}>
-        {/* imagem da oferta sobreposta ao topo do card */}
-        <div style={{
-          position: 'relative', zIndex: 2,
-          marginBottom: mobile ? -40 : -64,
-          padding: '0 4px',
-        }}>
-          <img
-            src={ofertaImg}
-            alt="Plataforma Corpo Musical"
-            style={{
-              width: '100%', display: 'block', borderRadius: 16,
-              boxShadow: '0 22px 55px rgba(61,53,48,0.16)',
-            }}
-          />
+        <div style={{ textAlign: 'center', marginBottom: mobile ? 44 : 56 }}>
+          <div style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', marginBottom: 18,
+          }}>Planos</div>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: mobile ? 'clamp(28px, 7vw, 38px)' : 'clamp(32px, 3.6vw, 48px)',
+            color: C.brown, lineHeight: 1.2, letterSpacing: '-0.5px', marginBottom: 16,
+          }}>
+            Escolha como quer{' '}
+            <em style={{ color: C.sageDark, fontStyle: 'italic' }}>assinar.</em>
+          </h2>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
+            fontSize: mobile ? 15 : 17, color: C.brownMid, maxWidth: 480,
+            margin: '0 auto', lineHeight: 1.6,
+          }}>
+            O conteúdo é o mesmo nos dois planos. Muda só a forma de pagar.
+          </p>
         </div>
 
         <div style={{
-          position: 'relative', zIndex: 1,
-          background: C.white, border: `1.5px solid ${C.sageLight}`,
-          borderRadius: 24, padding: mobile ? '60px 26px 36px' : '88px 52px 48px',
-          boxShadow: '0 16px 50px rgba(61,53,48,0.08)',
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: mobile ? 28 : 24,
+          alignItems: 'stretch',
+        }}>
+          {/* Mensal — no celular vem depois do anual */}
+          <div style={{
+            order: mobile ? 2 : 1,
+            background: C.white, border: `1.5px solid ${C.sageLight}`, borderRadius: 24,
+            padding: mobile ? '32px 26px' : '44px 36px 40px',
+            display: 'flex', flexDirection: 'column', textAlign: 'center',
+          }}>
+            <div style={{ ...rotulo, color: C.brownLight, marginBottom: 22 }}>Mensal</div>
+            <div style={{
+              display: 'flex', alignItems: 'baseline', justifyContent: 'center',
+              gap: 5, marginBottom: 8,
+            }}>
+              <span style={cifrao}>R$</span>
+              <span style={valor}>{reais(mensal.preco)}</span>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+                fontSize: 16, color: C.brownMid,
+              }}>/mês</span>
+            </div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 14, color: C.brownLight, marginBottom: 32,
+            }}>Cobrado todo mês</div>
+            <div style={{ marginTop: 'auto' }}>
+              <CtaButton mobile={mobile} full href={mensal.checkout} variant="ghost">
+                Assinar mensal
+              </CtaButton>
+            </div>
+          </div>
+
+          {/* Anual — em destaque */}
+          <div style={{
+            order: mobile ? 1 : 2,
+            position: 'relative',
+            background: C.white, border: `2px solid ${C.sage}`, borderRadius: 24,
+            padding: mobile ? '40px 26px 32px' : '44px 36px 40px',
+            boxShadow: '0 18px 50px rgba(107,127,109,0.16)',
+            display: 'flex', flexDirection: 'column', textAlign: 'center',
+          }}>
+            {/* "Mais vantajoso", e não "mais escolhido": a assinatura é nova,
+                então não há escolha de ninguém para citar — a vantagem é o preço. */}
+            <div style={{
+              ...rotulo,
+              position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)',
+              background: C.sage, color: C.white,
+              borderRadius: 100, padding: '6px 16px',
+              fontSize: 11, whiteSpace: 'nowrap',
+            }}>Mais vantajoso</div>
+
+            <div style={{ ...rotulo, color: C.sageDark, marginBottom: 22 }}>Anual</div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 16, color: C.brownMid, marginBottom: 4,
+            }}>{anual.parcelas}x de</div>
+            <div style={{
+              display: 'flex', alignItems: 'baseline', justifyContent: 'center',
+              gap: 5, marginBottom: 8,
+            }}>
+              <span style={cifrao}>R$</span>
+              <span style={valor}>{reais(anual.parcela)}</span>
+            </div>
+            <div style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
+              fontSize: 15, color: C.brownMid, marginBottom: 18,
+            }}>ou <strong style={{ fontWeight: 700, color: C.brown }}>R$ {reais(anual.avista)}</strong> à vista</div>
+
+            {ECONOMIA_ANUAL > 0 && (
+              <div style={{
+                alignSelf: 'center',
+                background: C.sagePale, color: C.sageDark,
+                borderRadius: 100, padding: '7px 16px', marginBottom: 28,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13.5,
+              }}>
+                Economize R$ {reais(ECONOMIA_ANUAL)} pagando à vista
+              </div>
+            )}
+
+            <div style={{ marginTop: 'auto' }}>
+              <CtaButton mobile={mobile} full href={anual.checkout}>
+                Assinar anual
+              </CtaButton>
+            </div>
+          </div>
+        </div>
+
+        {/* O que os dois planos incluem */}
+        <div style={{
+          marginTop: mobile ? 28 : 36,
+          background: C.white, border: `1px solid ${C.sageLight}`, borderRadius: 24,
+          padding: mobile ? '28px 24px 18px' : '36px 44px 26px',
         }}>
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-            fontSize: 14, color: C.brownLight, marginBottom: 6,
-            textDecoration: 'line-through',
-          }}>de R$ 2.600</div>
-
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontSize: 12, letterSpacing: '2.5px', color: C.sage,
+            textTransform: 'uppercase', textAlign: 'center', marginBottom: 14,
+          }}>Incluso nos dois planos</div>
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-            fontSize: 16, color: C.brownMid, marginBottom: 2,
-          }}>12x de</div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-            fontSize: mobile ? 48 : 58, color: C.brown, lineHeight: 1,
-            letterSpacing: '-1px', marginBottom: 6,
-          }}>R$ 126,39</div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-            fontSize: 15, color: C.brownMid, marginBottom: 32,
-          }}>ou <strong style={{ fontWeight: 700, color: C.brown }}>R$ 1.300</strong> à vista</div>
-
-          <div style={{ textAlign: 'left', marginBottom: 32 }}>
+            display: 'grid',
+            gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+            columnGap: 36,
+          }}>
             {incluso.map((item, i) => (
               <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '11px 0',
-                borderBottom: i < incluso.length - 1 ? `1px solid ${C.cream}` : 'none',
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                padding: '12px 0',
+                borderBottom: i >= incluso.length - semFilete ? 'none' : `1px solid ${C.cream}`,
               }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
                   <circle cx="8" cy="8" r="7" stroke={C.sage} strokeWidth="1.1"/>
                   <path d="M5 8l2 2 4-4" stroke={C.sageDark} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                  fontSize: 15, color: C.brownMid,
+                  fontSize: 15, color: C.brownMid, lineHeight: 1.45,
                 }}>{item}</span>
               </div>
             ))}
           </div>
-
-          <CtaButton mobile={mobile} full>Quero Conhecer o Corpo Musical →</CtaButton>
         </div>
 
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
           fontSize: 13, color: C.brownLight, marginTop: 22, lineHeight: 1.6,
+          textAlign: 'center',
         }}>
           Acesso imediato · Pagamento 100% seguro
         </p>
@@ -1467,11 +1562,15 @@ function ChrisSection() {
 const faqItems = [
   {
     q: 'Como funciona o acesso?',
-    a: 'Assim que o pagamento é confirmado, você recebe o acesso à plataforma por e-mail e já pode começar a assistir todos os cursos imediatamente, de qualquer dispositivo.',
+    a: 'Assim que o pagamento é confirmado, você recebe o acesso à plataforma por e-mail e já pode começar a assistir todo o conteúdo imediatamente, de qualquer dispositivo.',
   },
   {
-    q: 'Por quanto tempo tenho acesso?',
-    a: 'O acesso é vitalício. Você estuda no seu ritmo, revisita os cursos quantas vezes quiser e acompanha os novos módulos que forem adicionados.',
+    q: 'Qual a diferença entre o plano mensal e o anual?',
+    a: 'O conteúdo é o mesmo nos dois. No mensal você paga mês a mês. No anual você paga um valor menor pelo ano inteiro, em até 12x ou à vista. As formas de pagamento aparecem na hora do checkout.',
+  },
+  {
+    q: 'O que acontece se eu cancelar?',
+    a: 'Ao cancelar a assinatura, o seu acesso à plataforma é encerrado na hora.',
   },
   {
     q: 'Preciso ter experiência em dança?',
@@ -1480,10 +1579,6 @@ const faqItems = [
   {
     q: 'Os encontros ao vivo ficam gravados?',
     a: 'Sim. Todas as aulas ao vivo ficam disponíveis como replay dentro da plataforma, no módulo de Encontros Gravados. Se não puder participar ao vivo, assiste depois.',
-  },
-  {
-    q: 'Posso parcelar?',
-    a: 'Sim. Você pode pagar à vista ou parcelar no cartão. As condições aparecem na hora do checkout.',
   },
   {
     q: 'E se eu não gostar?',
@@ -1569,7 +1664,7 @@ function FaqSection() {
         {faqItems.map((item, i) => <FaqItem key={i} item={item} index={i} />)}
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <CtaButton mobile={mobile} href="#oferta">Quero Conhecer o Corpo Musical →</CtaButton>
+          <CtaButton mobile={mobile} href="#planos">Ver os planos →</CtaButton>
         </div>
       </div>
     </section>
@@ -1619,8 +1714,9 @@ export default function PlataformaCursosLP() {
         {/* TODO: reativar quando os feedbacks reais forem adicionados */}
         {/* <DepoimentosSection /> */}
         <PorDentroSection />
-        <OfertaSection />
+        {/* Prova social antes do preço */}
         <FeedbackSection />
+        <PlanosSection />
         <ChrisSection />
         <FaqSection />
         <Footer />

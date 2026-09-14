@@ -9,7 +9,7 @@ import AgradecimentoOnlineLP from '../AgradecimentoOnlineLP.jsx'
 import BrincandoNaMusicaGlobalLP from '../BrincandoNaMusicaGlobalLP.jsx'
 import DateForaDoComumLP from '../DateForaDoComumLP.jsx'
 import VergonhaNaDancaLP from '../VergonhaNaDancaLP.jsx'
-import PlataformaCursosLP from '../PlataformaCursosLP.jsx'
+import ClubeMusicalLP from '../ClubeMusicalLP.jsx'
 import TesteAssinaturaLP from '../TesteAssinaturaLP.jsx'
 import AoVivoLP from '../AoVivoLP.jsx'
 import QuizLP from '../QuizLP.jsx'
@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/casais" element={<DateForaDoComumLP />} />
         <Route path="/vergonha" element={<VergonhaNaDancaLP />} />
         <Route path="/vergonha37" element={<VergonhaNaDancaLP preco="R$37" checkoutUrl="https://pay.cakto.com.br/oviafav" />} />
-        <Route path="/online" element={<PlataformaCursosLP />} />
+        <Route path="/online" element={<ClubeMusicalLP />} />
         <Route path="/teste" element={<TesteAssinaturaLP />} />
         <Route path="/aovivo" element={<AoVivoLP />} />
         <Route path="/quiz" element={<QuizLP />} />
