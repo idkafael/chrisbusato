@@ -16,9 +16,6 @@ import encontrosAoVivo from './images/encontrosaovivo.png'
 const CHECKOUT_ONLINE = 'https://pay.cakto.com.br/iewzemj'      // Programa Online — 12x R$97 / R$997 à vista
 const CHECKOUT_MASTERMOVE = 'https://pay.cakto.com.br/93w4xfe'  // Master Move — 12x R$145 / R$1497 à vista
 
-// A barra fixa leva para a seção do Master Move, não direto pro checkout:
-// quem ainda está rolando a página precisa ver a oferta antes de decidir.
-const DESTINO_BARRA_FIXA = '#mastermove'
 
 // Na /corpomusical1 (sem preços) os botões finais abrem o WhatsApp da rota em
 // vez do checkout, já dizendo de qual programa a pessoa quer saber.
@@ -63,10 +60,6 @@ const globalStyles = `
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes barUp {
-    from { opacity: 0; transform: translateY(100%); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes shimmerSlide {
@@ -1737,92 +1730,6 @@ function Fechamento({ isMobile }) {
   )
 }
 
-function BarraFixa({ isMobile }) {
-  const [visivel, setVisivel] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setVisivel(window.scrollY > window.innerHeight * 0.9)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  if (!visivel) return null
-
-  const isAnchor = DESTINO_BARRA_FIXA.charAt(0) === '#'
-
-  return (
-    <div style={{
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 60,
-      animation: 'barUp 0.45s cubic-bezier(0.22,1,0.36,1) both',
-      background: 'rgba(42,29,20,0.94)',
-      backdropFilter: 'blur(10px)',
-      borderTop: '1px solid rgba(198,168,122,0.28)',
-      padding: isMobile ? '12px 88px 12px 16px' : '14px 40px',
-    }}>
-      <div style={{
-        maxWidth: 980,
-        margin: '0 auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 16,
-      }}>
-        <div>
-          <div style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: isMobile ? 10.5 : 12,
-            fontWeight: 600,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: C.goldLight,
-          }}>
-            {/* No celular "São Paulo" quebraria a linha ao lado do botão. */}
-            {isMobile ? 'Master Move · SP' : 'Master Move · São Paulo'}
-          </div>
-          {/* Sem preço nas duas páginas: a barra só lembra o que vem junto e
-              leva para a seção do Master Move. */}
-          <div style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: isMobile ? 17 : 20,
-            fontWeight: 500,
-            color: C.white,
-            marginTop: 2,
-            lineHeight: 1.2,
-          }}>
-            Programa Online incluso
-          </div>
-        </div>
-
-        <a
-          href={DESTINO_BARRA_FIXA}
-          {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
-          style={{
-            flexShrink: 0,
-            padding: isMobile ? '12px 18px' : '14px 30px',
-            borderRadius: 999,
-            background: `linear-gradient(100deg, ${C.gold}, ${C.goldLight})`,
-            color: C.brown,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: isMobile ? 12.5 : 14,
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            textDecoration: 'none',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Fazer parte
-        </a>
-      </div>
-    </div>
-  )
-}
-
 // ─── Página ──────────────────────────────────────────────────────────────────
 
 export default function PropostaLP({ semPrecos = false }) {
@@ -1843,7 +1750,6 @@ export default function PropostaLP({ semPrecos = false }) {
         <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} />
         <Comparativo isMobile={isMobile} semPrecos={semPrecos} />
         <Fechamento isMobile={isMobile} />
-        <BarraFixa isMobile={isMobile} />
       </main>
     </>
   )
