@@ -5,6 +5,11 @@ const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false,
 // Checkout do lote atual do presencial (13 de setembro).
 // Vazio = botão vira "Vendas abrem em breve".
 const PRESENCIAL_URL = 'https://pay.cakto.com.br/cqmaji2'
+
+// Presencial fechado até a próxima vivência ser divulgada: só a transmissão fica
+// à venda. O card presencial continua na página, apagado e com a faixa amarela
+// de interditado por cima. Para reabrir as vendas, troque para false.
+const PRESENCIAL_BLOQUEADO = true
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -111,7 +116,9 @@ function Navbar() {
 function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
-  const { globalMode, highlightOnline } = useContext(GlobalModeCtx)
+  const { globalMode, highlightOnline: destaqueOnline } = useContext(GlobalModeCtx)
+  // Com o presencial bloqueado, a transmissão vira o botão principal do topo.
+  const highlightOnline = destaqueOnline || PRESENCIAL_BLOQUEADO
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
@@ -189,7 +196,7 @@ function Hero() {
             Quero ver a transmissão dia 13 de Setembro
           </a>}
           {/* Botão presencial */}
-          {!globalMode && <a href="#ingresso-presencial" style={{
+          {!globalMode && !PRESENCIAL_BLOQUEADO && <a href="#ingresso-presencial" style={{
             display: 'inline-block',
             background: highlightOnline ? C.sagePale : C.sage,
             color: highlightOnline ? C.sageDark : C.white,
@@ -1824,6 +1831,43 @@ function FaixaStatus({ tipo, selo, texto }) {
   )
 }
 
+// Faixa de "interditado" sobre o card presencial enquanto a próxima vivência não
+// é divulgada. A camada cobre o card inteiro, então nada embaixo fica clicável.
+function FaixaInterditada({ mobile }) {
+  const texto = 'Próxima vivência a ser divulgada'
+  return (
+    <div aria-hidden="true" style={{
+      position: 'absolute', inset: 0, zIndex: 5,
+      background: 'rgba(245,243,239,0.62)',
+      overflow: 'hidden',
+      cursor: 'not-allowed',
+    }}>
+      <div style={{
+        position: 'absolute',
+        left: '-30%', width: '160%',
+        top: '46%',
+        transform: `translateY(-50%) rotate(${mobile ? -14 : -11}deg)`,
+        background: '#F7C600',
+        borderTop: '4px solid #1A1A1A',
+        borderBottom: '4px solid #1A1A1A',
+        boxShadow: '0 12px 30px rgba(0,0,0,0.28)',
+        padding: mobile ? '9px 0' : '11px 0',
+        display: 'flex', justifyContent: 'center',
+        gap: mobile ? 22 : 30,
+        whiteSpace: 'nowrap',
+      }}>
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
+            fontSize: mobile ? 13 : 15, letterSpacing: '0.08em',
+            textTransform: 'uppercase', color: '#111111',
+          }}>{texto}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // Barra de vagas — alimentada por pedidos PAGOS na Cakto (/api/vagas-presencial).
 // Se a API não responder ou a capacidade não estiver configurada, não renderiza nada:
 // é melhor não mostrar barra do que mostrar um número que não é real.
@@ -1935,7 +1979,10 @@ function InscricaoSection() {
   const [ref, inView] = useInView()
   const w = useWindowWidth()
   const mobile = w < 768
-  const { globalMode, highlightOnline, onlineUrl } = useContext(GlobalModeCtx)
+  const { globalMode, highlightOnline: destaqueOnline, onlineUrl } = useContext(GlobalModeCtx)
+  // Bloqueado, o card presencial usa a versão clara para não disputar atenção
+  // com o card da transmissão, que é o único à venda.
+  const highlightOnline = destaqueOnline || PRESENCIAL_BLOQUEADO
 
   return (
     <section id="inscricao" style={{
@@ -2156,6 +2203,8 @@ function InscricaoSection() {
               ? { display: 'flex', flexDirection: 'column' }
               : { display: 'grid', gridTemplateRows: 'subgrid', gridRow: 'span 11' }),
           }}>
+            {PRESENCIAL_BLOQUEADO && <FaixaInterditada mobile={mobile} />}
+
             {/* blob */}
             <div style={{
               position: 'absolute', top: '-15%', right: '-10%',
@@ -2174,7 +2223,9 @@ function InscricaoSection() {
               marginBottom: 20,
             }}>Presencial · 1º lote</div>
 
-            <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="A edição de 16 de agosto lotou" />
+            {PRESENCIAL_BLOQUEADO
+              ? <FaixaStatus tipo="breve" selo="EM BREVE" texto="Próxima vivência a ser divulgada" />
+              : <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="A edição de 16 de agosto lotou" />}
 
             <div style={{
               fontFamily: "'Playfair Display', serif",
@@ -2239,7 +2290,7 @@ function InscricaoSection() {
             {/* wrapper sempre presente: mantém a contagem de linhas do subgrid
                 estável mesmo quando a barra não tem dados para exibir */}
             <div>
-              <BarraVagas escuro={!highlightOnline} />
+              {!PRESENCIAL_BLOQUEADO && <BarraVagas escuro={!highlightOnline} />}
             </div>
 
             <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }} />
@@ -2249,7 +2300,7 @@ function InscricaoSection() {
             </div>
 
             <div style={{ marginTop: 'auto' }}>
-            {PRESENCIAL_URL ? (
+            {PRESENCIAL_URL && !PRESENCIAL_BLOQUEADO ? (
               <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
                 display: 'block', width: '100%',
                 background: C.white, color: C.brown,
@@ -2269,15 +2320,15 @@ function InscricaoSection() {
             ) : (
               <div style={{
                 width: '100%',
-                background: 'rgba(255,255,255,0.12)',
-                border: '1px dashed rgba(255,255,255,0.35)',
-                color: 'rgba(237,234,227,0.75)',
+                background: highlightOnline ? 'rgba(138,158,140,0.12)' : 'rgba(255,255,255,0.12)',
+                border: highlightOnline ? `1px dashed ${C.sage}` : '1px dashed rgba(255,255,255,0.35)',
+                color: highlightOnline ? C.sageDark : 'rgba(237,234,227,0.75)',
                 padding: '17px 24px', borderRadius: 100,
                 fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
                 textAlign: 'center', marginBottom: 14,
                 position: 'relative', zIndex: 1,
               }}>
-                Vendas abrem em breve
+                {PRESENCIAL_BLOQUEADO ? 'Próxima vivência a ser divulgada' : 'Vendas abrem em breve'}
               </div>
             )}
 

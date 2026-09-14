@@ -1205,17 +1205,6 @@ function PlataformaSection({ isMobile, reduzir }) {
           </div>
         </div>
 
-        {/* Enquanto os recursos da tela não forem confirmados, a imagem é ilustrativa */}
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 13,
-          color: C.brownLight,
-          textAlign: 'center',
-          marginTop: 14,
-        }}>
-          Imagem ilustrativa da plataforma.
-        </p>
-
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
