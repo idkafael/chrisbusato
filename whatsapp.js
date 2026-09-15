@@ -11,6 +11,7 @@ const NUMERO_CORPO_MUSICAL = '5571981959330' // +55 71 98195-9330
 const NUMERO_POR_ROTA = {
   '/corpomusical': NUMERO_CORPO_MUSICAL,
   '/corpomusical1': NUMERO_CORPO_MUSICAL,
+  '/corpomusical3': '557181959330', // +55 71 8195-9330
 }
 
 export function numeroDaRota(pathname) {

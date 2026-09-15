@@ -8,7 +8,10 @@ export default function BotaoWhatsApp() {
   const { pathname } = useLocation()
   if (pathname.startsWith('/admin') || pathname.startsWith('/quiz')) return null
 
-  const link = linkWhatsApp(numeroDaRota(pathname), MENSAGEM)
+  const mensagem = pathname.replace(/\/+$/, '').toLowerCase() === '/corpomusical3'
+    ? 'Oi! Vim da página do Corpo Musical e quero saber mais sobre o Programa Online e o Master Move.'
+    : MENSAGEM
+  const link = linkWhatsApp(numeroDaRota(pathname), mensagem)
 
   return (
     <a

@@ -195,11 +195,11 @@ function IconeWhatsApp({ size = 18 }) {
   )
 }
 
-// Botão de conversão das ofertas. Com preços vai para o checkout; sem preços
-// abre o WhatsApp da rota com a mensagem do programa escolhido.
+// As versões sem preços e /corpomusical3 abrem o WhatsApp com o programa escolhido.
 function CtaFinal({ semPrecos, checkout, mensagem, ...props }) {
   const { pathname } = useLocation()
-  if (!semPrecos) return <CtaButton href={checkout} {...props} />
+  const usaWhatsApp = semPrecos || pathname.replace(/\/+$/, '').toLowerCase() === '/corpomusical3'
+  if (!usaWhatsApp) return <CtaButton href={checkout} {...props} />
 
   const link = linkWhatsApp(numeroDaRota(pathname), mensagem)
   return <CtaButton href={link} onClick={(e) => abrirWhatsApp(e, link)} whatsapp {...props} />
@@ -279,7 +279,7 @@ function NumberBadge({ n, size = 46 }) {
 // tamanho do valor. Por isso "12x de" e "R$" saem em DM Sans, menores e alinhados
 // pelo topo do número — o valor é a única coisa em serifa.
 
-function Preco({ parcela, avista, dark = false, isMobile }) {
+function Preco({ parcela, avista, dark = false, isMobile, precoAnterior }) {
   const big = isMobile ? 60 : 78
   const muted = dark ? 'rgba(255,253,250,0.6)' : C.brownLight
   const forte = dark ? C.white : C.brown
@@ -287,13 +287,18 @@ function Preco({ parcela, avista, dark = false, isMobile }) {
 
   return (
     <div style={{ textAlign: 'center' }}>
+      {precoAnterior && (
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: C.brownMid, marginBottom: 18 }}>
+          de <s>R$ {precoAnterior}</s> por
+        </div>
+      )}
       <div style={{
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
         gap: isMobile ? 7 : 9,
       }}>
-        <span style={{
+        {!precoAnterior && <span style={{
           fontFamily: "'DM Sans', sans-serif",
           fontSize: big * 0.23,
           fontWeight: 500,
@@ -302,7 +307,7 @@ function Preco({ parcela, avista, dark = false, isMobile }) {
           marginTop: big * 0.3,
         }}>
           12x de
-        </span>
+        </span>}
         <span style={{
           fontFamily: "'DM Sans', sans-serif",
           fontSize: big * 0.3,
@@ -326,6 +331,11 @@ function Preco({ parcela, avista, dark = false, isMobile }) {
         </span>
       </div>
 
+      {precoAnterior && (
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: C.brownMid, marginTop: 14 }}>
+          por parcela, em 12x
+        </div>
+      )}
       {avista && <div style={{
         marginTop: isMobile ? 14 : 16,
         fontFamily: "'DM Sans', sans-serif",
@@ -806,7 +816,7 @@ function Hero({ isMobile, vslPlayerId }) {
             justifyContent: 'center',
             marginTop: isMobile ? 38 : 48,
           }}>
-            <CtaButton href="#online" full={isMobile}>Conhecer o programa online</CtaButton>
+            <CtaFinal checkout="#online" mensagem={MENSAGEM_ONLINE} full={isMobile}>Conhecer o programa online</CtaFinal>
           </div>
         </Reveal>
       </div>
@@ -1146,7 +1156,7 @@ function OfertaOnline({ isMobile, semPrecos, somenteParcelas }) {
               <>
                 <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
                 <div style={{ marginTop: isMobile ? 20 : 24 }}>
-                  <Preco parcela="97" avista={somenteParcelas ? null : "997"} isMobile={isMobile} />
+                  <Preco parcela="97" precoAnterior={somenteParcelas ? "1.300,00" : null} avista={somenteParcelas ? null : "997"} isMobile={isMobile} />
                 </div>
               </>
             )}
