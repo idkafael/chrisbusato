@@ -326,7 +326,7 @@ function Preco({ parcela, avista, dark = false, isMobile }) {
         </span>
       </div>
 
-      <div style={{
+      {avista && <div style={{
         marginTop: isMobile ? 14 : 16,
         fontFamily: "'DM Sans', sans-serif",
         fontSize: isMobile ? 15 : 16.5,
@@ -338,7 +338,7 @@ function Preco({ parcela, avista, dark = false, isMobile }) {
           R$ {avista}
         </span>{' '}
         à vista
-      </div>
+      </div>}
     </div>
   )
 }
@@ -395,7 +395,7 @@ function PrecoMini({ parcela, avista, destaque = false, isMobile, label }) {
           {parcela}
         </span>
       </div>
-      <div style={{
+      {avista && <div style={{
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 12,
         fontWeight: 300,
@@ -403,7 +403,7 @@ function PrecoMini({ parcela, avista, destaque = false, isMobile, label }) {
         marginTop: 3,
       }}>
         ou R$ {avista}
-      </div>
+      </div>}
     </div>
   )
 }
@@ -928,7 +928,7 @@ function Ponte({ isMobile }) {
   )
 }
 
-function OfertaOnline({ isMobile, semPrecos }) {
+function OfertaOnline({ isMobile, semPrecos, somenteParcelas }) {
   return (
     <section id="online" style={{
       background: C.creamDeep,
@@ -1146,7 +1146,7 @@ function OfertaOnline({ isMobile, semPrecos }) {
               <>
                 <Eyebrow color={C.brownLight}>Investimento</Eyebrow>
                 <div style={{ marginTop: isMobile ? 20 : 24 }}>
-                  <Preco parcela="97" avista="997" isMobile={isMobile} />
+                  <Preco parcela="97" avista={somenteParcelas ? null : "997"} isMobile={isMobile} />
                 </div>
               </>
             )}
@@ -1166,7 +1166,7 @@ function OfertaOnline({ isMobile, semPrecos }) {
   )
 }
 
-function OfertaMasterMove({ isMobile, semPrecos }) {
+function OfertaMasterMove({ isMobile, semPrecos, somenteParcelas }) {
   return (
     <section id="mastermove" style={{
       background: `linear-gradient(180deg, ${C.brown} 0%, #3A291D 55%, #241A12 100%)`,
@@ -1490,7 +1490,7 @@ function OfertaMasterMove({ isMobile, semPrecos }) {
               <>
                 <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
                 <div style={{ marginTop: isMobile ? 22 : 26 }}>
-                  <Preco parcela="145" avista="1.497" dark isMobile={isMobile} />
+                  <Preco parcela="145" avista={somenteParcelas ? null : "1.497"} dark isMobile={isMobile} />
                 </div>
               </>
             )}
@@ -1543,7 +1543,7 @@ function Check({ on }) {
   )
 }
 
-function Comparativo({ isMobile, semPrecos }) {
+function Comparativo({ isMobile, semPrecos, somenteParcelas }) {
   const cols = isMobile ? '1fr 62px 62px' : '1fr 150px 170px'
 
   return (
@@ -1651,8 +1651,8 @@ function Comparativo({ isMobile, semPrecos }) {
                 background: C.cardAlt,
               }}>
                 {!isMobile && <div />}
-                <PrecoMini parcela="97" avista="997" label="Online" isMobile={isMobile} />
-                <PrecoMini parcela="145" avista="1.497" label="Master Move" destaque isMobile={isMobile} />
+                <PrecoMini parcela="97" avista={somenteParcelas ? null : "997"} label="Online" isMobile={isMobile} />
+                <PrecoMini parcela="145" avista={somenteParcelas ? null : "1.497"} label="Master Move" destaque isMobile={isMobile} />
               </div>
             )}
           </div>
@@ -1747,7 +1747,7 @@ function Fechamento({ isMobile }) {
 
 // ─── Página ──────────────────────────────────────────────────────────────────
 
-export default function PropostaLP({ semPrecos = false }) {
+export default function PropostaLP({ semPrecos = false, somenteParcelas = false }) {
   const width = useWindowWidth()
   const isMobile = width < 768
 
@@ -1761,9 +1761,9 @@ export default function PropostaLP({ semPrecos = false }) {
       <main style={{ background: C.cream }}>
         <Hero isMobile={isMobile} vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
         <Ponte isMobile={isMobile} />
-        <OfertaOnline isMobile={isMobile} semPrecos={semPrecos} />
-        <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} />
-        <Comparativo isMobile={isMobile} semPrecos={semPrecos} />
+        <OfertaOnline isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
+        <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
+        <Comparativo isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
         <Fechamento isMobile={isMobile} />
       </main>
     </>
