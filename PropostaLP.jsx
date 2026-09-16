@@ -195,10 +195,11 @@ function IconeWhatsApp({ size = 18 }) {
   )
 }
 
-// As versões sem preços e /corpomusical3 abrem o WhatsApp com o programa escolhido.
+// Ofertas com preços abrem o checkout. A versão sem preços e o convite
+// inicial da /corpomusical3 abrem o WhatsApp com o programa escolhido.
 function CtaFinal({ semPrecos, checkout, mensagem, ...props }) {
   const { pathname } = useLocation()
-  const usaWhatsApp = semPrecos || pathname.replace(/\/+$/, '').toLowerCase() === '/corpomusical3'
+  const usaWhatsApp = semPrecos || (checkout === '#online' && pathname.replace(/\/+$/, '').toLowerCase() === '/corpomusical3')
   if (!usaWhatsApp) return <CtaButton href={checkout} {...props} />
 
   const link = linkWhatsApp(numeroDaRota(pathname), mensagem)
