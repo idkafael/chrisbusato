@@ -279,7 +279,8 @@ function NumberBadge({ n, size = 46 }) {
 // tamanho do valor. Por isso "12x de" e "R$" saem em DM Sans, menores e alinhados
 // pelo topo do número — o valor é a única coisa em serifa.
 
-function Preco({ parcela, avista, dark = false, isMobile, precoAnterior }) {
+function Preco({ parcela, avista, dark = false, isMobile, precoAnterior, parcelasAbaixo = false }) {
+  const exibeParcelasAbaixo = parcelasAbaixo || Boolean(precoAnterior)
   const big = isMobile ? 60 : 78
   const muted = dark ? 'rgba(255,253,250,0.6)' : C.brownLight
   const forte = dark ? C.white : C.brown
@@ -298,7 +299,7 @@ function Preco({ parcela, avista, dark = false, isMobile, precoAnterior }) {
         justifyContent: 'center',
         gap: isMobile ? 7 : 9,
       }}>
-        {!precoAnterior && <span style={{
+        {!exibeParcelasAbaixo && <span style={{
           fontFamily: "'DM Sans', sans-serif",
           fontSize: big * 0.23,
           fontWeight: 500,
@@ -331,8 +332,8 @@ function Preco({ parcela, avista, dark = false, isMobile, precoAnterior }) {
         </span>
       </div>
 
-      {precoAnterior && (
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: C.brownMid, marginTop: 14 }}>
+      {exibeParcelasAbaixo && (
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: dark ? 'rgba(255,253,250,0.85)' : C.brownMid, marginTop: 14 }}>
           por parcela, em 12x
         </div>
       )}
@@ -1500,7 +1501,7 @@ function OfertaMasterMove({ isMobile, semPrecos, somenteParcelas }) {
               <>
                 <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
                 <div style={{ marginTop: isMobile ? 22 : 26 }}>
-                  <Preco parcela="145" avista={somenteParcelas ? null : "1.497"} dark isMobile={isMobile} />
+                  <Preco parcela="145" parcelasAbaixo={somenteParcelas} avista={somenteParcelas ? null : "1.497"} dark isMobile={isMobile} />
                 </div>
               </>
             )}
