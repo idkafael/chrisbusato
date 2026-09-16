@@ -818,7 +818,7 @@ function Hero({ isMobile, vslPlayerId }) {
             justifyContent: 'center',
             marginTop: isMobile ? 38 : 48,
           }}>
-            <CtaFinal checkout="#online" mensagem={MENSAGEM_ONLINE} full={isMobile}>Conhecer o programa online</CtaFinal>
+            <CtaButton href="#online" full={isMobile}>Conhecer o programa online</CtaButton>
           </div>
         </Reveal>
       </div>
