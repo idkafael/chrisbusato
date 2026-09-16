@@ -760,7 +760,7 @@ function ListaVantagens({ itens, isMobile, semDivisor = false, claro = false }) 
 
 // ─── Seções ──────────────────────────────────────────────────────────────────
 
-function Hero({ isMobile, vslPlayerId }) {
+function Hero({ isMobile, vslPlayerId, mostrarMasterMove = false }) {
   return (
     <section style={{
       position: 'relative',
@@ -817,8 +817,14 @@ function Hero({ isMobile, vslPlayerId }) {
             display: 'flex',
             justifyContent: 'center',
             marginTop: isMobile ? 38 : 48,
+            flexDirection: isMobile ? 'column' : 'row',
+            flexWrap: 'wrap',
+            gap: 16,
           }}>
             <CtaButton href="#online" full={isMobile}>Conhecer o programa online</CtaButton>
+            {mostrarMasterMove && (
+              <CtaButton href="#mastermove" variant="ghost" full={isMobile}>Conhecer o Master Move</CtaButton>
+            )}
           </div>
         </Reveal>
       </div>
@@ -1771,7 +1777,7 @@ export default function PropostaLP({ semPrecos = false, somenteParcelas = false 
     <>
       <style>{globalStyles}</style>
       <main style={{ background: C.cream }}>
-        <Hero isMobile={isMobile} vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
+        <Hero isMobile={isMobile} mostrarMasterMove={somenteParcelas} vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
         <Ponte isMobile={isMobile} />
         <OfertaOnline isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
         <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
