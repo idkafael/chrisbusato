@@ -290,7 +290,7 @@ function Preco({ parcela, avista, dark = false, isMobile, precoAnterior, parcela
   return (
     <div style={{ textAlign: 'center' }}>
       {precoAnterior && (
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: C.brownMid, marginBottom: 18 }}>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: dark ? 'rgba(255,253,250,0.85)' : C.brownMid, marginBottom: 18 }}>
           de <s>R$ {precoAnterior}</s> por
         </div>
       )}
@@ -1502,7 +1502,7 @@ function OfertaMasterMove({ isMobile, semPrecos, somenteParcelas }) {
               <>
                 <Eyebrow color={C.goldLight}>Investimento</Eyebrow>
                 <div style={{ marginTop: isMobile ? 22 : 26 }}>
-                  <Preco parcela="145" parcelasAbaixo={somenteParcelas} avista={somenteParcelas ? null : "1.497"} dark isMobile={isMobile} />
+                  <Preco parcela="145" precoAnterior={somenteParcelas ? "1.497,00" : null} parcelasAbaixo={somenteParcelas} avista={somenteParcelas ? null : "1.497"} dark isMobile={isMobile} />
                 </div>
               </>
             )}
