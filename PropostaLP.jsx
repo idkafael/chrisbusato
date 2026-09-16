@@ -1777,7 +1777,7 @@ export default function PropostaLP({ semPrecos = false, somenteParcelas = false 
     <>
       <style>{globalStyles}</style>
       <main style={{ background: C.cream }}>
-        <Hero isMobile={isMobile} mostrarMasterMove={somenteParcelas} vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
+        <Hero isMobile={isMobile} mostrarMasterMove vslPlayerId={semPrecos ? VSL_PLAYER.semPrecos : VSL_PLAYER.comPrecos} />
         <Ponte isMobile={isMobile} />
         <OfertaOnline isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
         <OfertaMasterMove isMobile={isMobile} semPrecos={semPrecos} somenteParcelas={somenteParcelas} />
