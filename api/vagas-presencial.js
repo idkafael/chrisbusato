@@ -9,13 +9,10 @@
 
 const CAKTO_API = 'https://api.cakto.com.br'
 
-// Padrões do lote atual (13 de setembro). As env vars abaixo continuam valendo
-// como override — ao trocar de evento, basta atualizar aqui ou na Vercel.
-const PRODUTO_PADRAO = '751ef21d-edda-4dff-a3c4-83a855d8d545' // Presencial 13 de Setembro
+// Produto exclusivo do evento de 18 de outubro. Não reutilizar o produto
+// de setembro, pois sua contagem inclui vendas da vivência anterior.
 const TOTAL_PADRAO = 70
-// Vagas já ocupadas por convidados/cortesias — não vão à venda pública, mas
-// ocupam lugar na sala, então entram na conta de "vagas preenchidas".
-const RESERVADAS_PADRAO = 10
+const PERCENTUAL_INICIAL = 15
 
 let tokenCache = { token: null, expiresAt: 0 }
 let vagasCache = { dados: null, expiresAt: 0 }
@@ -44,11 +41,15 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Método não permitido' })
 
   const total = Number(process.env.VAGAS_PRESENCIAL_TOTAL) || TOTAL_PADRAO
-  const produto = process.env.CAKTO_PRODUTO_PRESENCIAL || PRODUTO_PADRAO
-  const reservadas = Number(process.env.VAGAS_PRESENCIAL_RESERVADAS ?? RESERVADAS_PADRAO) || 0
+  const produto = process.env.CAKTO_PRODUTO_PRESENCIAL_OUTUBRO_2026
+  const reservadas = total * PERCENTUAL_INICIAL / 100
 
   if (!total || total <= 0) {
     return res.status(200).json({ indisponivel: true, motivo: 'Capacidade inválida' })
+  }
+  if (!produto) {
+    res.setHeader('Cache-Control', 'no-store')
+    return res.status(200).json({ percentual: PERCENTUAL_INICIAL, esgotado: false, marcos: [], aguardandoConfiguracao: true })
   }
   if (!process.env.CAKTO_CLIENT_ID || !process.env.CAKTO_CLIENT_SECRET) {
     return res.status(200).json({ indisponivel: true, motivo: 'Credenciais Cakto não configuradas' })
@@ -69,9 +70,10 @@ export default async function handler(req, res) {
     if (!resp.ok) throw new Error(`Cakto respondeu ${resp.status}`)
 
     const data = await resp.json()
-    const vendidas = Number(data.count) || 0
+    const vendidas = Number(data.count)
+    if (!Number.isInteger(vendidas) || vendidas < 0) throw new Error('Contagem de vendas inválida')
 
-    // Ocupação da sala = vendas reais + vagas de convidados já comprometidas.
+    // Base de 15% definida para este evento, acrescida das vendas pagas.
     const ocupadas = Math.min(vendidas + reservadas, total)
 
     // Marcos de virada de lote, posicionados por vagas restantes.

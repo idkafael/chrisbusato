@@ -1875,11 +1875,13 @@ function BarraVagas({ escuro = true }) {
 
   useEffect(() => {
     let ativo = true
-    fetch('/api/vagas-presencial')
+    const atualizar = () => fetch('/api/vagas-presencial')
       .then(r => r.json())
       .then(d => { if (ativo && d && !d.indisponivel) setDados(d) })
       .catch(() => {})
-    return () => { ativo = false }
+    atualizar()
+    const intervalo = setInterval(atualizar, 60_000)
+    return () => { ativo = false; clearInterval(intervalo) }
   }, [])
 
   useEffect(() => {
