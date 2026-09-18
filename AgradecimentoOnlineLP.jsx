@@ -10,7 +10,7 @@ const C = {
 const WA_NUMBER = '5511967068271'
 const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso online')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
-const GROUP_LINK = 'https://chat.whatsapp.com/DY9lognHIesJaAw6UNBA90?s=cl&p=i&mlu=4&ilr=4'
+const GROUP_LINK = 'https://chat.whatsapp.com/GjnqqVVB0nMIwDqEeZl0g5'
 
 export default function AgradecimentoOnlineLP() {
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function AgradecimentoOnlineLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 32,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 13 de setembro</strong>, ao vivo com Chris Busato.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>online no dia 18 de outubro</strong>, ao vivo com Chris Busato.
           </p>
 
           {/* Detalhes do evento */}
@@ -105,7 +105,7 @@ export default function AgradecimentoOnlineLP() {
             fontSize: mobile ? 16 : 17, color: C.brownMid,
             lineHeight: 1.8, marginBottom: 32,
           }}>
-            Domingo, 13 de setembro · 10h às 14h · Transmissão ao vivo<br />
+            Domingo, 18 de outubro · 10h às 14h · Transmissão ao vivo<br />
             <span style={{ fontSize: 14, color: C.brownLight }}>Link de acesso enviado por e-mail</span>
           </p>
 

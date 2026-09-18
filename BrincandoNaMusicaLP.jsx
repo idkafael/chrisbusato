@@ -1,15 +1,13 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 
-const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/khbx2vk' })
+const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/wp92bu4' })
 
-// Checkout do lote atual do presencial (13 de setembro).
+// Checkout do lote atual do presencial (18 de outubro).
 // Vazio = botão vira "Vendas abrem em breve".
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/cqmaji2'
+const PRESENCIAL_URL = 'https://pay.cakto.com.br/3244b9m'
 
-// Presencial fechado até a próxima vivência ser divulgada: só a transmissão fica
-// à venda. O card presencial continua na página, apagado e com a faixa amarela
-// de interditado por cima. Para reabrir as vendas, troque para false.
-const PRESENCIAL_BLOQUEADO = true
+// Ambos os ingressos estão à venda. Use true para bloquear o presencial.
+const PRESENCIAL_BLOQUEADO = false
 import carol1 from './images/carol1.jpeg'
 import carol2 from './images/carol2.jpeg'
 import carol3 from './images/carol3.jpeg'
@@ -193,7 +191,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero ver a transmissão dia 13 de Setembro
+            Quero ver a transmissão dia 18 de Outubro
           </a>}
           {/* Botão presencial */}
           {!globalMode && !PRESENCIAL_BLOQUEADO && <a href="#ingresso-presencial" style={{
@@ -210,7 +208,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente domingo 13 de Setembro
+            Quero ir Presencialmente domingo 18 de Outubro
           </a>}
           {/* Botão online — segundo quando NÃO é highlightOnline */}
           {!highlightOnline && <a href="#ingresso-online" style={{
@@ -225,7 +223,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ver a transmissão dia 13 de Setembro
+            Quero ver a transmissão dia 18 de Outubro
           </a>}
         </div>
 
@@ -2083,7 +2081,7 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
                 fontSize: 19, color: C.white,
                 letterSpacing: '-0.3px', marginBottom: 4,
-              }}>📅 13 de Setembro · domingo</div>
+              }}>📅 18 de Outubro · domingo</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)',
@@ -2139,7 +2137,7 @@ function InscricaoSection() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
                 fontSize: 13.5, color: C.brownMid, lineHeight: 1.6,
-              }}>Não pode no horário? Sem problema. A vivência fica gravada e você assiste quando e quantas vezes quiser, no seu ritmo.</div>
+              }}>Não pode no horário? Sem problema. A vivência fica gravada e disponível por 6 meses. Durante esse período, você assiste quando e quantas vezes quiser, no seu ritmo.</div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(138,158,140,0.2)', marginBottom: 24, position: 'relative', zIndex: 1 }} />
@@ -2166,7 +2164,7 @@ function InscricaoSection() {
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(138,158,140,0.45)' }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(138,158,140,0.35)' }}
               >
-                {mobile ? 'Quero ver a transmissão →' : 'Quero ver a transmissão dia 13/09 →'}
+                {mobile ? 'Quero ver a transmissão →' : 'Quero ver a transmissão dia 18/10 →'}
               </a>
             ) : (
               <div style={{
@@ -2252,7 +2250,7 @@ function InscricaoSection() {
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
                 fontSize: 19, color: C.white,
                 letterSpacing: '-0.3px', marginBottom: 4,
-              }}>📅 13 de Setembro · domingo</div>
+              }}>📅 18 de Outubro · domingo</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 fontSize: 13, color: 'rgba(255,255,255,0.9)', marginBottom: 4,
@@ -2357,7 +2355,7 @@ const faqs = [
   },
   {
     q: 'Por quanto tempo vou ter acesso à gravação?',
-    a: 'Para sempre. A Vivência Gravada fica disponível de forma vitalícia, então você pode assistir e rever quando e quantas vezes quiser, no seu ritmo.',
+    a: 'Por 6 meses. Durante esse período, você pode assistir e rever a Vivência Gravada quando e quantas vezes quiser, no seu ritmo.',
   },
   {
     q: 'E se eu não gostar? Tenho garantia?',
@@ -2563,7 +2561,7 @@ function Footer() {
 
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/khbx2vk' }) {
+export default function BrincandoNaMusicaLP({ globalMode = false, highlightOnline = false, onlineUrl = 'https://pay.cakto.com.br/wp92bu4' }) {
   useEffect(() => {
     const link = document.createElement('link')
     link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap'

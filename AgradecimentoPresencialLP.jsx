@@ -11,7 +11,7 @@ const C = {
 const WA_NUMBER = '5511967068271'
 const WA_MSG = encodeURIComponent('Oii, fiz a compra do ingresso presencial')
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
-const GROUP_LINK = 'https://chat.whatsapp.com/DY9lognHIesJaAw6UNBA90?s=cl&p=i&mlu=4&ilr=4'
+const GROUP_LINK = 'https://chat.whatsapp.com/GjnqqVVB0nMIwDqEeZl0g5'
 
 function useWindowWidth() {
   const [w, setW] = [typeof window !== 'undefined' ? window.innerWidth : 1200, null]
@@ -102,7 +102,7 @@ export default function AgradecimentoPresencialLP() {
             color: C.brownMid, lineHeight: 1.75,
             marginBottom: 16,
           }}>
-            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 13 de setembro (domingo), das 10h às 14h</strong> na <strong style={{ fontWeight: 500, color: C.brown }}>Yandê Dança e Movimento</strong> — R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050.
+            Te vejo <strong style={{ fontWeight: 500, color: C.brown }}>presencialmente no dia 18 de outubro (domingo), das 10h às 14h</strong> na <strong style={{ fontWeight: 500, color: C.brown }}>Yandê Dança e Movimento</strong> — R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050.
           </p>
 
           <p style={{
@@ -144,7 +144,7 @@ export default function AgradecimentoPresencialLP() {
             fontSize: 13, color: C.brownLight,
             marginTop: 32,
           }}>
-            📍 13 de setembro (domingo) · 10h às 14h · Yandê Dança e Movimento · R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050
+            📍 18 de outubro (domingo) · 10h às 14h · Yandê Dança e Movimento · R. Domingos Lopes, 61 - Campo Belo, São Paulo - SP, 04606-050
           </p>
         </div>
       </section>
