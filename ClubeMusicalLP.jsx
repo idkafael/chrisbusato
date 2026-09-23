@@ -26,8 +26,8 @@ import mark1 from './images/mark1.jpg'
 // TODO: o valor do mensal e os links da Cakto ainda são ilustrativos — trocar
 // antes de publicar. O anual segue o Programa Online da /corpomusical.
 const PLANOS = {
-  mensal: { preco: 127, checkout: '#' },
-  anual: { parcelas: 12, parcela: 97, avista: 997, checkout: '#' },
+  mensal: { preco: 127, checkout: '/assinatura?plano=mensal' },
+  anual: { parcelas: 12, parcela: 97, avista: 997, checkout: '/assinatura?plano=anual' },
 }
 
 // Economia e mensal equivalente são contra o anual à vista — é o que o card diz.
@@ -319,7 +319,7 @@ function CtaButton({ children, href, variant = 'gold', full = false, isMobile })
   return (
     <a
       href={href}
-      {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+      {...(isAnchor || href.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -1529,7 +1529,7 @@ function CtaPlano({ children, href, destaque = false, isMobile }) {
   return (
     <a
       href={href}
-      {...(isAnchor ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+      {...(isAnchor || href.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{

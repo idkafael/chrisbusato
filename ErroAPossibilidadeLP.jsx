@@ -26,7 +26,7 @@ const C = {
 // ─── Keyframes ────────────────────────────────────────────────────────────────
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=League+Spartan:wght@600;700;800&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -661,7 +661,8 @@ function InscricaoSection() {
           }}>de R$ 197</div>
 
           <div style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'League Spartan', 'DM Sans', sans-serif",
+            fontWeight: 700,
             fontSize: mobile ? 52 : 64,
             color: C.cream, lineHeight: 1, marginBottom: 4,
             letterSpacing: '-2px',
@@ -994,8 +995,8 @@ export default function ErroAPossibilidadeLP() {
       <OQueESection />
       <AprendizadosSection />
       <ParaQuemSection />
-      <ChrisSection />
       <InscricaoSection />
+      <ChrisSection />
       <UrgenciaSection />
       <FaqSection />
       <Footer />

@@ -6,7 +6,7 @@ const MENSAGEM = 'vim do site da chris, pode me ajudar?'
 
 export default function BotaoWhatsApp() {
   const { pathname } = useLocation()
-  if (pathname.startsWith('/admin') || pathname.startsWith('/quiz')) return null
+  if (pathname.startsWith('/admin') || pathname.startsWith('/quiz') || pathname.replace(/\/+$/, '') === '/assinatura') return null
 
   const mensagem = pathname.replace(/\/+$/, '').toLowerCase() === '/corpomusical3'
     ? 'Oi! Vim da página do Corpo Musical e quero saber mais sobre o Programa Online e o Master Move.'

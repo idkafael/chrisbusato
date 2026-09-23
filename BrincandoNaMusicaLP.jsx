@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
+import { LOTES_ONLINE, loteOnlineEm } from './lotes-online.js'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/wp92bu4' })
 
@@ -1753,6 +1754,7 @@ function TestemunhosSection() {
 // ─── Inscrição ────────────────────────────────────────────────────────────────
 
 const inclusosOnline = [
+  'Módulo pré-vivência para se preparar e aproveitar melhor o encontro',
   'Mapa musical aplicado ao movimento',
   'Estrutura musical para dançarinos: prática, não teoria',
   'Musicalização: o sentir como ponto de partida',
@@ -1763,6 +1765,8 @@ const inclusosOnline = [
 const inclusosPresencial = [
   'Tudo do acesso online',
   'Vivência presencial com Chris Busato',
+  'Módulo pré-vivência para se preparar e aproveitar melhor o encontro',
+  '6 meses de acesso à gravação da vivência presencial',
   'Prática ao vivo com música',
   'Exercícios em dupla e em grupo',
   'Interação direta e feedback em tempo real',
@@ -1913,8 +1917,9 @@ function BarraVagas({ escuro = true }) {
         }}>
           {dados.esgotado
             ? 'Vagas esgotadas'
-            : `${dados.percentual}% das vagas preenchidas`}
+            : 'Vagas preenchidas'}
         </span>
+        <strong style={{ marginLeft: 'auto', fontFamily: "'DM Sans', sans-serif", fontSize: 24, fontWeight: 600, letterSpacing: '-1px', color: corTexto, fontVariantNumeric: 'tabular-nums' }}>{dados.percentual}<span style={{ fontSize: 13, marginLeft: 2 }}>%</span></strong>
         {!dados.esgotado && quaseCheio && (
           <span style={{
             fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
@@ -1932,15 +1937,15 @@ function BarraVagas({ escuro = true }) {
         aria-valuemax={100}
         aria-label={`${dados.percentual}% das vagas preenchidas`}
         style={{
-          height: 9, borderRadius: 100,
+          height: 7, borderRadius: 100,
           background: trilha, position: 'relative',
         }}
       >
         <div style={{
-          width: animou ? `${dados.percentual}%` : '0%',
+          width: '100%', transformOrigin: 'left', transform: `scaleX(${animou ? dados.percentual / 100 : 0})`,
           height: '100%', borderRadius: 100,
           background: preenchimento,
-          transition: 'width 1.1s cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: 'transform 1.1s cubic-bezier(0.22, 1, 0.36, 1)',
         }} />
 
         {/* marcos de virada de lote */}
@@ -1980,6 +1985,15 @@ function InscricaoSection() {
   const w = useWindowWidth()
   const mobile = w < 768
   const { globalMode, highlightOnline: destaqueOnline, onlineUrl } = useContext(GlobalModeCtx)
+  const [relogioLotes, setRelogioLotes] = useState(Date.now)
+  useEffect(() => {
+    const atualizar = () => setRelogioLotes(Date.now())
+    const timer = setInterval(atualizar, 1000)
+    window.addEventListener('focus', atualizar)
+    return () => { clearInterval(timer); window.removeEventListener('focus', atualizar) }
+  }, [])
+  const loteOnline = loteOnlineEm(relogioLotes)
+  const checkoutOnline = loteOnline.ativo ? (loteOnline.lote.checkout ?? onlineUrl) : ''
   // Bloqueado, o card presencial usa a versão clara para não disputar atenção
   // com o card da transmissão, que é o único à venda.
   const highlightOnline = destaqueOnline || PRESENCIAL_BLOQUEADO
@@ -2012,14 +2026,10 @@ function InscricaoSection() {
         <div ref={ref} style={{
           display: 'grid',
           gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
-          // No desktop os cards viram subgrid: cada bloco (título, data, preço,
-          // barra, botão) cai na mesma linha nos dois, mesmo com textos de
-          // alturas diferentes.
-          gridTemplateRows: mobile ? undefined : 'repeat(11, auto)',
           columnGap: 24,
           rowGap: mobile ? 24 : 0,
           maxWidth: 900, margin: '0 auto',
-          alignItems: 'stretch',
+          alignItems: 'start',
           transition: 'opacity 0.7s ease, transform 0.7s ease',
           opacity: inView ? 1 : 0,
           transform: inView ? 'translateY(0)' : 'translateY(28px)',
@@ -2033,9 +2043,7 @@ function InscricaoSection() {
             padding: mobile ? '36px 26px 32px' : '44px 40px 40px',
             position: 'relative', overflow: 'hidden',
             boxShadow: '0 20px 50px rgba(61,53,48,0.08)',
-            ...(mobile
-              ? { display: 'flex', flexDirection: 'column' }
-              : { display: 'grid', gridTemplateRows: 'subgrid', gridRow: 'span 11' }),
+            display: 'flex', flexDirection: 'column',
           }}>
             {/* blob sutil sage */}
             <div style={{
@@ -2046,28 +2054,14 @@ function InscricaoSection() {
             }} />
 
             <div style={{
-              display: 'inline-block', position: 'relative', zIndex: 1,
-              background: C.sagePale,
-              color: C.sageDark,
-              borderRadius: 100, padding: '5px 15px',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-              fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
-              marginBottom: 18,
-            }}>Online · Transmissão ao vivo</div>
-
-            {onlineUrl
-              ? <FaixaStatus tipo="aberto" selo="ABERTO" texto="Inscrições abertas" />
-              : <FaixaStatus tipo="breve" selo="EM BREVE" texto="Inscrições abrem em instantes" />}
-
-            <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 24, color: C.brown,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
-              minHeight: mobile ? undefined : 29,
+              minHeight: mobile ? undefined : 58,
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: C.sageDark, fontStyle: 'italic' }}>ao vivo</em>
+              <em style={{ color: C.sageDark, fontStyle: 'italic', display: 'block' }}>ao vivo</em>
             </div>
 
             {/* data em destaque */}
@@ -2076,7 +2070,7 @@ function InscricaoSection() {
               borderRadius: 12,
               padding: '14px 18px',
               marginBottom: 20,
-              minHeight: mobile ? undefined : 84,
+              minHeight: mobile ? undefined : 144,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
@@ -2102,7 +2096,7 @@ function InscricaoSection() {
                 borderRadius: 100, padding: '2px 10px',
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 11, letterSpacing: '0.5px',
-              }}>60% OFF</div>
+              }}>{Math.round((1 - loteOnline.lote.preco / 167) * 100)}% OFF</div>
             </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 800,
@@ -2110,36 +2104,26 @@ function InscricaoSection() {
               color: C.brown, lineHeight: 1, marginBottom: 6,
               letterSpacing: '-2.5px', position: 'relative', zIndex: 1,
               textShadow: '0 4px 30px rgba(138,158,140,0.25)',
-            }}>R$ 67</div>
+            }}>R$ {loteOnline.lote.preco}</div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
               fontSize: 13, color: C.brownMid, marginBottom: 22, position: 'relative', zIndex: 1,
             }}>pagamento único · participe ao vivo de onde estiver</div>
 
-            {/* nota replay — box de destaque */}
+            {/* Acesso à gravação — nota editorial integrada ao ingresso. */}
             <div style={{
-              background: C.sagePale,
-              border: `1px solid rgba(138,158,140,0.2)`,
-              borderRadius: 14,
-              padding: '16px 18px',
-              marginBottom: 26,
-              position: 'relative', zIndex: 1,
+              display: 'flex', alignItems: 'center', gap: 18,
+              padding: '8px 0 8px 18px', borderLeft: `2px solid ${C.sage}`,
+              marginBottom: 26, position: 'relative', zIndex: 1,
             }}>
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-                fontSize: 13.5, color: C.sageDark, marginBottom: 6,
-              }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                  <rect x="2" y="5" width="15" height="14" rx="2.5" stroke={C.sageDark} strokeWidth="1.8"/>
-                  <path d="M17 10l5-3v10l-5-3z" stroke={C.sageDark} strokeWidth="1.8" strokeLinejoin="round"/>
-                </svg>
-                E fica gravado para você
+              <div style={{ flexShrink: 0, textAlign: 'center', color: C.sageDark }}>
+                <span style={{ display: 'block', fontFamily: "'DM Sans', sans-serif", fontSize: 42, fontWeight: 500, lineHeight: 1, letterSpacing: '-2px' }}>6</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11 }}>meses</span>
               </div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-                fontSize: 13.5, color: C.brownMid, lineHeight: 1.6,
-              }}>Não pode no horário? Sem problema. A vivência fica gravada e disponível por 6 meses. Durante esse período, você assiste quando e quantas vezes quiser, no seu ritmo.</div>
+              <div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 15, color: C.brown, marginBottom: 5 }}>A gravação é sua por 6 meses.</div>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: C.brownMid, lineHeight: 1.6, margin: 0 }}>Perdeu o ao vivo ou quer repetir uma prática? Assista quantas vezes quiser nesse período.</p>
+              </div>
             </div>
 
             <div style={{ height: 1, background: 'rgba(138,158,140,0.2)', marginBottom: 24, position: 'relative', zIndex: 1 }} />
@@ -2149,8 +2133,45 @@ function InscricaoSection() {
             </div>
 
             <div style={{ marginTop: 'auto' }}>
-            {onlineUrl ? (
-              <a href={onlineUrl} target="_blank" rel="noopener noreferrer" style={{
+            <div style={{
+              display: 'inline-block', position: 'relative', zIndex: 1,
+              background: C.sagePale,
+              color: C.sageDark,
+              borderRadius: 100, padding: '5px 15px',
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+              fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
+              marginBottom: 18,
+            }}>Online · Transmissão ao vivo</div>
+
+            {checkoutOnline
+              ? <FaixaStatus tipo="aberto" selo="ABERTO" texto="Inscrições abertas" />
+              : <FaixaStatus tipo="breve" selo={loteOnline.encerrado ? 'ENCERRADO' : 'EM BREVE'} texto={loteOnline.encerrado ? 'Vendas encerradas' : loteOnline.ativo ? 'Inscrições disponíveis em breve' : 'Inscrições abrem em 22/09'} />}
+
+            <div aria-label="Calendário de lotes do ingresso online" style={{ marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 12, fontSize: 12, color: C.sageDark }}>
+                <strong>Lotes por data</strong>
+                <span>{loteOnline.encerrado ? 'Vendas encerradas' : loteOnline.ativo ? `Lote Atual · ${loteOnline.lote.nome}` : 'A partir de 22/09'}</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6 }}>
+                {LOTES_ONLINE.map((lote, index) => {
+                  const atual = loteOnline.ativo && index === loteOnline.indice
+                  const passou = relogioLotes >= Date.parse(lote.fim)
+                  return <div key={lote.nome} aria-current={atual ? 'step' : undefined} style={{ minWidth: 0, borderTop: `5px solid ${atual ? C.sageDark : passou ? C.sage : C.sageLight}`, borderRadius: 8, padding: '12px 4px', textAlign: 'center', background: atual ? C.sagePale : 'rgba(138,158,140,0.06)', color: C.brownMid }}>
+                    <div style={{ fontSize: 11 }}>{lote.nome}</div>
+                    <strong style={{ display: 'block', fontSize: 21, color: C.brown, margin: '5px 0' }}>R$ {lote.preco}</strong>
+                    <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.5, color: C.brown, background: atual ? 'rgba(255,255,255,0.7)' : C.sagePale, borderRadius: 8, padding: '8px 3px', marginTop: 8 }}>
+                      <span style={{ display: 'block' }}>{lote.periodo.split(' a ')[0]}</span>
+                      <span style={{ display: 'block' }}>a {lote.periodo.split(' a ')[1]}</span>
+                    </div>
+                    <div style={{ fontSize: 9, color: C.sageDark, marginTop: 6 }}>{atual ? 'Lote Atual' : passou ? 'Encerrado' : 'Em breve'}</div>
+                  </div>
+                })}
+              </div>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.sageDark, lineHeight: 1.6, margin: '14px 0 0' }}>Próximas viradas: 02/10 → R$ 47 · 10/10 → R$ 67.</p>
+              <p style={{ fontSize: 11, color: C.brownMid, margin: '6px 0 0' }}>Virada de lote à meia-noite · horário de Brasília.</p>
+            </div>
+            {checkoutOnline ? (
+              <a href={checkoutOnline} target="_blank" rel="noopener noreferrer" style={{
                 display: 'block', width: '100%',
                 background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
                 color: C.white,
@@ -2179,7 +2200,7 @@ function InscricaoSection() {
                 textAlign: 'center', marginBottom: 14,
                 position: 'relative', zIndex: 1,
               }}>
-                Vendas abrem em breve
+                {loteOnline.encerrado ? 'Vendas encerradas' : loteOnline.ativo ? 'Inscrições disponíveis em breve' : 'Vendas abrem em 22/09'}
               </div>
             )}
 
@@ -2195,13 +2216,11 @@ function InscricaoSection() {
           {/* ── CARD PRESENCIAL ── */}
           {!globalMode && <div id="ingresso-presencial" style={{
             background: highlightOnline ? C.creamCard : C.brown,
-            border: highlightOnline ? `1.5px solid ${C.sageLight}` : 'none',
+            border: `1px solid ${highlightOnline ? C.sageLight : 'transparent'}`,
             borderRadius: 20,
             padding: mobile ? '36px 24px' : '44px 40px',
             position: 'relative', overflow: 'hidden',
-            ...(mobile
-              ? { display: 'flex', flexDirection: 'column' }
-              : { display: 'grid', gridTemplateRows: 'subgrid', gridRow: 'span 11' }),
+            display: 'flex', flexDirection: 'column',
           }}>
             {PRESENCIAL_BLOQUEADO && <FaixaInterditada mobile={mobile} />}
 
@@ -2214,28 +2233,14 @@ function InscricaoSection() {
             }} />
 
             <div style={{
-              display: 'inline-block',
-              background: highlightOnline ? C.sagePale : C.sage,
-              color: highlightOnline ? C.sageDark : C.white,
-              borderRadius: 100, padding: '4px 14px',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-              fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
-              marginBottom: 20,
-            }}>Presencial · 1º lote</div>
-
-            {PRESENCIAL_BLOQUEADO
-              ? <FaixaStatus tipo="breve" selo="EM BREVE" texto="Próxima vivência a ser divulgada" />
-              : <FaixaStatus tipo="esgotado" selo="ESGOTADO" texto="A edição de 16 de agosto lotou" />}
-
-            <div style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 24, color: highlightOnline ? C.brown : C.cream,
               letterSpacing: '-0.3px', marginBottom: 16, lineHeight: 1.2,
-              minHeight: mobile ? undefined : 29,
+              minHeight: mobile ? undefined : 58,
               position: 'relative', zIndex: 1,
             }}>
               Brincando na Música{' '}
-              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic' }}>Presencial</em>
+              <em style={{ color: highlightOnline ? C.sageDark : C.sageLight, fontStyle: 'italic', display: 'block' }}>Presencial</em>
             </div>
 
             {/* data e local */}
@@ -2245,7 +2250,7 @@ function InscricaoSection() {
               borderRadius: 12,
               padding: '14px 18px',
               marginBottom: 20,
-              minHeight: mobile ? undefined : 84,
+              minHeight: mobile ? undefined : 144,
               position: 'relative', zIndex: 1,
             }}>
               <div style={{
@@ -2282,13 +2287,8 @@ function InscricaoSection() {
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
             }}>R$ 120</div>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 13, color: highlightOnline ? C.brownLight : C.sageLight, marginBottom: 20,
-            }}>pagamento único · 1º lote</div>
 
-            {/* wrapper sempre presente: mantém a contagem de linhas do subgrid
-                estável mesmo quando a barra não tem dados para exibir */}
+            {/* Disponibilidade do presencial. */}
             <div>
               {!PRESENCIAL_BLOQUEADO && <BarraVagas escuro={!highlightOnline} />}
             </div>
@@ -2353,7 +2353,7 @@ function InscricaoSection() {
 const faqs = [
   {
     q: 'Como vou receber o acesso?',
-    a: 'Ao adquirir a Vivência Gravada, você recebe tudo por e-mail: além da vivência completa, ganha um módulo preparatório para chegar pronto e aproveitar ainda mais. Já na Vivência Presencial, você entra em um grupo exclusivo no WhatsApp, onde recebe todas as informações e orientações antes do encontro.',
+    a: 'Após a confirmação da compra, você recebe por e-mail as orientações de acesso. Tanto o ingresso online quanto o presencial incluem um módulo pré-vivência para você se preparar antes do encontro e aproveitar melhor a experiência. No presencial, você também entra em um grupo exclusivo no WhatsApp com as informações e orientações da vivência.',
   },
   {
     q: 'Por quanto tempo vou ter acesso à gravação?',
@@ -2466,49 +2466,26 @@ function FaqSection() {
           <FaqItem key={i} faq={faq} index={i} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
         ))}
 
-        {/* caixinha garantia — 7 dias de risco zero */}
-        <div style={{
-          marginTop: 48,
-          background: C.sagePale,
-          border: `1px solid rgba(138,158,140,0.28)`,
-          borderRadius: 20,
-          padding: mobile ? '28px 24px' : '32px 40px',
-          display: 'flex',
-          flexDirection: mobile ? 'column' : 'row',
-          alignItems: 'center',
-          textAlign: mobile ? 'center' : 'left',
-          gap: mobile ? 16 : 28,
+        {/* Garantia integrada à página, sem selo ou caixa sobreposta. */}
+        <aside aria-label="Garantia de 7 dias" style={{
+          marginTop: mobile ? 40 : 56,
+          padding: mobile ? '28px 0 0' : '32px 0 0',
+          borderTop: `1px solid ${C.sageLight}`,
+          display: 'grid', gridTemplateColumns: mobile ? '76px minmax(0, 1fr)' : '112px minmax(0, 1fr)',
+          gap: mobile ? 20 : 32, alignItems: 'start',
         }}>
-          {/* selo escudo */}
-          <div style={{
-            flexShrink: 0,
-            width: 72, height: 72, borderRadius: '50%',
-            background: C.white,
-            border: `1.5px solid ${C.sage}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 6px 18px rgba(138,158,140,0.22)',
-          }}>
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2.5l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V5.5l7-3z"
-                stroke={C.sageDark} strokeWidth="1.6" strokeLinejoin="round"/>
-              <path d="M8.5 12l2.4 2.4L15.8 9.5" stroke={C.sageDark} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <div style={{ color: C.sageDark, textAlign: 'center' }}>
+            <span style={{ display: 'block', fontFamily: "'Playfair Display', serif", fontSize: mobile ? 72 : 92, lineHeight: .95, letterSpacing: '-4px' }}>7</span>
+            <span style={{ display: 'block', fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: '2px', marginTop: 10 }}>DIAS</span>
           </div>
-
           <div>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: mobile ? 20 : 22, color: C.brown,
-              marginBottom: 8, letterSpacing: '-0.3px',
-            }}>7 dias de risco zero</div>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 400,
-              fontSize: 14.5, color: C.brownMid, lineHeight: 1.65,
-            }}>
-              Você tem uma <strong style={{ fontWeight: 600, color: C.brown }}>garantia incondicional de 7 dias</strong>, protegida por lei. Se por qualquer motivo a experiência não for para você, é só pedir o reembolso dentro do prazo e devolvemos 100% do seu valor, sem burocracia.
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: mobile ? 24 : 30, fontWeight: 400, color: C.brown, margin: '0 0 12px', lineHeight: 1.2, letterSpacing: '-.5px' }}>Tempo para decidir.</h3>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: C.brownMid, lineHeight: 1.7, margin: 0 }}>
+              Se a experiência não for para você, peça o reembolso em até 7 dias. Devolvemos o valor integral.
             </p>
+            <span style={{ display: 'block', fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500, color: C.sageDark, marginTop: 16 }}>Garantia incondicional · 100% do valor</span>
           </div>
-        </div>
+        </aside>
       </div>
     </section>
   )
