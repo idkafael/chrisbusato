@@ -19,21 +19,25 @@
     async
     defer
   ></script>
-  <!-- LowTrack Pixel — só na home (/) e no encontro diário (/aovivo).
-       O index.html é único para todas as rotas, por isso o filtro de caminho. -->
+  <!-- LowTrack compartilhado por todas as rotas. -->
   <script>
-    (function () {
-      var rotasComPixel = ['/', '/aovivo'];
-      var caminho = location.pathname.replace(/\/+$/, '') || '/';
-      if (rotasComPixel.indexOf(caminho) === -1) return;
-
-      window.pixelId = "lt_px_28a68b97c3c4";
-      var a = document.createElement("script");
-      a.setAttribute("async", "");
-      a.setAttribute("defer", "");
-      a.setAttribute("src", "https://lowtrack.com.br/pixel.js");
-      document.head.appendChild(a);
-    })();
+    window.pixelId = "lt_px_7ee1c884892b";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://lowtrack.com.br/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <!-- Meta Pixel compartilhado por todas as rotas. -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
+      n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1144605324759704');
+    // PageView é enviado pelo roteador para também cobrir navegações internas.
   </script>
 
   <script type="text/javascript">
@@ -45,6 +49,7 @@
   </script>
   </head>
   <body>
+    <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1144605324759704&amp;ev=PageView&amp;noscript=1" /></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

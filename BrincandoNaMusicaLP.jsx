@@ -191,7 +191,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sageDark; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 32px rgba(107,127,109,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(107,127,109,0.35)' }}
           >
-            Quero ver a transmissão dia 18 de Outubro
+            Quero ver a Transmissão Ao Vivo dia 18 de Outubro (1º Lote)
           </a>}
           {/* Botão presencial */}
           {!globalMode && !PRESENCIAL_BLOQUEADO && <a href="#ingresso-presencial" style={{
@@ -208,7 +208,7 @@ function Hero() {
             onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
             onMouseLeave={e => { e.currentTarget.style.background = highlightOnline ? C.sagePale : C.sage; e.currentTarget.style.color = highlightOnline ? C.sageDark : C.white; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Quero ir Presencialmente domingo 18 de Outubro
+            Quero ir Presencialmente domingo 18 de Outubro (1º Lote)
           </a>}
 
         </div>

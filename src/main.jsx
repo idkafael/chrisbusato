@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import BrincandoNaMusicaLP from '../BrincandoNaMusicaLP.jsx'
 import CorpoMusicalPresencialLP from '../CorpoMusicalPresencialLP.jsx'
 import ErroAPossibilidadeLP from '../ErroAPossibilidadeLP.jsx'
@@ -18,9 +18,21 @@ import AdminLP from '../AdminLP.jsx'
 import PropostaLP from '../PropostaLP.jsx'
 import BotaoWhatsApp from '../BotaoWhatsApp.jsx'
 
+function PixelPageViews() {
+  const { pathname } = useLocation()
+  const ultimaPagina = React.useRef(null)
+  React.useEffect(() => {
+    if (ultimaPagina.current === pathname || typeof window.fbq !== 'function') return
+    window.fbq('track', 'PageView')
+    ultimaPagina.current = pathname
+  }, [pathname])
+  return null
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
+      <PixelPageViews />
       <Routes>
         <Route path="/" element={<BrincandoNaMusicaLP />} />
         <Route path="/presencial" element={<CorpoMusicalPresencialLP />} />
