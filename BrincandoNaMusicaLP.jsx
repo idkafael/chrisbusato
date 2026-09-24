@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import { LOTES_ONLINE, loteOnlineEm } from './lotes-online.js'
+import { LOTES_PRESENCIAL, lotePresencialEm } from './lotes-presencial.js'
 
 const GlobalModeCtx = createContext({ globalMode: false, highlightOnline: false, onlineUrl: 'https://pay.cakto.com.br/wp92bu4' })
 
-// Checkout do lote atual do presencial (18 de outubro).
-// Vazio = botão vira "Vendas abrem em breve".
-const PRESENCIAL_URL = 'https://pay.cakto.com.br/3244b9m'
+// Preços e checkouts presenciais definidos por data em lotes-presencial.js.
 
 // Ambos os ingressos estão à venda. Use true para bloquear o presencial.
 const PRESENCIAL_BLOQUEADO = false
@@ -115,9 +114,9 @@ function Navbar() {
 function Hero() {
   const w = useWindowWidth()
   const mobile = w < 768
-  const { globalMode, highlightOnline: destaqueOnline } = useContext(GlobalModeCtx)
-  // Com o presencial bloqueado, a transmissão vira o botão principal do topo.
-  const highlightOnline = destaqueOnline || PRESENCIAL_BLOQUEADO
+  const { globalMode } = useContext(GlobalModeCtx)
+  // A transmissão é a ação principal do topo.
+  const highlightOnline = true
 
   useEffect(() => {
     if (document.querySelector('script[src*="6a120f7fc9941c35508e9807"]')) return
@@ -178,7 +177,7 @@ function Hero() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 560, margin: '0 auto 16px' }}>
           {/* Botão online — primeiro quando highlightOnline */}
           {highlightOnline && <a href="#ingresso-online" style={{
             display: 'inline-block',
@@ -211,21 +210,7 @@ function Hero() {
           >
             Quero ir Presencialmente domingo 18 de Outubro
           </a>}
-          {/* Botão online — segundo quando NÃO é highlightOnline */}
-          {!highlightOnline && <a href="#ingresso-online" style={{
-            display: 'inline-block',
-            background: C.sagePale, color: C.sageDark,
-            border: `2px solid ${C.sage}`,
-            padding: '17px 36px', borderRadius: 100,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
-            textDecoration: 'none', letterSpacing: '0.2px',
-            transition: 'background 0.2s, color 0.2s, transform 0.2s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = C.sage; e.currentTarget.style.color = C.white; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.sagePale; e.currentTarget.style.color = C.sageDark; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Quero ver a transmissão dia 18 de Outubro
-          </a>}
+
         </div>
 
       </div>
@@ -1896,7 +1881,8 @@ function BarraVagas({ escuro = true }) {
 
   if (!dados) return null
 
-  const marcos = dados.marcos || []
+  // Os lotes agora mudam por data; a barra continua indicando ocupação.
+  const marcos = []
   const quaseCheio = dados.percentual >= 80
   const corTexto = escuro ? C.cream : C.brown
   const corSuave = escuro ? 'rgba(237,234,227,0.72)' : C.brownMid
@@ -1993,6 +1979,24 @@ function InscricaoSection() {
     return () => { clearInterval(timer); window.removeEventListener('focus', atualizar) }
   }, [])
   const loteOnline = loteOnlineEm(relogioLotes)
+  const proximoLote = LOTES_ONLINE[loteOnline.indice + 1]
+  const segundosRestantes = Math.max(0, Math.ceil((Date.parse(loteOnline.lote.fim) - relogioLotes) / 1000))
+  const contagemLote = [
+    [Math.floor(segundosRestantes / 86400), 'dias'],
+    [Math.floor(segundosRestantes / 3600) % 24, 'horas'],
+    [Math.floor(segundosRestantes / 60) % 60, 'min'],
+    [segundosRestantes % 60, 'seg'],
+  ]
+  const lotePresencial = lotePresencialEm(relogioLotes)
+  const proximoLotePresencial = LOTES_PRESENCIAL[lotePresencial.indice + 1]
+  const segundosRestantesPresencial = Math.max(0, Math.ceil((Date.parse(lotePresencial.lote.fim) - relogioLotes) / 1000))
+  const contagemLotePresencial = [
+    [Math.floor(segundosRestantesPresencial / 86400), 'dias'],
+    [Math.floor(segundosRestantesPresencial / 3600) % 24, 'horas'],
+    [Math.floor(segundosRestantesPresencial / 60) % 60, 'min'],
+    [segundosRestantesPresencial % 60, 'seg'],
+  ]
+  const checkoutPresencial = lotePresencial.ativo ? lotePresencial.lote.checkout : ''
   const checkoutOnline = loteOnline.ativo ? (loteOnline.lote.checkout ?? onlineUrl) : ''
   // Bloqueado, o card presencial usa a versão clara para não disputar atenção
   // com o card da transmissão, que é o único à venda.
@@ -2156,19 +2160,27 @@ function InscricaoSection() {
                 {LOTES_ONLINE.map((lote, index) => {
                   const atual = loteOnline.ativo && index === loteOnline.indice
                   const passou = relogioLotes >= Date.parse(lote.fim)
-                  return <div key={lote.nome} aria-current={atual ? 'step' : undefined} style={{ minWidth: 0, borderTop: `5px solid ${atual ? C.sageDark : passou ? C.sage : C.sageLight}`, borderRadius: 8, padding: '12px 4px', textAlign: 'center', background: atual ? C.sagePale : 'rgba(138,158,140,0.06)', color: C.brownMid }}>
+                  return <div key={lote.nome} aria-current={atual ? 'step' : undefined} style={{ minWidth: 0, border: `1px solid ${atual ? C.sageDark : C.sageLight}`, borderTopWidth: 5, borderRadius: 10, padding: '12px 4px', textAlign: 'center', background: atual ? '#40594A' : 'rgba(138,158,140,0.06)', color: atual ? C.white : C.brownMid, boxShadow: atual ? '0 6px 18px rgba(64,89,74,0.18)' : 'none' }}>
                     <div style={{ fontSize: 11 }}>{lote.nome}</div>
-                    <strong style={{ display: 'block', fontSize: 21, color: C.brown, margin: '5px 0' }}>R$ {lote.preco}</strong>
-                    <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.5, color: C.brown, background: atual ? 'rgba(255,255,255,0.7)' : C.sagePale, borderRadius: 8, padding: '8px 3px', marginTop: 8 }}>
+                    <strong style={{ display: 'block', fontSize: 21, color: atual ? C.white : C.brown, margin: '5px 0' }}>R$ {lote.preco}</strong>
+                    <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.5, color: atual ? C.white : C.brown, background: atual ? 'rgba(255,255,255,0.09)' : 'transparent', borderRadius: 8, padding: '8px 3px', marginTop: 8 }}>
                       <span style={{ display: 'block' }}>{lote.periodo.split(' a ')[0]}</span>
                       <span style={{ display: 'block' }}>a {lote.periodo.split(' a ')[1]}</span>
                     </div>
-                    <div style={{ fontSize: 9, color: C.sageDark, marginTop: 6 }}>{atual ? 'Lote Atual' : passou ? 'Encerrado' : 'Em breve'}</div>
+                    <div style={{ display: 'inline-block', fontSize: 10, fontWeight: atual ? 700 : 500, color: atual ? '#40594A' : C.sageDark, background: atual ? C.white : 'transparent', borderRadius: 100, padding: '4px 7px', marginTop: 8 }}>{atual ? '✓ Lote Atual' : passou ? 'Encerrado' : 'Em breve'}</div>
                   </div>
                 })}
               </div>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.sageDark, lineHeight: 1.6, margin: '14px 0 0' }}>Próximas viradas: 02/10 → R$ 47 · 10/10 → R$ 67.</p>
-              <p style={{ fontSize: 11, color: C.brownMid, margin: '6px 0 0' }}>Virada de lote à meia-noite · horário de Brasília.</p>
+              {loteOnline.ativo && <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.sageLight}`, color: C.sageDark }}>
+                <p style={{ fontSize: 12, fontWeight: 600, margin: '0 0 12px' }}>{proximoLote ? 'O lote vira em' : 'As inscrições encerram em'}</p>
+                <div role="timer" aria-live="off" aria-label={`${contagemLote[0][0]} dias, ${contagemLote[1][0]} horas, ${contagemLote[2][0]} minutos e ${contagemLote[3][0]} segundos ${proximoLote ? 'para a virada de lote' : 'para o encerramento'}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 8 }}>
+                  {contagemLote.map(([valor, unidade]) => <div key={unidade} aria-hidden="true" style={{ borderRight: unidade === 'seg' ? 'none' : `1px solid ${C.sageLight}`, textAlign: 'center' }}>
+                    <strong style={{ display: 'block', fontSize: mobile ? 27 : 30, fontWeight: 600, fontVariantNumeric: 'tabular-nums', lineHeight: 1.15, color: C.brown }}>{String(valor).padStart(2, '0')}</strong>
+                    <span style={{ fontSize: 10 }}>{unidade}</span>
+                  </div>)}
+                </div>
+                {proximoLote && <p style={{ fontSize: 12, lineHeight: 1.6, margin: '12px 0 0' }}>Em {proximoLote.periodo.split(' a ')[0]}, o ingresso passa para <strong>R$ {proximoLote.preco}</strong>.</p>}
+              </div>}
             </div>
             {checkoutOnline ? (
               <a href={checkoutOnline} target="_blank" rel="noopener noreferrer" style={{
@@ -2279,14 +2291,14 @@ function InscricaoSection() {
                 borderRadius: 100, padding: '2px 10px',
                 fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                 fontSize: 11, letterSpacing: '0.5px',
-              }}>39% OFF</div>
+              }}>{Math.round((1 - lotePresencial.lote.preco / 197) * 100)}% OFF</div>
             </div>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
               fontSize: 'clamp(48px, 5vw, 64px)',
               color: highlightOnline ? C.brown : C.cream, lineHeight: 1, marginBottom: 4,
               letterSpacing: '-2px',
-            }}>R$ 120</div>
+            }}>R$ {lotePresencial.lote.preco}</div>
 
             {/* Disponibilidade do presencial. */}
             <div>
@@ -2300,8 +2312,39 @@ function InscricaoSection() {
             </div>
 
             <div style={{ marginTop: 'auto' }}>
-            {PRESENCIAL_URL && !PRESENCIAL_BLOQUEADO ? (
-              <a href={PRESENCIAL_URL} target="_blank" rel="noopener noreferrer" style={{
+            <div aria-label="Calendário de lotes do ingresso presencial" style={{ marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 12, fontSize: 12, color: highlightOnline ? C.sageDark : C.sageLight }}>
+                <strong>Lotes por data</strong>
+                <span>{lotePresencial.encerrado ? 'Vendas encerradas' : lotePresencial.ativo ? `Lote Atual · ${lotePresencial.lote.nome}` : 'A partir de 24/09'}</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 6 }}>
+                {LOTES_PRESENCIAL.map((lote, index) => {
+                  const atual = lotePresencial.ativo && index === lotePresencial.indice
+                  const passou = relogioLotes >= Date.parse(lote.fim)
+                  return <div key={lote.nome} aria-current={atual ? 'step' : undefined} style={{ minWidth: 0, border: `1px solid ${atual ? C.sageDark : C.sageLight}`, borderTopWidth: 5, borderRadius: 10, padding: '12px 4px', textAlign: 'center', background: atual ? '#40594A' : 'rgba(138,158,140,0.06)', color: atual ? C.white : highlightOnline ? C.brownMid : C.cream, boxShadow: atual ? '0 6px 18px rgba(64,89,74,0.18)' : 'none' }}>
+                    <div style={{ fontSize: 11 }}>{lote.nome}</div>
+                    <strong style={{ display: 'block', fontSize: 21, color: atual ? C.white : highlightOnline ? C.brown : C.cream, margin: '5px 0' }}>R$ {lote.preco}</strong>
+                    <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.5, color: atual ? C.white : highlightOnline ? C.brown : C.cream, background: atual ? 'rgba(255,255,255,0.09)' : 'transparent', borderRadius: 8, padding: '8px 3px', marginTop: 8 }}>
+                      <span style={{ display: 'block' }}>{lote.periodo.split(' a ')[0]}</span>
+                      <span style={{ display: 'block' }}>a {lote.periodo.split(' a ')[1]}</span>
+                    </div>
+                    <div style={{ display: 'inline-block', fontSize: 10, fontWeight: atual ? 700 : 500, color: atual ? '#40594A' : highlightOnline ? C.sageDark : C.sageLight, background: atual ? C.white : 'transparent', borderRadius: 100, padding: '4px 7px', marginTop: 8 }}>{atual ? '✓ Lote Atual' : passou ? 'Encerrado' : 'Em breve'}</div>
+                  </div>
+                })}
+              </div>
+              {lotePresencial.ativo && <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.sageLight}`, color: highlightOnline ? C.sageDark : C.sageLight }}>
+                <p style={{ fontSize: 12, fontWeight: 600, margin: '0 0 12px' }}>{proximoLotePresencial ? 'O lote vira em' : 'As inscrições encerram em'}</p>
+                <div role="timer" aria-live="off" aria-label={`${contagemLotePresencial[0][0]} dias, ${contagemLotePresencial[1][0]} horas, ${contagemLotePresencial[2][0]} minutos e ${contagemLotePresencial[3][0]} segundos ${proximoLotePresencial ? 'para a virada de lote' : 'para o encerramento'}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 8 }}>
+                  {contagemLotePresencial.map(([valor, unidade]) => <div key={unidade} aria-hidden="true" style={{ borderRight: unidade === 'seg' ? 'none' : `1px solid ${C.sageLight}`, textAlign: 'center' }}>
+                    <strong style={{ display: 'block', fontSize: mobile ? 27 : 30, fontWeight: 600, fontVariantNumeric: 'tabular-nums', lineHeight: 1.15, color: highlightOnline ? C.brown : C.cream }}>{String(valor).padStart(2, '0')}</strong>
+                    <span style={{ fontSize: 10 }}>{unidade}</span>
+                  </div>)}
+                </div>
+                {proximoLotePresencial && <p style={{ fontSize: 12, lineHeight: 1.6, margin: '12px 0 0' }}>Em {proximoLotePresencial.periodo.split(' a ')[0]}, o ingresso passa para <strong>R$ {proximoLotePresencial.preco}</strong>.</p>}
+              </div>}
+            </div>
+            {checkoutPresencial && !PRESENCIAL_BLOQUEADO ? (
+              <a href={checkoutPresencial} target="_blank" rel="noopener noreferrer" style={{
                 display: 'block', width: '100%',
                 background: C.white, color: C.brown,
                 padding: '18px 24px', borderRadius: 100,
@@ -2328,7 +2371,7 @@ function InscricaoSection() {
                 textAlign: 'center', marginBottom: 14,
                 position: 'relative', zIndex: 1,
               }}>
-                {PRESENCIAL_BLOQUEADO ? 'Próxima vivência a ser divulgada' : 'Vendas abrem em breve'}
+                {PRESENCIAL_BLOQUEADO ? 'Próxima vivência a ser divulgada' : lotePresencial.encerrado ? 'Vendas encerradas' : 'Vendas abrem em breve'}
               </div>
             )}
 
